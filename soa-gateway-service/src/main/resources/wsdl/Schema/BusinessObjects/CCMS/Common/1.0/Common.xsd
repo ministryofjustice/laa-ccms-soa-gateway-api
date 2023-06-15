@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="http://legalservices.gov.uk/DataObjects/Finance/Applications/iBusiness/Common/1.0"
+  elementFormDefault="qualified">
+  <xsd:import namespace="http://legalservices.gov.uk/Enterprise/Common/1.0/Common"
+    schemaLocation="../../../Enterprise/Common/1.0/Common.xsd"/>
+</xsd:schema>

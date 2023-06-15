@@ -1,0 +1,665 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="opads_rulebase"
+  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:tns="http://oracle.com/determinations/server/10.0/rulebase/types"
+  targetNamespace="http://oracle.com/determinations/server/10.0/rulebase/types">
+  <wsdl:types>
+    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      xmlns="http://oracle.com/determinations/server/10.0/rulebase/types"
+      targetNamespace="http://oracle.com/determinations/server/10.0/rulebase/types"
+      elementFormDefault="qualified" version="1.0">
+      <xsd:element name="screen-definition"
+        type="ScreenDefinition"/>                    <!-- List Goals Request and response -->
+      <xsd:element name="list-goals-response" type="ListGoalsResponse"/>
+      <xsd:element name="list-goals-request">
+        <xsd:complexType/>
+      </xsd:element>                    <!-- List Screens Request and response -->
+      <xsd:element name="list-screens-response" type="ListScreensResponse"/>
+      <xsd:element name="list-screens-request">
+        <xsd:complexType/>
+      </xsd:element>                    <!-- Assess Request and response -->
+      <xsd:element name="assess-request" type="AssessRequest"/>
+      <xsd:element name="assess-response"
+        type="AssessResponse"/>                    <!--  Get Rulebase Version Response and Request -->
+      <xsd:element name="get-rulebase-version-response" type="xsd:string"/>
+      <xsd:element name="get-rulebase-version-request">
+        <xsd:complexType/>
+      </xsd:element>                    <!--  Get screen -->
+      <xsd:element name="get-screen-request" type="GetScreenRequest"/>
+      <xsd:element name="get-screen-response"
+        type="GetScreenResponse"/>                    <!-- error response -->
+      <xsd:element name="error-response" type="Error"/>                    <!-- List Goals -->
+      <xsd:complexType name="ListGoalsResponse">
+        <xsd:sequence>
+          <xsd:element name="entity" type="ListGoalsEntity"
+            minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <!--
+        list goals outputs an entity and attributes but has different
+        required attributes
+      -->
+      <xsd:complexType name="ListGoalsEntity">
+        <xsd:sequence>
+          <xsd:element name="attribute" type="ListGoalsAttribute"
+            minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="entity-type" type="xsd:string"/>
+      </xsd:complexType>
+      <xsd:complexType name="ListGoalsAttribute">
+        <xsd:attribute name="id" type="xsd:string" use="required"/>
+        <xsd:attribute name="type" type="xsd:string" use="required"/>
+        <xsd:attribute name="text" type="xsd:string" use="optional"/>
+      </xsd:complexType>
+      <xsd:complexType name="AssessResponse">
+        <xsd:sequence>
+          <xsd:element name="events" type="ListEvents" minOccurs="0"/>
+          <xsd:element name="session-data" type="Session"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AssessmentConfiguration">
+        <xsd:sequence>
+          <xsd:element name="show-silent" type="xsd:boolean"
+            minOccurs="0"/>
+          <xsd:element name="show-invisible" type="xsd:boolean"
+            minOccurs="0"/>
+          <xsd:element name="show-properties" type="xsd:boolean"
+            minOccurs="0"/>
+          <xsd:element name="show-events" type="xsd:boolean"
+            minOccurs="0"/>
+          <xsd:element name="resolve-indecision-relationships"
+            type="xsd:boolean" minOccurs="0"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AssessRequest">
+        <xsd:sequence>
+          <xsd:element name="config" type="AssessmentConfiguration"
+            minOccurs="0"/>
+          <xsd:element name="session-data" type="Session"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Error">
+        <xsd:sequence>
+          <xsd:element name="code" type="xsd:string"/>
+          <xsd:element name="message" type="xsd:string"/>
+          <xsd:element name="events" type="ListEvents" minOccurs="0"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="RulebaseEvent">
+        <xsd:sequence>
+          <xsd:element name="message" type="xsd:string"/>
+          <xsd:element name="parameters">
+            <xsd:complexType>
+              <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+                <xsd:element name="value" type="xsd:string"/>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="decision-report" type="DecisionReport"
+            minOccurs="0"/>
+        </xsd:sequence>
+        <xsd:attribute name="name" type="xsd:string" use="required"/>
+        <xsd:attribute name="entity-id" type="xsd:IDREF"/>
+      </xsd:complexType>
+      <xsd:complexType name="ListEvents">
+        <xsd:sequence>
+          <xsd:element name="event" type="RulebaseEvent"
+            minOccurs="1" maxOccurs="unbounded"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScreenSummary">
+        <xsd:attribute name="id" type="xsd:string" use="required"/>
+        <xsd:attribute name="name" type="xsd:string"/>
+        <xsd:attribute name="title" type="xsd:string"/>
+        <xsd:attribute name="is-automatic" type="xsd:boolean"
+          use="required"/>
+        <xsd:attribute name="entity-type" type="xsd:string"/>
+      </xsd:complexType>
+      <xsd:complexType name="ScreenDefinition">
+        <xsd:sequence>
+          <xsd:element name="screen-control" type="ScreenControl"
+            minOccurs="0" maxOccurs="unbounded"/>
+          <xsd:element name="properties" type="ListCustomProperties"
+            minOccurs="0"/>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:string" use="required"/>
+        <xsd:attribute name="name" type="xsd:string"/>
+        <xsd:attribute name="title" type="xsd:string"/>
+        <xsd:attribute name="is-automatic" type="xsd:boolean"
+          use="required"/>
+        <xsd:attribute name="entity-type" type="xsd:string"/>
+        <xsd:attribute name="entity-id" type="xsd:string"/>
+      </xsd:complexType>
+      <xsd:complexType name="ListScreenControls">
+        <xsd:sequence>
+          <xsd:element name="screen-control" type="ScreenControl"
+            minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScreenControl">
+        <xsd:sequence>
+          <xsd:element name="code-table-item" type="CodeTableItem"
+            minOccurs="0" maxOccurs="unbounded"/>
+          <xsd:element name="instance-template" type="ScreenControl"
+            minOccurs="0"/>
+          <xsd:element name="properties" type="ListCustomProperties"
+            minOccurs="0"/>
+          <xsd:element name="child-controls" type="ListScreenControls"
+            minOccurs="0"/>
+        </xsd:sequence>
+        <xsd:attribute name="control-type" use="optional">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:enumeration value="custom"/>
+              <xsd:enumeration value="entity"/>
+              <xsd:enumeration value="fixed"/>
+              <xsd:enumeration value="flow"/>
+              <xsd:enumeration value="entity-association"/>
+              <xsd:enumeration value="date"/>
+              <xsd:enumeration value="datetime"/>
+              <xsd:enumeration value="document"/>
+              <xsd:enumeration value="timeofday"/>
+              <xsd:enumeration value="goal"/>
+              <xsd:enumeration value="group"/>
+              <xsd:enumeration value="label"/>
+              <xsd:enumeration value="link"/>
+              <xsd:enumeration value="money"/>
+              <xsd:enumeration value="number"/>
+              <xsd:enumeration value="boolean"/>
+              <xsd:enumeration value="selection"/>
+              <xsd:enumeration value="text"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="text-style" type="xsd:string"
+          use="optional"/>
+        <xsd:attribute name="default" type="xsd:string" use="optional"/>
+        <xsd:attribute name="line-count" use="optional">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:nonNegativeInteger"/>
+          </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="value" use="optional"/>
+        <xsd:attribute name="attribute-id" type="xsd:string"
+          use="optional"/>
+        <xsd:attribute name="caption" type="xsd:string" use="optional"/>
+        <xsd:attribute name="is-inferred" use="optional">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:boolean"/>
+          </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="is-mandatory" use="optional">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:boolean"/>
+          </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="is-read-only" use="optional">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:boolean"/>
+          </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="is-visible" use="optional">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:boolean"/>
+          </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="style" use="optional">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:enumeration value="Radiobutton"/>
+              <xsd:enumeration value="Listbox"/>
+              <xsd:enumeration value="Dropdown"/>
+              <xsd:enumeration value="Checkboxes"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="entity-type" type="xsd:string"
+          use="optional"/>
+        <xsd:attribute name="entity-id" type="xsd:string" use="optional"/>
+        <xsd:attribute name="relationship" type="xsd:string"
+          use="optional"/>
+        <xsd:attribute name="document-type" type="xsd:string"
+          use="optional"/>
+        <xsd:attribute name="config-file" type="xsd:string"
+          use="optional"/>
+        <xsd:attribute name="required-decision-reports" type="xsd:string"
+          use="optional"/>
+        <xsd:attribute name="template-file" type="xsd:string"
+          use="optional"/>
+        <xsd:attribute name="flow-id" type="xsd:string" use="optional"/>
+      </xsd:complexType>
+      <xsd:complexType name="CodeTableItem">
+        <xsd:attribute name="code" use="optional"/>
+        <xsd:attribute name="is-visible" use="optional"/>
+        <xsd:attribute name="value" use="optional"/>
+      </xsd:complexType>
+      <xsd:complexType name="TextProperty">
+        <xsd:sequence>
+          <xsd:element name="text-val" type="xsd:string"
+            minOccurs="0"/>
+          <xsd:element name="default-val" type="xsd:string"
+            minOccurs="0"/>
+          <xsd:element name="help-text" type="xsd:string"
+            minOccurs="0"/>
+        </xsd:sequence>
+        <xsd:attribute name="name" type="xsd:string"/>
+      </xsd:complexType>
+      <xsd:complexType name="NumberProperty">
+        <xsd:sequence>
+          <xsd:element name="number-val" type="xsd:decimal"
+            minOccurs="0"/>
+          <xsd:element name="default-val" type="xsd:decimal"
+            minOccurs="0"/>
+          <xsd:element name="help-text" type="xsd:string"
+            minOccurs="0"/>
+        </xsd:sequence>
+        <xsd:attribute name="name" type="xsd:string"/>
+      </xsd:complexType>
+      <xsd:complexType name="BooleanProperty">
+        <xsd:sequence>
+          <xsd:element name="boolean-val" type="xsd:boolean"
+            minOccurs="0"/>
+          <xsd:element name="default-val" type="xsd:boolean"
+            minOccurs="0"/>
+          <xsd:element name="help-text" type="xsd:string"
+            minOccurs="0"/>
+        </xsd:sequence>
+        <xsd:attribute name="name" type="xsd:string"/>
+      </xsd:complexType>
+      <xsd:complexType name="ListCustomProperties">
+        <xsd:sequence>
+          <xsd:element name="property" type="CustomProperty"
+            minOccurs="1" maxOccurs="unbounded"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="CustomProperty">
+        <xsd:simpleContent>
+          <xsd:extension base="xsd:string">
+            <xsd:attribute name="key" use="required"/>
+          </xsd:extension>
+        </xsd:simpleContent>
+      </xsd:complexType>
+      <xsd:complexType name="AttributeOutcome">
+        <xsd:attribute name="id" type="xsd:string"/>
+        <xsd:attribute name="outcome-style" type="AttributeOutcomeStyleEnum"/>
+        <xsd:attribute name="unknown-outcome-style" type="AttributeOutcomeStyleEnum"/>
+        <xsd:attribute name="known-outcome-style" type="AttributeOutcomeStyleEnum"/>
+        <xsd:attribute name="screen-if-unknown" type="xsd:boolean"/>
+      </xsd:complexType>
+      <xsd:complexType name="DecisionReport">
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+          <xsd:element name="relationship-decision-node" type="RelationshipDecisionNode"
+            minOccurs="0" maxOccurs="unbounded"/>
+          <xsd:element name="attribute-decision-node" type="AttributeDecisionNode"
+            minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:choice>
+        <xsd:attribute name="report-style" type="xsd:string"/>
+        <xsd:attribute name="outcome-id" type="xsd:string"/>
+      </xsd:complexType>
+      <xsd:complexType name="AttributeDecisionNode">
+        <xsd:sequence>
+          <xsd:choice minOccurs="0">
+            <xsd:element name="boolean-val" type="xsd:boolean"/>
+            <xsd:element name="date-val" type="xsd:date"/>
+            <xsd:element name="datetime-val" type="xsd:dateTime"/>
+            <xsd:element name="time-val" type="xsd:time"/>
+            <xsd:element name="number-val" type="xsd:decimal"/>
+            <xsd:element name="text-val" type="xsd:string"/>
+            <xsd:element name="uncertain-val" type="UncertainValue"/>
+            <xsd:element name="unknown-val" type="UnknownValue"/>
+          </xsd:choice>
+          <xsd:element name="change-point" minOccurs="0"
+            maxOccurs="unbounded">
+            <xsd:complexType>
+              <xsd:choice minOccurs="0">
+                <xsd:element name="boolean-val" type="xsd:boolean"/>
+                <xsd:element name="date-val" type="xsd:date"/>
+                <xsd:element name="datetime-val" type="xsd:dateTime"/>
+                <xsd:element name="time-val" type="xsd:time"/>
+                <xsd:element name="number-val" type="xsd:decimal"/>
+                <xsd:element name="text-val" type="xsd:string"/>
+                <xsd:element name="uncertain-val" type="UncertainValue"/>
+                <xsd:element name="unknown-val" type="UnknownValue"/>
+              </xsd:choice>
+              <xsd:attribute name="date" type="xsd:date"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="properties" type="ListCustomProperties"
+            minOccurs="0"/>
+          <xsd:element name="already-proven" type="xsd:string"
+            minOccurs="0"/>
+          <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="attribute-decision-node" type="AttributeDecisionNode"/>
+            <xsd:element name="relationship-decision-node" type="RelationshipDecisionNode"/>
+          </xsd:choice>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:string"/>
+        <xsd:attribute name="entity-type" type="xsd:string"/>
+        <xsd:attribute name="entity-id" type="xsd:IDREF"/>
+        <xsd:attribute name="attribute-id" type="xsd:string"/>
+        <xsd:attribute name="type" type="AttributeTypeEnum"
+          use="optional"/>
+        <xsd:attribute name="text" type="xsd:string"/>
+        <xsd:attribute name="start-relevance" type="xsd:date"
+          use="optional"/>
+        <xsd:attribute name="end-relevance" type="xsd:date"
+          use="optional"/>
+        <xsd:attribute name="inferencing-type" type="InferencingTypeEnum"/>
+      </xsd:complexType>
+      <xsd:complexType name="RelationshipDecisionNode">
+        <xsd:sequence>
+          <xsd:element name="properties" type="ListCustomProperties"
+            minOccurs="0"/>
+          <xsd:element name="already-proven" type="xsd:string"
+            minOccurs="0"/>
+          <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="attribute-decision-node" type="AttributeDecisionNode"/>
+            <xsd:element name="relationship-decision-node" type="RelationshipDecisionNode"/>
+          </xsd:choice>
+        </xsd:sequence>
+        <xsd:attribute name="relationship-name" type="xsd:string"/>
+        <xsd:attribute name="source" type="xsd:IDREF"/>
+        <xsd:attribute name="target" type="xsd:string"/>
+        <xsd:attribute name="id" type="xsd:string"/>
+        <xsd:attribute name="state" type="KnownValueEnum"/>
+        <xsd:attribute name="inferred" type="xsd:string"/>
+      </xsd:complexType>
+      <xsd:complexType name="UserData">
+        <xsd:sequence>
+          <xsd:any/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:simpleType name="AttributeOutcomeStyleEnum">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="value-only"/>
+          <xsd:enumeration value="decision-report"/>
+          <xsd:enumeration value="base-attributes"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="RelationshipOutcomeStyleEnum">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="value-only"/>
+          <xsd:enumeration value="decision-report"/>
+          <xsd:enumeration value="base-attributes"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="InferencingTypeEnum">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="base-level"/>
+          <xsd:enumeration value="goal"/>
+          <xsd:enumeration value="intermediate"/>
+          <xsd:enumeration value="stand-alone"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="AttributeTypeEnum">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="boolean"/>
+          <xsd:enumeration value="text"/>
+          <xsd:enumeration value="number"/>
+          <xsd:enumeration value="currency"/>
+          <xsd:enumeration value="date"/>
+          <xsd:enumeration value="datetime"/>
+          <xsd:enumeration value="timeofday"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="KnownValueEnum">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="known"/>
+          <xsd:enumeration value="unknown"/>
+          <xsd:enumeration value="uncertain"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:complexType name="GetScreenRequest">
+        <xsd:sequence>
+          <xsd:choice>
+            <xsd:element name="screen-name" type="xsd:string"/>
+            <xsd:element name="screen-id" type="xsd:string"/>
+          </xsd:choice>
+          <xsd:element name="screen-entity" minOccurs="0">
+            <xsd:complexType>
+              <xsd:attribute name="entity-id" type="xsd:IDREF"
+                use="required"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="session-data" type="Session"
+            minOccurs="0"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="GetScreenResponse">
+        <xsd:sequence>
+          <xsd:element name="screen" type="ScreenDefinition"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ListScreensResponse">
+        <xsd:sequence>
+          <xsd:element name="screen-summary" type="ScreenSummary"
+            minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="RelationshipTarget">
+        <xsd:attribute name="entity-id" type="xsd:IDREF" use="required"/>
+      </xsd:complexType>
+      <xsd:complexType name="ListRelationships">
+        <xsd:sequence>
+          <xsd:element name="relationship-outcome" type="RelationshipOutcome"
+            minOccurs="0" maxOccurs="unbounded"/>
+          <xsd:element name="relationship" type="Relationship"
+            minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="UnknownValue"/>
+      <xsd:complexType name="UncertainValue"/>
+      <xsd:complexType name="Attribute">
+        <xsd:sequence>
+          <xsd:choice minOccurs="0">
+            <xsd:element name="boolean-val" type="xsd:boolean"/>
+            <xsd:element name="date-val" type="xsd:date"/>
+            <xsd:element name="datetime-val" type="xsd:dateTime"/>
+            <xsd:element name="time-val" type="xsd:time"/>
+            <xsd:element name="number-val" type="xsd:decimal"/>
+            <xsd:element name="text-val" type="xsd:string"/>
+            <xsd:element name="uncertain-val" type="UncertainValue"/>
+            <xsd:element name="unknown-val" type="UnknownValue"/>
+          </xsd:choice>
+          <xsd:element name="change-point" minOccurs="0"
+            maxOccurs="unbounded">
+            <xsd:complexType>
+              <xsd:choice minOccurs="0">
+                <xsd:element name="boolean-val" type="xsd:boolean"/>
+                <xsd:element name="date-val" type="xsd:date"/>
+                <xsd:element name="datetime-val" type="xsd:dateTime"/>
+                <xsd:element name="time-val" type="xsd:time"/>
+                <xsd:element name="number-val" type="xsd:decimal"/>
+                <xsd:element name="text-val" type="xsd:string"/>
+                <xsd:element name="uncertain-val" type="UncertainValue"/>
+                <xsd:element name="unknown-val" type="UnknownValue"/>
+              </xsd:choice>
+              <xsd:attribute name="date" type="xsd:date"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="properties" type="ListCustomProperties"
+            minOccurs="0"/>
+          <xsd:element name="user-data" type="UserData"
+            minOccurs="0"/>
+          <xsd:element name="decision-report" type="DecisionReport"
+            minOccurs="0"/>
+          <xsd:element name="screen" type="ScreenDefinition"
+            minOccurs="0"/>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:string" use="required"/>
+        <xsd:attribute name="type" type="AttributeTypeEnum"
+          use="optional"/>
+        <xsd:attribute name="inferencing-type" type="InferencingTypeEnum"/>
+      </xsd:complexType>
+      <xsd:complexType name="Entity">
+        <xsd:sequence>
+          <xsd:element name="attribute-outcome" type="AttributeOutcome"
+            minOccurs="0" maxOccurs="unbounded"/>
+          <xsd:element name="attribute" type="Attribute"
+            minOccurs="0" maxOccurs="unbounded"/>
+          <xsd:element name="relationships" type="ListRelationships"
+            minOccurs="0"/>
+          <xsd:element name="properties" type="ListCustomProperties"
+            minOccurs="0"/>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:ID" use="required"/>
+      </xsd:complexType>
+      <xsd:complexType name="Relationship">
+        <xsd:sequence>
+          <xsd:element name="target" type="RelationshipTarget"
+            minOccurs="0" maxOccurs="unbounded"/>
+          <xsd:element name="properties" type="ListCustomProperties"
+            minOccurs="0"/>
+          <xsd:element name="decision-report" type="DecisionReport"
+            minOccurs="0" maxOccurs="1"/>
+        </xsd:sequence>
+        <xsd:attribute name="name" type="xsd:string" use="required"/>
+        <xsd:attribute name="inferred" type="xsd:boolean"/>
+        <xsd:attribute name="state" type="KnownValueEnum"/>
+      </xsd:complexType>
+      <xsd:complexType name="RelationshipOutcome">
+        <xsd:attribute name="id" type="xsd:string"/>
+        <xsd:attribute name="outcome-style" type="RelationshipOutcomeStyleEnum"/>
+        <xsd:attribute name="unknown-outcome-style" type="RelationshipOutcomeStyleEnum"/>
+        <xsd:attribute name="known-outcome-style" type="RelationshipOutcomeStyleEnum"/>
+        <xsd:attribute name="screen-if-unknown" type="xsd:boolean"/>
+      </xsd:complexType>
+      <xsd:complexType name="ListEntity">
+        <xsd:sequence>
+          <xsd:element name="entity" type="Entity" minOccurs="0"
+            maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="entity-type" type="xsd:string"
+          use="required"/>
+        <xsd:attribute name="collected" type="xsd:boolean"
+          use="optional"/>
+      </xsd:complexType>
+      <xsd:complexType name="Session">
+        <xsd:sequence>
+          <xsd:element name="list-entity" type="ListEntity"
+            minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="GetRulebaseVersionRequest">
+    <wsdl:part element="tns:get-rulebase-version-request" name="GetRulebaseVersionRequest"/>
+  </wsdl:message>
+  <wsdl:message name="GetRulebaseVersionResponse">
+    <wsdl:part element="tns:get-rulebase-version-response" name="GetRulebaseVersionResponse"/>
+  </wsdl:message>
+  <wsdl:message name="ListGoalsResponse">
+    <wsdl:part element="tns:list-goals-response" name="ListGoalsResponse"/>
+  </wsdl:message>
+  <wsdl:message name="ListGoalsRequest">
+    <wsdl:part element="tns:list-goals-request" name="ListGoalsRequest"/>
+  </wsdl:message>
+  <wsdl:message name="ErrorResponse">
+    <wsdl:part element="tns:error-response" name="ErrorResponse"/>
+  </wsdl:message>
+  <wsdl:message name="AssessResponse">
+    <wsdl:part element="tns:assess-response" name="AssessResponse"/>
+  </wsdl:message>
+  <wsdl:message name="AssessRequest">
+    <wsdl:part element="tns:assess-request" name="AssessRequest"/>
+  </wsdl:message>
+  <wsdl:message name="GetScreenRequest">
+    <wsdl:part name="GetScreenRequest" element="tns:get-screen-request"/>
+  </wsdl:message>
+  <wsdl:message name="GetScreenResponse">
+    <wsdl:part name="GetScreenResponse" element="tns:get-screen-response"/>
+  </wsdl:message>
+  <wsdl:message name="ListScreensResponse">
+    <wsdl:part element="tns:list-screens-response" name="ListScreensResponse"/>
+  </wsdl:message>
+  <wsdl:message name="ListScreensRequest">
+    <wsdl:part element="tns:list-screens-request" name="ListScreensRequest"/>
+  </wsdl:message>
+  <wsdl:portType name="opads_lsc_demo_generic">
+    <wsdl:operation name="ListGoals">
+      <wsdl:input message="tns:ListGoalsRequest"/>
+      <wsdl:output message="tns:ListGoalsResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="Assess">
+      <wsdl:input message="tns:AssessRequest"/>
+      <wsdl:output message="tns:AssessResponse"/>
+      <wsdl:fault name="Client" message="tns:ErrorResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetRulebaseVersion">
+      <wsdl:input message="tns:GetRulebaseVersionRequest"/>
+      <wsdl:output message="tns:GetRulebaseVersionResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetScreen">
+      <wsdl:input message="tns:GetScreenRequest"/>
+      <wsdl:output message="tns:GetScreenResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="ListScreens">
+      <wsdl:input message="tns:ListScreensRequest"/>
+      <wsdl:output message="tns:ListScreensResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="opads_lsc_demo_generic" type="tns:opads_lsc_demo_generic">
+    <soap:binding style="document"
+      transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="ListGoals">
+      <soap:operation
+        soapAction="http://oracle.com/determinations/server/10.0/rulebase/types/ListGoals"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Assess">
+      <soap:operation
+        soapAction="http://oracle.com/determinations/server/10.0/rulebase/types/Assess"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="Client">
+        <soap:fault name="Client" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetRulebaseVersion">
+      <soap:operation
+        soapAction="http://oracle.com/determinations/server/10.0/rulebase/types/GetRulebaseVersion"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetScreen">
+      <soap:operation
+        soapAction="http://oracle.com/determinations/server/10.0/rulebase/types/GetScreen"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListScreens">
+      <soap:operation
+        soapAction="http://oracle.com/determinations/server/10.0/rulebase/types/ListScreens"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="hdsRulebase">
+    <wsdl:port binding="tns:opads_lsc_demo_generic" name="opadsRulebaseSOAP">
+      <soap:address
+        location="http://localhost:8080/determinations-server/soap/lsc_demo"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

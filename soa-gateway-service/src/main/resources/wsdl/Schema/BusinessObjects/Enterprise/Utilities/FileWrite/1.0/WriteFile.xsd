@@ -1,0 +1,24 @@
+<schema attributeFormDefault="unqualified"
+  elementFormDefault="qualified"
+  targetNamespace="http://legalservices.gov.uk/Schema/Enterprise/Utilities/FileWrite/1.0"
+  xmlns:header="http://legalservices.gov.uk/Schema/Common/Header/1.0"
+  xmlns="http://www.w3.org/2001/XMLSchema">
+  <import namespace="http://legalservices.gov.uk/Schema/Common/Header/1.0"
+    schemaLocation="http://legalservices.gov.uk/Schema/Common/Header/1.0/Header.xsd"/>
+  <element name="WriteFileProcessRequest">
+    <complexType>
+      <sequence>
+        <element ref="header:HeaderRq"/>
+        <element name="filePathName" type="string"/>
+        <element name="fileText" type="string"/>
+      </sequence>
+    </complexType>
+  </element>
+  <element name="WriteFileProcessResponse">
+    <complexType>
+      <sequence>
+        <element ref="header:HeaderRs"/>
+      </sequence>
+    </complexType>
+  </element>
+</schema>

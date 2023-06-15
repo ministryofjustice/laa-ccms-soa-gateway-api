@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2010 rel. 3 (http://www.altova.com) by Ashish (Capgemini) -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common"
+  xmlns:inv="http://legalservices.gov.uk/CCMS/Finance/Payables/1.0/BillingBIO"
+  targetNamespace="http://legalservices.gov.uk/CCMS/Finance/Payables/1.0/BillingBIO"
+  elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      <Version>1.0 Draft</Version>
+      <Definition>BILL BIO</Definition>
+      <Description>This schema defines the objects to create invoices at Ebiz.</Description>
+      <Author>Mohammed Sajid Ali</Author>
+      <ModifiedBy>Mohammed Sajid Ali</ModifiedBy>
+      <VersionDate>08-11-2010</VersionDate>
+      <VersionDescription>Initial Version</VersionDescription>
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:import namespace="http://legalservices.gov.uk/Enterprise/Common/1.0/Common"
+    schemaLocation="../../../../Enterprise/Common/1.0/Common.xsd"/>
+
+  <xsd:complexType name="BillElementType">
+    <xsd:sequence>
+      <xsd:element name="CaseReferenceNumber" type="common:IDREF30"/>
+      <xsd:element name="ProviderFirmID" type="common:ID15"/>
+      <xsd:element name="TypeOfBill" type="common:LOV"/>
+      <xsd:element name="SupportingInfo" type="common:C240"/>
+      <xsd:element name="ClientApproval" type="common:BooleanString"/>
+      <xsd:element name="DateSentToClient" type="common:Dt" minOccurs="0"/>
+      <xsd:element name="ClientResponse" type="common:LOV" minOccurs="0"/>
+      <xsd:element name="ClientObjectionReason" type="common:C150" minOccurs="0"/>
+      <xsd:element name="CourtCode" type="common:LOV" minOccurs="0"/>
+      <xsd:element name="CourtAssessment" type="common:BooleanString" minOccurs="0"/>
+      <xsd:element name="CourtAssessmentDate" type="common:Dt" minOccurs="0"/>
+      <xsd:element name="OPAResponse" type="common:AssesmentResultType" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+  <xsd:complexType name="POAElementType">
+    <xsd:sequence>
+      <xsd:element name="ProviderID" type="common:ID15"/>
+      <xsd:element name="CaseReferenceNumber" type="common:IDREF30"/>
+      <xsd:element name="Reason" type="common:C50"/>
+      <xsd:element name="CourtType" type="common:LOV"/>
+      <xsd:element name="DateIncurred" type="common:Dt"/>
+      <xsd:element name="ActualNetCost" type="common:Amount"/>
+      <xsd:element name="VATRate" type="common:LOV"/>
+      <xsd:element name="DtldAssessmentOrderDate" type="common:Dt" minOccurs="0"/>
+      <xsd:element name="Notes" type="common:C2000" minOccurs="0"/>
+      <xsd:element name="CalculatedNetCost" type="common:Amount"/>
+      <xsd:element name="ActualTotalCost" type="common:Amount"/>
+      <xsd:element name="OPAResponse" type="common:AssesmentResultType" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+  <xsd:complexType name="SOAElementType">
+    <xsd:sequence>
+      <xsd:element name="CaseReferenceNumber" type="common:IDREF30"/>
+      <xsd:element name="CertificateType" type="common:LOV" minOccurs="0"/>
+      <xsd:element name="CertificateDate" type="common:Dt" minOccurs="0"/>
+      <xsd:element name="Total" type="inv:SOASummaryElementType"/>
+      <xsd:element name="Details">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Statement" type="inv:SOADetailElementType" maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="SOASummaryElementType">
+    <xsd:sequence>
+      <xsd:element name="CostLimitation" type="inv:CostLimitElementType"/>
+      <xsd:element name="CounselCostCeiling" type="inv:CostCeilingElementType"/>
+      <xsd:element name="UndertakingAmount" type="common:Amount"/>
+      <xsd:element name="Bills" type="inv:BillSummaryElementType"/>
+      <xsd:element name="POA" type="inv:POASummaryElementType"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="SOADetailElementType">
+    <xsd:sequence>
+      <xsd:element name="FirmID" type="common:ID15"/>
+      <xsd:element name="FirmName" type="common:C35"/>
+      <xsd:element name="EntityType" type="common:C50"/>
+      <xsd:element name="CostLimitation" type="inv:CostLimitElementType" minOccurs="0"/>
+      <xsd:element name="UndertakingAmount" type="common:Amount"/>
+      <xsd:element name="Bills" type="inv:BillSummaryElementType"/>
+      <xsd:element name="POA" type="inv:POASummaryElementType"/>
+      <xsd:element name="InvoiceList">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Invoice" type="inv:InvoiceListElementType" maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="CostCeilingElementType">
+    <xsd:sequence>
+      <xsd:element name="CurrentAmount" type="common:Amount"/>
+      <xsd:element name="RemainingAmount" type="common:Amount"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="CostLimitElementType">
+    <xsd:sequence>
+      <xsd:element name="CertificateAmount" type="common:Amount"/>
+      <xsd:element name="RemainingAmount" type="common:Amount"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+  <xsd:complexType name="BillSummaryElementType">
+    <xsd:sequence>
+      <xsd:element name="AmountSubmitted" type="common:Amount"/>
+      <xsd:element name="AmountAuthorized" type="common:Amount"/>
+      <xsd:element name="TotalAmount" type="common:Amount"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="POASummaryElementType">
+    <xsd:sequence>
+      <xsd:element name="AmountRecouped" type="common:Amount"/>
+      <xsd:element name="AmountAuthorized" type="common:Amount"/>
+      <xsd:element name="AmountUnRecouped" type="common:Amount"/>
+      <xsd:element name="AmountSubmitted" type="common:Amount"/>
+      <xsd:element name="TotalAmount" type="common:Amount"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+  <xsd:complexType name="InvoiceListElementType">
+    <xsd:sequence>
+      <xsd:element name="InvoiceType" type="common:LOV"/>
+      <xsd:element name="DateSubmitted" type="common:Dt"/>
+      <xsd:element name="DateAuthorized" type="common:Dt" minOccurs="0"/>
+      <xsd:element name="InvoiceAmount" type="common:Amount"/>
+      <xsd:element name="InvoiceStatus" type="common:LOV"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+</xsd:schema>

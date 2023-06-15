@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- edited with XMLSpy v2010 (http://www.altova.com) by Ashish (Capgemini) -->
+<!--Created with Liquid XML Studio - FREE Community Edition 7.1.6.1440 (http://www.liquid-technologies.com)-->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:logging="http://legalservices.gov.uk/CCMS/Logging/1.0/LoggingBIO"
+  xmlns:msg="http://legalservices.gov.uk/CCMS/Logging/1.0/LoggingBIM"
+  targetNamespace="http://legalservices.gov.uk/CCMS/Logging/1.0/LoggingBIM"
+  elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+  <xsd:import namespace="http://legalservices.gov.uk/CCMS/Logging/1.0/LoggingBIO"
+    schemaLocation="LoggingBIO.xsd"/>
+  <xsd:import namespace="http://legalservices.gov.uk/Enterprise/Common/1.0/Header"
+    schemaLocation="../../../Enterprise/Common/1.0/Header.xsd"/>
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      <Version>1.0</Version>
+      <Definition>Logging BIM</Definition>
+      <Description>This schema defines the objects to insert or update the Log messages at LSC
+      </Description>
+      <Author>Mohammed Sajid Ali</Author>
+      <ModifiedBy>Mohammed Sajid Ali</ModifiedBy>
+      <VersionDate>17-03-2010</VersionDate>
+      <VersionDescription>Initial Version</VersionDescription>
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:element name="LogMessageAddRQ" type="msg:LogMessageAddRQ"/>
+  <xsd:complexType name="LogMessageAddRQ">
+    <xsd:sequence>
+      <xsd:element name="LogDetails" type="logging:LogDetails" minOccurs="1" maxOccurs="1"/>
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>

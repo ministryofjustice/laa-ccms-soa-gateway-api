@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 
+	
+	Experimental XML Schema
+	for iTunes Store Package: Film Profile 3.1
+
+	February 26, 2008 - jcjimenez - added support for: attribute, available_for_vod_date, cleared_for_vod, physical_release_date, theatrical_release_date, unavailable_for_vod_date, vod_type 
+	March 23, 2007 - vwarraich - moved product into individual spec schemas from inside base schema
+	March 16, 2007 - vwarraich - imported base schema; cleaned up  	
+	September 18, 2006 - jsuitts - promoted genre type to string (was incorrectly NCName), made amg_video_id optional
+	September 1, 2006 - jsuitts - first public experimental release
+	August 25, 2006 - jsuitts - initial draft
+	
+-->
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+  xmlns:itmsp="http://apple.com/itunes/importer"
+  targetNamespace="http://apple.com/itunes/importer"
+  version="film3.1"
+>
+  <xs:include schemaLocation="iTPBaseSchema.xsd"/>
+
+  <!-- Package -->
+  <xs:element name="package">
+    <xs:complexType>
+      <xs:all>
+        <xs:element ref="itmsp:provider" minOccurs="1"/>
+        <!-- Language is not required or listed in the spec. However, packages seem to contain it -->
+        <xs:element ref="itmsp:language" minOccurs="0"/>
+        <!-- The "video" and "assets" elements are optional only because they are mutually exclusive -->
+        <xs:element name="video" type="itmsp:video" minOccurs="0"/>
+        <xs:element name="assets" type="itmsp:assets_for_assets_only" minOccurs="0"/>
+      </xs:all>
+      <xs:attribute name="version" use="required" type="xs:NCName" fixed="film3.1"></xs:attribute>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- Video -->
+  <xs:complexType name="video">
+    <xs:all>
+      <xs:element name="type">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:pattern value="[F|f]ilm"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="production_company" type="itmsp:String-1-255" minOccurs="1"></xs:element>
+      <xs:element name="vendor_id" type="itmsp:vendor_id" minOccurs="1"/>
+      <xs:element name="isan" type="itmsp:isan" minOccurs="0"/>
+      <xs:element name="upc" type="itmsp:upc" minOccurs="0"/>
+      <!-- Todo : make AMG_VIDEO_ID more restrictive by specifying a pattern -->
+      <xs:element name="amg_video_id" type="itmsp:String-0-255" minOccurs="0"></xs:element>
+      <xs:element name="title" type="itmsp:title" minOccurs="1"></xs:element>
+      <xs:element name="release_date" type="itmsp:release_date" minOccurs="0"></xs:element>
+      <xs:element name="original_release_year" type="itmsp:original_release_year"
+        minOccurs="0"></xs:element>
+      <xs:element name="country" type="xs:string" minOccurs="1"></xs:element>
+      <xs:element name="genres" type="itmsp:genres" minOccurs="1"></xs:element>
+      <xs:element name="ratings" type="itmsp:ratings" minOccurs="0">
+        <xs:key name="Rating-Systems-Unique">
+          <xs:annotation>
+            <xs:documentation>There may be only one rating per system.</xs:documentation>
+          </xs:annotation>
+          <xs:selector xpath="itmsp:rating"></xs:selector>
+          <xs:field xpath="@system"></xs:field>
+        </xs:key>
+      </xs:element>
+      <xs:element name="copyright_cline" type="itmsp:copyright_cline" minOccurs="0"/>
+      <xs:element name="synopsis" type="itmsp:String-1-4000" minOccurs="1"/>
+      <xs:element name="cast" type="itmsp:cast" minOccurs="1"></xs:element>
+      <xs:element name="crew" type="itmsp:crew" minOccurs="1"></xs:element>
+      <!-- deprecated: artwork_files should no longer be used, use <asset type="artwork"> instead -->
+      <xs:element name="artwork_files" type="itmsp:artwork_files" minOccurs="0"></xs:element>
+      <xs:element name="assets" type="itmsp:assets" minOccurs="0" maxOccurs="1"></xs:element>
+      <xs:element name="bonus_materials" type="itmsp:bonus_materials" minOccurs="0"
+        maxOccurs="1"></xs:element>
+
+      <xs:element name="products" type="itmsp:products"/>
+
+      <xs:element name="vendor_offer_code" type="itmsp:String-1-100" minOccurs="0"></xs:element>
+
+      <!-- Begin rentals properties -->
+      <xs:element name="theatrical_release_date" type="itmsp:release_date" minOccurs="0"/>
+    </xs:all>
+  </xs:complexType>
+
+  <!-- Cast -->
+  <xs:complexType name="cast">
+    <xs:sequence>
+      <xs:element name="actor" type="itmsp:actor" minOccurs="0" maxOccurs="unbounded"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- Actor -->
+  <xs:complexType name="actor">
+    <xs:simpleContent>
+      <xs:extension base="itmsp:String-1-255">
+        <xs:attribute name="name" use="required" type="itmsp:String-1-255"></xs:attribute>
+        <xs:attribute name="display" use="required" type="itmsp:String-1-255"></xs:attribute>
+        <xs:attribute name="amg_artist_id" use="optional" type="xs:string"></xs:attribute>
+        <xs:attribute name="billing" use="optional" type="xs:string"
+          default="ordered"></xs:attribute>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <!-- Crew -->
+  <xs:complexType name="crew">
+    <xs:sequence>
+      <xs:element name="member" type="itmsp:member" minOccurs="0"
+        maxOccurs="unbounded"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="member">
+    <xs:simpleContent>
+      <xs:extension base="itmsp:String-1-255">
+        <xs:attribute name="name" use="required" type="itmsp:String-1-255"></xs:attribute>
+        <xs:attribute name="display" use="required" type="itmsp:String-1-255"></xs:attribute>
+        <xs:attribute name="amg_artist_id" use="optional" type="xs:string"></xs:attribute>
+        <xs:attribute name="billing" use="optional" type="xs:string"
+          default="ordered"></xs:attribute>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <!-- Assets -->
+  <xs:complexType name="assets">
+    <xs:sequence>
+      <xs:element name="asset" type="itmsp:asset" maxOccurs="unbounded"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="assets_for_assets_only">
+    <xs:complexContent>
+      <xs:extension base="itmsp:assets">
+        <xs:attribute name="vendor_id" type="xs:string"></xs:attribute>
+        <xs:attribute name="media_type">
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="video"></xs:enumeration>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Asset -->
+  <xs:complexType name="asset">
+    <xs:sequence>
+      <xs:element name="data_file" type="itmsp:data_file_forFilm"
+        maxOccurs="unbounded"></xs:element>
+    </xs:sequence>
+    <xs:attribute name="type" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="full"/>
+          <xs:enumeration value="preview"/>
+          <xs:enumeration value="artwork"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name="data_file_forFilm">
+    <!--
+      This needs to be xs:choice since:
+        1) Order cannot be enforced at this point.
+        2) The occurrence of attribute elements is unbounded.
+    -->
+    <xs:choice minOccurs="1" maxOccurs="unbounded">
+      <xs:element ref="itmsp:file_name"></xs:element>
+      <xs:element ref="itmsp:size" minOccurs="0"></xs:element>
+      <xs:element ref="itmsp:checksum"></xs:element>
+      <xs:element name="attribute" type="itmsp:attribute" minOccurs="0"
+        maxOccurs="unbounded"></xs:element>
+    </xs:choice>
+    <!-- The role attribute is required for all roles except "artwork" -->
+    <xs:attribute name="role" use="optional" type="xs:token"></xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name="attribute">
+    <xs:simpleContent>
+      <xs:extension base="xs:positiveInteger">
+        <xs:attribute name="name" use="required">
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="crop.left"></xs:enumeration>
+              <xs:enumeration value="crop.top"></xs:enumeration>
+              <xs:enumeration value="crop.right"></xs:enumeration>
+              <xs:enumeration value="crop.bottom"></xs:enumeration>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:attribute>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <!-- Preview -->
+  <xs:complexType name="preview">
+    <xs:attribute name="starttime" use="optional" type="xs:nonNegativeInteger"></xs:attribute>
+  </xs:complexType>
+
+
+  <!-- Bonus Material -->
+  <xs:complexType name="bonus_materials">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="itmsp:bonus_material"/>
+    </xs:choice>
+  </xs:complexType>
+
+  <!-- Product element -->
+  <xs:element name="product">
+    <xs:complexType>
+      <xs:all>
+        <xs:element ref="itmsp:territory"/>
+        <xs:element ref="itmsp:wholesale_price_tier"/>
+        <xs:element ref="itmsp:sales_start_date" minOccurs="0"/>
+        <xs:element ref="itmsp:sales_end_date" minOccurs="0"/>
+        <xs:element ref="itmsp:cleared_for_sale" minOccurs="0"/>
+        <xs:element ref="itmsp:preorder_sales_start_date" minOccurs="0"/>
+
+        <!-- Rentals properties -->
+        <xs:element name="cleared_for_vod" type="xs:boolean" minOccurs="0"/>
+        <xs:element name="vod_type" type="itmsp:vod_type_value" minOccurs="0"/>
+        <xs:element name="available_for_vod_date" type="itmsp:release_date" minOccurs="0"/>
+        <xs:element name="unavailable_for_vod_date" type="itmsp:release_date" minOccurs="0"/>
+        <xs:element name="physical_release_date" type="itmsp:release_date" minOccurs="0"/>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- Values for vod_type -->
+  <xs:simpleType name="vod_type_value">
+    <xs:restriction base="xs:token">
+      <xs:pattern value="[Nn][Ee][Ww]\s[Rr][Ee][Ll][Ee][Aa][Ss][Ee]"/>
+      <xs:pattern value="[Dd][Ii][Rr][Ee][Cc][Tt]-[Tt][Oo]-[Vv][Ii][Dd][Ee][Oo]"/>
+      <xs:pattern value="[Ll][Ii][Bb][Rr][Aa][Rr][Yy]"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- Bonus Material : For films, file tag is mandatory -->
+  <xs:element name="bonus_material">
+    <xs:complexType>
+      <xs:all>
+        <xs:element name="vendor_identifier" type="xs:token" minOccurs="0"></xs:element>
+        <xs:element name="bonus_material_name" type="xs:string" minOccurs="1"></xs:element>
+        <xs:element name="copyright" type="xs:string" minOccurs="1"></xs:element>
+        <xs:element name="volume" type="xs:positiveInteger" minOccurs="0"></xs:element>
+        <xs:element name="track" type="xs:positiveInteger" minOccurs="1"></xs:element>
+        <xs:element name="preorder_only" type="xs:boolean" minOccurs="0"></xs:element>
+        <xs:element name="file" type="itmsp:file" minOccurs="1"></xs:element>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
+

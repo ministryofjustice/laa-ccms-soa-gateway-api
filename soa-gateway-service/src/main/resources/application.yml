@@ -1,0 +1,7 @@
+laa:
+  ccms:
+    soa-gateway:
+      username: pui_user
+      password: THj9f52dH2NV
+      notification:
+        url: http://localhost:8051/soa-infra/services/default/NotificationServices/NotificationServices_ep

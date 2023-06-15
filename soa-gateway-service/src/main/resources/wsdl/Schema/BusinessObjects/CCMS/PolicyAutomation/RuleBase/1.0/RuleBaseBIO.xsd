@@ -1,0 +1,492 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:opa="http://legalservices.gov.uk/CCMS/PolicyAutomation/RuleBase/1.0/RuleBaseBIO"
+  targetNamespace="http://legalservices.gov.uk/CCMS/PolicyAutomation/RuleBase/1.0/RuleBaseBIO"
+  elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      <Version>1.0</Version>
+      <Definition>Header for all mesages</Definition>
+      <Author>Ramesh Madhavan</Author>
+      <ModifiedBy>Ramesh Madhavan</ModifiedBy>
+      <VersionDate>18-12-2009</VersionDate>
+      <Description>This schema defines the objects for calling the Oracle Policy Automation
+      </Description>
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <!-- List Goals -->
+
+  <xsd:complexType name="ListGoalsResponse">
+    <xsd:sequence>
+      <xsd:element name="entity" type="opa:ListGoalsEntity" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <!-- List Flows -->
+  <xsd:complexType name="ListFlowsResponse">
+    <xsd:sequence>
+      <xsd:element name="flows" type="opa:ListFlow" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ListFlow">
+    <xsd:sequence>
+      <xsd:element name="flow" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <!-- Flow Screen Service -->
+
+
+  <xsd:complexType name="GetFlowScreenRequest">
+
+    <xsd:sequence>
+      <xsd:element name="session-data" type="opa:Session"/>
+      <xsd:element name="flow-state" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="flow-name" type="xsd:string"/>
+    </xsd:sequence>
+
+  </xsd:complexType>
+
+  <xsd:complexType name="GetFlowScreenResponse">
+    <xsd:sequence>
+      <xsd:element name="screen" type="opa:ScreenDefinition" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="flow-state" type="xsd:string"/>
+      <xsd:element name="flow-name" type="xsd:string"/>
+    </xsd:sequence>
+
+  </xsd:complexType>
+
+  <!-- list goals outputs an entity and attributes but has different required attributes  -->
+
+  <xsd:complexType name="ListGoalsEntity">
+    <xsd:sequence>
+      <xsd:element name="attribute" type="opa:ListGoalsAttribute" minOccurs="0"
+        maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="entity-type" type="xsd:string"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="ListGoalsAttribute">
+    <xsd:attribute name="id" type="xsd:string" use="required"/>
+    <xsd:attribute name="type" type="xsd:string" use="required"/>
+    <xsd:attribute name="text" type="xsd:string" use="optional"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="AssessResponse">
+    <xsd:sequence>
+      <xsd:element name="events" type="opa:ListEvents" minOccurs="0"/>
+      <xsd:element name="session-data" type="opa:Session"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="AssessmentConfiguration">
+    <xsd:sequence>
+      <xsd:element name="show-silent" type="xsd:boolean" minOccurs="0"/>
+      <xsd:element name="show-invisible" type="xsd:boolean" minOccurs="0"/>
+      <xsd:element name="show-properties" type="xsd:boolean" minOccurs="0"/>
+      <xsd:element name="show-events" type="xsd:boolean" minOccurs="0"/>
+      <xsd:element name="resolve-indecision-relationships" type="xsd:boolean" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="AssessRequest">
+    <xsd:sequence>
+      <xsd:element name="config" type="opa:AssessmentConfiguration" minOccurs="0"/>
+      <xsd:element name="session-data" type="opa:Session"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="Error">
+    <xsd:sequence>
+      <xsd:element name="code" type="xsd:string"/>
+      <xsd:element name="message" type="xsd:string"/>
+      <xsd:element name="events" type="opa:ListEvents" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="RulebaseEvent">
+    <xsd:sequence>
+      <xsd:element name="message" type="xsd:string"/>
+      <xsd:element name="parameters">
+        <xsd:complexType>
+          <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="value" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="decision-report" type="opa:DecisionReport" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="name" type="xsd:string" use="required"/>
+    <xsd:attribute name="entity-id" type="xsd:IDREF"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="ListEvents">
+    <xsd:sequence>
+      <xsd:element name="event" type="opa:RulebaseEvent" minOccurs="1" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="ScreenSummary">
+    <xsd:attribute name="id" type="xsd:string" use="required"/>
+    <xsd:attribute name="name" type="xsd:string"/>
+    <xsd:attribute name="title" type="xsd:string"/>
+    <xsd:attribute name="is-automatic" type="xsd:boolean" use="required"/>
+    <xsd:attribute name="entity-type" type="xsd:string"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="ScreenDefinition">
+    <xsd:sequence>
+      <xsd:element name="screen-control" type="opa:ScreenControl" minOccurs="0"
+        maxOccurs="unbounded"/>
+      <xsd:element name="properties" type="opa:ListCustomProperties" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:string" use="required"/>
+    <xsd:attribute name="name" type="xsd:string"/>
+    <xsd:attribute name="title" type="xsd:string"/>
+    <xsd:attribute name="is-automatic" type="xsd:boolean" use="required"/>
+    <xsd:attribute name="entity-type" type="xsd:string"/>
+    <xsd:attribute name="entity-id" type="xsd:string"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="ListScreenControls">
+    <xsd:sequence>
+      <xsd:element name="screen-control" type="opa:ScreenControl" minOccurs="0"
+        maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="ScreenControl">
+    <xsd:sequence>
+      <xsd:element name="code-table-item" type="opa:CodeTableItem" minOccurs="0"
+        maxOccurs="unbounded"/>
+      <xsd:element name="instance-template" type="opa:ScreenControl" minOccurs="0"/>
+      <xsd:element name="properties" type="opa:ListCustomProperties" minOccurs="0"/>
+      <xsd:element name="child-controls" type="opa:ListScreenControls" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="control-type" use="optional">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="custom"/>
+          <xsd:enumeration value="entity"/>
+          <xsd:enumeration value="fixed"/>
+          <xsd:enumeration value="flow"/>
+          <xsd:enumeration value="entity-association"/>
+          <xsd:enumeration value="date"/>
+          <xsd:enumeration value="goal"/>
+          <xsd:enumeration value="group"/>
+          <xsd:enumeration value="label"/>
+          <xsd:enumeration value="link"/>
+          <xsd:enumeration value="money"/>
+          <xsd:enumeration value="number"/>
+          <xsd:enumeration value="boolean"/>
+          <xsd:enumeration value="selection"/>
+          <xsd:enumeration value="text"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="text-style" type="xsd:string" use="optional"/>
+    <xsd:attribute name="default" type="xsd:string" use="optional"/>
+    <xsd:attribute name="line-count" use="optional">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:nonNegativeInteger"/>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="value" type="xsd:string" use="optional"/>
+    <xsd:attribute name="attribute-id" type="xsd:string" use="optional"/>
+    <xsd:attribute name="caption" type="xsd:string" use="optional"/>
+    <xsd:attribute name="is-inferred" use="optional">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:boolean"/>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="is-mandatory" use="optional">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:boolean"/>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="is-read-only" use="optional">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:boolean"/>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="is-visible" use="optional">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:boolean"/>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="style" use="optional">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Radiobutton"/>
+          <xsd:enumeration value="Listbox"/>
+          <xsd:enumeration value="Dropdown"/>
+          <xsd:enumeration value="Checkboxes"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="entity-type" type="xsd:string" use="optional"/>
+    <xsd:attribute name="entity-id" type="xsd:string" use="optional"/>
+    <xsd:attribute name="relationship" type="xsd:string" use="optional"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="CodeTableItem">
+    <xsd:attribute name="code" type="xsd:string" use="optional"/>
+    <xsd:attribute name="is-visible" type="xsd:string" use="optional"/>
+    <xsd:attribute name="value" type="xsd:string" use="optional"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="TextProperty">
+    <xsd:sequence>
+      <xsd:element name="text-val" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="default-val" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="help-text" type="xsd:string" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="name" type="xsd:string"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="NumberProperty">
+    <xsd:sequence>
+      <xsd:element name="number-val" type="xsd:decimal" minOccurs="0"/>
+      <xsd:element name="default-val" type="xsd:decimal" minOccurs="0"/>
+      <xsd:element name="help-text" type="xsd:string" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="name" type="xsd:string"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="BooleanProperty">
+    <xsd:sequence>
+      <xsd:element name="boolean-val" type="xsd:boolean" minOccurs="0"/>
+      <xsd:element name="default-val" type="xsd:boolean" minOccurs="0"/>
+      <xsd:element name="help-text" type="xsd:string" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="name" type="xsd:string"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="ListCustomProperties">
+    <xsd:sequence>
+      <xsd:element name="property" type="opa:CustomProperty" minOccurs="1" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="CustomProperty">
+    <xsd:attribute name="key" type="xsd:string"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="Outcome">
+    <xsd:attribute name="id" type="xsd:string"/>
+    <xsd:attribute name="outcome-style" type="opa:OutcomeStyleEnum"/>
+    <xsd:attribute name="unknown-outcome-style" type="opa:OutcomeStyleEnum"/>
+    <xsd:attribute name="known-outcome-style" type="opa:OutcomeStyleEnum"/>
+    <xsd:attribute name="screen-if-unknown" type="xsd:boolean"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="DecisionReport">
+    <xsd:choice minOccurs="0" maxOccurs="unbounded">
+      <xsd:element name="relationship-decision-node" type="opa:RelationshipDecisionNode"
+        minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="attribute-decision-node" type="opa:AttributeDecisionNode" minOccurs="0"
+        maxOccurs="unbounded"/>
+    </xsd:choice>
+    <xsd:attribute name="report-style" type="xsd:string"/>
+    <xsd:attribute name="outcome-id" type="xsd:string"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="AttributeDecisionNode">
+    <xsd:sequence>
+      <xsd:choice minOccurs="0">
+        <xsd:element name="boolean-val" type="xsd:boolean"/>
+        <xsd:element name="date-val" type="xsd:date"/>
+        <xsd:element name="number-val" type="xsd:decimal"/>
+        <xsd:element name="text-val" type="xsd:string"/>
+        <xsd:element name="uncertain-val" type="opa:UncertainValue"/>
+        <xsd:element name="unknown-val" type="opa:UnknownValue"/>
+      </xsd:choice>
+      <xsd:element name="change-point" minOccurs="0" maxOccurs="unbounded">
+        <xsd:complexType>
+          <xsd:choice minOccurs="0">
+            <xsd:element name="boolean-val" type="xsd:boolean"/>
+            <xsd:element name="date-val" type="xsd:date"/>
+            <xsd:element name="number-val" type="xsd:decimal"/>
+            <xsd:element name="text-val" type="xsd:string"/>
+            <xsd:element name="uncertain-val" type="opa:UncertainValue"/>
+            <xsd:element name="unknown-val" type="opa:UnknownValue"/>
+          </xsd:choice>
+          <xsd:attribute name="date" type="xsd:date"/>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="properties" type="opa:ListCustomProperties" minOccurs="0"/>
+      <xsd:element name="already-proven" type="xsd:string" minOccurs="0"/>
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+        <xsd:element name="attribute-decision-node" type="opa:AttributeDecisionNode"/>
+        <xsd:element name="relationship-decision-node" type="opa:RelationshipDecisionNode"/>
+      </xsd:choice>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:string"/>
+    <xsd:attribute name="entity-type" type="xsd:string"/>
+    <xsd:attribute name="entity-id" type="xsd:IDREF"/>
+    <xsd:attribute name="attribute-id" type="xsd:string"/>
+    <xsd:attribute name="type" type="opa:AttributeTypeEnum" use="optional"/>
+    <xsd:attribute name="text" type="xsd:string"/>
+    <xsd:attribute name="start-relevance" type="xsd:date" use="optional"/>
+    <xsd:attribute name="end-relevance" type="xsd:date" use="optional"/>
+    <xsd:attribute name="inferencing-type" type="opa:InferencingTypeEnum"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="RelationshipDecisionNode">
+    <xsd:sequence>
+      <xsd:element name="properties" type="opa:ListCustomProperties" minOccurs="0"/>
+      <xsd:element name="already-proven" type="xsd:string" minOccurs="0"/>
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+        <xsd:element name="attribute-decision-node" type="opa:AttributeDecisionNode"/>
+        <xsd:element name="relationship-decision-node" type="opa:RelationshipDecisionNode"/>
+      </xsd:choice>
+    </xsd:sequence>
+    <xsd:attribute name="relationship-name" type="xsd:string"/>
+    <xsd:attribute name="source" type="xsd:IDREF"/>
+    <xsd:attribute name="target" type="xsd:string"/>
+    <xsd:attribute name="id" type="xsd:string"/>
+    <xsd:attribute name="state" type="xsd:string"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="UserData">
+    <xsd:sequence>
+      <xsd:any/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:simpleType name="OutcomeStyleEnum">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="attribute-only"/>
+      <xsd:enumeration value="decision-report"/>
+      <xsd:enumeration value="base-attributes"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="InferencingTypeEnum">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="base-level"/>
+      <xsd:enumeration value="goal"/>
+      <xsd:enumeration value="intermediate"/>
+      <xsd:enumeration value="stand-alone"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="AttributeTypeEnum">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="boolean"/>
+      <xsd:enumeration value="text"/>
+      <xsd:enumeration value="number"/>
+      <xsd:enumeration value="currency"/>
+      <xsd:enumeration value="date"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:complexType name="GetScreenRequest">
+    <xsd:sequence>
+      <xsd:choice>
+        <xsd:element name="screen-name" type="xsd:string"/>
+        <xsd:element name="screen-id" type="xsd:string"/>
+      </xsd:choice>
+      <xsd:element name="screen-entity" minOccurs="0">
+        <xsd:complexType>
+          <xsd:attribute name="entity-id" type="xsd:IDREF" use="required"/>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="session-data" type="opa:Session" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="GetScreenResponse">
+    <xsd:sequence>
+      <xsd:element name="screen" type="opa:ScreenDefinition"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="ListScreensResponse">
+    <xsd:sequence>
+      <xsd:element name="screen-summary" type="opa:ScreenSummary" minOccurs="0"
+        maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="RelationshipTarget">
+    <xsd:attribute name="entity-id" type="xsd:IDREF" use="required"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="ListRelationships">
+    <xsd:sequence>
+      <xsd:element name="relationship" type="opa:Relationship" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="UnknownValue"/>
+
+  <xsd:complexType name="UncertainValue"/>
+
+  <xsd:complexType name="Attribute">
+    <xsd:sequence>
+      <xsd:choice minOccurs="0">
+        <xsd:element name="boolean-val" type="xsd:boolean"/>
+        <xsd:element name="date-val" type="xsd:date"/>
+        <xsd:element name="number-val" type="xsd:decimal"/>
+        <xsd:element name="text-val" type="xsd:string"/>
+        <xsd:element name="uncertain-val" type="opa:UncertainValue"/>
+        <xsd:element name="unknown-val" type="opa:UnknownValue"/>
+      </xsd:choice>
+      <xsd:element name="change-point" minOccurs="0" maxOccurs="unbounded">
+        <xsd:complexType>
+          <xsd:choice minOccurs="0">
+            <xsd:element name="boolean-val" type="xsd:boolean"/>
+            <xsd:element name="date-val" type="xsd:date"/>
+            <xsd:element name="number-val" type="xsd:decimal"/>
+            <xsd:element name="text-val" type="xsd:string"/>
+            <xsd:element name="uncertain-val" type="opa:UncertainValue"/>
+            <xsd:element name="unknown-val" type="opa:UnknownValue"/>
+          </xsd:choice>
+          <xsd:attribute name="date" type="xsd:date"/>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="properties" type="opa:ListCustomProperties" minOccurs="0"/>
+      <xsd:element name="user-data" type="opa:UserData" minOccurs="0"/>
+      <xsd:element name="decision-report" type="opa:DecisionReport" minOccurs="0"/>
+      <xsd:element name="screen" type="opa:ScreenDefinition" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:string" use="required"/>
+    <xsd:attribute name="type" type="opa:AttributeTypeEnum" use="optional"/>
+    <xsd:attribute name="inferencing-type" type="opa:InferencingTypeEnum"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="Entity">
+    <xsd:sequence>
+      <xsd:element name="attribute-outcome" type="opa:Outcome" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="attribute" type="opa:Attribute" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="relationships" type="opa:ListRelationships" minOccurs="0"/>
+      <xsd:element name="properties" type="opa:ListCustomProperties" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID" use="required"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="Relationship">
+    <xsd:sequence>
+      <xsd:element name="target" type="opa:RelationshipTarget" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="properties" type="opa:ListCustomProperties" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="name" type="xsd:string" use="required"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="ListEntity">
+    <xsd:sequence>
+      <xsd:element name="entity" type="opa:Entity" minOccurs="1" maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="entity-type" type="xsd:string" use="required"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="Session">
+    <xsd:sequence>
+      <xsd:element name="list-entity" type="opa:ListEntity" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+</xsd:schema>

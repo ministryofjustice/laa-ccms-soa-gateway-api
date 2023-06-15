@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- edited with XMLSpy v2010 rel. 3 (http://www.altova.com) by Ashish (Capgemini) -->
+<!--Created with Liquid XML Studio - FREE Community Edition 7.1.6.1440 (http://www.liquid-technologies.com)-->
+<xsd:schema xmlns:header="http://legalservices.gov.uk/Enterprise/Common/1.0/Header"
+  xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common"
+  xmlns:msg="http://legalservices.gov.uk/CCMS/Finance/Receivables/1.0/ARReceiptBIM"
+  xmlns:receipt="http://legalservices.gov.uk/CCMS/Finance/Receivables/1.0/ARReceiptBIO"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="http://legalservices.gov.uk/CCMS/Finance/Receivables/1.0/ARReceiptBIM"
+  elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+  <xsd:import namespace="http://legalservices.gov.uk/CCMS/Finance/Receivables/1.0/ARReceiptBIO"
+    schemaLocation="ARReceiptBIO.xsd"/>
+  <xsd:import namespace="http://legalservices.gov.uk/Enterprise/Common/1.0/Header"
+    schemaLocation="../../../../Enterprise/Common/1.0/Header.xsd"/>
+  <xsd:import namespace="http://legalservices.gov.uk/Enterprise/Common/1.0/Common"
+    schemaLocation="../../../../Enterprise/Common/1.0/Common.xsd"/>
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      <Version>1.0 Draft</Version>
+      <Definition>ARReceipt</Definition>
+      <Description>This schema defines the objects to create Receipt at Ebiz.</Description>
+      <Author>Milind A</Author>
+      <ModifiedBy>Milind A</ModifiedBy>
+      <VersionDate>07-09-2011</VersionDate>
+      <VersionDescription>Initial Version</VersionDescription>
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:element name="CreateReceiptRQ" type="msg:CreateReceiptRQ"/>
+  <xsd:element name="CreateReceiptRS" type="msg:CreateReceiptRS"/>
+  <xsd:element name="ReverseReceiptRQ" type="msg:ReverseReceiptRQ"/>
+  <xsd:element name="ReverseReceiptRS" type="msg:ReverseReceiptRS"/>
+
+
+  <xsd:complexType name="CreateReceiptRQ">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRQ"/>
+      <xsd:element name="ARReceipts">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="ARReceipt" type="receipt:ARReceiptType" maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="CreateReceiptRS">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRS"/>
+      <xsd:element name="ARReceipts" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="ARReceipt" type="receipt:ARReceiptIDType" maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="ReverseReceiptRQ">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRQ"/>
+      <xsd:element name="ARReceipts">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="ARReceipt">
+              <xsd:complexType>
+                <xsd:sequence>
+                  <xsd:element name="ReceiptReference" type="common:IDREF15"/>
+                  <xsd:element name="ReceiptID" type="common:ID15" minOccurs="0"/>
+                  <xsd:element name="ReceiptNumber" type="common:IDREF15" minOccurs="0"/>
+                  <xsd:element name="ReversalDetails" type="receipt:ReversalDetailsElementType"
+                    minOccurs="0"/>
+                </xsd:sequence>
+              </xsd:complexType>
+            </xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ReverseReceiptRS">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRS"/>
+      <xsd:element name="ARReceipts" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="ARReceipt" type="receipt:ARReceiptIDType" maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>

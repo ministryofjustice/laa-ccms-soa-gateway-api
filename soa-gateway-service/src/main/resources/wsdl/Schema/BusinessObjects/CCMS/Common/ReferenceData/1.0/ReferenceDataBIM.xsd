@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- edited with XMLSpy v2010 (http://www.altova.com) by Ashish (Capgemini) -->
+<!--Created with Liquid XML Studio - FREE Community Edition 7.1.6.1440 (http://www.liquid-technologies.com)-->
+<xsd:schema xmlns:header="http://legalservices.gov.uk/Enterprise/Common/1.0/Header"
+  xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common"
+  xmlns:msg="http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/ReferenceDataBIM"
+  xmlns:refdata="http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/ReferenceDataBIO"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/ReferenceDataBIM"
+  elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+  <xsd:import namespace="http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/ReferenceDataBIO"
+    schemaLocation="ReferenceDataBIO.xsd"/>
+  <xsd:import namespace="http://legalservices.gov.uk/Enterprise/Common/1.0/Header"
+    schemaLocation="../../../../Enterprise/Common/1.0/Header.xsd"/>
+  <xsd:import namespace="http://legalservices.gov.uk/Enterprise/Common/1.0/Common"
+    schemaLocation="../../../../Enterprise/Common/1.0/Common.xsd"/>
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      <Version>1.0</Version>
+      <Definition>Reference Data BIM</Definition>
+      <Description>This schema defines the messages to call the common Reference Data service
+      </Description>
+      <Author>Ramesh Madhavan</Author>
+      <ModifiedBy>Ramesh Madhavan</ModifiedBy>
+      <VersionDate>09-08-2010</VersionDate>
+      <VersionDescription>Updated as per Swipper 1.8</VersionDescription>
+      <ModificationHistory>
+        24-03-2010 Version 1.0 - Initial Development Version
+        09-08-2010 Version 1.2 - Updated the schema as per Swipper version 1.8
+      </ModificationHistory>
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:element name="ReferenceDataInqRQ" type="msg:ReferenceDataInqRQ"/>
+  <xsd:element name="ReferenceDataInqRS" type="msg:ReferenceDataInqRS"/>
+  <xsd:element name="ContractDetailsRQ" type="msg:ContractDetailsInqRQ"/>
+  <xsd:element name="ContractDetailsRS" type="msg:ContractDetailsInqRS"/>
+  <xsd:element name="UserRolesInqRQ" type="msg:UserRolesInqRQ"/>
+  <xsd:element name="UserRolesInqRS" type="msg:UserRolesInqRS"/>
+  <xsd:element name="CommonOrgInqRQ" type="msg:CommonOrgInqRQ"/>
+  <xsd:element name="CommonOrgInqRS" type="msg:CommonOrgInqRS"/>
+
+  <xsd:complexType name="ReferenceDataInqRQ">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRQ"/>
+      <xsd:element name="RecordCount" type="common:RecordCount"/>
+      <xsd:element name="SearchCriteria" type="refdata:SearchContext" minOccurs="1" maxOccurs="10"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ReferenceDataInqRS">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRS"/>
+      <xsd:element name="RecordCount" type="common:RecordCount"/>
+      <xsd:choice minOccurs="0">
+        <xsd:element name="Results" type="common:C50" maxOccurs="unbounded"/>
+        <xsd:element name="ResultSets" type="refdata:ResultSetType" maxOccurs="unbounded"/>
+      </xsd:choice>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="ContractDetailsInqRQ">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRQ"/>
+      <xsd:element name="RecordCount" type="common:RecordCount"/>
+      <xsd:element name="SearchCriteria">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="FirmID" type="common:ID15"/>
+            <xsd:element name="OfficeID" type="common:ID15"/>
+            <xsd:element name="AuthorisationDate" type="common:Dt" minOccurs="0"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="ContractDetailsInqRS">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRS"/>
+      <xsd:element name="RecordCount" type="common:RecordCount"/>
+      <xsd:element name="ContractDetails" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="ContractDetail" type="refdata:ContractDetailsElementType"
+              maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="UserRolesInqRQ">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRQ"/>
+      <xsd:element name="RecordCount" type="common:RecordCount"/>
+      <xsd:element name="SearchCriteria">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="UserID" type="common:ID15"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="UserRolesInqRS">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRS"/>
+      <xsd:element name="RecordCount" type="common:RecordCount"/>
+      <xsd:element name="UserDetails" type="refdata:UserRolesElementType" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="CommonOrgInqRQ">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRQ"/>
+      <xsd:element name="RecordCount" type="common:RecordCount"/>
+      <xsd:element name="SearchCriteria">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:choice>
+              <xsd:element name="OrganizationPartyID" type="common:ID15"/>
+              <xsd:element name="Organization">
+                <xsd:complexType>
+                  <xsd:sequence>
+                    <xsd:element name="OrganizationName" type="common:C150"/>
+                    <xsd:element name="OrganizationType" type="common:C50" minOccurs="0"/>
+                    <xsd:element name="City" type="common:C60" minOccurs="0"/>
+                    <xsd:element name="PostCode" type="common:C60" minOccurs="0"/>
+                  </xsd:sequence>
+                </xsd:complexType>
+              </xsd:element>
+            </xsd:choice>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="CommonOrgInqRS">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRS"/>
+      <xsd:element name="RecordCount" type="common:RecordCount"/>
+      <xsd:choice minOccurs="0">
+        <xsd:element name="Organization" type="refdata:OrganizationPartyType"/>
+        <xsd:element name="OrganizationList" maxOccurs="unbounded">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="OrganizationPartyID" type="common:ID15"/>
+              <xsd:element name="OrganizationName" type="common:C150"/>
+              <xsd:element name="OrganizationType" type="common:C50"/>
+              <xsd:element name="City" type="common:C60"/>
+              <xsd:element name="PostCode" type="common:C60"/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:choice>
+    </xsd:sequence>
+  </xsd:complexType>
+
+</xsd:schema>

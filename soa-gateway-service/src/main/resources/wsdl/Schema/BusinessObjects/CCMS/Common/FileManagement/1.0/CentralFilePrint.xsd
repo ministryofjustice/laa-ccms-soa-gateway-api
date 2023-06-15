@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- edited with XMLSpy v2010 (http://www.altova.com) by Ashish (Capgemini) -->
+<!--Created with Liquid XML Studio - FREE Community Edition 7.1.6.1440 (http://www.liquid-technologies.com)-->
+<xsd:schema xmlns:header="http://legalservices.gov.uk/Enterprise/Common/1.0/Header"
+  xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common"
+  xmlns:msg="http://legalservices.gov.uk/CCMS/Common/FileManagement/1.0/CentralFilePrint"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="http://legalservices.gov.uk/CCMS/Common/FileManagement/1.0/CentralFilePrint"
+  elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+  <xsd:import namespace="http://legalservices.gov.uk/Enterprise/Common/1.0/Header"
+    schemaLocation="../../../../Enterprise/Common/1.0/Header.xsd"/>
+  <xsd:import namespace="http://legalservices.gov.uk/Enterprise/Common/1.0/Common"
+    schemaLocation="../../../../Enterprise/Common/1.0/Common.xsd"/>
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      <Version>1.0</Version>
+      <Definition>Central File Print BIM</Definition>
+      <Description>This schema defines the messages to manage documents in ebusines suite
+      </Description>
+      <Author>Aman Agarwal</Author>
+      <ModifiedBy>Aman Agarwal</ModifiedBy>
+      <VersionDate>17-07-2012</VersionDate>
+      <VersionDescription>Initial Version</VersionDescription>
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:element name="CentralFilePrintRQ" type="msg:CentralFilePrintRQ"/>
+  <xsd:element name="CentralFilePrintRS" type="msg:CentralFilePrintRS"/>
+  <xsd:complexType name="CentralFilePrintRQ">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRQ"/>
+      <xsd:element name="EBSServerFilePath" type="common:C50" minOccurs="0"/>
+      <xsd:element name="SourceServerFilePath" type="common:C50" minOccurs="0"/>
+      <xsd:element name="TargeterverFilePath" type="common:C50" minOccurs="0"/>
+      <xsd:element name="SourceServerFileName" type="common:C50" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CentralFilePrintRS">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRS"/>
+      <xsd:element name="FileCount" type="common:C50" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>

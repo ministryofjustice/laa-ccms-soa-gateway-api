@@ -1,0 +1,832 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:ns1="http://mosaic.bt.com/Interfaces/ITV/E50fulfilment/1.0/ProgrammeVersionExport.xsd"
+  targetNamespace="http://mosaic.bt.com/Interfaces/ITV/E50fulfilment/1.0/ProgrammeVersionExport.xsd"
+  elementFormDefault="qualified" attributeFormDefault="unqualified">
+  <xs:annotation>
+    <xs:appinfo>
+      <Title>E50 Fulfilment Export Schema</Title>
+      <Version>Version 1.0, A Maddern, 14 Aug 08, 13:30 - Inital Release incorporating client
+        feedback
+      </Version>
+      <Version>Version 1.1, M Eaton, 20 Aug 08, 13:30 - Added missing attributes</Version>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="ProgrammeVersionExport">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="ID" type="xs:string" nillable="false"/>
+        <xs:element name="TAPE_BARCODE" type="xs:string" nillable="false"/>
+        <xs:element name="StartOfEssence" type="ns1:TimeCodePatternString" nillable="false"/>
+        <xs:element name="EndOfEssence" type="ns1:TimeCodePatternString" nillable="false"/>
+        <xs:element name="SEES_SOM" type="ns1:PatternMilliseconds" minOccurs="0"/>
+        <xs:element name="SEES_EOM" type="ns1:PatternMilliseconds" minOccurs="0"/>
+        <xs:element name="NUMBER_OF_PARTS" type="xs:integer" minOccurs="0"/>
+        <xs:element name="TITLE_TITLE" type="xs:string" nillable="false"/>
+        <xs:element name="SERIES_NUMBER" type="xs:string" nillable="false"/>
+        <xs:element name="SERIES_NUMERIC_ID" type="xs:string" nillable="false"/>
+        <xs:element name="EPISODE_TITLE" type="xs:string" nillable="false"/>
+        <xs:element name="EPISODE_NUMBER" type="xs:string" nillable="false"/>
+        <xs:element name="VERSION_TITLE" type="xs:string" nillable="false"/>
+        <xs:element name="SYNOPSIS" type="xs:string" nillable="false"/>
+        <xs:element name="GENRE" minOccurs="0">
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="ANIMATIONS / SPECIAL EFFECTS"/>
+              <xs:enumeration value="ARTS"/>
+              <xs:enumeration value="CHILDREN"/>
+              <xs:enumeration value="DRAMA"/>
+              <xs:enumeration value="EDUCATION"/>
+              <xs:enumeration value="ENT"/>
+              <xs:enumeration value="FACTUAL"/>
+              <xs:enumeration value="LIFESTYLE"/>
+              <xs:enumeration value="LOCAL"/>
+              <xs:enumeration value="NEWS"/>
+              <xs:enumeration value="OTHER"/>
+              <xs:enumeration value="RELIGION"/>
+              <xs:enumeration value="SPORTS"/>
+              <xs:enumeration value="UNKNOWN"/>
+              <xs:enumeration value="WILDLIFE"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SUB_GENRE" minOccurs="0">
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="ANIMATIONS / SPECIAL EFFECTS - Animated films"/>
+              <xs:enumeration value="ANIMATIONS / SPECIAL EFFECTS - Animated musical"/>
+              <xs:enumeration value="ANIMATIONS / SPECIAL EFFECTS - Animation"/>
+              <xs:enumeration value="ANIMATIONS / SPECIAL EFFECTS - Animation/SFX"/>
+              <xs:enumeration value="ANIMATIONS / SPECIAL EFFECTS - Domestic Animation"/>
+              <xs:enumeration value="ANIMATIONS / SPECIAL EFFECTS - Foreign animations"/>
+              <xs:enumeration value="ANIMATIONS / SPECIAL EFFECTS - Japanese animations"/>
+              <xs:enumeration value="ANIMATIONS / SPECIAL EFFECTS - Others"/>
+              <xs:enumeration value="ANIMATIONS / SPECIAL EFFECTS - SFX"/>
+              <xs:enumeration value="ARTS &amp; MEDIA - Advertising"/>
+              <xs:enumeration value="ARTS &amp; MEDIA - Art"/>
+              <xs:enumeration value="ARTS &amp; MEDIA - Exprimental Arts"/>
+              <xs:enumeration value="ARTS &amp; MEDIA - Fine arts"/>
+              <xs:enumeration value="ARTS &amp; MEDIA - General"/>
+              <xs:enumeration value="ARTS &amp; MEDIA - Industrial arts"/>
+              <xs:enumeration value="ARTS &amp; MEDIA - Music"/>
+              <xs:enumeration value="ARTS &amp; MEDIA - New Media"/>
+              <xs:enumeration value="ARTS &amp; MEDIA - Performing"/>
+              <xs:enumeration value="ARTS &amp; MEDIA - Plastic Arts"/>
+              <xs:enumeration value="ARTS &amp; MEDIA - Press"/>
+              <xs:enumeration value="ARTS &amp; MEDIA - Theater/Cinema"/>
+              <xs:enumeration value="ARTS &amp; MEDIA - Traditional arts"/>
+              <xs:enumeration value="CHILDREN - Cartoons"/>
+              <xs:enumeration value="CHILDREN - Comedy"/>
+              <xs:enumeration value="CHILDREN - Drama"/>
+              <xs:enumeration value="CHILDREN - Educational"/>
+              <xs:enumeration value="CHILDREN - Factual"/>
+              <xs:enumeration value="CHILDREN - Game Shows"/>
+              <xs:enumeration value="CHILDREN - Magazine"/>
+              <xs:enumeration value="CHILDREN - Other"/>
+              <xs:enumeration value="DOCUMENTARY - Adventure"/>
+              <xs:enumeration value="DOCUMENTARY - Animals"/>
+              <xs:enumeration value="DOCUMENTARY - Biography"/>
+              <xs:enumeration value="DOCUMENTARY - Business"/>
+              <xs:enumeration value="DOCUMENTARY - Culture"/>
+              <xs:enumeration value="DOCUMENTARY - Current events"/>
+              <xs:enumeration value="DOCUMENTARY - Current Topics"/>
+              <xs:enumeration value="DOCUMENTARY - Debates"/>
+              <xs:enumeration value="DOCUMENTARY - Discussion"/>
+              <xs:enumeration value="DOCUMENTARY - Educational"/>
+              <xs:enumeration value="DOCUMENTARY - Expeditions"/>
+              <xs:enumeration value="DOCUMENTARY - Features"/>
+              <xs:enumeration value="DOCUMENTARY - Foreign countries"/>
+              <xs:enumeration value="DOCUMENTARY - General documentaries"/>
+              <xs:enumeration value="DOCUMENTARY - History"/>
+              <xs:enumeration value="DOCUMENTARY - Interviews"/>
+              <xs:enumeration value="DOCUMENTARY - Lecture"/>
+              <xs:enumeration value="DOCUMENTARY - Literature and the arts"/>
+              <xs:enumeration value="DOCUMENTARY - Medicine"/>
+              <xs:enumeration value="DOCUMENTARY - Nature"/>
+              <xs:enumeration value="DOCUMENTARY - Others"/>
+              <xs:enumeration value="DOCUMENTARY - Politics"/>
+              <xs:enumeration value="DOCUMENTARY - Presentation"/>
+              <xs:enumeration value="DOCUMENTARY - Religious"/>
+              <xs:enumeration value="DOCUMENTARY - Science"/>
+              <xs:enumeration value="DOCUMENTARY - Showbiz"/>
+              <xs:enumeration value="DOCUMENTARY - Society"/>
+              <xs:enumeration value="DOCUMENTARY - Space"/>
+              <xs:enumeration value="DOCUMENTARY - Special features"/>
+              <xs:enumeration value="DOCUMENTARY - Speech"/>
+              <xs:enumeration value="DOCUMENTARY - Sports"/>
+              <xs:enumeration value="DOCUMENTARY - Textual (incl. relayed teletext)"/>
+              <xs:enumeration value="DOCUMENTARY - The environment"/>
+              <xs:enumeration value="DOCUMENTARY - Tradition"/>
+              <xs:enumeration value="DOCUMENTARY - Traditional Culture"/>
+              <xs:enumeration value="DOCUMENTARY - Transport"/>
+              <xs:enumeration value="DOCUMENTARY - Travelogues"/>
+              <xs:enumeration value="DOCUMENTARY - Universe"/>
+              <xs:enumeration value="DOCUMENTARY - War"/>
+              <xs:enumeration value="DOCUMENTARY - World Culture"/>
+              <xs:enumeration value="DRAMA - Broken comedy"/>
+              <xs:enumeration value="DRAMA - Action"/>
+              <xs:enumeration value="DRAMA - Adult"/>
+              <xs:enumeration value="DRAMA - Animated drama"/>
+              <xs:enumeration value="DRAMA - Clasical drama"/>
+              <xs:enumeration value="DRAMA - Comedy"/>
+              <xs:enumeration value="DRAMA - Contemporary drama"/>
+              <xs:enumeration value="DRAMA - Costume Play"/>
+              <xs:enumeration value="DRAMA - Docudrama"/>
+              <xs:enumeration value="DRAMA - Domestic Drama"/>
+              <xs:enumeration value="DRAMA - Drama with puppets"/>
+              <xs:enumeration value="DRAMA - Erotica"/>
+              <xs:enumeration value="DRAMA - Fantasy/Fairy tale"/>
+              <xs:enumeration value="DRAMA - Foreign drama"/>
+              <xs:enumeration value="DRAMA - General light drama"/>
+              <xs:enumeration value="DRAMA - Japanese drama"/>
+              <xs:enumeration value="DRAMA - Kabuki / classical theater"/>
+              <xs:enumeration value="DRAMA - Legal melodrama"/>
+              <xs:enumeration value="DRAMA - Medical melodrama"/>
+              <xs:enumeration value="DRAMA - Modern Drama"/>
+              <xs:enumeration value="DRAMA - Musical Drama"/>
+              <xs:enumeration value="DRAMA - Others"/>
+              <xs:enumeration value="DRAMA - Performed drama"/>
+              <xs:enumeration value="DRAMA - Poems / Stories"/>
+              <xs:enumeration value="DRAMA - Popular drama"/>
+              <xs:enumeration value="DRAMA - RAKUGO"/>
+              <xs:enumeration value="DRAMA - Religious"/>
+              <xs:enumeration value="DRAMA - Romance"/>
+              <xs:enumeration value="DRAMA - Samurai drama"/>
+              <xs:enumeration value="DRAMA - Serious drama"/>
+              <xs:enumeration value="DRAMA - Sitcom"/>
+              <xs:enumeration value="DRAMA - Soap"/>
+              <xs:enumeration value="DRAMA - Soap Opera"/>
+              <xs:enumeration value="DRAMA - Soap Special"/>
+              <xs:enumeration value="DRAMA - Soap Talk"/>
+              <xs:enumeration value="DRAMA - Theater Drama"/>
+              <xs:enumeration value="DRAMA - Traditional drama"/>
+              <xs:enumeration value="DRAMA - Western Drama"/>
+              <xs:enumeration value="DRAMA ACTION - Adventure/disaster"/>
+              <xs:enumeration value="DRAMA ACTION - Detective/thriller"/>
+              <xs:enumeration value="DRAMA ACTION - Epic"/>
+              <xs:enumeration value="DRAMA ACTION - Folkloric"/>
+              <xs:enumeration value="DRAMA ACTION - Horror"/>
+              <xs:enumeration value="DRAMA ACTION - Science fiction"/>
+              <xs:enumeration value="DRAMA ACTION - War"/>
+              <xs:enumeration value="DRAMA ACTION - Western"/>
+              <xs:enumeration value="EDUCATION - Education"/>
+              <xs:enumeration value="EDUCATION - Educational Problems"/>
+              <xs:enumeration value="EDUCATION - Entrance Examination"/>
+              <xs:enumeration value="EDUCATION - Further education"/>
+              <xs:enumeration value="EDUCATION - High-school"/>
+              <xs:enumeration value="EDUCATION - Infants"/>
+              <xs:enumeration value="EDUCATION - Junior High-school"/>
+              <xs:enumeration value="EDUCATION - Languages"/>
+              <xs:enumeration value="EDUCATION - Lifelong Education"/>
+              <xs:enumeration value="EDUCATION - Qualification"/>
+              <xs:enumeration value="EDUCATION - School Children"/>
+              <xs:enumeration value="EDUCATION - Students"/>
+              <xs:enumeration value="ENRICHMENT - Certification"/>
+              <xs:enumeration value="ENRICHMENT - Education"/>
+              <xs:enumeration value="ENRICHMENT - Educational issues"/>
+              <xs:enumeration value="ENRICHMENT - Entrance exams"/>
+              <xs:enumeration value="ENRICHMENT - Foreign language conversation"/>
+              <xs:enumeration value="ENRICHMENT - General enrichment"/>
+              <xs:enumeration value="ENRICHMENT - Informational"/>
+              <xs:enumeration value="ENRICHMENT - Inspirational enrichment"/>
+              <xs:enumeration value="ENRICHMENT - Language studies"/>
+              <xs:enumeration value="ENRICHMENT - Lifelong education"/>
+              <xs:enumeration value="ENRICHMENT - Scool programmes"/>
+              <xs:enumeration value="ENTERTAINMENT - Action"/>
+              <xs:enumeration value="ENTERTAINMENT - Big game show"/>
+              <xs:enumeration value="ENTERTAINMENT - Candid camera etc."/>
+              <xs:enumeration value="ENTERTAINMENT - Comedy"/>
+              <xs:enumeration value="ENTERTAINMENT - Cooking variety"/>
+              <xs:enumeration value="ENTERTAINMENT - Detective"/>
+              <xs:enumeration value="ENTERTAINMENT - Drama"/>
+              <xs:enumeration value="ENTERTAINMENT - Factual"/>
+              <xs:enumeration value="ENTERTAINMENT - Fashion"/>
+              <xs:enumeration value="ENTERTAINMENT - Game"/>
+              <xs:enumeration value="ENTERTAINMENT - Game show"/>
+              <xs:enumeration value="ENTERTAINMENT - Game shows"/>
+              <xs:enumeration value="ENTERTAINMENT - Gossip"/>
+              <xs:enumeration value="ENTERTAINMENT - Hosted show"/>
+              <xs:enumeration value="ENTERTAINMENT - Humour"/>
+              <xs:enumeration value="ENTERTAINMENT - Informative entertainment"/>
+              <xs:enumeration value="ENTERTAINMENT - Life"/>
+              <xs:enumeration value="ENTERTAINMENT - Music variety"/>
+              <xs:enumeration value="ENTERTAINMENT - Musical comedy"/>
+              <xs:enumeration value="ENTERTAINMENT - Musical romance"/>
+              <xs:enumeration value="ENTERTAINMENT - Musicals"/>
+              <xs:enumeration value="ENTERTAINMENT - Non-hosted show"/>
+              <xs:enumeration value="ENTERTAINMENT - Panel-show"/>
+              <xs:enumeration value="ENTERTAINMENT - Pure entertainment"/>
+              <xs:enumeration value="ENTERTAINMENT - Quiz/Contest"/>
+              <xs:enumeration value="ENTERTAINMENT - Rakugo / stand-up performance"/>
+              <xs:enumeration value="ENTERTAINMENT - Science Fiction"/>
+              <xs:enumeration value="ENTERTAINMENT - Show Business"/>
+              <xs:enumeration value="ENTERTAINMENT - Simple game show"/>
+              <xs:enumeration value="ENTERTAINMENT - Soap"/>
+              <xs:enumeration value="ENTERTAINMENT - Sports quiz"/>
+              <xs:enumeration value="ENTERTAINMENT - Standup commedian(s)"/>
+              <xs:enumeration value="ENTERTAINMENT - Surprise show"/>
+              <xs:enumeration value="ENTERTAINMENT - Talk shows"/>
+              <xs:enumeration value="ENTERTAINMENT - Travel variety"/>
+              <xs:enumeration value="ENTERTAINMENT - Variety Show"/>
+              <xs:enumeration value="HOBBY - Art"/>
+              <xs:enumeration value="HOBBY - Car"/>
+              <xs:enumeration value="HOBBY - Computer"/>
+              <xs:enumeration value="HOBBY - Craft"/>
+              <xs:enumeration value="HOBBY - Fishing"/>
+              <xs:enumeration value="HOBBY - Gardening"/>
+              <xs:enumeration value="HOBBY - GO"/>
+              <xs:enumeration value="HOBBY - Handicraft"/>
+              <xs:enumeration value="HOBBY - Life/ House Keeping"/>
+              <xs:enumeration value="HOBBY - MAJAN"/>
+              <xs:enumeration value="HOBBY - Motorcycle"/>
+              <xs:enumeration value="HOBBY - Music"/>
+              <xs:enumeration value="HOBBY - Others"/>
+              <xs:enumeration value="HOBBY - Outdoor"/>
+              <xs:enumeration value="HOBBY - PACHINCO"/>
+              <xs:enumeration value="HOBBY - Pet"/>
+              <xs:enumeration value="HOBBY - SHOGI"/>
+              <xs:enumeration value="HOBBY - Shopping"/>
+              <xs:enumeration value="HOBBY - Technology"/>
+              <xs:enumeration value="HOBBY - Travel"/>
+              <xs:enumeration value="HOBBY - Video Game"/>
+              <xs:enumeration value="HUMAN INTEREST - General"/>
+              <xs:enumeration value="HUMAN INTEREST - Notable personalities"/>
+              <xs:enumeration value="HUMAN INTEREST - Personal problems"/>
+              <xs:enumeration value="HUMAN INTEREST - Reality"/>
+              <xs:enumeration value="HUMAN INTEREST - Show business"/>
+              <xs:enumeration value="HUMANITIES - General"/>
+              <xs:enumeration value="HUMANITIES - History"/>
+              <xs:enumeration value="HUMANITIES - Languages"/>
+              <xs:enumeration value="HUMANITIES - Literature"/>
+              <xs:enumeration value="INFORMATION - Commentary"/>
+              <xs:enumeration value="INFORMATION - Current affairs"/>
+              <xs:enumeration value="INFORMATION - Daily news"/>
+              <xs:enumeration value="INFORMATION - Debate/Talk"/>
+              <xs:enumeration value="INFORMATION - Economy/Market"/>
+              <xs:enumeration value="INFORMATION - Foreign/International"/>
+              <xs:enumeration value="INFORMATION - General non-fiction topics"/>
+              <xs:enumeration value="INFORMATION - Local / regional"/>
+              <xs:enumeration value="INFORMATION - Magazines"/>
+              <xs:enumeration value="INFORMATION - News magazine"/>
+              <xs:enumeration value="INFORMATION - News/Report"/>
+              <xs:enumeration value="INFORMATION - Others"/>
+              <xs:enumeration value="INFORMATION - Periodical/General"/>
+              <xs:enumeration value="INFORMATION - Politics/National Assembly"/>
+              <xs:enumeration value="INFORMATION - Service information"/>
+              <xs:enumeration value="INFORMATION - Special Edition/Documentary"/>
+              <xs:enumeration value="INFORMATION - Special news programs"/>
+              <xs:enumeration value="INFORMATION - Special Report"/>
+              <xs:enumeration value="INFORMATION - Sports News"/>
+              <xs:enumeration value="INFORMATION - Traffic"/>
+              <xs:enumeration value="INFORMATION - Weather forecasts"/>
+              <xs:enumeration value="INFORMATION/ TABLOID - Entertainment / tabloid"/>
+              <xs:enumeration value="INFORMATION/ TABLOID - Fashion"/>
+              <xs:enumeration value="INFORMATION/ TABLOID - Gourmet eating / cooking"/>
+              <xs:enumeration value="INFORMATION/ TABLOID - Health"/>
+              <xs:enumeration value="INFORMATION/ TABLOID - Lifestyle / living space"/>
+              <xs:enumeration value="INFORMATION/ TABLOID - Medical care"/>
+              <xs:enumeration value="INFORMATION/ TABLOID - Others"/>
+              <xs:enumeration value="INFORMATION/ TABLOID - Program introductions / notices"/>
+              <xs:enumeration value="INFORMATION/ TABLOID - Remarkable people"/>
+              <xs:enumeration
+                value="INFORMATION/ TABLOID - Shopping / mail order &amp; telephone shopping"/>
+              <xs:enumeration value="INFORMATION/ TABLOID - Special Events"/>
+              <xs:enumeration value="LEISURE - Advertisement / Schopping"/>
+              <xs:enumeration value="LEISURE - Computing"/>
+              <xs:enumeration value="LEISURE - Cookery"/>
+              <xs:enumeration value="LEISURE - Do-it-yourself"/>
+              <xs:enumeration value="LEISURE - Fashion"/>
+              <xs:enumeration value="LEISURE - Fishing"/>
+              <xs:enumeration value="LEISURE - Fitness"/>
+              <xs:enumeration value="LEISURE - Gardening"/>
+              <xs:enumeration value="LEISURE - General"/>
+              <xs:enumeration value="LEISURE - Handicrafts"/>
+              <xs:enumeration value="LEISURE - Health / medical"/>
+              <xs:enumeration value="LEISURE - Igo / shogi (Japanese chess)"/>
+              <xs:enumeration value="LEISURE - Keep-fit"/>
+              <xs:enumeration value="LEISURE - Mah-jongg / pachinko"/>
+              <xs:enumeration value="LEISURE - Motoring"/>
+              <xs:enumeration value="LEISURE - Music"/>
+              <xs:enumeration value="LEISURE - Outdoors"/>
+              <xs:enumeration value="LEISURE - Pets"/>
+              <xs:enumeration value="LEISURE - Tourism"/>
+              <xs:enumeration value="LEISURE - Travel"/>
+              <xs:enumeration value="MOVIES - Action"/>
+              <xs:enumeration value="MOVIES - Adult"/>
+              <xs:enumeration value="MOVIES - Adventure"/>
+              <xs:enumeration value="MOVIES - Animation"/>
+              <xs:enumeration value="MOVIES - Comedy"/>
+              <xs:enumeration value="MOVIES - Detective"/>
+              <xs:enumeration value="MOVIES - Domestic Movie"/>
+              <xs:enumeration value="MOVIES - Drama"/>
+              <xs:enumeration value="MOVIES - Eastern"/>
+              <xs:enumeration value="MOVIES - Effect Movies"/>
+              <xs:enumeration value="MOVIES - Erotic"/>
+              <xs:enumeration value="MOVIES - Factual"/>
+              <xs:enumeration value="MOVIES - Family"/>
+              <xs:enumeration value="MOVIES - Fantasy"/>
+              <xs:enumeration value="MOVIES - Fiction"/>
+              <xs:enumeration value="MOVIES - Foreign Movie"/>
+              <xs:enumeration value="MOVIES - Historical"/>
+              <xs:enumeration value="MOVIES - Horror"/>
+              <xs:enumeration value="MOVIES - Musical"/>
+              <xs:enumeration value="MOVIES - Mystery"/>
+              <xs:enumeration value="MOVIES - Others"/>
+              <xs:enumeration value="MOVIES - Romance"/>
+              <xs:enumeration value="MOVIES - Romance comedy"/>
+              <xs:enumeration value="MOVIES - Sience Fiction"/>
+              <xs:enumeration value="MOVIES - Thriller"/>
+              <xs:enumeration value="MOVIES - War"/>
+              <xs:enumeration value="MOVIES - Western"/>
+              <xs:enumeration value="MOVIES - Western comedy"/>
+              <xs:enumeration value="MUSIC - Alternative"/>
+              <xs:enumeration value="MUSIC - Ballet"/>
+              <xs:enumeration value="MUSIC - Children's Song"/>
+              <xs:enumeration value="MUSIC - Classical"/>
+              <xs:enumeration value="MUSIC - Classical and Romantic"/>
+              <xs:enumeration value="MUSIC - Club and Dance"/>
+              <xs:enumeration value="MUSIC - Contemporary"/>
+              <xs:enumeration value="MUSIC - Country"/>
+              <xs:enumeration value="MUSIC - Culture-specific music / world music"/>
+              <xs:enumeration value="MUSIC - Dance"/>
+              <xs:enumeration value="MUSIC - Domestic Rock/Pop"/>
+              <xs:enumeration value="MUSIC - Early"/>
+              <xs:enumeration value="MUSIC - Ethnic"/>
+              <xs:enumeration value="MUSIC - Ethnic Music/World Music"/>
+              <xs:enumeration value="MUSIC - European popular traditional"/>
+              <xs:enumeration value="MUSIC - Events"/>
+              <xs:enumeration value="MUSIC - Folk music / (Japanese) folk music"/>
+              <xs:enumeration value="MUSIC - Foreign rock / pop"/>
+              <xs:enumeration value="MUSIC - Hip Hop"/>
+              <xs:enumeration value="MUSIC - Hit-Chart/Song Requests"/>
+              <xs:enumeration value="MUSIC - Japanese ballads / Enka"/>
+              <xs:enumeration value="MUSIC - Japanese rock / pop"/>
+              <xs:enumeration value="MUSIC - Jazz"/>
+              <xs:enumeration value="MUSIC - Jazz / fusion"/>
+              <xs:enumeration value="MUSIC - Karaoke / singing contests"/>
+              <xs:enumeration value="MUSIC - Light classical"/>
+              <xs:enumeration value="MUSIC - Live Concert"/>
+              <xs:enumeration value="MUSIC - Live performances / concerts"/>
+              <xs:enumeration value="MUSIC - Middle-of-the-road"/>
+              <xs:enumeration value="MUSIC - modern"/>
+              <xs:enumeration value="MUSIC - National Music"/>
+              <xs:enumeration value="MUSIC - Nursery songs / childrens music"/>
+              <xs:enumeration value="MUSIC - Opera"/>
+              <xs:enumeration value="MUSIC - Others"/>
+              <xs:enumeration value="MUSIC - Pop Jazz"/>
+              <xs:enumeration value="MUSIC - Pop/rock/pop-rock"/>
+              <xs:enumeration value="MUSIC - Popular music"/>
+              <xs:enumeration value="MUSIC - Rankings / requests"/>
+              <xs:enumeration value="MUSIC - Serious music"/>
+              <xs:enumeration value="MUSIC - Soul Ritme and Bleus"/>
+              <xs:enumeration value="MUSIC - Traditional"/>
+              <xs:enumeration value="MUSIC - Traditional Folksong/TraditionalMusic"/>
+              <xs:enumeration value="MUSIC - World Music"/>
+              <xs:enumeration value="MUSIC ROCK - Ballad"/>
+              <xs:enumeration value="MUSIC ROCK - Contemporary"/>
+              <xs:enumeration value="MUSIC ROCK - Folk"/>
+              <xs:enumeration value="MUSIC ROCK - Traditional"/>
+              <xs:enumeration value="MUSIC ROCK - World Music"/>
+              <xs:enumeration value="PHILOSOPHIES - Communism"/>
+              <xs:enumeration value="PHILOSOPHIES - Humanism"/>
+              <xs:enumeration value="PHILOSOPHIES - Non-religious philosophies"/>
+              <xs:enumeration value="PURE INFORMATION - Advice"/>
+              <xs:enumeration value="PURE INFORMATION - Commentary"/>
+              <xs:enumeration value="PURE INFORMATION - Debates / conferences"/>
+              <xs:enumeration value="PURE INFORMATION - Discussion"/>
+              <xs:enumeration value="PURE INFORMATION - Economics advisory"/>
+              <xs:enumeration value="PURE INFORMATION - Economy / Market conditions"/>
+              <xs:enumeration value="PURE INFORMATION - Infotainment"/>
+              <xs:enumeration value="PURE INFORMATION - Interviews"/>
+              <xs:enumeration value="PURE INFORMATION - Others"/>
+              <xs:enumeration value="PURE INFORMATION - Overseas / international"/>
+              <xs:enumeration value="PURE INFORMATION - Politics / the Diet"/>
+              <xs:enumeration value="PURE INFORMATION - Social advisory"/>
+              <xs:enumeration value="PURE INFORMATION - Social issues"/>
+              <xs:enumeration value="RELIGION - Buddhism"/>
+              <xs:enumeration value="RELIGION - Christinanity"/>
+              <xs:enumeration value="RELIGION - Hinduism"/>
+              <xs:enumeration value="RELIGION - Islam"/>
+              <xs:enumeration value="RELIGION - Judaism"/>
+              <xs:enumeration value="RELIGION - Religious philosophies"/>
+              <xs:enumeration value="SCIENCES - Applied sciences"/>
+              <xs:enumeration value="SCIENCES - General"/>
+              <xs:enumeration value="SCIENCES - Medecine"/>
+              <xs:enumeration value="SCIENCES - Natural sciences"/>
+              <xs:enumeration value="SCIENCES - Physical sciences"/>
+              <xs:enumeration value="SCIENCES - Physiology"/>
+              <xs:enumeration value="SCIENCES - Psychology"/>
+              <xs:enumeration value="SCIENCES - Social"/>
+              <xs:enumeration value="SCIENCES - Spiritual"/>
+              <xs:enumeration value="SCIENCES - Technology"/>
+              <xs:enumeration value="SOCIAL/POLITICAL - Economical"/>
+              <xs:enumeration value="SOCIAL/POLITICAL - General"/>
+              <xs:enumeration value="SOCIAL/POLITICAL - Legal"/>
+              <xs:enumeration value="SOCIAL/POLITICAL - Political"/>
+              <xs:enumeration value="SOCIAL/POLITICAL - Social"/>
+              <xs:enumeration
+                value="SPORT EVENTS - Horseracing / Government-sponsored sporting events (cycling, boat races, etc.)"/>
+              <xs:enumeration value="SPORT EVENTS - International competitions"/>
+              <xs:enumeration value="SPORT EVENTS - Live sports events"/>
+              <xs:enumeration value="SPORT EVENTS - Marine"/>
+              <xs:enumeration value="SPORT EVENTS - Motorsport"/>
+              <xs:enumeration value="SPORT EVENTS - Olympic games"/>
+              <xs:enumeration value="SPORT EVENTS - Others"/>
+              <xs:enumeration value="SPORT EVENTS - Special Events"/>
+              <xs:enumeration value="SPORT EVENTS - Sports Event"/>
+              <xs:enumeration value="SPORT EVENTS - Sports magazine"/>
+              <xs:enumeration value="SPORT EVENTS - Sports Non-Event"/>
+              <xs:enumeration value="SPORT EVENTS - Sports Talk"/>
+              <xs:enumeration value="SPORT EVENTS - track and field"/>
+              <xs:enumeration value="SPORT EVENTS - Water sport"/>
+              <xs:enumeration value="SPORT EVENTS - winter sports"/>
+              <xs:enumeration value="SPORT EVENTS - Woldcup"/>
+              <xs:enumeration value="SPORTS - Aeronautics"/>
+              <xs:enumeration value="SPORTS - Aikido"/>
+              <xs:enumeration value="SPORTS - American Football"/>
+              <xs:enumeration value="SPORTS - Archery"/>
+              <xs:enumeration value="SPORTS - Athletics"/>
+              <xs:enumeration value="SPORTS - Badminton"/>
+              <xs:enumeration value="SPORTS - Bandy"/>
+              <xs:enumeration value="SPORTS - Baseball"/>
+              <xs:enumeration value="SPORTS - Basketball"/>
+              <xs:enumeration value="SPORTS - Biathlon"/>
+              <xs:enumeration value="SPORTS - Bicycle"/>
+              <xs:enumeration value="SPORTS - Billiards"/>
+              <xs:enumeration value="SPORTS - Bobsleigh/tobogganing"/>
+              <xs:enumeration value="SPORTS - Body-building"/>
+              <xs:enumeration value="SPORTS - Boules sport"/>
+              <xs:enumeration value="SPORTS - Bowling"/>
+              <xs:enumeration value="SPORTS - Boxing"/>
+              <xs:enumeration value="SPORTS - Canoeing"/>
+              <xs:enumeration value="SPORTS - Casting"/>
+              <xs:enumeration value="SPORTS - Combative sports"/>
+              <xs:enumeration value="SPORTS - Cricket"/>
+              <xs:enumeration value="SPORTS - Croquet"/>
+              <xs:enumeration value="SPORTS - Curling"/>
+              <xs:enumeration value="SPORTS - Cycling"/>
+              <xs:enumeration value="SPORTS - Dance sport"/>
+              <xs:enumeration value="SPORTS - Darts"/>
+              <xs:enumeration value="SPORTS - Diving"/>
+              <xs:enumeration value="SPORTS - Equestrian"/>
+              <xs:enumeration value="SPORTS - Faustball"/>
+              <xs:enumeration value="SPORTS - Fencing"/>
+              <xs:enumeration value="SPORTS - Fishing"/>
+              <xs:enumeration value="SPORTS - Flying disc"/>
+              <xs:enumeration value="SPORTS - Football"/>
+              <xs:enumeration value="SPORTS - General"/>
+              <xs:enumeration value="SPORTS - Golf"/>
+              <xs:enumeration value="SPORTS - Gymnastics"/>
+              <xs:enumeration value="SPORTS - Handball"/>
+              <xs:enumeration value="SPORTS - Hockey"/>
+              <xs:enumeration value="SPORTS - Ice-hockey"/>
+              <xs:enumeration value="SPORTS - Jai-alai"/>
+              <xs:enumeration value="SPORTS - Judo"/>
+              <xs:enumeration value="SPORTS - Ju-jitsu"/>
+              <xs:enumeration value="SPORTS - Karate"/>
+              <xs:enumeration value="SPORTS - Korfball"/>
+              <xs:enumeration value="SPORTS - Lacrosse"/>
+              <xs:enumeration value="SPORTS - Luge"/>
+              <xs:enumeration value="SPORTS - Maccabi"/>
+              <xs:enumeration value="SPORTS - Marathon"/>
+              <xs:enumeration value="SPORTS - Martial sports"/>
+              <xs:enumeration value="SPORTS - Modern pentathlon"/>
+              <xs:enumeration value="SPORTS - Motor boating"/>
+              <xs:enumeration value="SPORTS - Motor cycling"/>
+              <xs:enumeration value="SPORTS - Motor racing"/>
+              <xs:enumeration value="SPORTS - Mounteneering"/>
+              <xs:enumeration value="SPORTS - Netball"/>
+              <xs:enumeration value="SPORTS - Orienteering"/>
+              <xs:enumeration value="SPORTS - Other ball games"/>
+              <xs:enumeration value="SPORTS - Others"/>
+              <xs:enumeration value="SPORTS - Polo"/>
+              <xs:enumeration value="SPORTS - Pool"/>
+              <xs:enumeration value="SPORTS - Powerlifting"/>
+              <xs:enumeration value="SPORTS - Racquetball"/>
+              <xs:enumeration value="SPORTS - Roller skating"/>
+              <xs:enumeration value="SPORTS - Rowing"/>
+              <xs:enumeration value="SPORTS - Rugby"/>
+              <xs:enumeration value="SPORTS - Running"/>
+              <xs:enumeration value="SPORTS - Shooting"/>
+              <xs:enumeration value="SPORTS - Skating"/>
+              <xs:enumeration value="SPORTS - Skibob"/>
+              <xs:enumeration value="SPORTS - Skiing"/>
+              <xs:enumeration value="SPORTS - Sleddog"/>
+              <xs:enumeration value="SPORTS - Snooker"/>
+              <xs:enumeration value="SPORTS - Snowboarding"/>
+              <xs:enumeration value="SPORTS - Soccer"/>
+              <xs:enumeration value="SPORTS - Soft tennis"/>
+              <xs:enumeration value="SPORTS - Softball"/>
+              <xs:enumeration value="SPORTS - Sombo"/>
+              <xs:enumeration value="SPORTS - Sport acrobatics"/>
+              <xs:enumeration value="SPORTS - Squash"/>
+              <xs:enumeration value="SPORTS - Subaquatics"/>
+              <xs:enumeration value="SPORTS - SUMO/Fighting Games"/>
+              <xs:enumeration value="SPORTS - Surfing"/>
+              <xs:enumeration value="SPORTS - Swimming/diving"/>
+              <xs:enumeration value="SPORTS - Table tennis"/>
+              <xs:enumeration value="SPORTS - Taekwondo"/>
+              <xs:enumeration value="SPORTS - Team sport (excluding football / soccer)"/>
+              <xs:enumeration value="SPORTS - Tennis"/>
+              <xs:enumeration value="SPORTS - Track/Field"/>
+              <xs:enumeration value="SPORTS - Trampoline"/>
+              <xs:enumeration value="SPORTS - Triathlon"/>
+              <xs:enumeration value="SPORTS - Tug-of-war"/>
+              <xs:enumeration value="SPORTS - Volleyball"/>
+              <xs:enumeration value="SPORTS - Water polo"/>
+              <xs:enumeration value="SPORTS - Water-skiing"/>
+              <xs:enumeration value="SPORTS - Weightlifting"/>
+              <xs:enumeration value="SPORTS - Wrestling"/>
+              <xs:enumeration value="SPORTS - Yachting"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="ACTUAL_DURATION" type="ns1:TimeCodePatternString" minOccurs="0"/>
+        <xs:element name="TIMECODE_CAPTURE_COMPLETE" minOccurs="0">
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="No"/>
+              <xs:enumeration value="Yes"/>
+              <xs:enumeration value="Work In Progress"/>
+              <xs:enumeration value="Copied &amp; Not Verified"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SOFT_PARTINGS_COMPLETE" type="xs:string" minOccurs="0"/>
+        <xs:element name="ActualActiveFormatDescriptorCode" minOccurs="0">
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="AFD 1 - 4:3 Active Frame"/>
+              <xs:enumeration value="AFD 2 - 16:9 Active Picture"/>
+              <xs:enumeration value="AFD 3 - 14:9 Active Picture"/>
+              <xs:enumeration value="AFD 4 - Not In Use"/>
+              <xs:enumeration value="AFD 5 - 4:3 Shoot &amp; Protect 14:9"/>
+              <xs:enumeration value="AFD 6 - 16:9 Shoot &amp; Protect 14:9"/>
+              <xs:enumeration value="AFD 7 - 16:9 Shoot &amp; Protect 4:3"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="ANNOTATION_SYNOPSIS_EPG" type="xs:string" minOccurs="0"/>
+        <xs:element name="CONTRACTUAL_ASPECT_RATIO" minOccurs="0">
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="1080I"/>
+              <xs:enumeration value="1080P"/>
+              <xs:enumeration value="12:9 (4:3)"/>
+              <xs:enumeration value="14:9 Letterbox"/>
+              <xs:enumeration value="15:9 Letterbox"/>
+              <xs:enumeration value="16:9 Anamorphic"/>
+              <xs:enumeration value="16:9 Letterbox"/>
+              <xs:enumeration value="4:3 Letterbox"/>
+              <xs:enumeration value="Not Applicable"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="CONTRACTUAL_DURATION" type="ns1:TimeCodePatternString" minOccurs="0"/>
+        <xs:element name="ATVOD_AGE_RATING" minOccurs="0">
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="0"/>
+              <xs:enumeration value="DNU"/>
+              <xs:enumeration value="16"/>
+              <xs:enumeration value="18"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SLOT_DURATION" type="ns1:HrMnScTimePatternString" minOccurs="0"/>
+        <xs:element name="SERIES_GUIDANCE_NOTES" type="xs:string" minOccurs="0"/>
+        <xs:element name="VERSION_GUIDANCE_NOTES" type="xs:string" minOccurs="0"/>
+        <xs:element name="FILM_RATING" minOccurs="0">
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="U"/>
+              <xs:enumeration value="PG"/>
+              <xs:enumeration value="12"/>
+              <xs:enumeration value="15"/>
+              <xs:enumeration value="18"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="FLAG_ALTERNATE_SCENE" type="xs:boolean" minOccurs="0"/>
+        <xs:element name="FLAG_AUDIENCE_INTERACTIVITY" type="xs:boolean" minOccurs="0"/>
+        <xs:element name="FLAG_BARS_AND_TONE" type="xs:boolean" minOccurs="0"/>
+        <xs:element name="FLAG_BLACK" type="xs:boolean" minOccurs="0"/>
+        <xs:element name="FLAG_DISTRIBUTION_CAPTION" type="xs:boolean" minOccurs="0"/>
+        <xs:element name="FLAG_END_CREDITS" type="xs:boolean" minOccurs="0"/>
+        <xs:element name="FLAG_END_PRODUCTION_CAPTION_ACTIVE" type="xs:boolean" minOccurs="0"/>
+        <xs:element name="FLAG_END_PRODUCTION_CAPTION_FREEZE" type="xs:boolean" minOccurs="0"/>
+        <xs:element name="FLAG_EOP_CAPTION_ACTIVE" type="xs:boolean" minOccurs="0"/>
+        <xs:element name="FLAG_EOP_CAPTION_FREEZE" type="xs:boolean" minOccurs="0"/>
+        <xs:element name="FLAG_FURTHER_INFORMATION" type="xs:boolean" minOccurs="0"/>
+        <xs:element name="FLAG_GENERIC_EOP" type="xs:boolean" minOccurs="0"/>
+        <xs:element name="FLAG_GENERIC_PART_CAPTION" type="xs:boolean" minOccurs="0"/>
+        <xs:element name="FLAG_GENERIC_SOP" type="xs:boolean" minOccurs="0"/>
+        <xs:element name="FLAG_OPTIONAL_BREAK" type="xs:boolean" minOccurs="0"/>
+        <xs:element name="FLAG_PART_CAPTIONS_PROGRAMME_SEGMENTS" type="xs:boolean" minOccurs="0"/>
+        <xs:element name="FLAG_PREFFERED_BREAK" type="xs:boolean" minOccurs="0"/>
+        <xs:element name="FLAG_PROGRAMME_PART" type="xs:boolean" minOccurs="0"/>
+        <xs:element name="FLAG_RECAP" type="xs:boolean" minOccurs="0"/>
+        <xs:element name="FLAG_SOP_CAPTION" type="xs:boolean" minOccurs="0"/>
+        <xs:element name="FLAG_SP_EOP_CAPTION" type="xs:boolean" minOccurs="0"/>
+        <xs:element name="FLAG_SP_GENERICPART_CAPTION" type="xs:boolean" minOccurs="0"/>
+        <xs:element name="FLAG_SP_SOP_CAPTION" type="xs:boolean" minOccurs="0"/>
+        <xs:element name="FLAG_SPONSORSHIP" type="xs:boolean" minOccurs="0"/>
+        <xs:element name="FLAG_START_PRODUCTION_CAPTION" type="xs:boolean" minOccurs="0"/>
+        <xs:element name="FLAG_SUBSTITUTED_SCENE" type="xs:boolean" minOccurs="0"/>
+        <xs:element name="FLAG_TEASER" type="xs:boolean" minOccurs="0"/>
+        <xs:element name="FLAG_TEXTLESS_BACKGROUND" type="xs:boolean" minOccurs="0"/>
+        <xs:element name="FLAG_TRAILER" type="xs:boolean" minOccurs="0"/>
+        <xs:element name="FLAG_URL_CAPTION_INPROG" type="xs:boolean" minOccurs="0"/>
+        <xs:element name="FLAG_WEBSITE_CAPTION" type="xs:boolean" minOccurs="0"/>
+        <xs:element name="FLAG_MIXED_START_OF_PART_CAPTION" type="xs:boolean" minOccurs="0"/>
+        <xs:element name="FLAG_MIXED_END_OF_PART_CAPTION_ACTIVE" type="xs:boolean" minOccurs="0"/>
+        <xs:element name="HARP" type="xs:boolean" minOccurs="0"/>
+        <xs:group ref="ns1:ENDC_SOM_EOM_GROUP" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:group ref="ns1:EPDA_SOM_EOM_GROUP" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:group ref="ns1:SPSP_SOM_EOM_GROUP" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:group ref="ns1:SPEP_SOM_EOM_GROUP" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:group ref="ns1:SPGP_SOM_EOM_GROUP" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:group ref="ns1:START_PROD_CAP_ACTIVE_SOM_EOM_GROUP" minOccurs="0"
+          maxOccurs="unbounded"/>
+        <xs:group ref="ns1:BARS_SOM_EOM_GROUP" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:group ref="ns1:CLOCK_SOM_EOM_GROUP" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:group ref="ns1:BLACK_SOM_EOM_GROUP" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:group ref="ns1:DISTRIBUTION_SOM_EOM_GROUP" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:element name="PartTimecodes" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="PartTimecode" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:choice maxOccurs="unbounded">
+                    <xs:element name="PartNumber" type="xs:int" nillable="false"/>
+                    <xs:element name="PART_SOM" type="ns1:TimecodeOrMillisecond" minOccurs="0"/>
+                    <xs:element name="PART_EOM" type="ns1:TimecodeOrMillisecond" minOccurs="0"/>
+                    <xs:group ref="ns1:SOPC_SOM_EOM_GROUP" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:group ref="ns1:EPCA_SOM_EOM_GROUP" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:group ref="ns1:RCAP_SOM_EOM_GROUP" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:group ref="ns1:TEAS_SOM_EOM_GROUP" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:group ref="ns1:MXSP_SOM_EOM_GROUP" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:group ref="ns1:MXEP_SOM_EOM_GROUP" minOccurs="0" maxOccurs="unbounded"/>
+                  </xs:choice>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="SoftParts" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="SoftPart" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:choice maxOccurs="unbounded">
+                    <xs:element name="SOBR_SOM" type="ns1:TimecodeOrMillisecond" minOccurs="0"/>
+                    <xs:element name="SOBR_EOM" type="ns1:TimecodeOrMillisecond" minOccurs="0"/>
+                    <xs:element name="SPBR_SOM" type="ns1:TimecodeOrMillisecond" minOccurs="0"/>
+                    <xs:element name="SPBR_EOM" type="ns1:TimecodeOrMillisecond" minOccurs="0"/>
+                  </xs:choice>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="AUDITimecodes" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="AUDITimecode" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="AUDI_SOM" type="ns1:TimecodeOrMillisecond" minOccurs="0"/>
+                    <xs:element name="AUDI_EOM" type="ns1:TimecodeOrMillisecond" minOccurs="0"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="CollectionSpecificAttributes" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="KANGAROO_COMPLIED" type="xs:string" minOccurs="0"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:group name="ENDC_SOM_EOM_GROUP">
+    <xs:sequence>
+      <xs:element name="ENDC_SOM" type="ns1:TimecodeOrMillisecond"/>
+      <xs:element name="ENDC_EOM" type="ns1:TimecodeOrMillisecond"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="EPDA_SOM_EOM_GROUP">
+    <xs:sequence>
+      <xs:element name="EPDA_SOM" type="ns1:TimecodeOrMillisecond"/>
+      <xs:element name="EPDA_EOM" type="ns1:TimecodeOrMillisecond"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="SPSP_SOM_EOM_GROUP">
+    <xs:sequence>
+      <xs:element name="SPSP_SOM" type="ns1:TimecodeOrMillisecond"/>
+      <xs:element name="SPSP_EOM" type="ns1:TimecodeOrMillisecond"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="SPEP_SOM_EOM_GROUP">
+    <xs:sequence>
+      <xs:element name="SPEP_SOM" type="ns1:TimecodeOrMillisecond"/>
+      <xs:element name="SPEP_EOM" type="ns1:TimecodeOrMillisecond"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="SPGP_SOM_EOM_GROUP">
+    <xs:sequence>
+      <xs:element name="SPGP_SOM" type="ns1:TimecodeOrMillisecond"/>
+      <xs:element name="SPGP_EOM" type="ns1:TimecodeOrMillisecond"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="START_PROD_CAP_ACTIVE_SOM_EOM_GROUP">
+    <xs:sequence>
+      <xs:element name="StartProductionCaptionActive_SOM" type="ns1:TimecodeOrMillisecond"/>
+      <xs:element name="StartProductionCaptionActive_EOM" type="ns1:TimecodeOrMillisecond"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="BARS_SOM_EOM_GROUP">
+    <xs:sequence>
+      <xs:element name="BARS_SOM" type="ns1:TimecodeOrMillisecond"/>
+      <xs:element name="BARS_EOM" type="ns1:TimecodeOrMillisecond"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="CLOCK_SOM_EOM_GROUP">
+    <xs:sequence>
+      <xs:element name="CLOCK_SOM" type="ns1:TimecodeOrMillisecond"/>
+      <xs:element name="CLOCK_EOM" type="ns1:TimecodeOrMillisecond"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="BLACK_SOM_EOM_GROUP">
+    <xs:sequence>
+      <xs:element name="BLACK_SOM" type="ns1:TimecodeOrMillisecond"/>
+      <xs:element name="BLACK_EOM" type="ns1:TimecodeOrMillisecond"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="DISTRIBUTION_SOM_EOM_GROUP">
+    <xs:sequence>
+      <xs:element name="DISTRIBUTION_SOM" type="ns1:TimecodeOrMillisecond"/>
+      <xs:element name="DISTRIBUTION_EOM" type="ns1:TimecodeOrMillisecond"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="SOPC_SOM_EOM_GROUP">
+    <xs:sequence>
+      <xs:element name="SOPC_SOM" type="ns1:TimecodeOrMillisecond" minOccurs="0"/>
+      <xs:element name="SOPC_EOM" type="ns1:TimecodeOrMillisecond" minOccurs="0"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="EPCA_SOM_EOM_GROUP">
+    <xs:sequence>
+      <xs:element name="EPCA_SOM" type="ns1:TimecodeOrMillisecond"/>
+      <xs:element name="EPCA_EOM" type="ns1:TimecodeOrMillisecond"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="RCAP_SOM_EOM_GROUP">
+    <xs:sequence>
+      <xs:element name="RCAP_SOM" type="ns1:TimecodeOrMillisecond"/>
+      <xs:element name="RCAP_EOM" type="ns1:TimecodeOrMillisecond"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="TEAS_SOM_EOM_GROUP">
+    <xs:sequence>
+      <xs:element name="TEAS_SOM" type="ns1:TimecodeOrMillisecond"/>
+      <xs:element name="TEAS_EOM" type="ns1:TimecodeOrMillisecond"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="MXSP_SOM_EOM_GROUP">
+    <xs:sequence>
+      <xs:element name="MXSP_SOM" type="ns1:TimecodeOrMillisecond"/>
+      <xs:element name="MXSP_EOM" type="ns1:TimecodeOrMillisecond"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="MXEP_SOM_EOM_GROUP">
+    <xs:sequence>
+      <xs:element name="MXEP_SOM" type="ns1:TimecodeOrMillisecond"/>
+      <xs:element name="MXEP_EOM" type="ns1:TimecodeOrMillisecond"/>
+    </xs:sequence>
+  </xs:group>
+
+  <xs:simpleType name="TimecodeOrMillisecond">
+    <xs:union memberTypes="ns1:TimeCodePatternString ns1:PatternMilliseconds"/>
+  </xs:simpleType>
+  <xs:simpleType name="TimeCodePatternString">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="\d\d:\d\d:\d\d:\d\d"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="PatternMilliseconds">
+    <xs:restriction base="xs:int"/>
+  </xs:simpleType>
+
+  <xs:simpleType name="HrMnScTimePatternString">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="\d\d:\d\d:\d\d"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+
+</xs:schema>

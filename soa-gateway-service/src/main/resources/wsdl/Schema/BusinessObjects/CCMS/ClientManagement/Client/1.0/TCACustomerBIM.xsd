@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- edited with XMLSpy v2010 rel. 3 (http://www.altova.com) by Ashish (Capgemini) -->
+<!--Created with Liquid XML Studio - FREE Community Edition 7.1.6.1440 (http://www.liquid-technologies.com)-->
+<xsd:schema xmlns:header="http://legalservices.gov.uk/Enterprise/Common/1.0/Header"
+  xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common"
+  xmlns:msg="http://legalservices.gov.uk/CCMS/ClientManagement/Client/1.0/TCACustomerBIM"
+  xmlns:cust="http://legalservices.gov.uk/CCMS/ClientManagement/Client/1.0/TCACustomerBIO"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="http://legalservices.gov.uk/CCMS/ClientManagement/Client/1.0/TCACustomerBIM"
+  elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+  <xsd:import
+    namespace="http://legalservices.gov.uk/CCMS/ClientManagement/Client/1.0/TCACustomerBIO"
+    schemaLocation="TCACustomerBIO.xsd"/>
+  <xsd:import namespace="http://legalservices.gov.uk/Enterprise/Common/1.0/Header"
+    schemaLocation="../../../../Enterprise/Common/1.0/Header.xsd"/>
+  <xsd:import namespace="http://legalservices.gov.uk/Enterprise/Common/1.0/Common"
+    schemaLocation="../../../../Enterprise/Common/1.0/Common.xsd"/>
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      <Version>1.0</Version>
+      <Definition>Customer BIM</Definition>
+      <Author>Ramesh Madhavan</Author>
+      <ModifiedBy>Ramesh Madhavan</ModifiedBy>
+      <VersionDate>29-12-2009</VersionDate>
+      <Description>This schema defines the messages to create or update the Customers at LSC
+      </Description>
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:element name="PartyInqRQ" type="msg:PartyInqRQ"/>
+  <xsd:element name="PartyInqRS" type="msg:PartyInqRS"/>
+  <xsd:element name="PartyAddRQ" type="msg:PartyAddRQ"/>
+  <xsd:element name="PartyUpdateRQ" type="msg:PartyUpdateRQ"/>
+  <xsd:element name="PartyAddUpdtStatusRQ" type="msg:PartyAddStatusRQ"/>
+  <xsd:element name="PartyAddUpdtStatusRS" type="msg:PartyAddStatusRS"/>
+  <xsd:complexType name="PartyInqRQ">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRQ"/>
+      <xsd:element name="RecordCount" type="common:RecordCount"/>
+      <xsd:element name="CustomerIDRef" type="cust:PartyIDElementType"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="PartyInqRS">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRS"/>
+      <xsd:element name="RecordCount" type="common:RecordCount"/>
+      <xsd:element name="Party" type="cust:Party" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="PartyAddRQ">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRQ"/>
+      <xsd:element name="Customer" type="cust:PartyDetails"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="PartyUpdateRQ">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRQ"/>
+      <xsd:element name="Customer" type="cust:PartyUpdate"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="PartyAddStatusRQ">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRQ"/>
+      <xsd:element name="TransactionID" type="common:TransactionID"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="PartyAddStatusRS">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRS"/>
+      <xsd:element name="Customer" type="cust:Party" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="GetCommonOrg"
+  targetNamespace="http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/ReferenceDataBIM"
+  xmlns:ns1="http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/ReferenceDataBIM"
+  xmlns:plnk="http://schemas.xmlsoap.org/ws/2003/05/partner-link/"
+  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+  xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+  <wsdl:documentation>
+    <abstractWSDL>
+      http://bbplscapp02.lab.gov:8051/soa-infra/services/default/GetCommonOrg!1.0/GetCommonOrg.wsdl
+    </abstractWSDL>
+  </wsdl:documentation>
+  <plnk:partnerLinkType name="GetCommonOrg">
+    <plnk:role name="GetCommonOrgProvider">
+      <plnk:portType name="ns1:GetCommonOrg"/>
+    </plnk:role>
+  </plnk:partnerLinkType>
+  <wsdl:types>
+    <schema xmlns="http://www.w3.org/2001/XMLSchema">
+      <import namespace="http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/ReferenceDataBIM"
+        schemaLocation="../../../../Schema/BusinessObjects/CCMS/Common/ReferenceData/1.0/ReferenceDataBIM.xsd"/>
+      <import
+        namespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+        schemaLocation="../../../../Schema/BusinessObjects/Enterprise/External/oasis/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"/>
+    </schema>
+  </wsdl:types>
+  <wsdl:message name="GetCommonOrgRequestMessage">
+    <wsdl:part name="payload" element="ns1:CommonOrgInqRQ"/>
+  </wsdl:message>
+  <wsdl:message name="GetCommonOrgResponseMessage">
+    <wsdl:part name="payload" element="ns1:CommonOrgInqRS"/>
+  </wsdl:message>
+  <wsdl:message name="UsernameToken">
+    <wsdl:part name="Security" element="wsse:Security"/>
+  </wsdl:message>
+  <wsdl:portType name="GetCommonOrg">
+    <wsdl:operation name="process">
+      <wsdl:input message="ns1:GetCommonOrgRequestMessage"/>
+      <wsdl:output message="ns1:GetCommonOrgResponseMessage"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="GetCommonOrgSOAPBinding" type="ns1:GetCommonOrg">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="process">
+      <soap:operation style="document"
+        soapAction="http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/ReferenceDataBIM/process"/>
+      <wsdl:input>
+        <soap:body use="literal" parts="payload"/>
+        <soap:header message="ns1:UsernameToken" part="Security" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="payload"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="getcommonorg_ep">
+    <wsdl:port name="GetCommonOrg_pt" binding="ns1:GetCommonOrgSOAPBinding">
+      <soap:address
+        location="http://bbplscapp02.lab.gov:8051/soa-infra/services/default/GetCommonOrg/getcommonorg_ep"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<wsdl:definitions
+  name="GetValidAddress"
+  targetNamespace="http://legalservices.gov.uk/CCMS/Common/AddressValidation/1.0/GetValidAddress"
+  xmlns:ns1="http://legalservices.gov.uk/CCMS/Common/AddressValidation/1.0/AddressValidationBIM"
+  xmlns:plnk="http://schemas.xmlsoap.org/ws/2003/05/partner-link/"
+  xmlns:client="http://legalservices.gov.uk/CCMS/Common/AddressValidation/1.0/GetValidAddress"
+  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+  xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+>
+  <wsdl:documentation>
+    <abstractWSDL>
+      http://bbplscapp02.lab.gov:8055/soa-infra/services/default/GetValidAddress!1.0/GetValidAddress.wsdl
+    </abstractWSDL>
+  </wsdl:documentation>
+  <plnk:partnerLinkType name="GetValidAddress">
+    <plnk:role name="GetValidAddressProvider">
+      <plnk:portType name="client:GetValidAddress"/>
+    </plnk:role>
+  </plnk:partnerLinkType>
+  <wsdl:types>
+    <schema xmlns="http://www.w3.org/2001/XMLSchema">
+      <import
+        namespace="http://legalservices.gov.uk/CCMS/Common/AddressValidation/1.0/AddressValidationBIM"
+        schemaLocation="../../../../Schema/BusinessObjects/CCMS/Common/AddressValidation/1.0/AddressValidationBIM.xsd"/>
+      <import
+        namespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+        schemaLocation="../../../../Schema/BusinessObjects/Enterprise/External/oasis/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"/>
+    </schema>
+  </wsdl:types>
+  <wsdl:message name="GetValidAddressRequestMessage">
+    <wsdl:part name="payload" element="ns1:AddressValidationInqRQ"/>
+  </wsdl:message>
+  <wsdl:message name="GetValidAddressResponseMessage">
+    <wsdl:part name="payload" element="ns1:AddressValidationInqRS"/>
+  </wsdl:message>
+  <wsdl:message name="UsernameToken">
+    <wsdl:part name="Security" element="wsse:Security"/>
+  </wsdl:message>
+  <wsdl:portType name="GetValidAddress">
+    <wsdl:operation name="process">
+      <wsdl:input message="client:GetValidAddressRequestMessage"/>
+      <wsdl:output message="client:GetValidAddressResponseMessage"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="GetValidAddressSOAPBinding" type="client:GetValidAddress">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="process">
+      <soap:operation style="document"
+        soapAction="http://legalservices.gov.uk/CCMS/Common/AddressValidation/1.0/AddressValidationBIM"/>
+      <wsdl:input>
+        <soap:body use="literal" parts="payload"/>
+        <soap:header message="client:UsernameToken" part="Security" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="payload"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="getvalidaddress_ep">
+    <wsdl:port name="GetValidAddress_pt" binding="client:GetValidAddressSOAPBinding">
+      <soap:address
+        location="http://bbplscapp02.lab.gov:8055/soa-infra/services/default/GetValidAddress/getvalidaddress_ep"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
