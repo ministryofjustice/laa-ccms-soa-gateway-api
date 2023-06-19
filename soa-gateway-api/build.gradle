@@ -60,7 +60,7 @@ openApiGenerate {
 compileJava.dependsOn 'openApiGenerate'
 
 clean {
-    delete "$rootDir/data-api/generated"
+    delete "$rootDir/soa-gateway-api/generated"
 }
 
 // disable for overall project when running a build

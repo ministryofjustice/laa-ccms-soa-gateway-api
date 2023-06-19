@@ -64,16 +64,25 @@ task integrationTest(type: Test) {
 }
 
 jacocoTestReport {
-    reports {
-        xml.enabled true
-        csv.enabled false
-        html.enabled true
+
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: ['**/SoaGatewayApplication.class'])
+        }))
     }
 
     dependsOn tasks['test']
 }
 
 jacocoTestCoverageVerification {
+
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: ['**/SoaGatewayApplication.class'])
+        }))
+    }
+
+
     violationRules {
         rule {
             limit {
