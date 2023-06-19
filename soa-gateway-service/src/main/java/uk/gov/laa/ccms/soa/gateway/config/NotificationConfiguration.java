@@ -1,6 +1,5 @@
 package uk.gov.laa.ccms.soa.gateway.config;
 
-import jakarta.xml.bind.Marshaller;
 import org.apache.wss4j.dom.WSConstants;
 import org.apache.wss4j.dom.handler.WSHandlerConstants;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,12 +7,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
-import uk.gov.laa.ccms.soa.gateway.client.NotificationClient;
 import org.springframework.ws.soap.security.wss4j2.Wss4jSecurityInterceptor;
+import uk.gov.laa.ccms.soa.gateway.client.NotificationClient;
 
 @Configuration
 public class NotificationConfiguration {
-
     private final String username;
     private final String password;
     private final String url;
@@ -29,7 +27,7 @@ public class NotificationConfiguration {
     @Bean
     public Jaxb2Marshaller marshaller() {
         Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
-        marshaller.setContextPath("uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim");
+        marshaller.setContextPath("uk.gov.laa.ccms.soa.gateway.notificationservice");
         return marshaller;
     }
 
