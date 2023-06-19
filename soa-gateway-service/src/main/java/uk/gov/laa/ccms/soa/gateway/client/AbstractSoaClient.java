@@ -1,10 +1,8 @@
 package uk.gov.laa.ccms.soa.gateway.client;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
 
 public abstract class AbstractSoaClient extends WebServiceGatewaySupport {
@@ -22,11 +20,9 @@ public abstract class AbstractSoaClient extends WebServiceGatewaySupport {
     // added a 5 digit random number (zero packed) to act as noise/millis
     // I found that with just 4 digits I was getting a number of duplicates.
     // this reduced significantly with 5 digit noise.
-    Random rndGen = new Random();
-    DateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-    String id = df.format(new Date());
-
-    return id + StringUtils.right("000000000" + (rndGen.nextInt(999999998) + 1), 10);
+    return String.format("%s%010d",
+        new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date()),
+        (new Random().nextInt(999999998) + 1));
     //      yyyyMMddHHmmssSSS
     // e.g. 2016051215540200506053
   }
