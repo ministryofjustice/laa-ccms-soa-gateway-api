@@ -7,16 +7,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
-import org.springframework.ws.soap.security.wss4j2.Wss4jSecurityInterceptor;
 import uk.gov.laa.ccms.soa.gateway.client.NotificationClient;
+import org.springframework.ws.soap.security.wss4j2.Wss4jSecurityInterceptor;
 
 @Configuration
-public class NotificationConfiguration {
+public class SoaConfiguration {
     private final String username;
     private final String password;
     private final String url;
 
-    public NotificationConfiguration(@Value("${laa.ccms.soa-gateway.notification.url}")String url,
+    public SoaConfiguration(@Value("${laa.ccms.soa-gateway.notification.url}")String url,
                                      @Value("${laa.ccms.soa-gateway.username}")String username,
                                      @Value("${laa.ccms.soa-gateway.password}")String password){
         this.url = url;
@@ -27,7 +27,7 @@ public class NotificationConfiguration {
     @Bean
     public Jaxb2Marshaller marshaller() {
         Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
-        marshaller.setContextPath("uk.gov.laa.ccms.soa.gateway.notificationservice");
+        marshaller.setPackagesToScan("uk.gov.legalservices");
         return marshaller;
     }
 
