@@ -38,9 +38,14 @@ public class NotificationClient extends AbstractSoaClient {
         searchCriteria.setUserID(searchLoginId);
         inquiryRequest.setSearchCriteria(searchCriteria);
 
-        JAXBElement<NotificationCntInqRS> response = (JAXBElement<NotificationCntInqRS>)getWebServiceTemplate()
-                .marshalSendAndReceive(OBJECT_FACTORY.createNotificationCntInqRQ(inquiryRequest),
-                        new SoapActionCallback("http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/NotificationService/GetNotificationCount"));
+        @SuppressWarnings("unchecked")
+        JAXBElement<NotificationCntInqRS> response = (JAXBElement<NotificationCntInqRS>) getWebServiceTemplate()
+                .marshalSendAndReceive(
+                        OBJECT_FACTORY.createNotificationCntInqRQ(inquiryRequest),
+                        new SoapActionCallback(
+                                "http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/NotificationService/GetNotificationCount"
+                        )
+                );
 
         return response.getValue();
     }
