@@ -3,6 +3,7 @@ package uk.gov.laa.ccms.soa.gateway.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uk.gov.laa.ccms.soa.gateway.client.NotificationClient;
+import uk.gov.laa.ccms.soa.gateway.mapper.NotificationMapper;
 import uk.gov.laa.ccms.soa.gateway.model.NotificationSummary;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationCntInqRS;
 
@@ -14,19 +15,22 @@ public class NotificationService {
 
     private final NotificationClient notificationClient;
 
-    public NotificationSummary getNotificationSummary(){
+    private final NotificationMapper notificationMapper;
+
+    public NotificationSummary getNotificationSummary(String searchLoginId,
+                                                      String soaGatewayUserLoginId,
+                                                      String soaGatewayUserRole,
+                                                      Integer soaGatewayMaxRecords){
 
         NotificationCntInqRS response = notificationClient.getNotificationCount(
-                "MARILYN@DESORANDCO.CO.UK",
-                "EXTERNAL",
-                "MARILYN@DESORANDCO.CO.UK",
-                new BigInteger("100"));
+                soaGatewayUserLoginId,
+                soaGatewayUserRole,
+                searchLoginId,
+                BigInteger.valueOf(soaGatewayMaxRecords));
 
-        System.out.println(response.getNotificationCntLists().getNotificationsCnt().get(0).getNotificationCount());
+        NotificationSummary notificationSummary =  notificationMapper.map(response);
 
-        //todo some mapping
-
-        return null;
+        return notificationSummary;
     }
 
 

@@ -1,11 +1,13 @@
 package uk.gov.laa.ccms.soa.gateway.mapper;
 
+import org.springframework.stereotype.Component;
 import uk.gov.laa.ccms.soa.gateway.model.NotificationSummary;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationCntInqRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.NotificationCntList;
 
+@Component
 public class NotificationMapper {
-    public static NotificationSummary map(NotificationCntInqRS response){
+    public NotificationSummary map(NotificationCntInqRS response){
 
         NotificationSummary notificationSummary = new NotificationSummary();
 

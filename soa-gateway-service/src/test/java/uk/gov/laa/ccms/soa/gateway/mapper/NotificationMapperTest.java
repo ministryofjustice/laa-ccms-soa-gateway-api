@@ -2,6 +2,7 @@ package uk.gov.laa.ccms.soa.gateway.mapper;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationCntInqRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.NotificationCntList;
@@ -10,6 +11,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 public class NotificationMapperTest {
+
+    @InjectMocks
+    NotificationMapper notificationMapper;
 
     @Test
     public void testMap() {
@@ -24,7 +28,7 @@ public class NotificationMapperTest {
 
         notificationCntLists.getNotificationsCnt().add(notificationCntList);
 
-        uk.gov.laa.ccms.soa.gateway.model.NotificationSummary result = NotificationMapper.map(response);
+        uk.gov.laa.ccms.soa.gateway.model.NotificationSummary result = notificationMapper.map(response);
 
         assertNotNull(result);
         assertEquals(5, result.getNotifications());
