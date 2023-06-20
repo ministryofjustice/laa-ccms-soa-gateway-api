@@ -103,10 +103,10 @@ class NotificationControllerTest {
     }
 
     @ParameterizedTest
-    @CsvSource({
+    @CsvSource(value = {
             "null, EXTERNAL", // SoaGateway-User-Login-Id is null
             "user, null" // SoaGateway-User-Role is null
-    })
+    }, nullValues={"null"})
     public void testGetUserNotificationSummary_HeaderBadRequest(String userLoginId, String userRole) throws Exception {
         // Call the getUserNotificationSummary method with null headers
         MockHttpServletRequestBuilder requestBuilder = get("/users/{user-id}/notifications/summary", "userId");
