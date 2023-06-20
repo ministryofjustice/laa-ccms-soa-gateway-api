@@ -8,19 +8,29 @@ import java.util.Random;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
+import org.springframework.ws.client.core.WebServiceTemplate;
 import uk.gov.legalservices.enterprise.common._1_0.common.RecordCount;
 import uk.gov.legalservices.enterprise.common._1_0.common.SystemsList;
 import uk.gov.legalservices.enterprise.common._1_0.header.HeaderRQType;
 import uk.gov.legalservices.enterprise.common._1_0.header.ObjectFactory;
 
 @Slf4j
-public abstract class AbstractSoaClient extends WebServiceGatewaySupport {
+public abstract class AbstractSoaClient {
 
   private static final ObjectFactory COMMON_HEADER_FACTORY = new ObjectFactory();
 
   private static final uk.gov.legalservices.enterprise.common._1_0.common.ObjectFactory COMMON_FACTORY =
       new uk.gov.legalservices.enterprise.common._1_0.common.ObjectFactory();
+
+  protected WebServiceTemplate webServiceTemplate;
+
+  /**
+   * Get the WebServiceTemplate for this SoaClient
+   * @return WebServiceTemplate
+   */
+  public WebServiceTemplate getWebServiceTemplate() {
+    return webServiceTemplate;
+  }
 
   /**
    * @param loggedInUserId The logged in user id

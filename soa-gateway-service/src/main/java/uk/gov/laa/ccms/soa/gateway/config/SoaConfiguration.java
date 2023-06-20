@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
+import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
-import uk.gov.laa.ccms.soa.gateway.client.NotificationClient;
 import org.springframework.ws.soap.security.wss4j2.Wss4jSecurityInterceptor;
 
 @Configuration
@@ -32,13 +32,13 @@ public class SoaConfiguration {
     }
 
     @Bean
-    public NotificationClient notificationClient(Jaxb2Marshaller marshaller) {
-        NotificationClient client = new NotificationClient();
-        client.setDefaultUri(this.url);
-        client.setMarshaller(marshaller);
-        client.setUnmarshaller(marshaller);
-        client.setInterceptors(new ClientInterceptor[]{ securityInterceptor() });
-        return client;
+    public WebServiceTemplate webServiceTemplate(Jaxb2Marshaller marshaller) {
+        WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
+        webServiceTemplate.setDefaultUri(this.url);
+        webServiceTemplate.setMarshaller(marshaller);
+        webServiceTemplate.setUnmarshaller(marshaller);
+        webServiceTemplate.setInterceptors(new ClientInterceptor[]{ securityInterceptor() });
+        return webServiceTemplate;
     }
 
     @Bean

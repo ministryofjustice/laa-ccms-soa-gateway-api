@@ -4,6 +4,8 @@ import jakarta.xml.bind.JAXBElement;
 import java.math.BigInteger;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.soap.client.core.SoapActionCallback;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationCntInqRQ;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationCntInqRS;
@@ -11,12 +13,18 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.ObjectFactory
 
 @Slf4j
 @SuppressWarnings("unchecked")
+@Component
 public class NotificationClient extends AbstractSoaClient {
 
-    @Value("${laa.ccms.soa-gateway.notification.service-name}")
-    private String serviceName;
+    private final String serviceName;
 
     private static final ObjectFactory CASE_FACTORY = new ObjectFactory();
+
+    public NotificationClient(WebServiceTemplate webServiceTemplate,
+        @Value("${laa.ccms.soa-gateway.notification.service-name}") String serviceName) {
+        this.webServiceTemplate = webServiceTemplate;
+        this.serviceName = serviceName;
+    }
 
     public NotificationCntInqRS getNotificationCount(
         String loggedInUserId,
