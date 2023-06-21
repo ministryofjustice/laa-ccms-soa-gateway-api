@@ -21,16 +21,13 @@ public class NotificationService {
                                                       String soaGatewayUserLoginId,
                                                       String soaGatewayUserRole,
                                                       Integer soaGatewayMaxRecords){
-
         NotificationCntInqRS response = notificationClient.getNotificationCount(
+                searchLoginId,
                 soaGatewayUserLoginId,
                 soaGatewayUserRole,
-                searchLoginId,
                 BigInteger.valueOf(soaGatewayMaxRecords));
 
-        NotificationSummary notificationSummary =  notificationMapper.map(response);
-
-        return notificationSummary;
+        return notificationMapper.map(response);
     }
 
 

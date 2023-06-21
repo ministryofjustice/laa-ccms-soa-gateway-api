@@ -1,5 +1,11 @@
 package uk.gov.laa.ccms.soa.gateway.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.math.BigInteger;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -10,14 +16,6 @@ import uk.gov.laa.ccms.soa.gateway.mapper.NotificationMapper;
 import uk.gov.laa.ccms.soa.gateway.model.NotificationSummary;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationCntInqRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.NotificationCntList;
-
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class NotificationServiceTest {
 
@@ -49,27 +47,33 @@ public class NotificationServiceTest {
         expectedSummary.setStandardActions(3);
         expectedSummary.setOverdueActions(2);
 
+        String searchLoginId = "searchLoginId";
+        String soaGatewayUserLoginId = "soaGatewayUserLoginId";
+        String soaGatewayUserRole = "soaGatewayUserRole";
+        BigInteger soaGatewayMaxRecords = BigInteger.TEN;
+
         // Stub the NotificationClient to return the mocked response
-        when(notificationClient.getNotificationCount(anyString(), anyString(), anyString(), any(BigInteger.class)))
+        when(notificationClient.getNotificationCount(searchLoginId, soaGatewayUserLoginId, soaGatewayUserRole, soaGatewayMaxRecords))
                 .thenReturn(response);
 
         // Stub the NotificationMapper to return the mocked summary
         when(notificationMapper.map(eq(response))).thenReturn(expectedSummary);
 
         // Call the service method
+
         NotificationSummary result = notificationService.getNotificationSummary(
-                "searchLoginId",
-                "soaGatewayUserLoginId",
-                "soaGatewayUserRole",
-                10
+            searchLoginId,
+            soaGatewayUserLoginId,
+            soaGatewayUserRole,
+            soaGatewayMaxRecords.intValue()
         );
 
         // Verify that the NotificationClient method was called with the expected arguments
         verify(notificationClient).getNotificationCount(
-                "soaGatewayUserLoginId",
-                "soaGatewayUserRole",
-                "searchLoginId",
-                BigInteger.valueOf(10)
+            searchLoginId,
+            soaGatewayUserLoginId,
+            soaGatewayUserRole,
+            soaGatewayMaxRecords
         );
 
         // Verify that the map function in the NotificationMapper was called with the mocked response

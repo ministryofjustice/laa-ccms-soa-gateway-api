@@ -67,7 +67,7 @@ public class NotificationClientIntegrationTest {
         .andExpect(xpath("/ns5:NotificationCntInqRQ/ns5:SearchCriteria/ns5:UserID", namespaces).evaluatesTo(searchLoginId))
         .andRespond(withPayload(notificationCntInqRS_valid));
 
-    NotificationCntInqRS response = client.getNotificationCount(testLoginId, testUserType, searchLoginId,
+    NotificationCntInqRS response = client.getNotificationCount(searchLoginId, testLoginId, testUserType,
         BigInteger.TEN);
 
     assertNotNull(response.getNotificationCntLists());
@@ -80,9 +80,9 @@ public class NotificationClientIntegrationTest {
 
   @Test
   public void testGetNotificationCount_HandlesError() throws Exception {
+    final String searchLoginId = "searchLogin";
     final String testLoginId = "testLogin";
     final String testUserType = "testType";
-    final String searchLoginId = "searchLogin";
 
     Map<String, String> namespaces = new HashMap<>();
     namespaces.put("ns2", HEADER_NS);
@@ -92,7 +92,7 @@ public class NotificationClientIntegrationTest {
     mockServer.expect(xpath("/ns5:NotificationCntInqRQ/ns2:HeaderRQ/ns2:TransactionRequestID", namespaces).exists())
         .andRespond(withError("Failed to call soap service"));
 
-    assertThrows(RuntimeException.class, () -> client.getNotificationCount(testLoginId, testUserType, searchLoginId,
+    assertThrows(RuntimeException.class, () -> client.getNotificationCount(searchLoginId, testLoginId, testUserType,
         BigInteger.TEN));
 
     mockServer.verify();

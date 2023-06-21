@@ -27,9 +27,9 @@ public class NotificationClient extends AbstractSoaClient {
     }
 
     public NotificationCntInqRS getNotificationCount(
+        String searchLoginId,
         String loggedInUserId,
         String loggedInUserType,
-        String searchLoginId,
         BigInteger maxSearchResults) {
 
         final String soapAction = String.format("%s/GetNotificationCount", serviceName);

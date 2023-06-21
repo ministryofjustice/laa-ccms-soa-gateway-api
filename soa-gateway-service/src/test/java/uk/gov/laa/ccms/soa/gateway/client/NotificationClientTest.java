@@ -44,14 +44,15 @@ public class NotificationClientTest {
     when(webServiceTemplate.marshalSendAndReceive(any(JAXBElement.class),
         any(SoapActionCallback.class))).thenReturn(objectFactory.createNotificationCntInqRS(new NotificationCntInqRS()));
 
+    final String searchLoginId = "searchLogin";
     final String testLoginId = "testLogin";
     final String testUserType = "testType";
-    final String searchLoginId = "searchLogin";
 
-    NotificationCntInqRS response = client.getNotificationCount(testLoginId, testUserType, searchLoginId,
-        BigInteger.TEN);
+    NotificationCntInqRS response = client.getNotificationCount(searchLoginId, testLoginId,
+        testUserType, BigInteger.TEN);
 
-    verify(webServiceTemplate).marshalSendAndReceive(requestCaptor.capture(), any(SoapActionCallback.class));
+    verify(webServiceTemplate).marshalSendAndReceive(requestCaptor.capture(),
+        any(SoapActionCallback.class));
 
     JAXBElement<NotificationCntInqRQ> payload = requestCaptor.getValue();
     assertNotNull(payload.getValue().getHeaderRQ().getTimeStamp());

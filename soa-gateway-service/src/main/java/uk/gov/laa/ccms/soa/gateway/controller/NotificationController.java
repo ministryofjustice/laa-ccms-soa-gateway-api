@@ -18,8 +18,8 @@ public class NotificationController implements NotificationsApi {
     @Override
     public ResponseEntity<NotificationSummary> getUserNotificationSummary(
            String userId,
-            @jakarta.validation.constraints.NotNull String soaGatewayUserLoginId,
-            @jakarta.validation.constraints.NotNull String soaGatewayUserRole,
+            String soaGatewayUserLoginId,
+            String soaGatewayUserRole,
             Integer soaGatewayMaxRecords) {
 
         try{
