@@ -57,7 +57,7 @@ public class NotificationServiceTest {
                 .thenReturn(response);
 
         // Stub the NotificationMapper to return the mocked summary
-        when(notificationMapper.map(eq(response))).thenReturn(expectedSummary);
+        when(notificationMapper.toNotificationSummary(eq(response))).thenReturn(expectedSummary);
 
         // Call the service method
 
@@ -77,7 +77,7 @@ public class NotificationServiceTest {
         );
 
         // Verify that the map function in the NotificationMapper was called with the mocked response
-        verify(notificationMapper).map(response);
+        verify(notificationMapper).toNotificationSummary(response);
 
         // Assert the result
         assertEquals(expectedSummary, result);

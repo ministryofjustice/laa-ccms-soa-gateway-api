@@ -28,7 +28,7 @@ public abstract class AbstractSoaClient {
    * Get the WebServiceTemplate for this SoaClient
    * @return WebServiceTemplate
    */
-  public WebServiceTemplate getWebServiceTemplate() {
+  protected WebServiceTemplate getWebServiceTemplate() {
     return webServiceTemplate;
   }
 

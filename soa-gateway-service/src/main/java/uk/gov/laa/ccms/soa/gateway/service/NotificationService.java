@@ -27,7 +27,7 @@ public class NotificationService {
                 soaGatewayUserRole,
                 BigInteger.valueOf(soaGatewayMaxRecords));
 
-        return notificationMapper.map(response);
+        return notificationMapper.toNotificationSummary(response);
     }
 
 
