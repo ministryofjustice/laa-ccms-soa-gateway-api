@@ -1,0 +1,9 @@
+laa:
+  ccms:
+    soa-gateway:
+      username: pui_user
+      password: ***REMOVED***
+      action-prefix: http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0
+      notification:
+        service-name: ${laa.ccms.soa-gateway.action-prefix}/NotificationService
+        url: http://localhost:8051/soa-infra/services/default/NotificationServices/NotificationServices_ep

@@ -1,0 +1,94 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns="http://cp.bt.com/profileservice/domain" xmlns:com="http://cp.bt.com/common/domain"
+  targetNamespace="http://cp.bt.com/profileservice/domain" elementFormDefault="qualified">
+  <xs:import namespace="http://cp.bt.com/common/domain" schemaLocation="common.xsd"/>
+  <xs:complexType name="CpProfile">
+    <xs:annotation>
+      <xs:documentation>A profile consists of :-
+        name : Name or label of the profile
+        value : Display name for UI
+        description : Textual description of the profile
+        profileType : Eg E24H, Conform, Transcode etc
+        profileAttributeList : List of attributes required for this profile
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="name" type="xs:string"/>
+      <xs:element name="value" type="xs:string"/>
+      <xs:element name="description" type="xs:string"/>
+      <xs:element name="profileType" type="xs:string"/>
+      <xs:element name="profileAttributeList" type="ArrayOfProfileAttributes"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfProfileAttributes">
+    <xs:sequence>
+      <xs:element name="profileAttributeList" type="ProfileAttribute" minOccurs="0"
+        maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ProfileAttribute">
+    <xs:annotation>
+      <xs:documentation>A profile attribute consists of :-
+        description : Textual description of the attribute
+        name : Name of the attribute
+        value : Display name of the attribute for UI
+        type : Type of attribute
+        selectionDataProfiles :
+        listOfValidProfiles : Valid profiles for this attribute
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="description" type="xs:string"/>
+      <xs:element name="name" type="xs:string"/>
+      <xs:element name="value" type="xs:string"/>
+      <xs:element name="type" type="xs:string"/>
+      <xs:element name="selectionDataProfiles" type="xs:string"/>
+      <xs:element name="listOfValidProfiles" type="ArrayOfProfile"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfProfile">
+    <xs:sequence>
+      <xs:element name="cpProfile" type="CpProfile" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="profilesResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="ArrayOfProfile" type="ArrayOfProfile"/>
+        <xs:element name="responseDetails" type="com:responseDetails"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="profileRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getProfilesByTypeRequest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>Get profiles given a type, eg E24H, Conform etc.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+        <xs:element name="profileType" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getProfileByNameAndTypeRequest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>Get profiles given a type, eg E24H, Conform etc and name.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+        <xs:element name="profileName" type="xs:string"/>
+        <xs:element name="profileType" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

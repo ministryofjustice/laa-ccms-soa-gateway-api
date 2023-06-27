@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema xmlns:alarm="http://cp.bt.com/alarmservice/domain"
+  xmlns:audit="http://cp.bt.com/auditservice/domain"
+  xmlns:damlist="http://cp.bt.com/damlist/domain"
+  xmlns:dammap="http://cp.bt.com/dammap/domain"
+  xmlns:damsearch="http://cp.bt.com/damsearch/domain"
+  xmlns:ordermanagement="http://cp.bt.com/ordermanagementservice/domain"
+  xmlns:profile="http://cp.bt.com/profileservice/domain"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://cp.bt.com/service"
+  targetNamespace="http://cp.bt.com/service" elementFormDefault="qualified" version="1.0">
+  <xs:import namespace="http://cp.bt.com/alarmservice/domain" schemaLocation="AlarmService.xsd"/>
+  <xs:import namespace="http://cp.bt.com/auditservice/domain" schemaLocation="AuditService.xsd"/>
+  <xs:import namespace="http://cp.bt.com/damlist/domain" schemaLocation="DAMListService.xsd"/>
+  <xs:import namespace="http://cp.bt.com/dammap/domain" schemaLocation="DAMMapService.xsd"/>
+  <xs:import namespace="http://cp.bt.com/damsearch/domain" schemaLocation="DAMSearchService.xsd"/>
+  <xs:import namespace="http://cp.bt.com/ordermanagementservice/domain"
+    schemaLocation="OrderManagementService.xsd"/>
+  <xs:import namespace="http://cp.bt.com/profileservice/domain"
+    schemaLocation="ProfileService.xsd"/>
+  <xs:element name="Request" type="tns:Request"/>
+  <xs:complexType name="Request">
+    <xs:choice>
+      <xs:element ref="alarm:alarmEventRequest"/>
+      <xs:element ref="alarm:alarmRequest"/>
+      <xs:element ref="alarm:alarmEventsByJobIdRequest"/>
+      <xs:element ref="alarm:alarmEventsByErrorIdRequest"/>
+      <xs:element ref="alarm:AlarmServiceList"/>
+      <xs:element ref="alarm:manageAlarmDateRange"/>
+      <xs:element ref="alarm:manageAlarmRequest"/>
+      <xs:element ref="audit:auditServiceList"/>
+      <xs:element ref="audit:auditEventRequest"/>
+      <xs:element ref="audit:auditId"/>
+      <xs:element ref="audit:endPointTimeRangeDetails"/>
+      <xs:element ref="audit:requestIdRequest"/>
+      <xs:element ref="damlist:getOwnerEssencePackageRequest"/>
+      <xs:element ref="damlist:getEssencePackagesRequest"/>
+      <xs:element ref="damlist:getEssenceRequest"/>
+      <xs:element ref="damlist:describeEssenceRequest"/>
+      <xs:element ref="damlist:getSegmentsRequest"/>
+      <xs:element ref="damlist:getObjectDetailsRequest"/>
+      <xs:element ref="damlist:describeEssenceOfObjectRequest"/>
+      <xs:element ref="damlist:getAssociatedObjectsRequest"/>
+      <xs:element ref="damlist:descriptionResponse"/>
+      <xs:element ref="damlist:descriptionsResponse"/>
+      <xs:element ref="damlist:viewRequest"/>
+      <xs:element ref="dammap:mappingListsRequest"/>
+      <xs:element ref="dammap:mappingListsResponse"/>
+      <xs:element ref="dammap:getMappingListRequest"/>
+      <xs:element ref="dammap:getMappingListResponse"/>
+      <xs:element ref="dammap:getAttributesRequest"/>
+      <xs:element ref="dammap:getAttributesResponse"/>
+      <xs:element ref="dammap:getAttributeListNameRequest"/>
+      <xs:element ref="dammap:getAttributeGroupNamesRequest"/>
+      <xs:element ref="dammap:getStrataNamesRequest"/>
+      <xs:element ref="dammap:getHitlistsRequest"/>
+      <xs:element ref="dammap:getRestrictedAttributesRequest"/>
+      <xs:element ref="damsearch:searchRequest"/>
+      <xs:element ref="damsearch:searchResponse"/>
+      <xs:element ref="ordermanagement:addOrderRequest"/>
+      <xs:element ref="ordermanagement:updateOrderRequest"/>
+      <xs:element ref="ordermanagement:addUpdateOrderStatusForChildrenRequest"/>
+      <xs:element ref="ordermanagement:updateLoggingOrderRequest"/>
+      <xs:element ref="ordermanagement:OrderAttributeList"/>
+      <xs:element ref="ordermanagement:OrderList"/>
+      <xs:element ref="ordermanagement:orderStatusByOrderIdRequest"/>
+      <xs:element ref="ordermanagement:orderProgressRequest"/>
+      <xs:element ref="ordermanagement:orderByOrderIdRequest"/>
+      <xs:element ref="ordermanagement:cancelOrderTreeRequest"/>
+      <xs:element ref="ordermanagement:orderNameByOrderIdRequest"/>
+      <xs:element ref="ordermanagement:orderStatusRequest"/>
+      <xs:element ref="ordermanagement:orderTypeRequest"/>
+      <xs:element ref="ordermanagement:orderRequest"/>
+      <xs:element ref="ordermanagement:getOrderByOrderIdRequest"/>
+      <xs:element ref="ordermanagement:getTreeOrderByOrderIdRequest"/>
+      <xs:element ref="ordermanagement:getOrdersByStatusRequest"/>
+      <xs:element ref="ordermanagement:getParentOrdersByTypeRequest"/>
+      <xs:element ref="ordermanagement:getOrdersRequest"/>
+      <xs:element ref="ordermanagement:deleteOrderRequest"/>
+      <xs:element ref="profile:profilesResponse"/>
+      <xs:element ref="profile:profileRequest"/>
+      <xs:element ref="profile:getProfilesByTypeRequest"/>
+      <xs:element ref="profile:getProfileByNameAndTypeRequest"/>
+    </xs:choice>
+  </xs:complexType>
+</xs:schema>

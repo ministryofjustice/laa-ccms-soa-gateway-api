@@ -1,0 +1,1549 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 rel. 2 sp2 (http://www.altova.com) by David Hunter (ITV) -->
+<schema xmlns:evt="http://mosaic.bt.com/itv/Event/1.0" xmlns="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="http://mosaic.bt.com/itv/Event/1.0" elementFormDefault="qualified">
+  <include schemaLocation="LanguageCode.xsd"/>
+  <simpleType name="EventId">
+    <annotation>
+      <documentation>A GUID or identifier that uniquely identifies each Event - type TBC
+      </documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="128"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="Type">
+    <annotation>
+      <documentation>An OpenEnum of the Types of Events that will be raised by Content Store
+      </documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="XX"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="DateTime">
+    <annotation>
+      <documentation>The Date and Time that the Event happened - GMT</documentation>
+    </annotation>
+    <restriction base="dateTime"/>
+  </simpleType>
+  <simpleType name="CAPTURE_ASPECT_RATIO">
+    <annotation>
+      <documentation>AFD</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="AFD 1 - 4:3 Active Frame"/>
+      <enumeration value="AFD 2 - 16:9 Active Picture"/>
+      <enumeration value="AFD 3 - 14:9 Active Picture"/>
+      <enumeration value="AFD 4 - Not In Use"/>
+      <enumeration value="AFD 5 - 4:3 Shoot &amp; Protect 14:9"/>
+      <enumeration value="AFD 6 - 16:9 Shoot &amp; Protect 14:9"/>
+      <enumeration value="AFD 7 - 16:9 Shoot &amp; Protect 4:3"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="CLOCK_IDENTIFIER">
+    <annotation>
+      <documentation>Clock Identifier</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="128"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="GENERIC_PROFILE">
+    <annotation>
+      <documentation>?????Check length and desc with Matt</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="128"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="CONTRACTUAL_ASPECT_RATIO">
+    <annotation>
+      <documentation>Contractual AR</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="1080I"/>
+      <enumeration value="1080P"/>
+      <enumeration value="12:9 (4:3)"/>
+      <enumeration value="14:9 Letterbox"/>
+      <enumeration value="15:9 Letterbox"/>
+      <enumeration value="16:9 Anamorphic"/>
+      <enumeration value="16:9 Letterbox"/>
+      <enumeration value="4:3 Letterbox"/>
+      <enumeration value="Not Applicable"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="RECORDINGS_ID">
+    <annotation>
+      <documentation>Recordings ID</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="32"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="TAPE_IDENTIFIERS">
+    <annotation>
+      <documentation>Tape Barcode Number</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="32"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="TECHNICAL_ASPECT_RATIO">
+    <annotation>
+      <documentation>Technical Aspect Ratio</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="4:3"/>
+      <enumeration value="16:9 [4x3 Frame]"/>
+      <enumeration value="14:9"/>
+      <enumeration value="15:9"/>
+      <enumeration value="Unknown"/>
+      <enumeration value="Anamorphic"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="TECHNICAL_COMPLIANCE_FAILURE_REASON">
+    <annotation>
+      <documentation>Tech Comp Notes</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="256"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="TECHNICAL_COMPLIANCE_FLAG">
+    <annotation>
+      <documentation>Tech Compliance Pass</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="XX"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="TECHNICAL_COMPLIANCE_WORKFLOW_HISTORY">
+    <annotation>
+      <documentation>Tech Compliance History</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="256"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="TECHNICAL_QC_FAILURE_REASON">
+    <annotation>
+      <documentation>Tech QC Failure Reasons</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="256"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="TECHNICAL_QC_FLAG">
+    <annotation>
+      <documentation>Tech QC Pass</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="XX"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="TECHNICAL_QC_REPORT_FILENAME">
+    <annotation>
+      <documentation>Tech_QC_Report</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="64"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="TECHNICAL_QC_WORKFLOW_HISTORY">
+    <annotation>
+      <documentation>Tech QC History</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="128"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="EPISODE_NUMBER">
+    <annotation>
+      <documentation>Eps No</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="5"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="EPISODE_TITLE">
+    <annotation>
+      <documentation>Episode Title</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="256"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="FULFILMENT_COMPLIANCE_SERIES_GUIDANCE_NOTES">
+    <annotation>
+      <documentation>Series Guidance Notes</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="127"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="TOTAL_NUMBER_IN_SEQUENCE">
+    <annotation>
+      <documentation>Total Number Of Episodes</documentation>
+    </annotation>
+    <restriction base="integer">
+      <totalDigits value="5"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="SERIES_NUMBER">
+    <annotation>
+      <documentation>Series Title</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="256"/>
+    </restriction>
+    <!-- Confirm this name -->
+  </simpleType>
+  <simpleType name="SERIES_NUMERIC_ID">
+    <annotation>
+      <documentation>Series Order</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="24"/>
+    </restriction>
+    <!-- Confirm this name -->
+  </simpleType>
+  <simpleType name="FIRST_BROADCAST_FLAG">
+    <annotation>
+      <documentation>Date of First TX</documentation>
+    </annotation>
+    <restriction base="date"/>
+    <!-- Confirm this name -->
+  </simpleType>
+  <simpleType name="ANNOTATION_SYNOPSIS">
+    <annotation>
+      <documentation>Synopsis</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="1"/>
+    </restriction>
+    <!-- length specified as 0 in spreadsheet-->
+  </simpleType>
+  <simpleType name="CAST_LIST">
+    <annotation>
+      <documentation>Credits</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="4000"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="CLASSIFICATION_TYPE">
+    <annotation>
+      <documentation>Certification Status
+      </documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="SAT"/>
+      <enumeration value="SAT Term Time"/>
+      <enumeration value="Post 19:00"/>
+      <enumeration value="Post 19:30"/>
+      <enumeration value="Post 20:00"/>
+      <enumeration value="Post 20:30"/>
+      <enumeration value="Post 21:00"/>
+      <enumeration value="Post 21:30"/>
+      <enumeration value="Post 22:00"/>
+      <enumeration value="Post 22:30"/>
+      <enumeration value="Post 23:00"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="COLOUR_DESCRIPTOR">
+    <annotation>
+      <documentation>Colour or B/W</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="XX"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="GENRE">
+    <annotation>
+      <documentation>Genre</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="XX"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="KEYWORD">
+    <annotation>
+      <documentation>Key Word</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="256"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="SUB_GENRE">
+    <annotation>
+      <documentation>Sub-Genre</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="XX"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="CLIENT_INTERNAL_ID">
+    <annotation>
+      <documentation>Client Int ID</documentation>
+    </annotation>
+    <restriction base="integer">
+      <totalDigits value="16"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="CLIENT_NAME">
+    <annotation>
+      <documentation>Client Name</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="XX"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="PROGRAMME_NUMBER">
+    <annotation>
+      <documentation>ID</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="32"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="PROGRAMME_TYPE">
+    <annotation>
+      <documentation>Prog Type</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="XX"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="TITLE_TITLE">
+    <annotation>
+      <documentation>Title</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="256"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="TITLE_TYPE">
+    <annotation>
+      <documentation>Title Type</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="XX"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="UMID">
+    <annotation>
+      <documentation>UMID</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="64"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="ANNOTATION_SYNOPSIS_EPG">
+    <annotation>
+      <documentation>EPG Synopsis</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="1"/>
+    </restriction>
+    <!-- length specified as 0 in spreadsheet-->
+  </simpleType>
+  <simpleType name="ARCHIVE_METADATA_CAPTURE">
+    <annotation>
+      <documentation>Archive M/Data Status</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="XX"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="ATVOD_AGE_RATING">
+    <annotation>
+      <documentation>ATVOD Age Rating</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="XX"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="BROADCAST_CHANNEL">
+    <annotation>
+      <documentation>Compliance Channel</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="ITV1"/>
+      <enumeration value="ITV2"/>
+      <enumeration value="ITV3"/>
+      <enumeration value="ITV4"/>
+      <enumeration value="CITV"/>
+      <enumeration value="Men &amp; Motors"/>
+      <enumeration value="All Channels"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="CERTIFICATION_CHANNEL_HISTORY">
+    <annotation>
+      <documentation>Certification Notes for Channels</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="512"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="COLLECTION_ID">
+    <annotation>
+      <documentation>Collection ID</documentation>
+      <documentation>Known in ITV as WorkOrder</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="Cool Room"/>
+      <enumeration value="Kangaroo"/>
+      <enumeration value="Amazon"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="COMPLIANCE_CATEGORY">
+    <annotation>
+      <documentation>Compliance Category</documentation>
+    </annotation>
+    <restriction base="string">
+      <!--
+            <enumeration value="Alcohol Abuse"/>
+            <enumeration value="Animal Cruelty/Slaughter"/>
+            <enumeration value="Animals - Dangerous/Vicious"/>
+            <enumeration value="Charity Appeal"/>
+            <enumeration value="Child Abduction/Abuse"/>
+            <enumeration value="Commercial References - Negative"/>
+            <enumeration value="Commercial References - Prominence"/>
+            <enumeration value="Competitions"/>
+            <enumeration value="Dangerous and/or Imitable Behaviour"/>
+            <enumeration value="Disaster, Images of"/>
+            <enumeration value="Distressing/Disturbing Material"/>
+            <enumeration value="Drug &amp; Solvent Abuse "/>
+            <enumeration value="Flashing Images"/>
+            <enumeration value="Guns"/>
+            <enumeration value="Hanging"/>
+            <enumeration value="Hypnotism"/>
+            <enumeration value="Interactivity (Including Helplines, PRS, SMS)"/>
+            <enumeration value="Knives"/>
+            <enumeration value="Medical Scenes/Procedures/Surgery"/>
+            <enumeration value="Nudity"/>
+            <enumeration value="Offensive Language and Humour (e.g. based on Race, Disability, Gender, Sexuality)"/>
+            <enumeration value="Other"/>
+            <enumeration value="Paranormal or Psychic Phenomena and the Occult (including Exorcism)"/>
+            <enumeration value="Product Placement"/>
+            <enumeration value="Programme Related Material (PRM)"/>
+            <enumeration value="Red Button Promotion"/>
+            <enumeration value="Religious References"/>
+            <enumeration value="Sexual Content (including Sexual Violence/Rape)"/>
+            <enumeration value="Sponsor References"/>
+            <enumeration value="Smoking"/>
+            <enumeration value="Strong Language (e.g. Swearing)"/>
+            <enumeration value="Suicide and Self Harm"/>
+            <enumeration value="Terrorism"/>
+            <enumeration value="Violence"/>
+            <enumeration value="Voting"/>
+      -->
+    </restriction>
+  </simpleType>
+  <simpleType name="COMMERCIAL_REFERENCES">
+    <annotation>
+      <documentation>Commercial References</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="256"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="COMPLIANCE_DATE">
+    <annotation>
+      <documentation>Date material was editorially complied</documentation>
+    </annotation>
+    <restriction base="date"/>
+  </simpleType>
+  <simpleType name="COMPLIANCE_EXPIRY_DATE">
+    <annotation>
+      <documentation>Compliance Expiry Date</documentation>
+    </annotation>
+    <restriction base="date"/>
+  </simpleType>
+  <simpleType name="COMPLIANCE_NOTES">
+    <annotation>
+      <documentation>Compliance Notes</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="528"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="COMPLIANCE_SYNOPSIS">
+    <annotation>
+      <documentation>Compliance Synopsis</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="528"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="CONTENT_DELIVERED">
+    <annotation>
+      <documentation>Ingested</documentation>
+    </annotation>
+    <restriction base="boolean"/>
+  </simpleType>
+  <simpleType name="CONTRACTUAL_ARCHIVE_FLAG">
+    <annotation>
+      <documentation>Part of Archive</documentation>
+    </annotation>
+    <restriction base="boolean"/>
+  </simpleType>
+  <simpleType name="COUNTRY_CODE_OF_COPYRIGHT_LICENSE">
+    <annotation>
+      <documentation>Production Country</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="XX"/>
+    </restriction>
+    <!-- Is this actually an ISO Country Code? See the ITV schema for a reference.-->
+  </simpleType>
+  <simpleType name="CREDIT_STYLE">
+    <annotation>
+      <documentation>Credit Style</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="XX"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="EDITING_DECISION_INFORMATION">
+    <annotation>
+      <documentation>Editing Information</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="4096"/>
+    </restriction>
+    <!-- this is defined as length 0 in spreadsheet -->
+  </simpleType>
+  <simpleType name="USER">
+    <annotation>
+      <documentation>Editorial Compliance User</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="XX"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="END_OF_ESSENCE">
+    <annotation>
+      <documentation>EOE</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="24"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="EXPLOITATION_READY">
+    <annotation>
+      <documentation>Exploitation Ready</documentation>
+    </annotation>
+    <restriction base="boolean"/>
+  </simpleType>
+  <simpleType name="FILM_RATING">
+    <annotation>
+      <documentation>Film Rating</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="XX"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="FLAG_TYPE">
+    <annotation>
+      <documentation>Exploitation Ready</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="FLAG_ALTERNATE_SCENE">
+        <annotation>
+          <documentation>Alternate Scene</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_AUDIENCE_INTERACTIVITY">
+        <annotation>
+          <documentation>Audience Interactivity</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_AUDIO_DESCRIPTION">
+        <annotation>
+          <documentation>AD Files in CS</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_BARS_AND_TONE">
+        <annotation>
+          <documentation>Bars &amp; Tone</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_BLACK">
+        <annotation>
+          <documentation>Black</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_CLOCK_SLATE">
+        <annotation>
+          <documentation>Clock / Slate</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_DISTRIBUTION_CAPTION">
+        <annotation>
+          <documentation>Distribution Captn</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_END_CREDIT_PROMOTION">
+        <annotation>
+          <documentation>Suitable for ECP</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_END_CREDITS">
+        <annotation>
+          <documentation>End Credits</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_END_PRODUCTION_CAPTION_ACTIVE">
+        <annotation>
+          <documentation>End Prodn Caption Active</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_END_PRODUCTION_CAPTION_FREEZE">
+        <annotation>
+          <documentation>End Prodn Caption Freeze</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_ENDCREDIT_ANNOUNCEMENT">
+        <annotation>
+          <documentation>Suitable for ECA</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_ENDCREDIT_VOICEOVER">
+        <annotation>
+          <documentation>End Credits VoiceOver</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_ENDCREDITS_CONTAINS_PROMOTION">
+        <annotation>
+          <documentation>E/C's Contains Promo</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_ENDCREDITS_SEC_EVENT_WINDOW">
+        <annotation>
+          <documentation>E/C's Sec Event Window</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_EOP_CAPTION_ACTIVE">
+        <annotation>
+          <documentation>EOP Caption Active</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_EOP_CAPTION_FREEZE">
+        <annotation>
+          <documentation>EOP Caption Freeze</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_FURTHER_INFORMATION">
+        <annotation>
+          <documentation>Further Information</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_GENERIC_EOP">
+        <annotation>
+          <documentation>Generic EOP</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_GENERIC_PART_CAPTION">
+        <annotation>
+          <documentation>Generic Part Caption</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_GENERIC_SOP">
+        <annotation>
+          <documentation>Generic SOP</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_HARD_PARTED">
+        <annotation>
+          <documentation>Hard Parted</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_IPP_TAIL">
+        <annotation>
+          <documentation>IPP at Tail</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_IPP_TOP">
+        <annotation>
+          <documentation>IPP at Top</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_NEC_WINDOW">
+        <annotation>
+          <documentation>NEC Window</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_OPTIONAL_BREAK">
+        <annotation>
+          <documentation>Optional Break</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_OSN_WINDOW">
+        <annotation>
+          <documentation>OSN Window</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_PARIS_HARD_PARTED">
+        <annotation>
+          <documentation>Paris Hard Parted</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_PARIS_NEUTRAL_BG">
+        <annotation>
+          <documentation>Paris Neutral B/G</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_PARIS_TEXTED">
+        <annotation>
+          <documentation>Paris Texted</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_PART_CAPTIONS_PROGRAMME_SEGMENTS">
+        <annotation>
+          <documentation>Part Captions Prog Segments</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_PREFERRED_BREAK">
+        <annotation>
+          <documentation>Preferred Break</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_PROGRAMME_PART">
+        <annotation>
+          <documentation>Programme Part</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_RECAP">
+        <annotation>
+          <documentation>Recap</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_SEC_EVENT_ENDCREDITS">
+        <annotation>
+          <documentation>Suitable Sec Event E/Cs</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_SOP_CAPTION">
+        <annotation>
+          <documentation>SOP Caption</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_SP_EOP_CAPTION">
+        <annotation>
+          <documentation>Soft Parted EOP Capn</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_SP_GENERICPART_CAPTION">
+        <annotation>
+          <documentation>Soft Parted Generic Part</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_SP_SOP_CAPTION">
+        <annotation>
+          <documentation>Soft Parted SOP Capn</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_SPONSORSHIP">
+        <annotation>
+          <documentation>Sponsorship</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_START_PRODUCTION_CAPTION">
+        <annotation>
+          <documentation>Start Production Caption</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_SUBSTITUTED_SCENE">
+        <annotation>
+          <documentation>Substituted Scene</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_SUBTITLED_HARD_OF_HEARING">
+        <annotation>
+          <documentation>Subtitled HOH</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_SUITABLE_FOR_IPP">
+        <annotation>
+          <documentation>Suitable IPP</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_SUITABLE_FOR_NEC">
+        <annotation>
+          <documentation>Suitable NEC</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_SUITABLE_FOR_OSN">
+        <annotation>
+          <documentation>Suitable OSN</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_TEASER">
+        <annotation>
+          <documentation>Teaser</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_TEXTLESS_BACKGROUND">
+        <annotation>
+          <documentation>Textless Elements/Background</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_TRAILER">
+        <annotation>
+          <documentation>Trailer</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_URL_CAPTION_INPROG">
+        <annotation>
+          <documentation>URL Caption in Prog</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="FLAG_WEBSITE_CAPTION">
+        <annotation>
+          <documentation>Flag</documentation>
+        </annotation>
+      </enumeration>
+    </restriction>
+  </simpleType>
+  <simpleType name="FULFILMENT_COMPLIANCE_GUIDANCE_NOTES">
+    <annotation>
+      <documentation>Guidance Notes</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="127"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="FULFILMENT_PUBLISH_HISTORY">
+    <annotation>
+      <documentation>Fulfilment Publish History</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="128"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="INGEST_DATE">
+    <annotation>
+      <documentation>Ingest Date</documentation>
+    </annotation>
+    <restriction base="date"/>
+  </simpleType>
+  <simpleType name="INGEST_TIME">
+    <annotation>
+      <documentation>Ingest Date</documentation>
+    </annotation>
+    <restriction base="time"/>
+  </simpleType>
+  <simpleType name="INGEST_AND_AUTOMATED_QC_FAILURE_REASON">
+    <annotation>
+      <documentation>Reason For Failure</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="XSLT Error"/>
+      <enumeration value="Encode K2 Disc VITC"/>
+      <enumeration value="Tape Mismatch"/>
+      <enumeration value="Version ID Mismatch"/>
+      <enumeration value="Wrong AR Supplied"/>
+      <enumeration value="No VITC"/>
+      <enumeration value="Incorrect Language Supplied"/>
+      <enumeration value="No Video"/>
+      <enumeration value="No Audio"/>
+      <enumeration value="Missing TNS Data"/>
+      <enumeration value="Missing Recordings Data"/>
+      <enumeration value="Missing Conform XML"/>
+      <enumeration value="Technical W/Flow Failure"/>
+      <enumeration value="Dual Language on Track 1 and Track 2"/>
+      <enumeration value="Corrupt File"/>
+      <enumeration value="IPV Failure"/>
+      <enumeration value="Technical Error"/>
+      <enumeration value="Failed Manual Spot Check"/>
+      <enumeration value="GOP Issues"/>
+      <enumeration value="Tape Discontinuous VITC"/>
+      <enumeration value="Unknown Cerify Error Code"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="COMPLIANCE_USER">
+    <annotation>
+      <documentation>Compliance User K/Roo</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="XX"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="COMPLIED">
+    <annotation>
+      <documentation>Kangaroo Complied</documentation>
+    </annotation>
+    <restriction base="boolean"/>
+  </simpleType>
+  <simpleType name="DATE_COMPLETED">
+    <annotation>
+      <documentation>Kangaroo Comp'd Date</documentation>
+    </annotation>
+    <restriction base="date"/>
+  </simpleType>
+  <simpleType name="TIME_COMPLETED">
+    <annotation>
+      <documentation>Kangaroo Comp'd Time</documentation>
+    </annotation>
+    <restriction base="time"/>
+  </simpleType>
+  <simpleType name="ORDER_FAILURE_REASON">
+    <annotation>
+      <documentation>Kangaroo Failed Reason</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="Deal Cancelled"/>
+      <enumeration value="Missing Conform Strata"/>
+      <enumeration value="Technical Failure(e.g couldn't restore essence"/>
+      <enumeration value="Missing Recordings Data"/>
+      <enumeration value="Wrong Object Class Submitted"/>
+      <enumeration value="No Matching Profile for Recordings Data"/>
+      <enumeration value="EDL submitted referencing more than one object"/>
+      <enumeration value="Missing SOE and EOE"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="ORDER_STATUS">
+    <annotation>
+      <documentation>Kangaroo Order Status</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="Order Complete"/>
+      <enumeration value="Order Awaited"/>
+      <enumeration value="Order Processing"/>
+      <enumeration value="Order Requested"/>
+      <enumeration value="Order Failed"/>
+      <enumeration value="Order Cancelled"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="LEGAL_UNABLE_TO_REPEAT">
+    <annotation>
+      <documentation>Programme cannot be repeated for legal reasons</documentation>
+    </annotation>
+    <restriction base="boolean"/>
+  </simpleType>
+  <simpleType name="LEGAL_RELEGALLING_FOR_REPEAT">
+    <annotation>
+      <documentation>Programme cannot be repeated without re-legalling - refer to compliance
+      </documentation>
+    </annotation>
+    <restriction base="boolean"/>
+  </simpleType>
+  <simpleType name="LEGAL_CONSENT_FOR_TRANSMISSION">
+    <annotation>
+      <documentation>Legal Consent for Transmission</documentation>
+    </annotation>
+    <restriction base="boolean"/>
+  </simpleType>
+  <simpleType name="LEGAL_KIDS_COURTS">
+    <annotation>
+      <documentation>Under 18 in Court</documentation>
+    </annotation>
+    <restriction base="boolean"/>
+  </simpleType>
+  <simpleType name="LEGAL_LEGAL_PROCEEDINGS">
+    <annotation>
+      <documentation>Involved in Legal Proceedings</documentation>
+    </annotation>
+    <restriction base="boolean"/>
+  </simpleType>
+  <simpleType name="LEGAL_LOCAL_AUTHORITY_LICENSE_NEEDED">
+    <annotation>
+      <documentation>Need Local Authority License</documentation>
+    </annotation>
+    <restriction base="boolean"/>
+  </simpleType>
+  <simpleType name="LEGAL_OTHER_LEGAL_INFORMATION">
+    <annotation>
+      <documentation>Other Legal Information</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="528"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="LEGAL_RECORDED_TV_INTERVIEW">
+    <annotation>
+      <documentation>Does the programme contain material that was covertly filmed or recorded?
+      </documentation>
+    </annotation>
+    <restriction base="boolean"/>
+  </simpleType>
+  <simpleType name="LEGAL_CONTEMPT_SEXUAL_OFFENCE">
+    <annotation>
+      <documentation>Victim/Complainant of Sexual Offence</documentation>
+    </annotation>
+    <restriction base="boolean"/>
+  </simpleType>
+  <simpleType name="LEGAL_CONTEMPT_CHECK_COURT_PROCEEDINGS">
+    <annotation>
+      <documentation>Do checks need to be made for civil/criminal proceedings featuring contributors
+        before the programme is repeated?
+      </documentation>
+    </annotation>
+    <restriction base="boolean"/>
+  </simpleType>
+  <simpleType name="LEGAL_CONTEMPT_COURT_ORDERS">
+    <annotation>
+      <documentation>Are there any court orders affecting the broadcast of the programme?
+      </documentation>
+    </annotation>
+    <restriction base="boolean"/>
+  </simpleType>
+  <simpleType name="LEGAL_FAIRNESS_ALLEGATIONS">
+    <annotation>
+      <documentation>Does the programme include any response from the subject of allegations?
+      </documentation>
+    </annotation>
+    <restriction base="boolean"/>
+  </simpleType>
+  <simpleType name="LEGAL_FAIRNESS_RESPONSE_REVIEW">
+    <annotation>
+      <documentation>Would these responses need review for repeat broadcast?</documentation>
+    </annotation>
+    <restriction base="boolean"/>
+  </simpleType>
+  <simpleType name="LEGAL_PRIVACY_DOORSTEP_INTERVIEWS">
+    <annotation>
+      <documentation>Does the programme include any doorstep interviews?</documentation>
+    </annotation>
+    <restriction base="boolean"/>
+  </simpleType>
+  <simpleType name="LEGAL_PRIVACY_TRAUMATIC_EVENTS">
+    <annotation>
+      <documentation>Does the programme revisit traumatic past or current events?</documentation>
+    </annotation>
+    <restriction base="boolean"/>
+  </simpleType>
+  <simpleType name="LEGAL_PRIVACY_DECEASED_VICTIMS">
+    <annotation>
+      <documentation>Do contributors or families of deceased victims require to be notified before
+        any repeat?
+      </documentation>
+    </annotation>
+    <restriction base="boolean"/>
+  </simpleType>
+  <simpleType name="LEGAL_PRIVACY_SET_UPS">
+    <annotation>
+      <documentation>Does the programme contain set-ups or wind-ups for entertainment purposes?
+      </documentation>
+    </annotation>
+    <restriction base="boolean"/>
+  </simpleType>
+  <simpleType name="LEGAL_PRIVACY_FILMED_INSTITUTION">
+    <annotation>
+      <documentation>Was all or part of the programme filmed in an institution e.g. a prison, police
+        station, hospital, school?
+      </documentation>
+    </annotation>
+    <restriction base="boolean"/>
+  </simpleType>
+  <simpleType name="LEGAL_PRIVACY_OTHER">
+    <annotation>
+      <documentation>Are there any other privacy, DPA or confidentiality issues in the programme?
+      </documentation>
+    </annotation>
+    <restriction base="boolean"/>
+  </simpleType>
+  <simpleType name="LEGAL_COPYRIGHT">
+    <annotation>
+      <documentation>Is there any fair dealing of material for copyright purposes?</documentation>
+    </annotation>
+    <restriction base="boolean"/>
+  </simpleType>
+  <simpleType name="LEGAL_GENERAL_COMPLAINTS">
+    <annotation>
+      <documentation>Have any complaints been received about the programme?</documentation>
+    </annotation>
+    <restriction base="boolean"/>
+  </simpleType>
+  <simpleType name="LEGAL_GENERAL_OFCOM">
+    <annotation>
+      <documentation>Have any complaints been upheld by Ofcom</documentation>
+    </annotation>
+    <restriction base="boolean"/>
+  </simpleType>
+  <simpleType name="LEGAL_GENERAL_IMPARTIALITY">
+    <annotation>
+      <documentation>Due Impartiality - Does the programme include matters of political or
+        industrial controversy or current public policy?
+      </documentation>
+    </annotation>
+    <restriction base="boolean"/>
+  </simpleType>
+  <simpleType name="LEGAL_GENERAL_REPEATS">
+    <annotation>
+      <documentation>Is there any other reason why the programme should not be repeated?
+      </documentation>
+    </annotation>
+    <restriction base="boolean"/>
+  </simpleType>
+  <simpleType name="METADATA_CAPTURE_INFORMATION">
+    <annotation>
+      <documentation>Timecode Capture Info</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="512"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="METADATA_EDITOR_HISTORY">
+    <annotation>
+      <documentation>Metadata Editor History</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="128"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="METADATA_TEMPLATE_VALUE">
+    <annotation>
+      <documentation>Current Template</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="Template A - 06/08/07"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="NUMBER_OF_PARTS">
+    <annotation>
+      <documentation>Number of Parts</documentation>
+    </annotation>
+    <restriction base="integer">
+      <totalDigits value="2"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="ORIGINAL_INGEST_STATUS_FLAG">
+    <annotation>
+      <documentation>Version Status Flag</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="Ingest Complete"/>
+      <enumeration value="Awaiting Content Compliance"/>
+      <enumeration value="Awaiting Delivery"/>
+      <enumeration value="Awaiting Manual QC"/>
+      <enumeration value="Complete"/>
+      <enumeration value="Delivered"/>
+      <enumeration value="Failed Content Compliance"/>
+      <enumeration value="Failed Ingest"/>
+      <enumeration value="Failed Technical Compliance"/>
+      <enumeration value="Failed Technical QC"/>
+      <enumeration value="In Progress"/>
+      <enumeration value="Not Applicable"/>
+      <enumeration value="Passed Content Compliance"/>
+      <enumeration value="Passed Ingest"/>
+      <enumeration value="Passed Manual QC"/>
+      <enumeration value="Passed Techncial QC"/>
+      <enumeration value="Passed Technical Compliance"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="PRODUCTION_AREA">
+    <annotation>
+      <documentation>Production Area</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="XX"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="PRODUCTION_CAPTION_TEXT">
+    <annotation>
+      <documentation>Prodn Capn Text</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="1024"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="PRODUCTION_CATALOGUE_OWNER">
+    <annotation>
+      <documentation>Production Catalogue Owner</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="XX"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="PRODUCTION_YEAR">
+    <annotation>
+      <documentation>Production Year</documentation>
+    </annotation>
+    <restriction base="integer">
+      <totalDigits value="4"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="SLOT_TIME">
+    <annotation>
+      <documentation>Slot Time</documentation>
+    </annotation>
+    <restriction base="time"/>
+    <!-- check this type -->
+  </simpleType>
+  <simpleType name="START_OF_ESSENCE">
+    <annotation>
+      <documentation>SOE</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="24"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="TAPE_CLOCK_IDENTIFIER">
+    <annotation>
+      <documentation>Clock From Tape</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="64"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="TAPE_COMPLIANCE_IDENTIFIER">
+    <annotation>
+      <documentation>Compliance Tape Barcode</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="32"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="TAPE_START_OF_MESSAGE">
+    <annotation>
+      <documentation>Tape SOM</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="32"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="TIMECODE_ADDITIONAL_INFORMATION">
+    <annotation>
+      <documentation>Timecode Add'l Info</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="1024"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="RELATED_COMPLIANCE_DOCUMENT">
+    <annotation>
+      <documentation>Related Compliance Docs</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="32"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="STATUS_WORKFLOW_HISTORY">
+    <annotation>
+      <documentation>Status History</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="1"/>
+    </restriction>
+    <!-- length of 0 in spreadsheet -->
+  </simpleType>
+  <simpleType name="ACTUAL_DURATION">
+    <annotation>
+      <documentation>Actual Duration</documentation>
+    </annotation>
+    <restriction base="duration"/>
+    <!-- confirm this datatype -->
+  </simpleType>
+  <simpleType name="AGGREGATED_PROGRAMME">
+    <annotation>
+      <documentation>Compilation</documentation>
+    </annotation>
+    <restriction base="boolean"/>
+  </simpleType>
+  <simpleType name="COMPLIANCE_WARNING">
+    <annotation>
+      <documentation>Compliance Warning</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="No"/>
+      <enumeration value="Yes"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="COMPLIANCE_WARNING_CHANNEL">
+    <annotation>
+      <documentation>Warning Channel</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="Specific TX Only"/>
+      <enumeration value="All Transmissions"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="COMPLIANCE_WARNING_NOTES">
+    <annotation>
+      <documentation>Announcer Notes</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="128"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="COMPLIANCE_WARNING_REASON">
+    <annotation>
+      <documentation>Warning Reason</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="Flashing Lights"/>
+      <enumeration value="Sex"/>
+      <enumeration value="Violence"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="CONTRACTUAL_DURATION">
+    <annotation>
+      <documentation>Contractual Duration</documentation>
+    </annotation>
+    <restriction base="duration"/>
+    <!-- confirm this datatype -->
+  </simpleType>
+  <simpleType name="EDITORIAL_COMPLIANCE_FAILURE_REASONS">
+    <annotation>
+      <documentation>Comp Failure Reasons</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="256"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="EDITORIAL_COMPLIANCE_FLAG">
+    <annotation>
+      <documentation>Editorial Comp Pass</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="XX"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="EDITORIAL_COMPLIANCE_WORKFLOW_HISTORY">
+    <annotation>
+      <documentation>Editorial Comp History</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="128"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="EDITORIAL_TECHNICAL_ASSESSMENT">
+    <annotation>
+      <documentation>Editorial Tech Assessment</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="528"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="ESTIMATED_DURATION">
+    <annotation>
+      <documentation>Estimated Duration</documentation>
+    </annotation>
+    <restriction base="duration"/>
+    <!-- confirm this datatype -->
+  </simpleType>
+  <simpleType name="METADATA_CAPTURE_FLAG">
+    <annotation>
+      <documentation>Timecode Capture Complete</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="No"/>
+      <enumeration value="Yes"/>
+      <enumeration value="Work In Progress"/>
+      <enumeration value="Copied &amp; Not Verified"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="METADATA_CAPTURE_WORKFLOW_HISTORY">
+    <annotation>
+      <documentation>Timecode Capture W/Flow History</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="128"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="METADATA_PARTINGS_FLAG">
+    <annotation>
+      <documentation>Soft Partings Complete</documentation>
+    </annotation>
+    <restriction base="evt:METADATA_CAPTURE_FLAG"/>
+  </simpleType>
+  <simpleType name="METADATA_PARTINGS_WORKFLOW_HISTORY">
+    <annotation>
+      <documentation>Soft Partings History</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="128"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="PRODUCTION_ID">
+    <annotation>
+      <documentation>Production ID</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="32"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="PROMOTION_DATA_CAPTURE_FLAG">
+    <annotation>
+      <documentation>Promotion Capture Complete</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="XX"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="PROMOTION_DATA_WORKFLOW_HISTORY">
+    <annotation>
+      <documentation>Promotion Capture History</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="128"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="VERSION_DESCRIPTION">
+    <annotation>
+      <documentation>Version Description</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="128"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="VERSION_EPISODE_LINKS">
+    <annotation>
+      <documentation>Version Eps Links</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="32"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="VERSION_INFORMATION">
+    <annotation>
+      <documentation>Version Information</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="300"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="VERSION_NUMBER">
+    <annotation>
+      <documentation>Version Number</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="32"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="VERSION_TITLE">
+    <annotation>
+      <documentation>Version Title</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="128"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="VERSION_TITLE_NEW">
+    <annotation>
+      <documentation>Production Title</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="128"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="TX_FILE_NAME">
+    <annotation>
+      <documentation>Name of the file delivered for transmission - TX_FILE_NAME</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="128"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="COMPONENT_TYPE">
+    <annotation>
+      <documentation>Type needs to be confirmed by Matt/Dan</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="Video"/>
+      <enumeration value="Audio"/>
+      <enumeration value="Audio Description"/>
+      <enumeration value="Visual Signing"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="AUDIO_MIX_TYPE">
+    <annotation>
+      <documentation>Audio_Type</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="5.1"/>
+      <enumeration value="5.1 Effects Surround Sound"/>
+      <enumeration value="5.1 Final Mix"/>
+      <enumeration value="6.1"/>
+      <enumeration value="Combined Effects Mix"/>
+      <enumeration value="Combined Effects Mix Left"/>
+      <enumeration value="Combined Effects Mix Right"/>
+      <enumeration value="Dialogue and Effects"/>
+      <enumeration value="Dialogue Only"/>
+      <enumeration value="Effects Only"/>
+      <enumeration value="Mono"/>
+      <enumeration value="Mono Full Mix"/>
+      <enumeration value="Mono Mix Minus Music"/>
+      <enumeration value="Mono Mix Minus Narration"/>
+      <enumeration value="Mono Music and Effects Mix"/>
+      <enumeration value="Music Only"/>
+      <enumeration value="Music Surround Sound"/>
+      <enumeration value="Narration"/>
+      <enumeration value="Production Sound (Interviews to Camera)"/>
+      <enumeration value="Stereo"/>
+      <enumeration value="Stereo Dialogue and Effects Left"/>
+      <enumeration value="Stereo Dialogue and Effects Right"/>
+      <enumeration value="Stereo Dialogue Left"/>
+      <enumeration value="Stereo Dialogue Right"/>
+      <enumeration value="Stereo Left Full Mix"/>
+      <enumeration value="Stereo Left M/E Mix Minus Narration"/>
+      <enumeration value="Stereo Left Music"/>
+      <enumeration value="Stereo Left Music &amp; Effects"/>
+      <enumeration value="Stereo Mix Left Minus Narration"/>
+      <enumeration value="Stereo Mix Right Minus Narration"/>
+      <enumeration value="Stereo Right Full Mix"/>
+      <enumeration value="Stereo Right M/E Minus Narration"/>
+      <enumeration value="Stereo Right Music"/>
+      <enumeration value="Stereo Right Music &amp; Effects"/>
+      <enumeration value="Surround Sound Elements"/>
+      <enumeration value="Track 1"/>
+      <enumeration value="Track 2"/>
+      <enumeration value="Track 3"/>
+      <enumeration value="Track 4"/>
+      <enumeration value="Track 5"/>
+      <enumeration value="Track 6"/>
+      <enumeration value="Track 7"/>
+      <enumeration value="Track 8"/>
+      <enumeration value="Unknown"/>
+      <enumeration value="Voice and Narration"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="FLAG_SUBTITLED_HARD_OF_HEARING">
+    <annotation>
+      <documentation>indicates if subtitle present</documentation>
+    </annotation>
+    <restriction base="boolean"/>
+  </simpleType>
+  <simpleType name="SOURCE_FILENAME">
+    <annotation>
+      <documentation>Subtitle filename</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="128"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="FLAG_AUDIO_DESCRIPTION">
+    <annotation>
+      <documentation>indicates if AD Pair present</documentation>
+    </annotation>
+    <restriction base="boolean"/>
+  </simpleType>
+  <simpleType name="AUDIO_DESCRIPTION_FORMAT">
+    <annotation>
+      <documentation>indicates type of Audio Description file</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="BWAV Pair"/>
+      <enumeration value="BWAV ESF &amp; Multiple"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="FLAG_VISUAL_SIGNING">
+    <annotation>
+      <documentation>indicates if Visual Signing Composite present</documentation>
+    </annotation>
+    <restriction base="boolean"/>
+  </simpleType>
+  <simpleType name="AUTOMATED_QC_STATUS">
+    <annotation>
+      <documentation>AUTOMATED_QC_STATUS</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="Pass"/>
+      <enumeration value="Fail"/>
+      <enumeration value="Conditional Client Pass"/>
+    </restriction>
+  </simpleType>
+</schema>

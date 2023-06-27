@@ -1,0 +1,2646 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2010 rel. 3 (http://www.altova.com) by Ashish (Capgemini) -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common"
+  xmlns:cust="http://legalservices.gov.uk/CCMS/ClientManagement/Client/1.0/TCACustomerBIO"
+  targetNamespace="http://legalservices.gov.uk/CCMS/ClientManagement/Client/1.0/TCACustomerBIO"
+  elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      <Version>1.0</Version>
+      <Definition>TCA Customer BIO</Definition>
+      <Author>Ramesh Madhavan</Author>
+      <ModifiedBy>Mohammed Sajid Ali</ModifiedBy>
+      <VersionDate>26-04-2010</VersionDate>
+      <Description>This schema defines the objects to create or update the Customer at LSC
+      </Description>
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:import namespace="http://legalservices.gov.uk/Enterprise/Common/1.0/Common"
+    schemaLocation="../../../../Enterprise/Common/1.0/Common.xsd"/>
+  <xsd:complexType name="Party">
+    <xsd:sequence>
+      <xsd:element name="PartyID" type="cust:PartyIDElementType">
+        <xsd:annotation>
+          <xsd:documentation>Unique Customer ID or Party Id</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="PartyDetails" type="cust:PartyDetails"/>
+      <xsd:element name="Account" type="cust:AccountDetailsElementType" minOccurs="0"/>
+      <xsd:element name="RecordHistory" type="common:RecordHistory"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="PartyDetails">
+    <xsd:sequence>
+      <xsd:element name="Reference" type="cust:PartyReferenceDetailsElementType" minOccurs="0"/>
+      <xsd:element name="Type" type="common:LOV">
+        <xsd:annotation>
+          <xsd:documentation>Valid values are Person, Organization,Group</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Name" type="common:Name" minOccurs="0"/>
+      <xsd:element name="OrganizationName" type="common:C35" minOccurs="0"/>
+      <xsd:element name="GroupName" type="common:C35" minOccurs="0"/>
+      <xsd:element name="KnownAs" type="cust:KnownAsElementType" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Customer Alias Names</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="PhoneticName" type="common:PhoneticName" minOccurs="0"/>
+      <xsd:element name="GeneralInformation" minOccurs="0">
+        <xsd:complexType>
+          <xsd:choice>
+            <xsd:element name="Person" type="cust:PersonTypeDetailsElementType"/>
+            <xsd:element name="Organization" type="cust:OrganizationTypeDetailsElementType"/>
+            <xsd:element name="Group" type="cust:GroupDetailsElementType"/>
+          </xsd:choice>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="SpecialNotes" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Note" type="cust:NotesElementType" maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Locations" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Location" type="cust:LocationDetailsElementType"
+              maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Languages" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Language" type="cust:LanguageDetailsElementType"
+              maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Relations" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Relation" type="cust:RelationShipDetailsElementType"
+              maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="PartyPreferences" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Preference" type="cust:ContactPreferenceDetailsElementType"
+              maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Contacts" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Contact" type="cust:ContactDetailsElementType"
+              maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Classification" type="cust:CategoryDetailsElementType" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="PartyUpdate">
+    <xsd:sequence>
+      <xsd:element name="PartyReference">
+        <xsd:complexType>
+          <xsd:choice>
+            <xsd:element name="ReferenceID" type="common:IDREF30"/>
+            <xsd:element name="ID" type="cust:PartyIDElementType"/>
+          </xsd:choice>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Reference" type="cust:PartyReferenceDetailsElementType" minOccurs="0"/>
+      <xsd:element name="Name" type="common:Name" minOccurs="0"/>
+      <xsd:element name="OrganizationName" type="common:C35" minOccurs="0"/>
+      <xsd:element name="GroupName" type="common:C35" minOccurs="0"/>
+      <xsd:element name="KnownAs" type="cust:KnownAsElementType" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            Customer Alias Names
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="PhoneticName" type="common:PhoneticName" minOccurs="0"/>
+      <xsd:element name="GeneralInformation" minOccurs="0">
+        <xsd:complexType>
+          <xsd:choice>
+            <xsd:element name="Person" type="cust:PersonTypeDetailsElementType"/>
+            <xsd:element name="Organization" type="cust:OrganizationTypeDetailsElementType"/>
+            <xsd:element name="Group" type="cust:GroupDetailsElementType"/>
+          </xsd:choice>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="SpecialNotes" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Note" type="cust:NotesElementType" maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Sites" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Site" type="cust:SiteDetailsElementType" maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Locations" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="CustomerLocation" type="cust:LocationDetailsElementType"
+              maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Languages" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Language" type="cust:LanguageDetailsElementType"
+              maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Relations" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Relation" type="cust:RelationShipDetailsElementType"
+              maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="PartyPreferences" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="ContactPreference" type="cust:ContactPreferenceDetailsElementType"
+              maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Contacts" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Contact" type="cust:ContactDetailsElementType"
+              maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Classification" type="cust:CategoryDetailsElementType" minOccurs="0"/>
+      <xsd:element name="Account" type="cust:AccountDetailsElementType" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="PersonTypeDetailsElementType">
+    <xsd:sequence>
+      <xsd:element name="PersonalDetails" type="cust:PersonalDetailsElementType" minOccurs="0"/>
+      <xsd:element name="OtherDefinedAttributes" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="TaxReference" type="common:C50" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Taxpayer registration number, also known as the VAT number
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="JgzzFiscalCode" type="common:C20" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Taxpayer identification number or SSN number or Income taxpayer
+                  ID or Fiscal code or NIF
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="LastKnownGPS" type="common:C60" minOccurs="0"/>
+            <xsd:element name="InternalFlag" type="common:BooleanString" minOccurs="0"/>
+            <xsd:element name="FamilyDetails" type="cust:HouseDetailsElementType" minOccurs="0"/>
+            <xsd:element name="ActualContentSource" type="common:LOV" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Source System Name</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ConfigurableAttributes" type="common:Attributes20" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>DFF Fields to populate extra information into the e-Business Suite
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="PersonalDetailsElementType">
+    <xsd:sequence>
+      <xsd:element name="Identifier" type="common:C60" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            Personal identifier, such as driver's license or passport number
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="IdentifierType" type="common:LOV" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Personal identifier type, such as driver's license or passport
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="DateOfBirth" type="common:Dt" minOccurs="0"/>
+      <xsd:element name="PlaceOfBirth" type="common:C60" minOccurs="0"/>
+      <xsd:element name="DateOfDeath" type="common:Dt" minOccurs="0"/>
+      <xsd:element name="Gender" type="common:Gender" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Male or Female</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="MaritalStatus" type="common:LOV" minOccurs="0"/>
+      <xsd:element name="MaritalStatusEffectiveDate" type="common:Dt" minOccurs="0"/>
+      <xsd:element name="Income" type="common:Amount" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="HouseDetailsElementType">
+    <xsd:sequence>
+      <xsd:element name="HeadOfHouseholdFlag" type="common:BooleanString" minOccurs="0"/>
+      <xsd:element name="HouseHoldIncome" type="common:Amount" minOccurs="0"/>
+      <xsd:element name="HouseHoldSize" type="common:Integer" minOccurs="0"/>
+      <xsd:element name="RentOwnInd" type="common:BooleanString" minOccurs="0"/>
+      <xsd:element name="DeclaredEthnicity" type="common:LOV" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Society Name</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="OrganizationTypeDetailsElementType">
+    <xsd:sequence>
+      <xsd:element name="DunsNumber" type="common:IDREF30">
+        <xsd:annotation>
+          <xsd:documentation>
+            A unique identification number assigned to business entities
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="EnquiryDuns" type="common:C15" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            Headquarters Duns number or Duns Number
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="LineOfBusiness" type="common:LOV">
+        <xsd:annotation>
+          <xsd:documentation>
+            Type of business activities performed at this site
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="PrincipalTitle" type="common:LOV" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            Title of the highest ranking person in the company
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="PrincipalName" type="common:LOV" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            Name of the highest ranking person in the company
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="CEOTitle" type="common:LOV" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            Formal title of the chief executive officer
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="CEOName" type="common:C35" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            Name of the chief executive officer
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="LegalStatus" type="common:LOV">
+        <xsd:annotation>
+          <xsd:documentation>Legal structure, such as partnership, corporation and so on
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ControlYear" type="common:Integer" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Year when current ownership gained control</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="EmployeesTotal" type="common:Integer" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Total number of employees</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="HQBranchInd" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Status of this site. Identifies if the location is the headquarters, a
+            branch, or a single location
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="BranchFlag" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Branch location Indicator</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="OutOfBusinessInd" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates the organization is out of business or not
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="CongDistCode" type="common:LOV" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>U.S. Congressional District Code</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="SICCode" type="common:IDREF30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Standard Industry Classification (SIC) code</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ImportInd" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates if this company is an importer or not</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ExportInd" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates if this company is an exporter or not</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="LaborSurplusInd" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates if this company operates in an area with a labor surplus or
+            not
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="MinorityOwnedInd" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates if this company is primarily owned by ethnic or racial
+            minorities
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="MinorityOwnedType" type="common:LOV" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The type of minority-owned frim</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="WomanOwnedInd" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates if this company is primarily owned by women or not
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="DisadvantageInd" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates if this company is considered disadvantaged by the US
+            governement under Title 8A or not
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="SmallBusInd" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates if this company is considered to be a small business or not
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="RentOwnInd" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates if this company owns or rents its place of business
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="DBRating" type="common:LOV" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Dun and Bradstreet credit rating</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="BestTimeContactBegin" type="common:Dt" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Beginning of the best period of time to contact the organization
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="BestTimeContactEnd" type="common:Dt" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>End of the best period of time to contact the organization
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="OrganizationNamePhonetic" type="common:C320" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Phonetic representation of organization name</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="TaxReference" type="common:C50" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Taxpayer registration number, also known as the VAT number
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="GSAIndicatorFlag" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates if this is a US federal agency supported by the General
+            Services Administration (GSA) or not
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="JgzzFiscalCode" type="common:C20" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Taxpayer identification number or SSN number or Income taxpayer ID or
+            Fiscal code or NIF
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="AnalysisFY" type="common:C5" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Fiscal Year</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="FiscalYearendMonth" type="common:Integer" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Month that the fiscal year ends for organization</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="CurrFYPotentialRevenue" type="common:Amount" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Organization's potential revenue for this fiscal year
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="NextFYPotentialRevenue" type="common:Amount" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Organization's potential revenue for next fiscal year
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="YearEstablished" type="common:Integer" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Year that the organization began doing business</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="MissionStatement" type="common:C2000" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Corporate charter of organization</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="OrganizationType" type="common:LOV" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>User-defined organization types such as region, division, and
+            department
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="BusinessScope" type="common:LOV" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The physical class of business in which a business participates. For
+            example, local, national, or international
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="CorporationClass" type="common:LOV" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Taxation classification for corporation entities</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="LocalBusIdentifierType" type="common:LOV" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Lookup that represents most common business identifier in a country
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="LocalBusIdentifier" type="common:LOV" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Primary identifier assigned to businesses by government agency
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="PrefFunctionalCurrency" type="common:CurrencyCode" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Organization's default currency code</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="RegistrationType" type="common:LOV" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Lookup for type of registration, such as nonprofit</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="TotalEmployeesText" type="common:C60" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Total number of personnel employeed</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="TotalEmployeesInd" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Lookup that indicates whether subsidiaries are included in the
+            calculation of total employees or not
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="TotalEmpEstInd" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Lookup that indicates whether the employee total is estimated or not
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="TotalEmpMinInd" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Lookup that indicates whether the number is a minimum, maximum, or
+            average number of total employees
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ParentSubInd" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Lookup that indicates if organization is a parent or subsidiary
+            location
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="IncorpYear" type="common:ID40" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Year that the business was incorporated</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="SICCodeType" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Version of Standard Industry Classification (SIC) code
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="PublicPrivateOwnershipFlag" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates if the organization is privately owned or publicly owned
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="InternalFlag" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates if this is an internal organization or external
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="LocalActivityCodeType" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Local activity classification code type identifier</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="LocalActivityCode" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Local activity classification code</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="EmpAtPrimaryAdr" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Number of employees at the referenced address</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="EmpAtPrimaryAdrText" type="common:C12" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Number of employees at the referenced address which cannot be mapped to
+            a number
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="EmpAtPrimaryAdrEstInd" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>YQualifies calculation of employees at the primary address as
+            estimated
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="EmpAtPrimaryAdrMinInd" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Qualifies calculation of employees at the primary address as minimum
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ContentSourceType" type="common:LOV" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Source of data content</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ContentSourceNumber" type="common:IDREF15" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Unique Source Number</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="TotalPayments" type="common:Amount" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Total number of payment</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="DoNotConfuseWith" type="common:C255" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates existence of similarly named business</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ActualContentSource" type="common:LOV" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Additional Content Source Type column for backward compatibility
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="HomeCountry" type="common:CountryCode" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Home Country</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ConfigurableAttributes" type="common:Attributes20" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            DFF Fields to populate extra information into the e-Business Suite
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CreditScoreCommetaryDetailsElementType">
+    <xsd:sequence>
+      <xsd:element name="CreditScoreCommentary1" type="common:C30" minOccurs="0"/>
+      <xsd:element name="CreditScoreCommentary2" type="common:C30" minOccurs="0"/>
+      <xsd:element name="CreditScoreCommentary3" type="common:C30" minOccurs="0"/>
+      <xsd:element name="CreditScoreCommentary4" type="common:C30" minOccurs="0"/>
+      <xsd:element name="CreditScoreCommentary5" type="common:C30" minOccurs="0"/>
+      <xsd:element name="CreditScoreCommentary6" type="common:C30" minOccurs="0"/>
+      <xsd:element name="CreditScoreCommentary7" type="common:C30" minOccurs="0"/>
+      <xsd:element name="CreditScoreCommentary8" type="common:C30" minOccurs="0"/>
+      <xsd:element name="CreditScoreCommentary9" type="common:C30" minOccurs="0"/>
+      <xsd:element name="CreditScoreCommentary10" type="common:C30" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="FailureScoreCommDetailsElementType">
+    <xsd:sequence>
+      <xsd:element name="FailureScoreCommentary1" type="common:C240" minOccurs="0"/>
+      <xsd:element name="FailureScoreCommentary2" type="common:C30" minOccurs="0"/>
+      <xsd:element name="FailureScoreCommentary3" type="common:C30" minOccurs="0"/>
+      <xsd:element name="FailureScoreCommentary4" type="common:C30" minOccurs="0"/>
+      <xsd:element name="FailureScoreCommentary5" type="common:C30" minOccurs="0"/>
+      <xsd:element name="FailureScoreCommentary6" type="common:C30" minOccurs="0"/>
+      <xsd:element name="FailureScoreCommentary7" type="common:C30" minOccurs="0"/>
+      <xsd:element name="FailureScoreCommentary8" type="common:C30" minOccurs="0"/>
+      <xsd:element name="FailureScoreCommentary9" type="common:C30" minOccurs="0"/>
+      <xsd:element name="FailureScoreCommentary10" type="common:C30" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="LocationDetailsElementType">
+    <xsd:sequence>
+      <xsd:element name="LocationID" type="common:ID15" minOccurs="0"/>
+      <xsd:element name="Address" type="cust:AddressElementType">
+        <xsd:annotation>
+          <xsd:documentation>Customer Address</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ShortDescription" type="common:C240" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            Short description of the location
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Description" type="common:C2000" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            An extensive description of the location
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="OtherDefinedAttributes" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="AddressKey" type="common:C500" minOccurs="0"/>
+            <xsd:element name="AddressStyle" type="common:C30" minOccurs="0"/>
+            <xsd:element name="ValidatedFlag" type="common:BooleanString" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Indicates if the location is valid or not</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="AddressLinesPhonetic" type="common:Address" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Phonetic or Kana representation of the Kanji address lines
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="PostalPlus4Code" type="common:C10" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Four digit extension to the United States Postal ZIP code
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="Position" type="common:C50" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>The primary direction such as North or East that is used to
+                  access the location
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="LocationDirections" type="common:C640" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Directions to the location</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="AddressEffectiveDate" type="common:Dt" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Date when the location is valid</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="AddressExpirationDate" type="common:Dt" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Date when the location is no longer valid</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="CLLICode" type="common:C60" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Common Language Location Identifier (CLLI) code
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="Language" type="common:C3" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Operating language of the location</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="Geometry" type="common:C30" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Spatial data integration status for given location
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="LocationHierarchyName" type="common:ID40" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Location Hierarchy Name</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="SalesTaxGEOcode" type="common:C30" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>US Sales Tax Jurisdiction code</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="SalesTaxInsideCityLimits" type="common:C30" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Indicates if the location is inside the boundary of a city or
+                  not
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="FALocationName" type="common:ID40" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Location Name</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="TimeZone" type="common:C25" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Time zone identifier</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="ActualContentSource" type="common:LOV" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Additional Content Source Type column for backward
+                  compatibility
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ConfigurableAttributes" type="common:Attributes20" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            DFF Fields to populate extra information into the e-Business Suite
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Site" type="cust:SiteDetailsElementType" minOccurs="0"
+        maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="GroupDetailsElementType">
+    <xsd:sequence>
+      <xsd:element name="Name" type="common:C35"/>
+      <xsd:element name="Type" type="common:LOV"/>
+      <xsd:element name="MissionStatement" type="common:C2000">
+        <xsd:annotation>
+          <xsd:documentation>Corporate charter of organization</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ProfileDetailsElementType">
+    <xsd:sequence>
+      <xsd:element name="Status" type="common:C1" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates whether the profile is active or inactive</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="CollectorName" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Collector associated with this customer profile</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="CreditChecking" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Credit check is to be carried out or not</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="NextCreditReviewDate" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The next date that credit will be reviewed</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Tolerance" type="common:ID40" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Percentage over credit limit that this customer can exceed before
+            action is taken
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="DiscountTerms" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates if discount terms exist or not</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="DunningLetters" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates if dunning letters are sent to this customer when invoices,
+            debit memos or chargebacks become past due or not
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="InterestCharges" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates if late charges are enabled or not</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="SendStatements" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates if statements are sent to this customer or not
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="CreditBalanceStatements" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates if customers credit balances receive statements or not
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="CreditHold" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates if a credit hold exists on this account or not
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="CreditRating" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>List of values choices</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="RiskCode" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>List of values choices</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="StandardTerms" type="common:Integer" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>User-defined payment terms</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="OverrideTerms" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates if user can override standard terms or not
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="InterestPeriodDays" type="common:Integer" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Number of days that the interest rate refers to</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="PaymentGraceDays" type="common:Integer" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Maximum number of overdue days allowed before action is taken
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="DiscountGraceDays" type="common:Integer" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Number of days after discount term date that this customer can take
+            discounts
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="StatementCycleName" type="common:C15" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Statement Cycle Name</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="AccountStatus" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>User-defined account status</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="PercentCollectable" type="common:Decimal" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Percentage of this customer's account balance that you expect to
+            collect on a regular basis
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="AutocashHierarchyName" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Autocash hierarchy associated with this customer profile
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attributes" type="common:Attributes15" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>DFF Fields to populate extra information into the e-Business Suite
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="AutoRecInclDisputedFlag" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates if disputed transactions are included or not
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="TaxPrintingOption" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Tax printing option</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ChargeOnFinanceChargeFlag" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Formula used to compute late charges</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="GroupingRuleName" type="common:C40" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>grouping rule for the customer</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ClearingDays" type="common:Integer" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Number days to clear receipt</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="JgzzAttributes" type="common:Attributes15" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>JG Descriptive Flexfield</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="GlobalAttributes" type="common:GlobalAttributes" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Reserved for country-specific functionality</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ConsInvFlag" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Sort priority</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ConsInvType" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates if balance forward bill is generated and sent to customer or
+            not
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="LockboxMatchingOption" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Lockbox matching option</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ReviewCycle" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Review cycle of customer profile data</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="LastCreditReviewDate" type="common:Dt" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Date of last customer profile data review</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="CreditClassification" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Credit classification</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="KnownAsElementType">
+    <xsd:sequence>
+      <xsd:element name="KnownAs1" type="common:C240" minOccurs="0"/>
+      <xsd:element name="KnownAs2" type="common:C240" minOccurs="0"/>
+      <xsd:element name="KnownAs3" type="common:C240" minOccurs="0"/>
+      <xsd:element name="KnownAs4" type="common:C240" minOccurs="0"/>
+      <xsd:element name="KnownAs5" type="common:C240" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="PartyReferenceDetailsElementType">
+    <xsd:sequence>
+      <xsd:element name="ReferenceID" type="common:IDREF30"/>
+      <xsd:element name="CategoryCode" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            Customer Category Code
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ValidateFlag" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Customer Validation Flag</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ConfigurableAttributes" type="common:Attributes24" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>DFF Fields to populate extra information into the e-Business Suite
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="AccountDetailsElementType">
+    <xsd:sequence>
+      <xsd:element name="Customer" type="cust:CustomerAccountDetailsElementType" minOccurs="0"
+        maxOccurs="unbounded"/>
+      <xsd:element name="Organization" type="common:NotImplemented" minOccurs="0"/>
+      <xsd:element name="Group" type="common:NotImplemented" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CustomerAccountDetailsElementType">
+    <xsd:sequence>
+      <xsd:element name="AccountNumber" type="common:ID25" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Account Number</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="AccountName" type="common:C50">
+        <xsd:annotation>
+          <xsd:documentation>Account Name</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Status" type="common:LOV" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            Customer Status Flag
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Relations" type="common:NotImplemented" minOccurs="0"/>
+      <xsd:element name="OtherDefinedAttributes" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="CustomerType" type="common:C30" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>
+                  I for internal Customer, R for revenue generating external Customer
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="CustomerClassCode" type="common:C30" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>
+                  Customer class indentifier
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="SalesChannelCode" type="common:C30" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>
+                  Sales Channel Code
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="TaxCode" type="common:C50" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>
+                  Tax Code for the Customer
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="FOBPoint" type="common:C30" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>
+                  The point in a shipment at which title to the goods is transferred
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="FrieghtTermCode" type="common:C30" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>
+                  Frieght Term Code
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="ShipVia" type="common:C25" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>
+                  The name of the preferred ship method
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="TaxHeaderLevelFlag" type="common:BooleanString" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>
+                  Indicate if item is tax header or a line item
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="TaxRoundingRules" type="common:C30" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>
+                  Tax amount rounding rule
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="TerminateServiceDayMonth" type="common:C6" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>
+                  The date when services ordered by the customer will end
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="AccountEstablisheDate" type="common:C30" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>
+                  Date when the customer account was originally established
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="HeldBillExpirationDate" type="common:C30" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>
+                  Held bill expiration date
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="HoldBillFlag" type="common:BooleanString" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>
+                  Indicates if the bill receivable should be held or not
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="DepositRefundMethod" type="common:C20" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>
+                  Refund Method
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="NPANumber" type="common:C60" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>
+                  Number Plan Area
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="SourceCode" type="common:C150" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>
+                  Source Code
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="Comments" type="common:C240" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>
+                  Free format information about the customer
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="DatesNegativeTolerance" type="common:ID40" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>
+                  Maximum number of days prior to a date
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="DatesPositiveTolerance" type="common:ID40" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>
+                  Maximum number of days after a date
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="DateTypePreference" type="common:C20" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>
+                  Preference for ship or arrival dates
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="OverShipmentTolerance" type="common:ID40" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>
+                  Percentage tolerance for over shipment
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="UnderShipmentTolerance" type="common:ID40" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>
+                  Percentage tolerance for under shipment
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="OverReturnTolerance" type="common:ID40" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>
+                  Percentage tolerance for over return
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="UnderReturnTolerance" type="common:ID40" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>
+                  Percentage tolerance for under return
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="ItemCrossRefPref" type="common:C30" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>
+                  Item cross reference preference for placing orders
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="ShipSetsIncludeLinesFlag" type="common:BooleanString" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>
+                  Indicates if lines should automatically be included in ship sets or not
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="ArrivalsetsIncludeLinesFlag" type="common:BooleanString"
+              minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>
+                  Indicates if lines include arrival sets
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="SchedDatePushFlag" type="common:BooleanString" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>
+                  Indicates if the group schedule date should automatically be pushed or
+                  not
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="InvoiceQuantityRule" type="common:ID40" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>
+                  Rule to indicate whether to invoice for ordered quantity or fulfilled
+                  quantity
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="StatusUpdateDate" type="common:C30" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>
+                  Last status update date
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="AutopayFlag" type="common:BooleanString" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>
+                  Autopay flag
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="Profile" type="cust:ProfileDetailsElementType" minOccurs="0"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ConfigurableAttributes" type="common:Attributes20" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            DFF Fields to populate extra information into the e-Business Suite
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ConfigurableGlobalAttributes" type="common:GlobalAttributes"
+        minOccurs="0"/>
+      <xsd:element name="CustomerAcctSites" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="AccountSite" type="cust:AcctSiteDetailsElementType"
+              maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="AcctSiteDetailsElementType">
+    <xsd:sequence>
+      <xsd:element name="AcctSiteID" type="common:ID15" minOccurs="0"/>
+      <xsd:element name="LocationID" type="common:ID15"/>
+      <xsd:element name="Status" type="common:LOV" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            Customer Status flag
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="OtherDefinedAttributes" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="CustomerCategoryCode" type="common:LOV" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Customer Category Code</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="KeyAccountFlag" type="common:BooleanString" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Key account for sales representatives</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="ECETPLocationCode" type="common:C40" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Stores the EDI location code. It should be unique for a
+                  customer
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="TerritoryCode" type="common:LOV" minOccurs="0"/>
+            <xsd:element name="TranslatedCustomerName" type="common:C50" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Translated customer name</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ConfigurableAttributes" type="common:Attributes20" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            DFF Fields to populate extra information into the e-Business Suite
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ConfigurableGlobalAttributes" type="common:GlobalAttributes"
+        minOccurs="0"/>
+      <xsd:element name="CustomerAcctSiteUses" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="SiteUse" type="cust:AcctSiteUsesDetailsElementType"
+              maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="CustomerAccountRoles" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="CustomerAccountRole" type="cust:AccountRoleDetailsElementType"
+              maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="AcctSiteUsesDetailsElementType">
+    <xsd:sequence>
+      <xsd:element name="SiteUseCode" type="common:LOV" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Business purpose assigned to customer site account</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="PrimaryFlag" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates if this site is the primary site for this customer account or
+            not
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Status" type="common:LOV" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Site use status flag</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="OtherDefinedAttributes" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="SICCode" type="common:C30" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Site use identifier</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="PaymentTerms" type="common:LOV" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Payment Term Name</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="GSAIndicator" type="common:BooleanString" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>US federal agency supported by the General Services
+                  Administration (GSA) or not
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="ShipVia" type="common:LOV" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>The name of the preferred ship method</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="FobPoint" type="common:C30" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Free on board point</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="OrderType" type="common:LOV" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Order type</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="PriceListName" type="common:LOV" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Price list name</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="FreightTerm" type="common:LOV" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Freight term code</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="TerritoryCode" type="common:LOV" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Territory code</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="TaxReference" type="common:C50" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Taxpayer identification number</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="SortPriority" type="common:ID40" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Sort priority</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="TaxCode" type="common:LOV" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Tax code associated with this site</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="DemandClassCode" type="common:LOV" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Used defined demand class code</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="TaxHeaderLevelFlag" type="common:BooleanString" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Used by Oracle Sales Compensation</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="TaxRoundingRule" type="common:LOV" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Tax rounding rule</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="PrimarySalesRepName" type="common:C60" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Primary Salesrep Name</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="DatesNegativeTolerance" type="common:Integer" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Acceptable range of days prior to a specified date
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="DatesPositiveTolerance" type="common:Integer" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Acceptable range of days after a specified date
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="DateTypePreference" type="common:LOV" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Preference for ship or arrival dates</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="OverShipmentTolerance" type="common:Integer" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Percentage tolerance for over shipment</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="UnderShipmentTolerance" type="common:Integer" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Percentage tolerance for under shipment</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="ItemCrossRefPref" type="common:LOV" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Item cross-reference preference for placing orders
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="OverReturnTolerance" type="common:Integer" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Percentage tolerance for over return</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="UnderReturnTolerance" type="common:Integer" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Percentage tolerance for under return</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="ShipSetsIncludeLinesFlag" type="common:BooleanString" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Indicates if lines should automatically be included in ship sets
+                  or not
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="ArrivalsetsIncludeLinesFlag" type="common:BooleanString"
+              minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Indicates if lines should automatically be included in ship sets
+                  or not
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="SchedDatePushFlag" type="common:BooleanString" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Indicates if the group schedule date should automatically be
+                  pushed or not
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="InvoiceQuantityRule" type="common:C30" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>
+                  Rule to indicate whether to invoice for ordered quantity or fulfilled
+                  quantity
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="TaxClassification" type="common:LOV" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>
+                  Classifies Bill-To site to tax group codes
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ConfigurableAttributes" type="common:Attributes25" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            DFF Fields to populate extra information into the e-Business Suite
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ConfigurableGlobalAttributes" type="common:GlobalAttributes"
+        minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="SiteDetailsElementType">
+    <xsd:sequence>
+      <xsd:element name="LocationID" type="common:ID15" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Location ID</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="SiteNumber" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Customer Site Number</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="SiteName" type="common:C240" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            User-defined name for the site
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Status" type="common:LOV" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            Party site status flag
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="OtherDefinedAttributes" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="MailStop" type="common:C60" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>A user-defined code to indicate a mail drop point within their
+                  organization
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="IdentifyingAddressFlag" type="common:BooleanString" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Indicates if this is the identifying address for the party
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="Addressee" type="common:C150" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Addressee information</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="GlobalLocationNumber" type="common:C40" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Global location number that uniquely identifies each location in
+                  a trading partners enterprise
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="DunsNumberC" type="common:C30" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>A unique nine-digit identification number that is assigned to
+                  business entities by Dun and Bradstreet
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ConfigurableAttributes" type="common:Attributes20" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            DFF Fields to populate extra information into the e-Business Suite
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="SiteUses" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="SiteUsesDetail" type="cust:SiteUsesDetailsElementType"
+              maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="SiteUsesDetailsElementType">
+    <xsd:sequence>
+      <xsd:element name="SiteUseID" type="common:ID30" minOccurs="0"/>
+      <xsd:element name="Type" type="common:LOV">
+        <xsd:annotation>
+          <xsd:documentation>Site use type</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="PrimaryPerTypeFlag" type="common:BooleanString">
+        <xsd:annotation>
+          <xsd:documentation>Indicates if this is the primary use for this site or not
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Status" type="common:LOV" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates if this is an Active or Inactive site or not
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Comments" type="common:C240" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            A textual description of the possible use of a site by a party
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ContactDetailsElementType">
+    <xsd:sequence>
+      <xsd:element name="OrgContact" type="cust:OrgContactDetailsElementType" minOccurs="0"/>
+      <xsd:element name="OrgContactRoles" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="OrgContactRole" type="cust:ContactRoleDetailsElementType"
+              maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ContactPoints" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="ContactPoint" type="cust:ContactPointDetailsElementType"
+              maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <!--<xsd:element name="CustomerRelationShip" type="cust:CustomerRelationTypeDetails" minOccurs="0"/> -->
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="OrgContactDetailsElementType">
+    <xsd:sequence>
+      <xsd:element name="ContactNumber" type="common:C30">
+        <xsd:annotation>
+          <xsd:documentation>User-defined identification number for this contact</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="JobTitle" type="common:C100" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            Job Title
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="JobTitleCode" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            Job title code
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="DepartmentCode" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Department code</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Department" type="common:C60" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Name of the department</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="DecisionMakerFlag" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates if this contact is a decision maker or not
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ReferenceUseFlag" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates if this contact can be used as a reference or not
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Rank" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Importance of the contact relative to other contacts
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Comments" type="common:C240" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            User comments
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ConfigurableAttributes" type="common:Attributes24" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>DFF Fields to populate extra information into the e-Business Suite
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="RelationShipDetailsElementType">
+    <xsd:sequence>
+      <xsd:element name="RelationshipCode" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Either a forward or a backward relationship code</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="RelationshipType" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The relationship type name</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Comments" type="common:C240" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>User comments</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="StartDate" type="common:Dt" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Date relationship begins</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="EndDate" type="common:Dt" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Date relationship ends</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Status" type="common:LOV" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates if this is an active or inactive relationship
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="AdditionalInfo" type="cust:AdditionalInfoDetailsElementType" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>DFF Fields to populate extra information into the e-Business Suite
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="PercentageOwnerShip" type="common:ID40" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Percentage of child entity owned by its parent entity
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ActualContentSource" type="common:LOV" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Additional Content Source Type column for backward compatibility
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ConfigurableAttributes" type="common:Attributes20" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            DFF Fields to populate extra information into the e-Business Suite
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="AdditionalInfoDetailsElementType">
+    <xsd:annotation>
+      <xsd:documentation>Reserved for application-specific functionality. Column values depend on
+        relationship type
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="AdditionalInformation1" type="common:C150" minOccurs="0"/>
+      <xsd:element name="AdditionalInformation2" type="common:C150" minOccurs="0"/>
+      <xsd:element name="AdditionalInformation3" type="common:C150" minOccurs="0"/>
+      <xsd:element name="AdditionalInformation4" type="common:C150" minOccurs="0"/>
+      <xsd:element name="AdditionalInformation5" type="common:C150" minOccurs="0"/>
+      <xsd:element name="AdditionalInformation6" type="common:C150" minOccurs="0"/>
+      <xsd:element name="AdditionalInformation7" type="common:C150" minOccurs="0"/>
+      <xsd:element name="AdditionalInformation8" type="common:C150" minOccurs="0"/>
+      <xsd:element name="AdditionalInformation9" type="common:C150" minOccurs="0"/>
+      <xsd:element name="AdditionalInformation10" type="common:C150" minOccurs="0"/>
+      <xsd:element name="AdditionalInformation11" type="common:C150" minOccurs="0"/>
+      <xsd:element name="AdditionalInformation12" type="common:C150" minOccurs="0"/>
+      <xsd:element name="AdditionalInformation13" type="common:C150" minOccurs="0"/>
+      <xsd:element name="AdditionalInformation14" type="common:C150" minOccurs="0"/>
+      <xsd:element name="AdditionalInformation15" type="common:C150" minOccurs="0"/>
+      <xsd:element name="AdditionalInformation16" type="common:C150" minOccurs="0"/>
+      <xsd:element name="AdditionalInformation17" type="common:C150" minOccurs="0"/>
+      <xsd:element name="AdditionalInformation18" type="common:C150" minOccurs="0"/>
+      <xsd:element name="AdditionalInformation19" type="common:C150" minOccurs="0"/>
+      <xsd:element name="AdditionalInformation20" type="common:C150" minOccurs="0"/>
+      <xsd:element name="AdditionalInformation21" type="common:C150" minOccurs="0"/>
+      <xsd:element name="AdditionalInformation22" type="common:C150" minOccurs="0"/>
+      <xsd:element name="AdditionalInformation23" type="common:C150" minOccurs="0"/>
+      <xsd:element name="AdditionalInformation24" type="common:C150" minOccurs="0"/>
+      <xsd:element name="AdditionalInformation25" type="common:C150" minOccurs="0"/>
+      <xsd:element name="AdditionalInformation26" type="common:C150" minOccurs="0"/>
+      <xsd:element name="AdditionalInformation27" type="common:C150" minOccurs="0"/>
+      <xsd:element name="AdditionalInformation28" type="common:C150" minOccurs="0"/>
+      <xsd:element name="AdditionalInformation29" type="common:C150" minOccurs="0"/>
+      <xsd:element name="AdditionalInformation30" type="common:C150" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ContactRoleDetailsElementType">
+    <xsd:sequence>
+      <xsd:element name="RoleType" type="common:C30">
+        <xsd:annotation>
+          <xsd:documentation>Role performed by a contact</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="PrimaryFlag" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates if this is the primary role for this contact or not
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="RoleLevel" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Role level of the contact</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="PrimaryContactPerRoleType" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates if the contact is the primary contact for this role or not
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Status" type="common:C1" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Record status flag</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="LanguageDetailsElementType">
+    <xsd:sequence>
+      <xsd:element name="LanguageReferenceID" type="common:IDREF15" minOccurs="0"/>
+      <xsd:element name="LanguageName" type="common:C4">
+        <xsd:annotation>
+          <xsd:documentation>The standard name for a language. For example, Spanish, Mandarin, or
+            American English
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="NativeLanguage" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates if this language is the person's declared native language or
+            not
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="PrimaryLanguageIndicator" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates if this is the primary language used by a person in
+            day-to-day transactions or not
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ReadsLevel" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>User-defined level number or name to indicate the ability to read a
+            language
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="SpeaksLevel" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>User-defined level number or name to indicate the ability to speak a
+            language
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="WritesLevel" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>User-defined level number or name to indicate the ability to write in a
+            language
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="SpokenComprehensionLevel" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Code to indicate comprehension of a spoken language</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Status" type="common:C1" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Record status flag</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ContactPointDetailsElementType">
+    <xsd:sequence>
+      <xsd:element name="ContactPointID" type="common:ID15" minOccurs="0"/>
+      <xsd:element name="ContactPointType" type="common:LOV">
+        <xsd:annotation>
+          <xsd:documentation>Contact point type, such as phone or e-mail</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Status" type="common:LOV" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Contact point status, such as active, inactive, delete
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="PrimaryFlag" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates if this is the primary contact point of this contact point
+            type for referenced party, site, or location
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ContactPointPurpose" type="common:LOV" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Contact point type, such as business or personal</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="PrimaryByPurpose" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates this is the primary contact point of the contact point or
+            not
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:choice>
+        <xsd:element name="EDI" type="cust:EDIDetailsElementType" minOccurs="0"/>
+        <xsd:element name="Email" type="cust:EmailDetailsElementType" minOccurs="0"/>
+        <xsd:element name="Phone" type="cust:PhoneDetailsElementType" minOccurs="0"/>
+        <xsd:element name="Telex" type="cust:TelexDetailsElementType" minOccurs="0"/>
+        <xsd:element name="Web" type="cust:WEBDetailsElementType" minOccurs="0"/>
+      </xsd:choice>
+      <xsd:element name="ActualContentSource" type="common:LOV" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            Additional Content Source Type column for backward compatibility
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ContactPreferences" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Preference" type="cust:ContactPreferenceDetailsElementType"
+              maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+
+      <xsd:element name="ConfigurableAttributes" type="common:Attributes20" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            DFF Fields to populate extra information into the e-Business Suite
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="EDIDetailsElementType">
+    <xsd:sequence>
+      <xsd:element name="EDITransactionHandling" type="common:C25" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>ANSI standard code for EDI transaction type</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="EDIIDNumber" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>EDI trading partner number for the supplier site</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="EDIPaymentMethod" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates how a payment is to be made through EDI</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="EDIPaymentFormat" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates payment format</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="EDIRemittanceMethod" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates how remittance advice are sent to the supplier
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="EDIRemittanceInstruction" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates who will send the remittance advice. Valid values are Banks
+            or Payables systems
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="EDITPHeaderID" type="common:ID40" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>EDI transaction header unique identifier</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="EDIEceTPLocationCode" type="common:C40" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Trading partner location code for EDI Gateway</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="EmailDetailsElementType">
+    <xsd:sequence>
+      <xsd:element name="EmailFormat" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates the preferred format for e-mail addressed to this address.
+            For example, HTML or ASCII
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="EmailAddress" type="common:C2000">
+        <xsd:annotation>
+          <xsd:documentation>E-mail address of the contact point</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="PhoneDetailsElementType">
+    <xsd:sequence>
+      <xsd:element name="PhoneNumber" type="common:C40">
+        <xsd:annotation>
+          <xsd:documentation>
+            A telephone number formatted in the local format. The number should not
+            include area code, country code, or extension
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="PhoneCallingCalendar" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The name or code for a calling calendar used with this telephone
+            number
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="LastContactDtTime" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Date and time of last contact placed to this contact point
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="PhoneAreaCode" type="common:C10" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The area code within a country code</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="PhoneCountryCode" type="common:C10" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>International country code for a telephone number</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="PhoneExtension" type="common:C20" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Additional number addressed after initial connection to an internal
+            telephone system
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="PhoneLineType" type="common:LOV">
+        <xsd:annotation>
+          <xsd:documentation>Phone line type, such as general, fax, inbound, or outbound
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="RawPhoneNumber" type="common:C60" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Unformatted telephone number</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="TelexDetailsElementType">
+    <xsd:sequence>
+      <xsd:element name="TelexNumber" type="common:C50">
+        <xsd:annotation>
+          <xsd:documentation>Reference number (usually a telephone number) that TELEX messages are
+            sent to
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="WEBDetailsElementType">
+    <xsd:sequence>
+      <xsd:element name="WebType" type="common:C60">
+        <xsd:annotation>
+          <xsd:documentation>The prefix class to a web address. Typically this is either FTP or
+            HTTP
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="URL" type="common:C2000">
+        <xsd:annotation>
+          <xsd:documentation>Uniform resource locator</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="RelationTypeDetailsElementType">
+    <xsd:sequence>
+      <xsd:element name="RelationshipType" type="common:LOV">
+        <xsd:annotation>
+          <xsd:documentation>The relationship type name</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ForwardRelCode" type="common:C30">
+        <xsd:annotation>
+          <xsd:documentation>The forward relationship code used to describe relationships
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="BackwardRelCode" type="common:C30">
+        <xsd:annotation>
+          <xsd:documentation>The backward relationship code used to describe relationships
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="DirectionCode" type="common:C30">
+        <xsd:annotation>
+          <xsd:documentation>Direction Code</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="HierarchicalFlag" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates whether the relationship type is hierarchy or not
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="CreatePartyFlag" type="common:BooleanString" minOccurs="0"/>
+      <xsd:element name="AllowRelateToSelfFlag" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates if a party can be related to itself or not
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="AllowCircularCelationships" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates if circular relationships are allowed using this relationship
+            type or not
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="SubjectType" type="common:C30">
+        <xsd:annotation>
+          <xsd:documentation>Subject type of the relationship type</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ObjectType" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Object type of the relationship type</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Status" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates if the relationship type is inactive or active
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="MultipleParentAllowed" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates whether multiple parents are allowed under this relationship
+            type or not
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="InclUnrelatedEntities" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>indicates whether entities not in relationships are included in a
+            hierarchy or not
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ForwardRole" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>This describes the role a subject party plays in a relationship
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="BackwardRole" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>This describes the role an object party plays in a relationship
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="CustomerRelationShip" type="cust:RelationShipDetailsElementType"
+        minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CategoryDetailsElementType">
+    <xsd:sequence>
+      <xsd:element name="ClassCategory" type="common:C30">
+        <xsd:annotation>
+          <xsd:documentation>Class category that belongs to the group</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="AllowMultiParentFlag" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates whether codes under this category can have multiple parent
+            codes or not
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="AllowMultiAssignFlag" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates whether codes under this category can be assigned to an
+            object more than once or not
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="AllowLeafNodeOnlyFlag" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates whether or not the instances of those entities associated
+            with this particular class category
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Relations" type="cust:ClassCodeRelationDetailsElementType" minOccurs="0"/>
+      <xsd:element name="Assignments" type="cust:ClassCodeAssignDetailsElementType" minOccurs="0"/>
+      <xsd:element name="CategoryUse" type="cust:ClassCatagoryUseDetailsElementType" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ClassCodeRelationDetailsElementType">
+    <xsd:sequence>
+      <xsd:element name="ClassCategory" type="common:C30">
+        <xsd:annotation>
+          <xsd:documentation>Classification category name</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ClassCode" type="common:C30">
+        <xsd:annotation>
+          <xsd:documentation>Parent classification code</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="SubClassCode" type="common:C30">
+        <xsd:annotation>
+          <xsd:documentation>Child classification code</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="StartDateActive" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The date when the class code relationship becomes effective
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="EndDateActive" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The date when the class code relationship is no longer applied
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ClassCodeAssignDetailsElementType">
+    <xsd:sequence>
+      <xsd:element name="ClassCategory" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Classification category name</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ClassCode" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Classification code</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="PrimaryFlag" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates if this is the primary class code of a class category for the
+            organization
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="StartDateActive" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The date that the class code applies to the organization
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="EndDateActive" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The date when the class code is no longer applied</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Status" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Record status flag</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Rank" type="common:ID40" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Used to rank classes if multiple classes have been assigned to a
+            customer
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ActualContentSource" type="common:LOV" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Source system that users can overwrite data from</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ClassCatagoryUseDetailsElementType">
+    <xsd:sequence>
+      <xsd:element name="ClassCategory" type="common:C30">
+        <xsd:annotation>
+          <xsd:documentation>Public classifications such as US SIC, NACE, NAICS or custom classes
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="AdditionalWhereClause" type="common:C4000" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Helps to restrict the set of instances in the owner table from which
+            the classification will apply
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ContactPreferenceDetailsElementType">
+    <xsd:sequence>
+      <xsd:element name="PreferenceID" type="common:ID15" minOccurs="0"/>
+      <xsd:element name="PreferenceCode" type="common:C30">
+        <xsd:annotation>
+          <xsd:documentation>
+            Permission to use or not to use a particular contact method
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ContactType" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Type of contact</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="PreferenceStartDate" type="common:Dt">
+        <xsd:annotation>
+          <xsd:documentation>
+            Starting date of the period during which a party should or should not be
+            contacted
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="PreferenceEndDate" type="common:Dt" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            Ending date of the period during which a party should or should not be
+            contacted
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ReasonCode" type="common:LOV" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            Reason that this type of contact should or should not be made
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="OtherDefinedAttributes" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="PreferenceTopicType" type="common:LOV" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Appropriate subjects to send or not to send to the customer that
+                  the preference is created for
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="PreferenceTopicTypeCode" type="common:LOV" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Preference topic type code</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="PreferenceStartTimeHr" type="common:Tm" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Starting hour of the time range during which a customer should or
+                  should not be contacted
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="PreferenceEndTimeHr" type="common:Tm" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Ending hour of the time range during which a customer should or
+                  should not be contacted.
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="PreferenceStartTimeHrMi" type="common:Tm" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Starting minute of the time range during which a customer should
+                  or should not be contacted
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="PreferenceEndTimeHrMi" type="common:Tm" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Ending minute of the time range during which a customer should or
+                  should not be contacted
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="MaxNoOfInteractions" type="common:Integer" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>The number of times you can use this contact point
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="MaxNoOfInteractUomCode" type="common:C30" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>The period of time during which the maximum number of
+                  interactions applies
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="RequestedBy" type="common:C30" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Indicates if the permission or restriction was created internally
+                  or requested by the customer
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="Status" type="common:LOV" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>Record status flag</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="AccountRoleDetailsElementType">
+    <xsd:sequence>
+      <xsd:element name="PrimaryFlag" type="common:BooleanString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Indicates if this role is the primary role for this customer account or
+            not
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="RoleType" type="common:LOV"/>
+      <xsd:element name="SourceCode" type="common:LOV" minOccurs="0"/>
+      <xsd:element name="Status" type="common:LOV"/>
+      <xsd:element name="ConfigurableAttributes" type="common:Attributes25" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            DFF Fields to populate extra information into the e-Business Suite
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="CustomerAccountRoleResp" type="cust:AccountRoleRespDetailsElementType"
+        minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="AccountRoleRespDetailsElementType">
+    <xsd:sequence>
+      <xsd:element name="ResponsibilityType" type="common:LOV" minOccurs="0"/>
+      <xsd:element name="PrimaryFlag" type="common:BooleanString" minOccurs="0"/>
+      <xsd:element name="ConfigurableAttributes" type="common:Attributes25" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>DFF Fields to populate extra information into the e-Business Suite
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:simpleType name="PartyIDElementType">
+    <xsd:annotation>
+      <xsd:documentation>Customer Identifier</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="common:ID15"/>
+  </xsd:simpleType>
+  <xsd:complexType name="NotesElementType">
+    <xsd:sequence>
+      <xsd:element name="NoteID" type="common:IDREF15" minOccurs="0"/>
+      <xsd:element name="Text" type="common:C2000"/>
+      <xsd:element name="Language" type="common:LanguageCode" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="AddressElementType">
+    <xsd:annotation>
+      <xsd:documentation>The base type for Address</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="House" type="common:C50" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>House Name and Number</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="AddressLine1" type="common:C240">
+        <xsd:annotation>
+          <xsd:documentation>Address Line 1</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="AddressLine2" type="common:C240" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Address Line 2</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="AddressLine3" type="common:C240" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Address Line 3</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="AddressLine4" type="common:C240" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Address Line 4</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="City" type="common:C60" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>City/Town Name</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Country" type="common:CountryCode">
+        <xsd:annotation>
+          <xsd:documentation>County</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="County" type="common:C60" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>County</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="State" type="common:C60" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>State Code/Name</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Province" type="common:C60" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Province</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="PostalCode" type="common:C60" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Postal Code</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>

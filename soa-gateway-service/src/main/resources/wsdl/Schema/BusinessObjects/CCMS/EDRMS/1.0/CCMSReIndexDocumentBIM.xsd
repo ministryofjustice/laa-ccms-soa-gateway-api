@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- edited with XMLSpy v2010 (http://www.altova.com) by Ashish (Capgemini) -->
+<!--Created with Liquid XML Studio - FREE Community Edition 7.1.6.1440 (http://www.liquid-technologies.com)-->
+<xsd:schema
+  xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common"
+  xmlns:msg="http://legalservices.gov.uk/CCMS/EDRMS/1.0/CCMSReIndexDocumentBIM"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:edrms="http://legalservices.gov.uk/CCMS/EDRMS/1.0/EDRMSBIO"
+  targetNamespace="http://legalservices.gov.uk/CCMS/EDRMS/1.0/CCMSReIndexDocumentBIM"
+  elementFormDefault="qualified" attributeFormDefault="unqualified"
+  version="1.0">
+  <xsd:import namespace="http://legalservices.gov.uk/Enterprise/Common/1.0/Header"
+    schemaLocation="../../../Enterprise/Common/1.0/Header.xsd"/>
+  <xsd:import namespace="http://legalservices.gov.uk/Enterprise/Common/1.0/Common"
+    schemaLocation="../../../Enterprise/Common/1.0/Common.xsd"/>
+  <xsd:import namespace="http://legalservices.gov.uk/CCMS/EDRMS/1.0/EDRMSBIO"
+    schemaLocation="EDRMSBIO.xsd"/>
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      <Version>1.0</Version>
+      <Definition>Strore Document BIM</Definition>
+      <Description>This schema will used for storing document at EDRMS</Description>
+      <Author>Milind A</Author>
+      <ModifiedBy>Milind A</ModifiedBy>
+      <VersionDate>03-12-2012</VersionDate>
+      <VersionDescription>Initial Version</VersionDescription>
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:element name="ReIndexDocumentRQ" type="msg:ReIndexDocumentRQ"/>
+  <xsd:element name="ReIndexDocumentRS" type="msg:ReIndexDocumentRS"/>
+  <xsd:complexType name="ReIndexDocumentRQ">
+    <xsd:sequence>
+      <xsd:element name="User" type="msg:UserType"/>
+      <xsd:element name="SourceSystem">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Name" type="common:C100" minOccurs="0"/>
+            <xsd:element name="DocumentId" type="common:C100" minOccurs="0"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="AuthrisationSystem" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Name"/>
+            <xsd:element name="AuthSysParameters" maxOccurs="unbounded" minOccurs="0">
+              <xsd:complexType>
+                <xsd:sequence>
+                  <xsd:element name="Name"/>
+                  <xsd:element name="Value" type="xsd:string"/>
+                </xsd:sequence>
+              </xsd:complexType>
+            </xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Document" type="msg:DocumentType"/>
+      <xsd:element name="NotificationID" type="common:ID15"/>
+      <xsd:element name="TransactionId" type="common:C100" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="MetadataType">
+    <xsd:sequence>
+      <xsd:element name="CCMS" type="edrms:MetaDataElementType"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="DocumentType">
+    <xsd:sequence>
+      <xsd:element name="ReIndexDate" type="common:C14" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>(‘DDMMYYYYHH24:MI:SS)</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="EDRMSDocumentId" type="common:C30" minOccurs="0"/>
+      <xsd:element name="DocumentClass" type="common:C2" minOccurs="0"/>
+      <xsd:element name="DocumentType" type="common:C8" minOccurs="0"/>
+      <xsd:element name="MultiIndex" type="common:Boolean" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="UserType">
+    <xsd:sequence>
+      <xsd:element name="UserName" type="common:C50">
+        <xsd:annotation>
+          <xsd:documentation>House Name and Number</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="NorthgateUser" type="common:C20"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="DocumentTypeRs">
+    <xsd:sequence>
+      <xsd:element name="EDRMSDocumentID" type="common:C40" minOccurs="0"></xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ReIndexDocumentRS">
+    <xsd:sequence>
+      <xsd:element name="Status" type="common:C20">
+        <xsd:annotation>
+          <xsd:documentation>Whether the request was successful. The value of this is
+            either “Success” or “Failed”
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="FailureReason" type="common:C50" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>2. Error message for the failed request.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Document" type="msg:DocumentTypeRs" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- edited with XMLSpy v2010 (http://www.altova.com) by Nikhil (Cap) -->
+<!--Created with Liquid XML Studio - FREE Community Edition 7.1.6.1440 (http://www.liquid-technologies.com)-->
+<xsd:schema xmlns:header="http://legalservices.gov.uk/Enterprise/Common/1.0/Header"
+  xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common"
+  xmlns:msg="http://legalservices.gov.uk/CCMS/Security/UserRoles/1.0/UserRolesBIM"
+  xmlns:userrole="http://legalservices.gov.uk/CCMS/Security/UserRoles/1.0/UserRolesBIO"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="http://legalservices.gov.uk/CCMS/Security/UserRoles/1.0/UserRolesBIM"
+  elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+  <xsd:import namespace="http://legalservices.gov.uk/CCMS/Security/UserRoles/1.0/UserRolesBIO"
+    schemaLocation="UserRolesBIO.xsd"/>
+  <xsd:import namespace="http://legalservices.gov.uk/Enterprise/Common/1.0/Header"
+    schemaLocation="../../../../Enterprise/Common/1.0/Header.xsd"/>
+  <xsd:import namespace="http://legalservices.gov.uk/Enterprise/Common/1.0/Common"
+    schemaLocation="../../../../Enterprise/Common/1.0/Common.xsd"/>
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      <Version>1.0</Version>
+      <Definition>User Roles BIM</Definition>
+      <Description>This schema defines the messages to define roles and responsibilities for the
+        CCMS user
+      </Description>
+      <Author>Ramesh Madhavan</Author>
+      <ModifiedBy>Ramesh Madhavan</ModifiedBy>
+      <VersionDate>29-12-2009</VersionDate>
+      <VersionDescription>Initial Version</VersionDescription>
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:element name="UserRolesInqRQ" type="msg:UserRolesInqRQ"/>
+  <xsd:element name="UserRolesInqRS" type="msg:UserRolesInqRS"/>
+
+  <xsd:complexType name="UserRolesInqRQ">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRQ"/>
+      <xsd:element name="UserID" type="common:C30"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="UserRolesInqRS">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRS"/>
+      <xsd:element name="UserRoles" type="userrole:UserRoles" minOccurs="0" maxOccurs="10"/>
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>

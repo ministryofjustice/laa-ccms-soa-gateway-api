@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2010 rel. 3 (http://www.altova.com) by Ashish (Capgemini) -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common"
+  xmlns:receipt="http://legalservices.gov.uk/CCMS/Finance/Receivables/1.0/ARReceiptBIO"
+  targetNamespace="http://legalservices.gov.uk/CCMS/Finance/Receivables/1.0/ARReceiptBIO"
+  elementFormDefault="qualified" attributeFormDefault="unqualified"
+  version="1.0">
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      <Version>1.0 Draft</Version>
+      <Definition>ARReceipt</Definition>
+      <Description>This schema defines the objects to create Receipt at Ebiz.</Description>
+      <Author>Milind A</Author>
+      <ModifiedBy>Milind A</ModifiedBy>
+      <VersionDate>07-09-2011</VersionDate>
+      <VersionDescription>Initial Version</VersionDescription>
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:import namespace="http://legalservices.gov.uk/Enterprise/Common/1.0/Common"
+    schemaLocation="../../../../Enterprise/Common/1.0/Common.xsd"/>
+  <xsd:complexType name="ARReceiptType">
+    <xsd:sequence>
+      <xsd:element name="ReceiptReference" type="common:IDREF15"/>
+      <xsd:element name="ReceiptID" type="common:ID15" minOccurs="0"/>
+      <xsd:element name="ReceiptNumber" type="common:IDREF15" minOccurs="0"/>
+      <xsd:element name="ReceiptDetails" type="receipt:ReceiptDetailsElementType" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+  <xsd:complexType name="ReceiptDetailsElementType">
+    <xsd:sequence>
+      <xsd:element name="ReceiptDate" type="common:Dt"/>
+      <xsd:element name="LedgerDate" type="common:Dt" minOccurs="0"/>
+      <xsd:element name="MaturityDate" type="common:Dt" minOccurs="0"/>
+      <xsd:element name="PostmarkDate" type="common:Dt" minOccurs="0"/>
+      <xsd:element name="CurrencyCode" type="common:CurrencyCode" minOccurs="0"/>
+      <xsd:element name="ExchangeRate" type="receipt:ExchangeRateElementType" minOccurs="0"/>
+      <xsd:element name="Amount" type="common:Amount"/>
+      <xsd:element name="FactorDiscountAmount" type="common:Amount" minOccurs="0"/>
+      <xsd:element name="ReceiptMethod" type="receipt:ReceiptMethodElementType" minOccurs="0"/>
+      <xsd:element name="Comments" type="common:C150" minOccurs="0"/>
+      <xsd:element name="CustomerDetails" type="receipt:CustomerDetailsElementType" minOccurs="0"/>
+      <xsd:element name="CustomerBankAccountDetails" type="receipt:BankAcctDetailsElementType"
+        minOccurs="0"/>
+      <xsd:element name="RemittanceBankAccountDetails" type="receipt:BankAcctDetailsElementType"
+        minOccurs="0"/>
+      <xsd:element name="OtherDefinedAttributes" type="receipt:OtherDefinedAttributesElementType"
+        minOccurs="0"/>
+      <xsd:element name="ConfigurableAttributes" type="common:Attributes15" minOccurs="0"/>
+      <xsd:element name="ConfigrableGlobalAttributes" type="common:GlobalAttributes" minOccurs="0"/>
+      <xsd:element name="IssuerDetails" type="receipt:IssuerDetailsElementType" minOccurs="0"/>
+      <xsd:element name="ReceiptApplicationDetails" type="receipt:ReceiptApplDetailsElementType"
+        minOccurs="0"/>
+      <xsd:element name="ReversalDetails" type="receipt:ReversalDetailsElementType" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CustomerDetailsElementType">
+    <xsd:sequence>
+      <xsd:element name="CustomerID" type="common:ID15"/>
+      <xsd:element name="CustomerNumber" type="common:IDREF15" minOccurs="0"/>
+      <xsd:element name="CustomerName" type="common:C50" minOccurs="0"/>
+      <xsd:element name="Location" type="common:C150" minOccurs="0"/>
+      <xsd:element name="CustomerSiteUseId" type="common:ID15" minOccurs="0"/>
+      <xsd:element name="DefaultSiteUse" type="common:C150" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="BankAcctDetailsElementType">
+    <xsd:sequence>
+      <xsd:element name="AccountID" type="common:ID15" minOccurs="0"/>
+      <xsd:element name="AccountNumber" type="common:IDREF30" minOccurs="0"/>
+      <xsd:element name="AccountName" type="common:C50" minOccurs="0"/>
+      <xsd:element name="OverrideRemitAccountFlag" type="common:Boolean"
+        minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ExchangeRateElementType">
+    <xsd:sequence>
+      <xsd:element name="Type" type="common:C30" minOccurs="0"/>
+      <xsd:element name="Rate" type="common:C30" minOccurs="0"/>
+      <xsd:element name="Date" type="common:Dt" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ReceiptMethodElementType">
+    <xsd:sequence>
+      <xsd:element name="ReceiptMethodId" type="common:ID15" minOccurs="0"/>
+      <xsd:element name="ReceiptMethodName" type="common:C50" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="IssuerDetailsElementType">
+    <xsd:sequence>
+      <xsd:element name="Name" type="common:C30" minOccurs="0"/>
+      <xsd:element name="Date" type="common:Dt" minOccurs="0"/>
+      <xsd:element name="BankBranchID" type="common:ID15" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="OtherDefinedAttributesElementType">
+    <xsd:sequence>
+      <xsd:element name="InternalFileID" type="common:IDREF15" minOccurs="0"/>
+      <xsd:element name="DepositDate" type="common:Dt" minOccurs="0"/>
+      <xsd:element name="DocSequenceValue" type="common:C50" minOccurs="0"/>
+      <xsd:element name="UssglTransactionCode" type="common:C50" minOccurs="0"/>
+      <xsd:element name="AnticipatedClearingDate" type="common:Dt" minOccurs="0"/>
+      <xsd:element name="CalledFrom" type="common:C30" minOccurs="0"/>
+      <xsd:element name="PaymentTrxnExtensionID" type="common:ID15" minOccurs="0"/>
+      <xsd:element name="CustomerReceiptReference" type="common:C50" minOccurs="0"/>
+      <xsd:element name="CallPaymentProcessor" type="common:C150" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ReceiptApplDetailsElementType">
+    <xsd:sequence>
+      <xsd:element name="CustomerTrxId" type="common:ID15" minOccurs="0"/>
+      <xsd:element name="TrxNumber" type="common:ID15" minOccurs="0"/>
+      <xsd:element name="Installment" type="common:C15" minOccurs="0"/>
+      <xsd:element name="AppliedPaymentScheduleID" type="common:Integer" minOccurs="0"/>
+      <xsd:element name="AmountApplied" type="common:C50" minOccurs="0"/>
+      <xsd:element name="AllocatedAmount" type="receipt:ReceiptAllocatedAmtElementType"
+        minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ReceiptAllocatedAmtElementType">
+    <xsd:sequence>
+      <xsd:element name="AmountAppliedFrom" type="common:C50" minOccurs="0"/>
+      <xsd:element name="TransToReceiptRate" type="common:C15" minOccurs="0"/>
+      <xsd:element name="Discount" type="common:Integer" minOccurs="0"/>
+      <xsd:element name="ApplyDate" type="common:Dt" minOccurs="0"/>
+      <xsd:element name="ApplyLedgerDate" type="common:Dt" minOccurs="0"/>
+      <xsd:element name="ApussglTransactionCode" type="common:Integer" minOccurs="0"/>
+      <xsd:element name="CustomerTrxLineID" type="common:ID15" minOccurs="0"/>
+      <xsd:element name="LineNumber" type="common:Integer" minOccurs="0"/>
+      <xsd:element name="ShowClosedInvoices" type="common:C50" minOccurs="0"/>
+      <xsd:element name="MoveDeferredTax" type="common:C50" minOccurs="0"/>
+      <xsd:element name="LinkToTrxHistID" type="common:ID15" minOccurs="0"/>
+      <xsd:element name="APAttributes" type="receipt:APAttributesElementType" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="APAttributesElementType">
+    <xsd:sequence>
+      <xsd:element name="Attributes" type="common:Attributes15" minOccurs="0"/>
+      <xsd:element name="GlobalAttributes" type="common:GlobalAttributes" minOccurs="0"/>
+      <xsd:element name="Comments" type="common:C150" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ReversalDetailsElementType">
+    <xsd:sequence>
+      <xsd:element name="ReversalLedgerDate" type="common:Dt" minOccurs="0"/>
+      <xsd:element name="ReversalReasonCode" type="common:C15" minOccurs="0"/>
+      <xsd:element name="ReversalReasonName" type="common:C30" minOccurs="0"/>
+      <xsd:element name="ReversalComments" type="common:C150" minOccurs="0"/>
+      <xsd:element name="CalledFrom" type="common:C150" minOccurs="0"/>
+      <xsd:element name="Attributes" type="common:Attributes15" minOccurs="0"/>
+      <xsd:element name="ReversalCategoryCode" type="common:C50" minOccurs="0"/>
+      <xsd:element name="ReversalCategoryName" type="common:C150" minOccurs="0"/>
+      <xsd:element name="GlobalAttributeRec" type="common:C50" minOccurs="0"/>
+      <xsd:element name="CancelClaimsFlag" type="common:C15" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ARReceiptIDType">
+    <xsd:sequence>
+      <xsd:element name="ReceiptID" type="common:IDREF15" minOccurs="0"/>
+      <xsd:element name="ReceiptReference" type="common:IDREF15" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>

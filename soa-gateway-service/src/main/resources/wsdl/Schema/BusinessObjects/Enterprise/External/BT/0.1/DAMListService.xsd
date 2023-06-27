@@ -1,0 +1,200 @@
+<xs:schema xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+  targetNamespace="http://cp.bt.com/damlist/domain" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:com="http://cp.bt.com/common/domain" xmlns:tns="http://cp.bt.com/damlist/domain">
+  <import namespace="http://cp.bt.com/common/domain" schemaLocation="common.xsd"/>
+  <xs:simpleType name="objectClassEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="TITLE"/>
+      <xs:enumeration value="SERIES"/>
+      <xs:enumeration value="EPISODE"/>
+      <xs:enumeration value="VERSION"/>
+      <xs:enumeration value="VARIANT"/>
+      <xs:enumeration value="COMPONENT"/>
+      <xs:enumeration value="SHORT_VERSION"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="NodeView">
+    <xs:annotation>
+      <xs:documentation>A node view consists of :-
+        label : text label for the node, For example CORONATION STREET
+        objectId : DMGUID of the object
+        objectClass : TITLE, SERIES, EPISODE etc
+        child : a child NodeView
+        shortVersionChild: text label for the child
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="label" type="xs:string"/>
+      <xs:element name="objectId" type="xs:string"/>
+      <xs:element name="objectClass" type="tns:objectClassEnum"/>
+      <xs:element name="child" type="tns:NodeView" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="shortVersionChild" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="NodeTreeView">
+    <xs:sequence>
+      <xs:element name="root" type="tns:NodeView"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="getOwnerEssencePackageRequest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>This operation queries the Digital media Asset Management database for the
+          input objectId of Essence Package (EPguid)
+          and returns the objectId of its owner (DMguid).
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="essencePackageId" type="xs:string"/>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getEssencePackagesRequest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>This operation queries the Digital media Asset Management database for the
+          input descriptive metadata objectId (DMguid)
+          and returns details of any Essence Packages associated with it.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="objectId" type="xs:string"/>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getEssenceRequest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>This operation queries the Digital media Asset Management database given
+          an Essence Package Id (EPguid.)
+          It returns a list of essence ids.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="essencePackageId" type="xs:string"/>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="describeEssenceRequest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>This operation queries the Digital media Asset Management database for the
+          input essence Id (EMguid)
+          and returns details of the package as name value pairs.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="essenceId" type="xs:string"/>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getSegmentsRequest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>This operation is similar to getObjectDetails but returns just segments
+          (of stratum).
+          Optionally specify the strata required. Eg compliance, timecode etc.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="objectId" type="xs:string"/>
+        <xs:element name="stratum" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getObjectDetailsRequest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>This operation queries the Digital media Asset Management database for the
+          input descriptive metadata objectId (DMguid)
+          and returns details of the object in a Descriptor, and also in AXF format. Details include
+          bit rate, list of actors etc.
+          To obtain stratum details, it is necessary to use the getSegments operation.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="objectId" type="xs:string"/>
+        <xs:element name="attributes" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="describeEssenceOfObjectRequest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>This operation queries the Digital media Asset Management database for the
+          input descriptive metadata objectId (DMguid) and returns details of any essence owned by
+          that object.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="objectId" type="xs:string"/>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getAssociatedObjectsRequest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>This operation queries the Digital media Asset Management database for the
+          input objectId and returns objectIds associated with it.
+          Optionally, a list of the association types required may be input. The default is to
+          return all associations. These are typically Title, episode, version etc.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="objectId" type="xs:string"/>
+        <xs:element name="associationType" type="xs:string" minOccurs="0"/>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="descriptionResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="description" type="com:NameValuePairs" minOccurs="0"/>
+        <xs:element name="responseDetails" type="com:responseDetails"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="descriptionsResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="description" type="com:Description" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:element name="responseDetails" type="com:responseDetails"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="viewRequest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>This operation is intended to support the Tree View (E6) display. Its
+          initial implementation returns all associations for a given object,
+          listed as either parent or children, together with a text label for each associated
+          object.
+          The rules for constructing the text label depend on the object class. Please note that the
+          text label may be blank
+          where the relevant data fields have not been populated, e.g. where VARIANT_TITLE attribute
+          is blank for a VARIANT object.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="objectId" type="xs:string"/>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="viewResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="view" type="tns:NodeTreeView" minOccurs="0"/>
+        <xs:element name="responseDetails" type="com:responseDetails"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

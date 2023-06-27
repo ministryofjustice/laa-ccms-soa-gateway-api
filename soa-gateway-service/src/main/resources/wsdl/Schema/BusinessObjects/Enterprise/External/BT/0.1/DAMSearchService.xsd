@@ -1,0 +1,124 @@
+<xs:schema xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+  targetNamespace="http://cp.bt.com/damsearch/domain" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:com="http://cp.bt.com/common/domain" xmlns:tns="http://cp.bt.com/damsearch/domain">
+  <import namespace="http://cp.bt.com/common/domain" schemaLocation="common.xsd"/>
+  <xs:element name="searchRequest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>
+          Request to search the Digital Asset Management system for matches.
+          resultId : The id by which the requester wishes to identify the results.
+          resultSpec : Optional. Name of Hitlist specifying metadata returned. Default is
+          1-Programmes. Currently available choices:
+          1-Programmes, 2-Promotions, 3-Continuity, 4-Commercials, 5-Components
+          maximumResults : Optional. Default is 1000000. Maximum number of searchResults records
+          returned.
+          startIndex : Index of first searchResults record to be returned.
+          endIndex : Index of last searchResults record to be returned.
+          searchString : Optional. Text to be searched on. Can include * wildcard.
+          attributeList : Optional. Zero to many lists of metadata attribute names.
+          Within list, choices are ANDed together.
+          Separate lists are ORed together.
+          strataOverlapping : set of name/pair values giving overlapping strata
+          strataNonOverlapping : set of name/pair values giving non overlapping strata
+          objectClasses : set of values containing object classes eg. TITLE, SERIES, EPISODE etc
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="resultId" type="xs:string" minOccurs="0"/>
+        <xs:element name="resultSpec" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="maximumResults" type="xs:int" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="startIndex" type="xs:int" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="endIndex" type="xs:int" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="searchString" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="attributeList" type="tns:ArrayOfAttribute" minOccurs="0"
+          maxOccurs="unbounded"/>
+        <xs:element name="strataOverlapping" type="com:NameValuePairs" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="strataNonOverlapping" type="com:NameValuePairs" minOccurs="0"
+          maxOccurs="1"/>
+        <xs:element name="objectClasses" type="com:Values"/>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="searchResponse">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>Response object containing :-
+          resultId : System generated id for the search
+          firstHit : Index of the first match returned.
+          numberOfHits : The total number of matches found for the search criteria. This may be
+          greater than the total if maximumHits was input.
+          total : Total number of guids returned in SearchResult.
+          hdr : Set of attribute names used in SearchResult. These are typically used in the UI for
+          column heading display.
+          searchResult : Set of records found, containing object ids and attribute names and values.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="resultId" type="xs:string" minOccurs="0"/>
+        <xs:element name="firstHit" type="xs:int" minOccurs="0"/>
+        <xs:element name="numberOfHits" type="xs:int" minOccurs="0"/>
+        <xs:element name="total" type="xs:int" minOccurs="0"/>
+        <xs:element name="hdr" type="tns:Header" minOccurs="0"/>
+        <xs:element name="searchResult" type="tns:SearchResult" minOccurs="0"
+          maxOccurs="unbounded"/>
+        <xs:element name="responseDetails" type="com:responseDetails"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="SearchResult">
+    <xs:annotation>
+      <xs:documentation>Results of search :-
+        objectId : id of object
+        objectClass : object class e.g. TITLE, SERIES, EPISODE etc
+        metaDataList : name/value pairs containing metadata
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="objectId" type="xs:string"/>
+      <xs:element name="objectClass" type="xs:string"/>
+      <xs:element name="metaDataList" type="com:NameValuePairs" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Header">
+    <xs:sequence>
+      <xs:element name="hdg" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfAttribute">
+    <xs:sequence>
+      <xs:element name="attributeChoice" type="tns:AttributeChoice" minOccurs="0"
+        maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="AttributeChoice">
+    <xs:annotation>
+      <xs:documentation>Attribute choices :-
+        group : Optional. Attribute Group name. A list of Blue Order Attribute Groups is obtainable
+        from the DAM Map Service.
+        name : Optional. Attribute name . A list of Blue Order Attribute names (not client-specific)
+        is obtainable from the DAM Map Service.
+        value : Mandatory within AttributeChoice. Value to search for. Enter the name of any Blue
+        Order Attribute, and the value to search for.
+        Value does not need to include wildcard character - Blue Order will return any match within
+        phrase, e.g. enter "Crown" and you will be returned all instances of "Jewel in the Crown".
+        If the attribute is an enumerated type, i.e. has a Blue Order "legal list", then enter the
+        enumeration code.
+        For example, CONTENT_DELIVERED takes values 0 or 1 meaning "No" and "Yes" respectively.
+        For attribute "TITLE_TYPE" the codes are:
+        0=Programme
+        1=Promotion
+        2=Presentation Item
+        3=Other
+        4=Commercial
+        5=Sponsorship6=Still
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="group" type="xs:string" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="value" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

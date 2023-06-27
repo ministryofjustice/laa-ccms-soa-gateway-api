@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<wsdl:definitions
+  name="UpdateUser"
+  targetNamespace="http://legalaid.gsi.gov.uk/UserManagement/UpdateUser/UpdateUser"
+  xmlns:ns1="http://legalaid.gsi.gov.uk/CCMS/Common/UserManagement/1.0/UserManagementBIM"
+  xmlns:plnk="http://schemas.xmlsoap.org/ws/2003/05/partner-link/"
+  xmlns:client="http://legalaid.gsi.gov.uk/UserManagement/UpdateUser/UpdateUser"
+  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+  xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+>
+  <wsdl:documentation>
+    <abstractWSDL>
+      http://bbplscapp02.lab.gov:8055/soa-infra/services/default/UpdateUser!1.0/UpdateUser.wsdl
+    </abstractWSDL>
+  </wsdl:documentation>
+  <plnk:partnerLinkType name="UpdateUser">
+    <plnk:role name="UpdateUserProvider">
+      <plnk:portType name="client:UpdateUser"/>
+    </plnk:role>
+  </plnk:partnerLinkType>
+  <wsdl:types>
+    <schema xmlns="http://www.w3.org/2001/XMLSchema">
+      <import
+        namespace="http://legalaid.gsi.gov.uk/CCMS/Common/UserManagement/1.0/UserManagementBIM"
+        schemaLocation="../../../../Schema/BusinessObjects/CCMS/Users/UserManagement/1.0/UserManagementBIM.xsd"/>
+      <import
+        namespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+        schemaLocation="../../../../Schema/BusinessObjects/Enterprise/External/oasis/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"/>
+    </schema>
+  </wsdl:types>
+  <wsdl:message name="UpdateUserRequestMessage">
+    <wsdl:part name="UpdateUserRQ" element="ns1:UpdateUserRQ"/>
+  </wsdl:message>
+  <wsdl:message name="UpdateUserResponseMessage">
+    <wsdl:part name="UpdateUserRS" element="ns1:UpdateUserRS"/>
+  </wsdl:message>
+  <wsdl:message name="UsernameToken">
+    <wsdl:part name="Security" element="wsse:Security"/>
+  </wsdl:message>
+  <wsdl:portType name="UpdateUser">
+    <wsdl:operation name="UpdateUser">
+      <wsdl:input message="client:UpdateUserRequestMessage"/>
+      <wsdl:output message="client:UpdateUserResponseMessage"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="UpdateUserSOAPBinding" type="client:UpdateUser">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="UpdateUser">
+      <soap:operation style="document"
+        soapAction="http://legalaid.gsi.gov.uk/UserManagement/UpdateUser/UpdateUser"/>
+      <wsdl:input>
+        <soap:body use="literal" parts="UpdateUserRQ"/>
+        <soap:header message="client:UsernameToken" part="Security" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="UpdateUserRS"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="UpdateUser_ep">
+    <wsdl:port name="UpdateUser_pt" binding="client:UpdateUserSOAPBinding">
+      <soap:address
+        location="http://bbplscapp02.lab.gov:8055/soa-infra/services/default/UpdateUser/UpdateUser_ep"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
