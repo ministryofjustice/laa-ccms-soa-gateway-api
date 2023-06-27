@@ -1,0 +1,1058 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+** CapGemini
+** SOA Object library 
+** Base Version : 7.4
+** Branch : LAR
+** LAR Version : 0.3
+
+	XML Schema
+	Name : \lsc\Schema\BusinessObjects\CCMS\CaseManagement\Case\1.0\CaseBIO.xsd
+
+Date        Authour             Details
+2011-05-29  Ramesh Madhavan     Base Version
+2013-03-06  Bikash Agrawal      LAR - Added OutcomeCourtCaseNumber at OutcomeDetailElementType
+2013-04-04  Bikash Agrawal      LAR Changes Merged to TRUNK
+2013-04-05  Bikash Agrawal      Created DocumentStatusElementType to return Status in CaseBIO.xsd 
+                                instead of importing extended DocumentElementType from EDRMSBIO.xsd cause duplication
+                                of DocumentElementType from Common XSD which PUI can't handle.
+2013-04-08 Bikash Agrawal       DocumentUploadElementType updated to recive CCMSDocumentID
+2013-04-08 Bikash Agrawal       Added ProviderFirmID in NotificationElementType as part of CR 20/21
+2013-10-09 Bikash Agrawal       Added field DelegatedFunctionsApply for create application reqruest which can hold true or false.
+2014-07-01 Tehseen Zaffar       BillingProviderName element type changed to C300 for USD1797515
+2017-04-20 Matt Pickett         Updated for ME7 adding CaseDocs and assocaited XML types. 
+-->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common"
+  xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO"
+  targetNamespace="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO"
+  elementFormDefault="qualified" attributeFormDefault="unqualified"
+  version="1.0">
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      <Version>1.0</Version>
+      <Definition>Case BIO</Definition>
+      <Description>This schema defines the objects to create or update the Case at
+        LSC
+      </Description>
+      <Author>Richard Lanchbruy</Author>
+      <ModifiedBy>Ramesh Madhavan</ModifiedBy>
+      <VersionDate>29-05-2011</VersionDate>
+      <VersionDescription>Updated as per comments from CACI</VersionDescription>
+      <ModificationHistory>29-05-2011 Updates mentioned in Version Details.xml
+        28-03-2017 Case Document changes added for ME7
+      </ModificationHistory>
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:import namespace="http://legalservices.gov.uk/Enterprise/Common/1.0/Common"
+    schemaLocation="../../../../Enterprise/Common/1.0/Common.xsd"/>
+  <xsd:import namespace="http://legalservices.gov.uk/CCMS/Finance/Payables/1.0/BillingBIO"
+    schemaLocation="../../../Finance/Payables/1.0/BillingBIO.xsd"/>
+  <xsd:complexType name="CaseAdd">
+    <xsd:sequence>
+      <xsd:element name="CaseReferenceNumber" type="common:IDREF30">
+        <xsd:annotation>
+          <xsd:documentation>LSC Case Reference Number</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="CaseDetails" type="case:CaseDetailsAdd"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Case">
+    <xsd:sequence>
+      <xsd:element name="CaseReferenceNumber" type="common:IDREF30">
+        <xsd:annotation>
+          <xsd:documentation>LSC Case Reference Number</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="CaseDetails" type="case:CaseDetails"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CaseDetailsAdd">
+    <xsd:sequence>
+      <xsd:element name="ApplicationDetails" type="case:ApplicationDetails"/>
+      <xsd:element name="CertificateType" type="common:LOV" minOccurs="0"/>
+      <xsd:element name="CertificateDate" type="common:Dt" minOccurs="0"/>
+      <xsd:element name="PreCertificateCosts" type="common:Amount" minOccurs="0"/>
+      <xsd:element name="LegalHelpCosts" type="common:Amount" minOccurs="0"/>
+      <xsd:element name="UndertakingAmount" type="common:Amount" minOccurs="0"/>
+      <xsd:element name="LinkedCases" type="case:LinkedCasesUpdate" minOccurs="0"/>
+      <xsd:element name="Awards" type="case:AwardsElementType" minOccurs="0"/>
+      <xsd:element name="PriorAuthorities" type="case:PriorAuthorities"
+        minOccurs="0"/>
+      <xsd:element name="DischargeStatus" type="case:DischargeElementType"
+        minOccurs="0"/>
+      <xsd:element name="CaseStatus" type="case:CaseStatusElementType"
+        minOccurs="0"/>
+      <xsd:element name="RecordHistory" type="common:RecordHistory"/>
+      <xsd:element name="CaseDocs" type="case:CaseDocs" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CaseDetails">
+    <xsd:sequence>
+      <xsd:element name="ApplicationDetails" type="case:ApplicationDetails"/>
+      <xsd:element name="CertificateType" type="common:LOV" minOccurs="0"/>
+      <xsd:element name="CertificateDate" type="common:Dt" minOccurs="0"/>
+      <xsd:element name="PreCertificateCosts" type="common:Amount" minOccurs="0"/>
+      <xsd:element name="LegalHelpCosts" type="common:Amount" minOccurs="0"/>
+      <xsd:element name="UndertakingAmount" type="common:Amount" minOccurs="0"/>
+      <xsd:element name="LinkedCases" type="case:LinkedCases" minOccurs="0"/>
+      <xsd:element name="Awards" type="case:AwardsElementType" minOccurs="0"/>
+      <xsd:element name="PriorAuthorities" type="case:PriorAuthorities"
+        minOccurs="0"/>
+      <xsd:element name="DischargeStatus" type="case:DischargeElementType"
+        minOccurs="0"/>
+      <xsd:element name="AvailableFunctions" type="case:ActionListElementType"
+        minOccurs="0"/>
+      <xsd:element name="CaseStatus" type="case:CaseStatusElementType"
+        minOccurs="0"/>
+      <xsd:element name="RecordHistory" type="common:RecordHistory"/>
+      <xsd:element name="CaseDocs" type="case:CaseDocs" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ApplicationDetails">
+    <xsd:sequence>
+      <xsd:element name="Client" type="case:Client"/>
+      <xsd:element name="PreferredAddress" type="common:C50"/>
+      <xsd:element name="CorrespondenceAddress" type="common:Address"
+        minOccurs="0"/>
+      <xsd:element name="ProviderDetails" type="case:ProviderDetails"/>
+      <xsd:element name="CategoryOfLaw" type="case:CategoryOfLawElementType"
+        minOccurs="0"/>
+      <xsd:element name="OtherParties" type="case:OtherParties" minOccurs="0"/>
+      <xsd:element name="ExternalResources" type="case:ExternalResources"
+        minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>SME (witnesses for e.g) or Counsel (a Qualified legal
+            representative with rights of audience in all courts,
+            aka Barrister.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Proceedings" type="case:Proceedings" minOccurs="0"/>
+      <xsd:element name="MeansAssesments" type="case:MeansAssesments"
+        minOccurs="0"/>
+      <xsd:element name="MeritsAssesments" type="case:MeritsAssesments"
+        minOccurs="0"/>
+      <xsd:element name="DateOfFirstAttendance" type="common:Dt" minOccurs="0"/>
+      <xsd:element name="PurposeOfApplication" type="common:C2000"/>
+      <xsd:element name="FixedHearingDateInd" type="common:BooleanString"
+        minOccurs="0"/>
+      <xsd:element name="DateOfHearing" type="common:Dt" minOccurs="0"/>
+      <xsd:element name="PurposeOfHearing" type="common:C2000" minOccurs="0"/>
+      <xsd:element name="HighProfileCaseInd" type="common:BooleanString"
+        minOccurs="0"/>
+      <xsd:element name="DevolvedPowersDate" type="common:Dt" minOccurs="0"/>
+      <xsd:element name="ApplicationAmendmentType" type="common:LOV"
+        minOccurs="0"/>
+      <xsd:element name="LARDetails" type="case:LARDetails" minOccurs="0"/>
+      <xsd:element name="CertificateType" type="common:LOV" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="UpdateApplicationDetails">
+    <xsd:sequence>
+      <xsd:element name="PreferredAddress" type="common:C50" minOccurs="0"/>
+      <xsd:element name="CorrespondenceAddress" type="common:Address"
+        minOccurs="0"/>
+      <xsd:element name="ProviderDetails" type="case:ProviderDetails"
+        minOccurs="0"/>
+      <xsd:element name="CategoryOfLaw" type="case:CategoryOfLawElementType"
+        minOccurs="0"/>
+      <xsd:element name="OtherParties" type="case:OtherParties" minOccurs="0"/>
+      <xsd:element name="ExternalResources" type="case:ExternalResources"
+        minOccurs="0"/>
+      <xsd:element name="Proceedings" type="case:Proceedings" minOccurs="0"/>
+      <xsd:element name="MeansAssesments" type="case:MeansAssesments"
+        minOccurs="0"/>
+      <xsd:element name="MeritsAssesments" type="case:MeritsAssesments"
+        minOccurs="0"/>
+      <xsd:element name="Undertakings" type="case:UndertakingElementType"
+        minOccurs="0"/>
+      <xsd:element name="DateOfFirstAttendance" type="common:Dt" minOccurs="0"/>
+      <xsd:element name="PurposeOfApplication" type="common:C50" minOccurs="0"/>
+      <xsd:element name="FixedHearingDateInd" type="common:BooleanString"
+        minOccurs="0"/>
+      <xsd:element name="DateOfHearing" type="common:Dt" minOccurs="0"/>
+      <xsd:element name="PurposeOfHearing" type="common:C2000" minOccurs="0"/>
+      <xsd:element name="HighProfileCaseInd" type="common:BooleanString"
+        minOccurs="0"/>
+      <xsd:element name="SupervisorContactID" type="common:ID15" minOccurs="0"/>
+      <xsd:element name="FeeEarnerContactID" type="common:ID15" minOccurs="0"/>
+      <xsd:element name="DevolvedPowersDate" type="common:Dt" minOccurs="0"/>
+      <xsd:element name="ApplicationAmendmentType" type="common:LOV"
+        minOccurs="0"/>
+      <xsd:element name="LARDetails" type="case:LARDetails" minOccurs="0"/>
+      <xsd:element name="CertificateType" type="common:LOV" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Client">
+    <xsd:sequence>
+      <xsd:element name="ClientReferenceNumber" type="common:IDREF30"/>
+      <xsd:element name="FirstName" type="common:C50" minOccurs="0"/>
+      <xsd:element name="Surname" type="common:C50" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CaseStatusElementType">
+    <xsd:sequence>
+      <xsd:element name="ActualCaseStatus" type="common:C25">
+        <xsd:annotation>
+          <xsd:documentation>The actual status of the case</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="DisplayCaseStatus" type="common:C25">
+        <xsd:annotation>
+          <xsd:documentation>The display status of the case</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="StatusUpdateInd" type="common:BooleanString">
+        <xsd:annotation>
+          <xsd:documentation>The status indicator of the case</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ProviderDetails">
+    <xsd:sequence>
+      <xsd:element name="ProviderCaseReferenceNumber" type="common:IDREF35"
+        minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The unique reference number allocated by a Provider</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ProviderFirmID" type="common:ID15"/>
+      <xsd:element name="ProviderOfficeID" type="common:ID15"/>
+      <xsd:element name="ContactUserID" type="common:User" minOccurs="0"/>
+      <xsd:element name="ContactDetails" type="case:ContactDetails" minOccurs="0"/>
+      <xsd:element name="SupervisorContactID" type="common:ID15" minOccurs="0"/>
+      <xsd:element name="FeeEarnerContactID" type="common:ID15" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ContactDetails">
+    <xsd:sequence>
+      <xsd:element name="TelephoneHome" type="common:PhoneNum" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Home Telephone Number</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="TelephoneWork" type="common:PhoneNum" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Office Telephone Number</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="MobileNumber" type="common:PhoneNum" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Mobile Number</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="EmailAddress" type="common:EmailAddress" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Email ID</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Fax" type="common:PhoneNum" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Fax</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CategoryOfLawElementType">
+    <xsd:sequence>
+      <xsd:element name="CategoryOfLawCode" type="common:IDREF15"/>
+      <xsd:element name="CategoryOfLawDescription" type="common:C50" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The description of a category of law</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="RequestedAmount" type="common:Amount" minOccurs="0"/>
+      <xsd:element name="GrantedAmount" type="common:Amount" minOccurs="0"/>
+      <xsd:element name="TotalPaidToDate" type="common:Amount" minOccurs="0"/>
+      <xsd:element name="CostLimitations" type="case:CostLimitations"
+        minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CostLimitationElementType">
+    <xsd:sequence>
+      <xsd:element name="CostLimitID" type="common:ID15" minOccurs="0"/>
+      <xsd:element name="BillingProviderID" type="common:ID15" minOccurs="0"/>
+      <xsd:element name="BillingProviderName" type="common:C300" minOccurs="0"/>
+      <xsd:element name="CostCategory" type="common:LOV"/>
+      <xsd:element name="PaidToDate" type="common:Amount" minOccurs="0"/>
+      <xsd:element name="Amount" type="common:Amount"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CostLimitations">
+    <xsd:sequence>
+      <xsd:element name="CostLimitation" type="case:CostLimitationElementType"
+        maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="OtherParties">
+    <xsd:sequence>
+      <xsd:element name="OtherParty" type="case:OtherPartyElementType"
+        maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="OtherPartyElementType">
+    <xsd:sequence>
+      <xsd:element name="OtherPartyID" type="common:ID15" minOccurs="0"/>
+      <xsd:element name="SharedInd" type="common:BooleanString"/>
+      <xsd:element name="OtherPartyDetail">
+        <xsd:complexType>
+          <xsd:choice>
+            <xsd:element name="Person" type="case:OtherPartyPersonType"/>
+            <xsd:element name="Organization" type="case:OtherPartyOrgType"/>
+          </xsd:choice>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="OtherPartyOrgType">
+    <xsd:sequence>
+      <xsd:element name="OrganizationName" type="common:C360"/>
+      <xsd:element name="OrganizationType" type="common:LOV"/>
+      <xsd:element name="CurrentlyTrading" type="common:LOV" minOccurs="0"/>
+      <xsd:element name="RelationToClient" type="common:LOV"/>
+      <xsd:element name="RelationToCase" type="common:LOV"/>
+      <xsd:element name="Address" type="common:Address" minOccurs="0"/>
+      <xsd:element name="ContactName" type="common:C150"/>
+      <xsd:element name="ContactDetails" type="case:ContactDetails" minOccurs="0"/>
+      <xsd:element name="OtherInformation" type="common:C240" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="OtherPartyPersonType">
+    <xsd:sequence>
+      <xsd:element name="Name" type="common:Name"/>
+      <xsd:element name="DateOfBirth" type="common:Dt" minOccurs="0"/>
+      <xsd:element name="Address" type="common:Address" minOccurs="0"/>
+      <xsd:element name="RelationToClient" type="common:LOV"/>
+      <xsd:element name="RelationToCase" type="common:LOV"/>
+      <xsd:element name="NINumber" type="common:NationalInsuranceNumber"
+        minOccurs="0"/>
+      <xsd:element name="ContactName" type="common:C35" minOccurs="0"/>
+      <xsd:element name="ContactDetails" type="case:ContactDetails" minOccurs="0"/>
+      <xsd:element name="OrganizationName" type="common:C30" minOccurs="0"/>
+      <xsd:element name="EmployersName" type="common:C30" minOccurs="0"/>
+      <xsd:element name="EmploymentStatus" type="common:C50" minOccurs="0"/>
+      <xsd:element name="OrganizationAddress" type="common:C150" minOccurs="0"/>
+      <xsd:element name="PartyLegalAidedInd" type="common:BooleanString"
+        minOccurs="0"/>
+      <xsd:element name="CertificateNumber" type="common:C30" minOccurs="0"/>
+      <xsd:element name="CourtOrderedMeansAssesment" type="common:BooleanString"
+        minOccurs="0"/>
+      <xsd:element name="AssessedIncomeFrequency" type="common:LOV" minOccurs="0"/>
+      <xsd:element name="AssessedIncome" type="common:Amount" minOccurs="0"/>
+      <xsd:element name="AssessedAsstes" type="common:Amount" minOccurs="0"/>
+      <xsd:element name="AssessmentDate" type="common:Dt" minOccurs="0"/>
+      <xsd:element name="PublicFundingAppliedInd" type="common:BooleanString"
+        minOccurs="0"/>
+      <xsd:element name="OtherInformation" type="common:C240" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="NameType">
+    <xsd:sequence>
+      <xsd:element name="Title" type="common:NamePrefix"/>
+      <xsd:element name="Surname" type="common:C30"/>
+      <xsd:element name="FirstName" type="common:C30"/>
+      <xsd:element name="MiddleName" type="common:C30" minOccurs="0"/>
+      <xsd:element name="DateOfBirth" type="common:Dt" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Person">
+    <xsd:sequence>
+      <xsd:element name="Contact" type="case:NameType"/>
+      <xsd:element name="Address" type="common:Address"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="OrganizationType">
+    <xsd:sequence>
+      <xsd:element name="OrganizationName" type="common:C30"/>
+      <xsd:element name="Contact" type="case:NameType"/>
+      <xsd:element name="Address" type="common:Address" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ExternalResources">
+    <xsd:sequence>
+      <xsd:element name="ExternalResource" type="case:ExtResourceElementType"
+        maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ExtResourceElementType">
+    <xsd:sequence>
+      <xsd:element name="ExternalResourceRef" type="common:IDREF15"/>
+      <xsd:element name="ExternalResourceType" type="common:LOV"/>
+      <xsd:element name="DateInstructed" type="common:Dt" minOccurs="0"/>
+      <xsd:element name="CostCeiling" type="case:CostLimitations" minOccurs="0"/>
+      <xsd:element name="Location" type="common:C25" minOccurs="0"/>
+      <xsd:element name="Chambers" type="common:C25" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Proceedings">
+    <xsd:sequence>
+      <xsd:element name="Proceeding" type="case:ProceedingElementType"
+        maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ProceedingElementType">
+    <xsd:sequence>
+      <xsd:element name="ProceedingCaseID" type="common:ID15" minOccurs="0"/>
+      <xsd:element name="DateApplied" type="common:Dt" minOccurs="0"/>
+      <xsd:element name="Status" type="common:LOV" minOccurs="0"/>
+      <xsd:element name="LeadProceedingIndicator" minOccurs="0"
+        type="common:Boolean"/>
+      <xsd:element name="OutcomeCourtCaseNumber" minOccurs="0"
+        type="common:IDREF30"/>
+      <xsd:element name="AvailableFunctions" type="case:ActionListElementType"
+        minOccurs="0"/>
+      <xsd:element name="ProceedingDetails" type="case:ProceedingDetElementType"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ProceedingDetElementType">
+    <xsd:sequence>
+      <xsd:element name="ProceedingType" type="common:LOV"/>
+      <xsd:element name="ProceedingDescription" type="common:C542" minOccurs="0"/>
+      <xsd:element name="DateCostsValid" type="common:Dt" minOccurs="0"/>
+      <xsd:element name="OrderType" type="common:LOV" minOccurs="0"/>
+      <xsd:element name="MatterType" type="common:LOV" minOccurs="0"/>
+      <xsd:element name="LevelOfService" type="common:LOV" minOccurs="0"/>
+      <xsd:element name="Stage" type="common:LOV" minOccurs="0"/>
+      <xsd:element name="ClientInvolvementType" type="common:LOV" minOccurs="0"/>
+      <xsd:element name="ScopeLimitations" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="ScopeLimitation" type="case:ScopeLimitationElementType"
+              maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ScopeLimitationApplied" type="common:LOV" minOccurs="0"/>
+      <xsd:element name="DevolvedPowersInd" type="common:BooleanString"
+        minOccurs="0"/>
+      <xsd:element name="DateDevolvedPowersUsed" type="common:Dt" minOccurs="0"/>
+      <xsd:element name="DateGranted" type="common:Dt" minOccurs="0"/>
+      <xsd:element name="Outcome" type="case:OutcomeDetailElementType"
+        minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ScopeLimitationElementType">
+    <xsd:sequence>
+      <xsd:element name="ScopeLimitationID" type="common:ID15" minOccurs="0"/>
+      <xsd:element name="ScopeLimitation" type="common:LOV"/>
+      <xsd:element name="ScopeLimitationWording" type="common:C1000"
+        minOccurs="0"/>
+      <xsd:element name="DelegatedFunctionsApply" minOccurs="0" maxOccurs="1"
+        type="common:BooleanString"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="LinkedCases">
+    <xsd:sequence>
+      <xsd:element name="LinkedCase" type="case:LinkedCaseType"
+        maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="LinkedCasesUpdate">
+    <xsd:sequence>
+      <xsd:element name="LinkedCase" type="case:LinkedCaseUpdateType"
+        maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="LinkedCaseType">
+    <xsd:sequence>
+      <xsd:element name="CaseReferenceNumber" type="common:IDREF30"/>
+      <xsd:element name="ProviderReferenceNumber" type="common:IDREF30"
+        minOccurs="0"/>
+      <xsd:element name="Client" type="case:Client"/>
+      <xsd:element name="CategoryOfLawCode" type="common:LOV"/>
+      <xsd:element name="CategoryOfLawDesc" type="common:C150"/>
+      <xsd:element name="FeeEarnerID" type="common:ID15" minOccurs="0"/>
+      <xsd:element name="FeeEarnerName" type="common:C300" minOccurs="0"/>
+      <xsd:element name="PublicFundingAppliedInd" type="common:BooleanString"
+        minOccurs="0"/>
+      <xsd:element name="LinkType" type="common:LOV"/>
+      <xsd:element name="CaseStatus" type="common:LOV"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="LinkedCaseUpdateType">
+    <xsd:sequence>
+      <xsd:element name="CaseReferenceNumber" type="common:IDREF15"/>
+      <xsd:element name="LinkType" type="common:LOV"/>
+      <xsd:element name="PublicFundingAppliedInd" type="common:BooleanString"
+        minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Messages">
+    <xsd:sequence>
+      <xsd:element name="Message" type="case:MessageType" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="MessageType">
+    <xsd:sequence>
+      <xsd:element name="MessageID" type="common:ID15" minOccurs="0"/>
+      <xsd:element name="Date" type="common:Dt" minOccurs="0"/>
+      <xsd:element name="MessageType" type="common:C25"/>
+      <xsd:element name="MessageContext" type="common:C50"/>
+      <xsd:element name="ObjectID" type="common:ID15"/>
+      <xsd:element name="MessageText" type="common:C240"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Notifications">
+    <xsd:sequence>
+      <xsd:element name="Notification" type="case:NotificationElementType"
+        maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="NotificationElementType">
+    <xsd:sequence>
+      <xsd:element name="NotificationID" type="common:ID15"/>
+      <xsd:element name="ProviderFirmID" minOccurs="0" maxOccurs="1" type="xsd:decimal"/>
+      <xsd:element name="Subject" type="common:C150" minOccurs="0"/>
+      <xsd:element name="AssignDate" type="common:Dt" minOccurs="0"/>
+      <xsd:element name="DueDate" type="common:Dt" minOccurs="0"/>
+      <xsd:element name="NotitificationType" type="common:LOV"/>
+      <xsd:element name="Status" type="common:LOV"/>
+      <xsd:element name="Notes" type="case:Notes" minOccurs="0"/>
+      <xsd:element name="EvidenceAllowed" type="common:BooleanString"
+        minOccurs="0"/>
+      <xsd:element name="NotificationOpenInd" type="common:BooleanString"
+        minOccurs="0"/>
+      <xsd:element name="AttachedDocuments" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Document" type="common:DocumentElementType"
+              maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="UploadedDocuments" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Document" type="common:DocumentElementType"
+              maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="AvailableResponses" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Response" type="common:LOV" maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ActionListElementType">
+    <xsd:sequence>
+      <xsd:element name="Function" type="common:C50" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="NotesElementType">
+    <xsd:sequence>
+      <xsd:element name="NotesID" type="common:ID15" minOccurs="0"/>
+      <xsd:element name="User" type="common:User" minOccurs="0"/>
+      <xsd:element name="Date" type="common:Dt" minOccurs="0"/>
+      <xsd:element name="Message" type="common:C2000"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Notes">
+    <xsd:sequence>
+      <xsd:element name="Note" type="case:NotesElementType" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="DocumentUploadElementType">
+    <xsd:sequence>
+      <xsd:element name="CCMSDocumentID" type="common:C50" minOccurs="0"/>
+      <xsd:element name="DocumentType" type="common:C240"/>
+      <xsd:element name="FileExtension" type="common:C50" minOccurs="0"/>
+      <xsd:element name="Channel" type="common:C20" minOccurs="0"/>
+      <xsd:element name="Text" type="common:C240" minOccurs="0"/>
+      <xsd:choice minOccurs="0">
+        <xsd:element name="DocumentLink" type="common:C240"/>
+        <xsd:element name="BinData" type="common:BinData"/>
+      </xsd:choice>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="AssessmentResultsElementType">
+    <xsd:sequence>
+      <xsd:element name="Entity" type="case:OPAEntityType" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="OPAEntityType">
+    <xsd:sequence>
+      <xsd:element name="EntityName" type="common:C50"/>
+      <xsd:element name="Instances" type="case:OPAInstanceType"
+        maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="OPAInstanceType">
+    <xsd:sequence>
+      <xsd:element name="InstanceLabel" type="common:C255"/>
+      <xsd:element name="Attributes">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Attribute" type="case:OPAAttributesType"
+              maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="OPAAttributesType">
+    <xsd:sequence>
+      <xsd:element name="Name" type="common:C50"/>
+      <xsd:element name="Value" type="common:C2000" minOccurs="0"/>
+      <xsd:element name="Type" type="common:C50" minOccurs="0"/>
+      <xsd:element name="UserDefinedInd" type="common:BooleanString"
+        minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="MeansAssesments">
+    <xsd:sequence>
+      <xsd:element name="AssesmentResults" type="common:AssesmentResultType"
+        maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="MeritsAssesments">
+    <xsd:sequence>
+      <xsd:element name="AssesmentResults" type="common:AssesmentResultType"
+        maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CaseList">
+    <xsd:sequence>
+      <xsd:element name="CaseReferenceNumber" type="common:IDREF30"/>
+      <xsd:element name="ProviderCaseReferenceNumber" type="common:IDREF35"/>
+      <xsd:element name="Client" type="case:Client"/>
+      <xsd:element name="FeeEarnerName" type="common:C300" minOccurs="0"/>
+      <xsd:element name="CategoryOfLaw" type="common:C35"/>
+      <xsd:element name="DisplayStatus" type="common:LOV" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CaseInfo">
+    <xsd:sequence>
+      <xsd:element name="CaseReferenceNumber" type="common:IDREF30" minOccurs="0"/>
+      <xsd:element name="ClientSurname" type="common:C50" minOccurs="0"/>
+      <xsd:element name="ProviderCaseReferenceNumber" type="common:IDREF35"
+        minOccurs="0"/>
+      <xsd:element name="FeeEarnerContactID" type="common:ID15" minOccurs="0"/>
+      <xsd:element name="OfficeID" type="common:ID15" minOccurs="0"/>
+      <xsd:element name="CaseStatus" type="common:LOV" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="NotificationLinksElementType">
+    <xsd:sequence>
+      <xsd:element name="ClientReferenceNumber" type="common:IDREF30"
+        minOccurs="0"/>
+      <xsd:element name="CaseReferenceNumber" type="common:IDREF30" minOccurs="0"/>
+      <xsd:element name="ProviderCaseReferenceNumber" type="common:IDREF35"
+        minOccurs="0"/>
+      <xsd:element name="User" type="common:User" minOccurs="0"/>
+      <xsd:element name="ClientName" type="common:C35" minOccurs="0"/>
+      <xsd:element name="CategoryOfLaw" type="common:C50" minOccurs="0"/>
+      <xsd:element name="FeeEarner" type="common:C300" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="NotificationListElementType">
+    <xsd:sequence>
+      <xsd:element name="ClientReferenceNumber" type="common:IDREF30"
+        minOccurs="0"/>
+      <xsd:element name="CaseReferenceNumber" type="common:IDREF30" minOccurs="0"/>
+      <xsd:element name="ProviderCaseReferenceNumber" type="common:IDREF35"
+        minOccurs="0"/>
+      <xsd:element name="User" type="common:User" minOccurs="0"/>
+      <xsd:element name="ClientName" type="common:C35" minOccurs="0"/>
+      <xsd:element name="CategoryOfLaw" type="common:C50" minOccurs="0"/>
+      <xsd:element name="FeeEarner" type="common:C300" minOccurs="0"/>
+      <xsd:element name="Notification" type="case:NotificationElementType"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="NotificationCntList">
+    <xsd:sequence>
+      <xsd:element name="AssignedToPartyID" type="common:IDREF30" minOccurs="0"/>
+      <xsd:element name="AssignedToPartyName" type="common:C360" minOccurs="0"/>
+      <xsd:element name="NotificationCount" type="common:IDREF30"/>
+      <xsd:element name="StandardActionCount" type="common:IDREF30"/>
+      <xsd:element name="OverdueActionCount" type="common:IDREF30"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ProviderRequestElementType">
+    <xsd:sequence>
+      <xsd:element name="CaseReferenceNumber" type="common:IDREF30" minOccurs="0"/>
+      <xsd:element name="User" type="common:User"/>
+      <xsd:element name="RequestDetails" maxOccurs="unbounded">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Request"
+              type="case:ProviderRequestDetailsElementType"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ProviderRequestDetailsElementType">
+    <xsd:sequence>
+      <xsd:element name="RequestType" type="common:LOV"/>
+      <xsd:element name="RequestText" type="case:ProviderRequestTextElementType"
+        maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ProviderRequestTextElementType">
+    <xsd:sequence>
+      <xsd:element name="Label" type="common:C35" minOccurs="0"/>
+      <xsd:element name="Text" type="common:C240"/>
+      <xsd:element name="Document" type="common:BinData" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Outcomes">
+    <xsd:sequence>
+      <xsd:element name="Outcome" type="case:OutcomeElementType"
+        maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="OutcomeElementType">
+    <xsd:sequence>
+      <xsd:element name="ProceedingCaseID" type="common:ID15"/>
+      <xsd:element name="OutcomeDetails" type="case:OutcomeDetailElementType"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="OutcomeDetailElementType">
+    <xsd:sequence>
+      <xsd:element name="IssueDate" type="common:Dt" minOccurs="0"/>
+      <xsd:element name="FinalWorkDate" type="common:Dt"/>
+      <xsd:element name="StageEnd" type="common:LOV"/>
+      <xsd:element name="ResolutionMethod" type="common:LOV"/>
+      <xsd:element name="Result" type="common:LOV"/>
+      <xsd:element name="AdditionalResultInfo" type="common:C1000" minOccurs="0"/>
+      <xsd:element name="AltDisputeResolution" type="common:C50"/>
+      <xsd:element name="AltAcceptanceReason" type="common:C1000" minOccurs="0"/>
+      <xsd:element name="CourtCode" type="common:LOV" minOccurs="0"/>
+      <xsd:element name="WiderBenifits" type="common:LOV"/>
+      <xsd:element name="OutcomeCourtCaseNumber" minOccurs="0"
+        type="common:IDREF30"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="JudgementElementType">
+    <xsd:sequence/>
+  </xsd:complexType>
+  <xsd:complexType name="AwardsElementType">
+    <xsd:sequence>
+      <xsd:element name="Award" type="case:AwardElementType"
+        maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="AwardElementType">
+    <xsd:sequence>
+      <xsd:element name="AwardID" type="common:ID15" minOccurs="0"/>
+      <xsd:element name="AwardType" type="common:C50" minOccurs="0"/>
+      <xsd:element name="DeleteAllowed" type="common:BooleanString"/>
+      <xsd:element name="UpdateAllowed" type="common:BooleanString"/>
+      <xsd:element name="AwardDetails" type="case:AwardDetailElementType"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="AwardDetailElementType">
+    <xsd:sequence>
+      <xsd:element name="AwardCategory" type="common:C50" minOccurs="0"/>
+      <xsd:element name="AwardDetails">
+        <xsd:complexType>
+          <xsd:choice>
+            <xsd:element name="CostAward" type="case:CostAwardElementType"/>
+            <xsd:element name="FinancialAward" type="case:FinancialAwardElementType"/>
+            <xsd:element name="LandAward" type="case:LandAwardElementType"/>
+            <xsd:element name="OtherAsset" type="case:OtherAssetElementType"/>
+          </xsd:choice>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CostAwardElementType">
+    <xsd:sequence>
+      <xsd:element name="OrderDate" type="common:Dt"/>
+      <xsd:element name="CourtAssessmentStatus" type="common:C50"/>
+      <xsd:element name="PreCertificateAwardLSC" type="common:Amount"
+        minOccurs="0"/>
+      <xsd:element name="PreCertificateAwardOth" type="common:Amount"
+        minOccurs="0"/>
+      <xsd:element name="CertificateCostRateLSC" type="common:Amount"
+        minOccurs="0"/>
+      <xsd:element name="CertificateCostRateMarket" type="common:Amount"
+        minOccurs="0"/>
+      <xsd:element name="AwardedBy" type="common:C50" minOccurs="0"/>
+      <xsd:element name="InterestAwardedRate" type="common:Amount" minOccurs="0"/>
+      <xsd:element name="InterestAwardedStartDate" type="common:Dt" minOccurs="0"/>
+      <xsd:element name="OtherDetails" type="common:C240" minOccurs="0"/>
+      <xsd:element name="LiableParties" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="OtherParyID" type="common:ID15" maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="OrderDateServed" type="common:Dt" minOccurs="0"/>
+      <xsd:element name="ServiceAddress" type="case:ServiceAddrElementType"
+        minOccurs="0"/>
+      <xsd:element name="Recovery" type="case:RecoveryElementType" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="FinancialAwardElementType">
+    <xsd:sequence>
+      <xsd:element name="OrderDate" type="common:Dt"/>
+      <xsd:element name="Amount" type="common:Amount"/>
+      <xsd:element name="InterimAward" type="common:Amount"/>
+      <xsd:element name="AwardedBy" type="common:C50"/>
+      <xsd:element name="AwardJustifications" type="common:C240" minOccurs="0"/>
+      <xsd:element name="StatutoryChangeReason" type="common:C240" minOccurs="0"/>
+      <xsd:element name="OtherDetails" type="common:C240" minOccurs="0"/>
+      <xsd:element name="LiableParties" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="OtherPartyID" type="common:ID15"
+              maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="OrderDateServed" type="common:Dt" minOccurs="0"/>
+      <xsd:element name="ServiceAddress" type="case:ServiceAddrElementType"
+        minOccurs="0"/>
+      <xsd:element name="Recovery" type="case:RecoveryElementType" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="LandAwardElementType">
+    <xsd:sequence>
+      <xsd:element name="OrderDate" type="common:Dt"/>
+      <xsd:element name="Description" type="common:C50"/>
+      <xsd:element name="TitleNo" type="common:C50" minOccurs="0"/>
+      <xsd:element name="PropertyAddress" type="case:ServiceAddrElementType"/>
+      <xsd:element name="Valuation">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Amount" type="common:Amount" minOccurs="0"/>
+            <xsd:element name="Criteria" type="common:LOV"/>
+            <xsd:element name="Date" type="common:Dt" minOccurs="0"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="DisputedPercentage" type="common:Decimal" minOccurs="0"/>
+      <xsd:element name="AwardedPercentage" type="common:Decimal" minOccurs="0"/>
+      <xsd:element name="MortgageAmountDue" type="common:Amount" minOccurs="0"/>
+      <xsd:element name="Equity" type="common:C50" minOccurs="0"/>
+      <xsd:element name="AwardedBy" type="common:LOV"/>
+      <xsd:element name="Recovery" type="common:LOV"/>
+      <xsd:element name="NoRecoveryDetails" type="common:C240" minOccurs="0"/>
+      <xsd:element name="StatChargeExemptReason" type="common:C240" minOccurs="0"/>
+      <xsd:element name="LandChargeRegistration" type="common:LOV" minOccurs="0"/>
+      <xsd:element name="RegistrationRef" type="common:C50" minOccurs="0"/>
+      <xsd:element name="OtherProprietors" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="OtherPartyID" type="common:ID15"
+              maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="TimeRelatedAward" type="case:TimeRelatedElementType"
+        minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="OtherAssetElementType">
+    <xsd:sequence>
+      <xsd:element name="OrderDate" type="common:Dt"/>
+      <xsd:element name="Description" type="common:C240"/>
+      <xsd:element name="Valuation" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Amount" type="common:Amount" minOccurs="0"/>
+            <xsd:element name="Criteria" type="common:C240"/>
+            <xsd:element name="Date" type="common:Dt" minOccurs="0"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="AwardedAmount" type="common:Amount" minOccurs="0"/>
+      <xsd:element name="AwardedPercentage" type="common:Decimal" minOccurs="0"/>
+      <xsd:element name="RecoveredAmount" type="common:Amount" minOccurs="0"/>
+      <xsd:element name="RecoveredPercentage" type="common:Decimal" minOccurs="0"/>
+      <xsd:element name="DisputedAmount" type="common:Amount" minOccurs="0"/>
+      <xsd:element name="DisputedPercentage" type="common:Decimal" minOccurs="0"/>
+      <xsd:element name="AwardedBy" type="common:LOV"/>
+      <xsd:element name="Recovery" type="common:LOV"/>
+      <xsd:element name="NoRecoveryDetails" type="common:C240" minOccurs="0"/>
+      <xsd:element name="HeldBy" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="OtherPartyID" type="common:ID15"
+              maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="TimeRelatedAward" type="case:TimeRelatedElementType"
+        minOccurs="0"/>
+      <xsd:element name="StatChargeExemptReason" type="common:C240" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="RecoveryElementType">
+    <xsd:sequence>
+      <xsd:element name="AwardValue" type="common:Amount"/>
+      <xsd:element name="RecoveredAmount" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Solicitor" type="case:RecoveryAmountElementType"
+              minOccurs="0"/>
+            <xsd:element name="Court" type="case:RecoveryAmountElementType"
+              minOccurs="0"/>
+            <xsd:element name="Client" type="case:RecoveryAmountElementType"
+              minOccurs="0"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="UnRecoveredAmount" type="common:Amount" minOccurs="0"/>
+      <xsd:element name="LeaveOfCourtReqdInd" type="common:BooleanString"
+        minOccurs="0"/>
+      <xsd:element name="OfferedAmount" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Amount" type="common:Amount" minOccurs="0"/>
+            <xsd:element name="ConditionsOfOffer" type="common:C240" minOccurs="0"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="RecoveryAmountElementType">
+    <xsd:sequence>
+      <xsd:element name="Amount" type="common:Amount" minOccurs="0"/>
+      <xsd:element name="DateReceived" type="common:Dt" minOccurs="0"/>
+      <xsd:element name="PaidToLSC" type="common:Amount" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ServiceAddrElementType">
+    <xsd:sequence>
+      <xsd:element name="AddressLine1" type="common:C240" minOccurs="0"/>
+      <xsd:element name="AddressLine2" type="common:C240" minOccurs="0"/>
+      <xsd:element name="AddressLine3" type="common:C240" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="TimeRelatedElementType">
+    <xsd:sequence>
+      <xsd:element name="AwardType" type="common:C50" minOccurs="0"/>
+      <xsd:element name="Description" type="common:C240" minOccurs="0"/>
+      <xsd:element name="Amount" type="common:Amount"/>
+      <xsd:element name="AwardTrigeringEvent" type="common:C240"/>
+      <xsd:element name="AwardDate" type="common:Dt" minOccurs="0"/>
+      <xsd:element name="OtherDetails" type="common:C240" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="DischargeElementType">
+    <xsd:sequence>
+      <xsd:element name="Reason" type="common:C240" minOccurs="0"/>
+      <xsd:element name="ClientContinuePvtInd" type="common:BooleanString"
+        minOccurs="0"/>
+      <xsd:element name="OtherDetails" type="common:C240" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="UndertakingElementType">
+    <xsd:sequence>
+      <xsd:element name="MaxAmount" type="common:Amount"/>
+      <xsd:element name="EnteredAmount" type="common:Amount"/>
+      <xsd:element name="Details" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Detail" type="case:UndertakingDetailsElementType"
+              maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="UndertakingDetailsElementType">
+    <xsd:sequence>
+      <xsd:element name="EntityType" type="common:Amount"/>
+      <xsd:element name="EntityRef" type="common:Amount"/>
+      <xsd:element name="BillsToDate" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="InterimAndFinal" type="common:Amount"/>
+            <xsd:element name="UnRecoupedPaymentOnAcct" type="common:Amount"/>
+            <xsd:element name="BillsSubmitted" type="common:Amount"/>
+            <xsd:element name="FinalBillReceived" type="common:Amount"/>
+            <xsd:element name="CurrentUndertaking" type="common:Amount"/>
+            <xsd:element name="UnBilledLiability" type="common:Amount"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="PriorAuthorities">
+    <xsd:sequence>
+      <xsd:element name="PriorAuthority" type="case:PriorAuthorityElementType"
+        maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="PriorAuthorityElementType">
+    <xsd:sequence>
+      <xsd:element name="PriorAuthorityType" type="common:LOV"/>
+      <xsd:element name="Description" type="common:C150"/>
+      <xsd:element name="ReasonForRequest" type="common:C255" minOccurs="0"/>
+      <xsd:element name="RequestAmount" type="common:Amount"/>
+      <xsd:element name="DecisionStatus" type="common:LOV" minOccurs="0"/>
+      <xsd:element name="AssessedAmount" type="common:Amount" minOccurs="0"/>
+      <xsd:element name="Details" type="case:PriorAuthorityDetElementType"
+        minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="PriorAuthorityDetElementType">
+    <xsd:sequence>
+      <xsd:element name="Attribute" type="case:PriorAuthorityAttribElementType"
+        maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="PriorAuthorityAttribElementType">
+    <xsd:sequence>
+      <xsd:element name="Name" type="common:C50"/>
+      <xsd:element name="Value" type="common:C150" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="LARDetails">
+    <xsd:sequence>
+      <xsd:element name="LARScopeFlag" type="common:Boolean" minOccurs="0"/>
+      <xsd:element name="LegalHelpOfficeCode" type="common:C30" minOccurs="0"/>
+      <xsd:element name="LegalHelpUFN" type="common:C30" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="DocumentStatusElementType">
+    <xsd:sequence>
+      <xsd:element name="CCMSDocumentID" type="common:C50" minOccurs="0"/>
+      <xsd:element name="Status" type="common:C50" minOccurs="0"/>
+      <xsd:element name="StatusDescription" type="common:C50" minOccurs="0"/>
+      <xsd:element name="EDRMSFilePath" type="common:C100" minOccurs="0"/>
+      <xsd:element name="FileType" type="common:C10" minOccurs="0"/>
+      <xsd:element name="DocumentClass" type="common:C20" minOccurs="0"/>
+      <xsd:element name="DocumentType" type="common:C20" minOccurs="0"/>
+      <xsd:element name="DocumentTypeDescription" type="common:C50" minOccurs="0"/>
+      <xsd:element name="DocumentDescription" type="common:C100" minOccurs="0"/>
+      <xsd:element name="Version" type="common:C20" minOccurs="0"/>
+      <xsd:element name="DateCreated" type="common:C14" minOccurs="0"/>
+      <xsd:element name="DocumentOwner" type="common:C20" minOccurs="0"/>
+      <xsd:element name="DateLastAmended" type="common:C14" minOccurs="0"/>
+      <xsd:element name="LastAmendedBy" type="common:C20" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="DocumentDetails">
+    <xsd:sequence>
+      <xsd:element name="Document" type="case:DocumentStatusElementType" minOccurs="0"
+        maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CaseDocs">
+    <xsd:sequence>
+      <xsd:element name="CaseDoc" type="case:CaseDocsElementType" minOccurs="0"
+        maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CaseDocsElementType">
+    <xsd:sequence>
+      <xsd:element name="CCMSDocumentID" type="common:C50" minOccurs="0"/>
+      <xsd:element name="DocumentSubject" type="common:C30" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>
+
+
+

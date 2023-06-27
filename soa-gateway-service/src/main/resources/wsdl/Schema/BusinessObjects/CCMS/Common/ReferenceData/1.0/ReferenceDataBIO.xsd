@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common"
+  xmlns:refdata="http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/ReferenceDataBIO"
+  targetNamespace="http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/ReferenceDataBIO"
+  elementFormDefault="qualified"
+  attributeFormDefault="unqualified" version="1.0">
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      <Version>1.0.0</Version>
+      <Definition>Reference Data BIO</Definition>
+      <Description>This schema defines the objects to query reference data within CCMS</Description>
+      <Author>Ramesh Madhavan</Author>
+      <ModifiedBy>Ramesh Madhavan</ModifiedBy>
+      <VersionDate>09-08-2010</VersionDate>
+      <VersionDescription>Updated the schema as per Swipper version 1.8</VersionDescription>
+      <ModificationHistory>
+        24-03-2010 Version 1.0 - Initial Development Version
+        09-08-2010 Version 1.2 - Updated the schema as per Swipper version 1.8
+      </ModificationHistory>
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:import namespace="http://legalservices.gov.uk/Enterprise/Common/1.0/Common"
+    schemaLocation="../../../../Enterprise/Common/1.0/Common.xsd"/>
+
+  <xsd:complexType name="ReferenceKey">
+    <xsd:sequence>
+      <xsd:element name="Key" type="refdata:KeyType"/>
+      <xsd:element name="Value" type="common:C50" maxOccurs="100"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="ResultSetType">
+    <xsd:sequence>
+      <xsd:element name="Column1">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Key" type="common:C50"/>
+            <xsd:element name="Value" type="common:C150"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Column2" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Key" type="common:C50"/>
+            <xsd:element name="Value" type="common:C150"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Column3" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Key" type="common:C50"/>
+            <xsd:element name="Value" type="common:C150"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+  <xsd:complexType name="ReferenceValue">
+    <xsd:sequence>
+      <xsd:element name="Value" type="common:C50"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="SearchContext">
+    <xsd:sequence>
+      <xsd:element name="ContextKey" type="refdata:KeyType" minOccurs="1" maxOccurs="10"/>
+      <xsd:element name="SearchKey" type="refdata:ReferenceKey" minOccurs="0" maxOccurs="10"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:simpleType name="KeyType">
+    <xsd:annotation>
+      <xsd:documentation>Reference key Values</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="common:ClosedEnum">
+      <xsd:enumeration value="CaseReferenceNumber"/>
+      <xsd:enumeration value="ClientReferenceNumber"/>
+      <xsd:enumeration value="DWP"/>
+      <xsd:enumeration value="SurName"/>
+      <xsd:enumeration value="BirthDate"/>
+      <xsd:enumeration value="NINumber"/>
+      <xsd:enumeration value="AwardDate"/>
+      <xsd:enumeration value="CommonOrg"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+
+  <xsd:complexType name="ContractDetailsElementType">
+    <xsd:sequence>
+      <xsd:element name="CategoryofLaw" type="common:C40" minOccurs="0"/>
+      <xsd:element name="SubCategory" type="common:C40" minOccurs="0"/>
+      <xsd:element name="AuthorisationType" type="common:C40" minOccurs="0"/>
+      <xsd:element name="CreateNewMatters" type="common:BooleanString" minOccurs="0"/>
+      <xsd:element name="ContractualDevolvedPowers" type="common:C40" minOccurs="0"/>
+      <xsd:element name="RemainderAuthorisation" type="common:BooleanString" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+  <xsd:complexType name="UserRolesElementType">
+    <xsd:sequence>
+      <xsd:element name="AssignedRoles" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Responsibility" type="common:C35" maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+  <xsd:complexType name="OrganizationPartyType">
+    <xsd:sequence>
+      <xsd:element name="OrganizationPartyID" type="common:ID15"/>
+      <xsd:element name="OrganizationName" type="common:C30"/>
+      <xsd:element name="OrganizationType" type="common:LOV"/>
+      <xsd:element name="CurrentlyTrading" type="common:LOV" minOccurs="0"/>
+      <xsd:element name="Address" type="common:Address"/>
+      <xsd:element name="ContactName" type="common:C150"/>
+      <xsd:element name="ContactDetails" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="TelephoneHome" type="common:PhoneNum" minOccurs="0"/>
+            <xsd:element name="TelephoneWork" type="common:PhoneNum" minOccurs="0"/>
+            <xsd:element name="MobileNumber" type="common:PhoneNum" minOccurs="0"/>
+            <xsd:element name="EmailAddress" type="common:EmailAddress" minOccurs="0"/>
+            <xsd:element name="Fax" type="common:PhoneNum" minOccurs="0"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="OtherInformation" type="common:C240" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+</xsd:schema>

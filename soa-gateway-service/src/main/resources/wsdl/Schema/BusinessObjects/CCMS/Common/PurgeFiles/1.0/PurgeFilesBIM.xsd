@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- edited with XMLSpy v2010 (http://www.altova.com) by Ashish (Capgemini) -->
+<!--Created with Liquid XML Studio - FREE Community Edition 7.1.6.1440 (http://www.liquid-technologies.com)-->
+<xsd:schema
+  xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common"
+  xmlns:msg="http://legalservices.gov.uk/CCMS/Common/PurgeFiles/1.0/PurgeFilesBIM"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="http://legalservices.gov.uk/CCMS/Common/PurgeFiles/1.0/PurgeFilesBIM"
+  elementFormDefault="qualified" attributeFormDefault="unqualified"
+  version="1.0">
+  <xsd:import namespace="http://legalservices.gov.uk/Enterprise/Common/1.0/Header"
+    schemaLocation="../../../../Enterprise/Common/1.0/Header.xsd"/>
+  <xsd:import namespace="http://legalservices.gov.uk/Enterprise/Common/1.0/Common"
+    schemaLocation="../../../../Enterprise/Common/1.0/Common.xsd"/>
+  <xsd:element name="PurgeFilesRQ" type="msg:PurgeFilesRQ"/>
+  <xsd:element name="PurgeFilesRS" type="msg:PurgeFilesRS"/>
+  <xsd:complexType name="PurgeFilesRQ">
+    <xsd:sequence>
+      <xsd:element name="RequestId" type="common:C50" maxOccurs="1"/>
+      <xsd:element name="FileName" type="common:C50" minOccurs="0"/>
+      <xsd:element name="FileDirectory" type="common:C240" minOccurs="0"/>
+      <xsd:element name="TargetServer" type="common:C50" maxOccurs="1" minOccurs="0"/>
+      <xsd:element name="EpochTimeValue" type="common:C50" maxOccurs="1" minOccurs="0"/>
+      <xsd:element name="UserName" type="common:C50" maxOccurs="1"/>
+      <xsd:element name="Responsibility" type="common:C50" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="PurgeFilesRS">
+    <xsd:sequence>
+      <xsd:element name="RequestId" type="common:C50" maxOccurs="1"/>
+      <xsd:element name="Result" type="common:C100" maxOccurs="1"/>
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>

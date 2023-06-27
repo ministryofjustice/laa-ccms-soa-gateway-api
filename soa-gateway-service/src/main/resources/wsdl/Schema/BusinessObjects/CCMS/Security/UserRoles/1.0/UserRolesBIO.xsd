@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common"
+  xmlns:userroles="http://legalservices.gov.uk/CCMS/Security/UserRoles/1.0/UserRolesBIO"
+  targetNamespace="http://legalservices.gov.uk/CCMS/Security/UserRoles/1.0/UserRolesBIO"
+  elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      <Version>1.0</Version>
+      <Definition>Roles and Responsibilities BIO</Definition>
+      <Description>This schema defines the objects to retreive the Roles
+        and Responsibilities within CCMS
+      </Description>
+      <Author>Ramesh Madhavan</Author>
+      <ModifiedBy>Ramesh Madhavan</ModifiedBy>
+      <VersionDate>22-03-2010</VersionDate>
+      <VersionDescription>Initial Version</VersionDescription>
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:import namespace="http://legalservices.gov.uk/Enterprise/Common/1.0/Common"
+    schemaLocation="../../../../Enterprise/Common/1.0/Common.xsd"/>
+  <xsd:complexType name="UserRoles">
+    <xsd:sequence>
+      <xsd:element name="UserID" type="common:C30"/>
+      <xsd:element name="UserType" type="common:C50"/>
+      <xsd:element name="FirstName" type="common:C50" minOccurs="0"/>
+      <xsd:element name="LastName" type="common:C50" minOccurs="0"/>
+      <xsd:element name="Functions" type="userroles:Function" minOccurs="0" maxOccurs="50"/>
+      <xsd:element name="StartDate" type="common:C30" minOccurs="0"/>
+      <xsd:element name="EndDate" type="common:C30" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="Function">
+    <xsd:sequence>
+      <xsd:element name="Responsibility" type="common:C50"/>
+      <xsd:element name="ScreenFunction" type="common:C50" minOccurs="0" maxOccurs="50"/>
+      <xsd:element name="StartDate" type="common:C30" minOccurs="0"/>
+      <xsd:element name="EndDate" type="common:C30" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+</xsd:schema>

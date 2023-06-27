@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2010 (http://www.altova.com) by Ashish (Capgemini) -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common"
+  xmlns:client="http://legalservices.gov.uk/CCMS/ClientManagement/Client/1.0/ClientBIO"
+  targetNamespace="http://legalservices.gov.uk/CCMS/ClientManagement/Client/1.0/ClientBIO"
+  elementFormDefault="qualified" attributeFormDefault="unqualified"
+  version="1.0">
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      <Version>1.0 Draft</Version>
+      <Definition>Client BIO</Definition>
+      <Description>This schema defines the objects to create or update the Clients
+        at LSC.
+      </Description>
+      <Author>Mohammed Sajid Ali</Author>
+      <ModifiedBy>Ramesh Madhavan</ModifiedBy>
+      <VersionDate>09-08-2010</VersionDate>
+      <VersionDescription>Updated the schema as per Swipper 1.8</VersionDescription>
+      <ModificationHistory>
+        07-05-2010 Version 1.0 - Initial Development Version
+        19-05-2010 Version 1.1 - Changed HomeOfficeReference to HomeOfficeNumber
+        09-08-2010 Version 1.2 - Updated the schema as per Swipper version 1.8
+        09-23-2010 Version 1.3 - Incorporated comments from Dwayne ( Final Review ClientManagement
+        xsds. doc)
+
+
+        1. Client inquiry request (ClientInqRQ)
+
+        " According to wireframe CS01, 'Gender' is an optional search-attribute. However, in the XSD
+        is it defined as mandatory. [Ramesh] Done
+
+
+        2. Client inquiry response (ClientInqRS)
+
+        " In the XSD, the 'Client' element is defined as optional and the 'ClientList' is defined as
+        mandatory. Why this distinction? What will be returned if no clients meet the search
+        criteria? [Ramesh] Done
+
+        " According to use case 'Search LSC Client' (BRUL 56) the backend will return an indicator
+        specifying the matching level of the Unique Identifier Type ('number matched', 'number not
+        matched', 'number not held'). This indicator is missing in the XSD. Ramesh : I am not aware
+        of this. I will get back and correct as required
+
+
+        3. Client addition request (ClientAddRQ)
+
+        " According to wireframe CR03, 'Country of Origin' is a mandatory field. The XSD doesn't
+        contain an element to pass this field to EBS. [Ramesh] Done
+
+        " Within the 'Contacts' element of the XSD, the element 'TelephoneHome' is mandatory.
+        However, according to wireframe CR04 it is optional (and besides that, for vulnerable
+        clients it is not applicable). [Ramesh] Done
+
+        " Within the 'Contacts' element of the XSD, the element 'CorrespondenceMethod' is mandatory.
+        However, for vulnerable clients the correspondence method won't be captured. How is the
+        Provider UI supposed to handle this? Ramesh : Need to check
+
+        " According to wireframe CR04, 'CorrespondenceLanguage' is optional. However, in the XSD is
+        it defined as mandatory. [Ramesh] Done . Made it optional
+        " According to wireframe CR05, 'House', 'PostalCode' and 'City' are mandatory. However, in
+        the XSD they are defined as optional. [Ramesh] Not required as it is optional in Oracle.
+        Moreover this comes as a common element. Can be handled as mandatory within PUI
+        " According to wireframe CR06, 'EthnicMonitoring' is mandatory. However, in the XSD is it
+        defined as optional. [Ramesh] Done . Made it optional
+        "
+        " According to wireframe CR06, only one disability can be selected (the predominant one).
+        However, in the XSD is it defined as a repeating structure. Why? [Ramesh] This is to allow
+        future requirements . I believe a person can have multiple disabilities . Just pass one
+        value to this
+
+
+        4. Client update request (ClientUpdRQ)
+
+        " In the XSD the element 'DisabilityMonitoring' is defined twice, just before and just after
+        'SpecialConsiderations'. Also it is defined as a repeating structure while wireframe CD05
+        only allows for one value to be selected. [Ramesh] Removed
+        " In the XSD the element 'NoFixedAbode' seems to be missing (defined on wireframe CD04).
+        [Ramesh] Added
+
+        " The XSD still contains the element 'CorrespondenceAddress', but in the Provider UI this is
+        moved from the client to the case/application. [Ramesh] Done, the changes were done on Add
+        request and needed to be replicated in the Update section too
+
+        " The XSD contains a single element 'Correspondence', but according to wireframe CD03,
+        'CorrespondenceMethod' and 'CorrespondenceLanguage' are two separate fields. [Ramesh] Done,
+        the changes were done on Add request and needed to be replicated in the Update section too
+
+        "
+
+        5. General issues
+
+        Using XMLSpy, we were not able to validate the ClientBIM.xsd successfully. This also causes
+        problems for the WSDL-to-Java compiler that we use to generate the data-structures from the
+        xsd. These are the issues we found:
+
+        " As mentioned already under point 4, the XSD contains a duplicate definition of the element
+        'DisabilityMonitoring'. Please remove one of the two. [Ramesh] done
+
+        " The common.xsd doesn't contain a definition for the C35 type. Please add this. [Ramesh]
+        done
+
+        " The RecordCount in the common.xsd is defined as a type instead of an element and can
+        therefore not be referenced in an element definition. Please fix this [Ramesh] This has
+        already been fixed .
+        " The Address element in the ClientBIO.xsd is only a reference the the common:Address. This
+        causes a naming conflict. Please remove the Address element definition from the
+        ClientBIO.xsd and refer to the common:Address instead. [Ramesh] The Address element was
+        created to have main address and correspondence address and so should have been removed to
+        make it simple. However , I am not sure why this would cause naming conflict as both have
+        different prefix. I will make the changes anyways
+        09-23-2010 Version 1.3 - Incorporated comments from Dwayne ( Final Review ClientManagement
+        xsds. doc)
+        Added element MatchLevelInd in ClientList
+      </ModificationHistory>
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:import namespace="http://legalservices.gov.uk/Enterprise/Common/1.0/Common"
+    schemaLocation="../../../../Enterprise/Common/1.0/Common.xsd"/>
+  <xsd:complexType name="Client">
+    <xsd:sequence>
+      <xsd:element name="ClientReferenceNumber" type="common:IDREF30">
+        <xsd:annotation>
+          <xsd:documentation>Unique Client Reference Number</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Details" type="client:ClientDetails"/>
+      <xsd:element name="RecordHistory" type="common:RecordHistory"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ClientDetails">
+    <xsd:sequence>
+      <xsd:element name="Name" type="common:Name"/>
+      <xsd:element name="PersonalInformation" type="client:PersonalDetails"/>
+      <xsd:element name="Contacts" type="client:ContactDetails"/>
+      <xsd:element name="DisabilityMonitoring" type="client:DisabilityDetails" minOccurs="0"/>
+      <xsd:element name="NoFixedAbode" type="common:BooleanString"/>
+      <xsd:element name="Address" type="common:Address" minOccurs="0"/>
+      <xsd:element name="EthnicMonitoring" type="common:LOV"/>
+      <xsd:element name="SpecialConsiderations" type="common:C2000" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Free text message</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="PersonalDetails">
+    <xsd:sequence>
+      <xsd:element name="DateOfBirth" type="common:Dt">
+        <xsd:annotation>
+          <xsd:documentation>Date of Birth</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="DateOfDeath" type="common:Dt" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Date of Death</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Gender" type="common:Gender">
+        <xsd:annotation>
+          <xsd:documentation>Gender</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="MaritalStatus" type="common:MaritalStatus">
+        <xsd:annotation>
+          <xsd:documentation>MaritalStatus</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="NINumber" type="common:NationalInsuranceNumber"
+        minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>National Insurance Number</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="HomeOfficeNumber" type="common:HomeOfficeNumber"
+        minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Home Office Reference Number</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="VulnerableClient" type="common:BooleanString">
+        <xsd:annotation>
+          <xsd:documentation>Main address is removed from the address page based on
+            flag value
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="HighProfileClient" type="common:BooleanString"/>
+      <xsd:element name="VexatiousLitigant" type="common:BooleanString"/>
+      <xsd:element name="CountryOfOrigin" type="common:CountryCode"/>
+      <xsd:element name="MentalCapacityInd" type="common:BooleanString"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ContactDetails">
+    <xsd:sequence>
+      <xsd:element name="TelephoneHome" type="common:PhoneNum" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Home Telephone Number</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="TelephoneWork" type="common:PhoneNum" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Office Telephone Number</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="MobileNumber" type="common:PhoneNum" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Mobile Number</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="EmailAddress" type="common:EmailAddress" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Email ID</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Password" type="common:C15">
+        <xsd:annotation>
+          <xsd:documentation>Password</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="PasswordReminder" type="common:C50" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Password Reminder</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="CorrespondenceMethod" type="common:LOV" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Correspondence Method</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="CorrespondenceLanguage" type="common:LOV" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Correspondence Language</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CorrespondenceAddressDetails">
+    <xsd:sequence>
+      <xsd:element name="References" type="common:C50" minOccurs="0"/>
+      <xsd:element name="Address" type="common:Address"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="DisabilityDetails">
+    <xsd:sequence>
+      <xsd:element name="DisabilityType" type="common:LOV" minOccurs="1"
+        maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ClientInfo">
+    <xsd:sequence>
+      <xsd:element name="Gender" type="common:Gender" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Gender</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="FirstName" type="common:C150">
+        <xsd:annotation>
+          <xsd:documentation>First Name</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Surname" type="common:C150">
+        <xsd:annotation>
+          <xsd:documentation>Surname</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="DateOfBirth" type="common:Dt">
+        <xsd:annotation>
+          <xsd:documentation>Date of Birth</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="NINumber" type="common:NationalInsuranceNumber"
+        minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>National Insurance Number</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="HomeOfficeReference" type="common:HomeOfficeReference"
+        minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Home Office Reference Number</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="CaseReferenceNumber" type="common:C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>LSC Case Reference Number</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ClientList">
+    <xsd:sequence>
+      <xsd:element name="Name" type="common:Name"/>
+      <xsd:element name="DateOfBirth" type="common:Dt"/>
+      <xsd:element name="Gender" type="common:Gender"/>
+      <xsd:element name="PostalCode" type="common:C60"/>
+      <xsd:element name="ClientReferenceNumber" type="common:C30"/>
+      <xsd:element name="HomeOfficeReference" type="common:HomeOfficeReference"/>
+      <xsd:element name="NINumber" type="common:NationalInsuranceNumber"/>
+      <xsd:element name="MatchLevelInd" type="common:C50"/>
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created with Liquid XML Studio 1.0.8.0 (http://www.liquid-technologies.com) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+  targetNamespace="http://technicolor.co.uk/namespaces/interactive/salesbookingform/2008-10-07">
+  <xs:element name="BookingForm">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Campaign">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="CampaignName" type="xs:string"/>
+              <xs:element name="StartDate" type="xs:date"/>
+              <xs:element name="EndDate" type="xs:date"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="IAdInstance" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ITVSalesAPPID" type="xs:integer"/>
+              <xs:element name="Platform" type="xs:string"/>
+              <xs:element name="Supplier" type="xs:string"/>
+              <xs:element name="ITVCompliance" type="xs:boolean"/>
+              <xs:element name="IAdType" type="xs:string"/>
+              <xs:element name="UniqueCampaignDescriptor" type="xs:string"/>
+              <xs:element name="TriggerID" type="xs:string" minOccurs="0"/>
+              <xs:element name="ContentID" type="xs:string" minOccurs="0"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="ComboInstance" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ComboAppID" type="xs:integer"/>
+              <xs:element name="DsatAppId" type="xs:integer"/>
+              <xs:element name="DttAppId" type="xs:integer"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

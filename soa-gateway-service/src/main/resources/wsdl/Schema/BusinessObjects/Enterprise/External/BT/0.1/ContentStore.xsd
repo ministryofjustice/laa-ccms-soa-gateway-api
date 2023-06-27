@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:ns1="http://mosaic.bt.com/Interfaces/ITV/OAK09/1.0/ProgrammeVersionTimecode.xsd"
+  targetNamespace="http://mosaic.bt.com/Interfaces/ITV/OAK09/1.0/ProgrammeVersionTimecode.xsd"
+  elementFormDefault="qualified" attributeFormDefault="unqualified">
+  <xs:element name="ProgrammeVersionTimecode">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="VersionId" type="xs:string" nillable="false"/>
+        <xs:element name="StartOfEssence" type="xs:string" nillable="false"/>
+        <xs:element name="EndOfEssence" type="xs:string" nillable="false"/>
+        <xs:element name="SEES_SOM" type="xs:int" nillable="false"/>
+        <xs:element name="SEES_EOM" type="xs:int" nillable="false"/>
+        <xs:element name="NumberOfParts" type="xs:int" nillable="false"/>
+        <xs:element name="LastEditedDate" type="xs:string" nillable="true"/>
+        <xs:element name="LastEditedBy" type="xs:string" nillable="true"/>
+        <xs:element name="CLID" type="xs:string" minOccurs="0"/>
+        <xs:element name="PCTX" type="xs:string" minOccurs="0"/>
+        <xs:element name="StructuralStatus" type="xs:string" minOccurs="0"/>
+        <xs:element name="PromotionStatus" type="xs:string" minOccurs="0"/>
+        <xs:element name="PartingTimecodesStatus" type="xs:string" minOccurs="0"/>
+        <xs:element name="ActualActiveFormatDescriptorCode" type="xs:string" minOccurs="0"/>
+        <xs:element name="ADIF" type="xs:string" minOccurs="0"/>
+        <xs:element name="PCPS" type="xs:boolean" nillable="false"/>
+        <xs:element name="SECP" type="xs:boolean" nillable="false"/>
+        <xs:element name="SCAL" type="xs:boolean" nillable="false"/>
+        <xs:element name="SECA" type="xs:boolean" nillable="false"/>
+        <xs:element name="SVOA" type="xs:boolean" nillable="false"/>
+        <xs:element name="HARP" type="xs:boolean" nillable="false"/>
+        <xs:element name="ECCP" type="xs:boolean" nillable="false"/>
+        <xs:element name="SNEC" type="xs:boolean" nillable="false"/>
+        <xs:element name="SIPP" type="xs:boolean" nillable="false"/>
+        <xs:element name="SOSN" type="xs:boolean" nillable="false"/>
+        <xs:element name="CSTL" type="xs:boolean" nillable="false"/>
+        <xs:element name="ECW_SOM" type="xs:int" minOccurs="0"/>
+        <xs:element name="ECW_EOM" type="xs:int" minOccurs="0"/>
+        <xs:element name="ENDC_SOM" type="xs:int" minOccurs="0"/>
+        <xs:element name="ENDC_EOM" type="xs:int" minOccurs="0"/>
+        <xs:element name="EPDA_SOM" type="xs:int" minOccurs="0"/>
+        <xs:element name="EPDA_EOM" type="xs:int" minOccurs="0"/>
+        <xs:element name="NECW_SOM" type="xs:int" minOccurs="0"/>
+        <xs:element name="NECW_EOM" type="xs:int" minOccurs="0"/>
+        <xs:element name="SPSP_SOM" type="xs:int" minOccurs="0"/>
+        <xs:element name="SPSP_EOM" type="xs:int" minOccurs="0"/>
+        <xs:element name="SPEP_SOM" type="xs:int" minOccurs="0"/>
+        <xs:element name="SPEP_EOM" type="xs:int" minOccurs="0"/>
+        <xs:element name="SPGP_SOM" type="xs:int" minOccurs="0"/>
+        <xs:element name="SPGP_EOM" type="xs:int" minOccurs="0"/>
+        <xs:element name="PartTimecodes" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="PartTimecode" type="ns1:PartTimecode" minOccurs="0"
+                maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="SoftParts" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="SoftPart" type="ns1:SoftPart" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="AUDITimecodes" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="AUDITimecode" type="ns1:AUDITimecode" minOccurs="0"
+                maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="PartTimecode">
+    <xs:sequence>
+      <xs:element name="PartNumber" type="xs:int" nillable="false"/>
+      <xs:element name="VersionId" type="xs:string" nillable="false"/>
+      <xs:element name="PART_SOM" type="xs:int" nillable="false"/>
+      <xs:element name="PART_EOM" type="xs:int" nillable="false"/>
+      <xs:element name="EPCA_SOM" type="xs:int" minOccurs="0"/>
+      <xs:element name="EPCA_EOM" type="xs:int" minOccurs="0"/>
+      <xs:element name="IPTP_SOM" type="xs:int" minOccurs="0"/>
+      <xs:element name="IPTP_EOM" type="xs:int" minOccurs="0"/>
+      <xs:element name="IPTL_SOM" type="xs:int" minOccurs="0"/>
+      <xs:element name="IPTL_EOM" type="xs:int" minOccurs="0"/>
+      <xs:element name="RCAP_SOM" type="xs:int" minOccurs="0"/>
+      <xs:element name="RCAP_EOM" type="xs:int" minOccurs="0"/>
+      <xs:element name="SOPC_SOM" type="xs:int" minOccurs="0"/>
+      <xs:element name="SOPC_EOM" type="xs:int" minOccurs="0"/>
+      <xs:element name="TEAS_SOM" type="xs:int" minOccurs="0"/>
+      <xs:element name="TEAS_EOM" type="xs:int" minOccurs="0"/>
+      <xs:element name="OSNW_SOM" type="xs:int" minOccurs="0"/>
+      <xs:element name="OSNW_EOM" type="xs:int" minOccurs="0"/>
+      <xs:element name="PartNotes" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SoftPart">
+    <xs:sequence>
+      <xs:element name="SOBR_SOM" type="xs:int" minOccurs="0"/>
+      <xs:element name="SOBR_EOM" type="xs:int" minOccurs="0"/>
+      <xs:element name="SPBR_SOM" type="xs:int" minOccurs="0"/>
+      <xs:element name="SPBR_EOM" type="xs:int" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="AUDITimecode">
+    <xs:sequence>
+      <xs:element name="AUDI_SOM" type="xs:int" minOccurs="0"/>
+      <xs:element name="AUDI_EOM" type="xs:int" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

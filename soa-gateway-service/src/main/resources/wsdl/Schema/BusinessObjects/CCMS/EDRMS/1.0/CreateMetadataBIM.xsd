@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- edited with XMLSpy v2010 (http://www.altova.com) by Ashish (Capgemini) -->
+<!--Created with Liquid XML Studio - FREE Community Edition 7.1.6.1440 (http://www.liquid-technologies.com)-->
+<xsd:schema xmlns:header="http://legalservices.gov.uk/Enterprise/Common/1.0/Header"
+  xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common"
+  xmlns:msg="http://legalservices.gov.uk/CCMS/EDRMS/1.0/CreateMetadataBIM"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:edrms="http://legalservices.gov.uk/CCMS/EDRMS/1.0/EDRMSBIO"
+  targetNamespace="http://legalservices.gov.uk/CCMS/EDRMS/1.0/CreateMetadataBIM"
+  elementFormDefault="qualified" attributeFormDefault="unqualified"
+  version="1.0">
+  <xsd:import namespace="http://legalservices.gov.uk/Enterprise/Common/1.0/Header"
+    schemaLocation="../../../Enterprise/Common/1.0/Header.xsd"/>
+  <xsd:import namespace="http://legalservices.gov.uk/Enterprise/Common/1.0/Common"
+    schemaLocation="../../../Enterprise/Common/1.0/Common.xsd"/>
+  <xsd:import namespace="http://legalservices.gov.uk/CCMS/EDRMS/1.0/EDRMSBIO"
+    schemaLocation="EDRMSBIO.xsd"/>
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      <Version>1.0</Version>
+      <Definition>Create MetaData</Definition>
+      <Description>This schema is used for creating metadata in EDRMS</Description>
+      <Author>Milind Alaspure</Author>
+      <ModifiedBy>Milind Alaspure</ModifiedBy>
+      <VersionDate>10-03-2012</VersionDate>
+      <VersionDescription>Initial Version</VersionDescription>
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:element name="CreateMetadataRQ" type="msg:CreateMetadataRQ"/>
+  <xsd:element name="CreateMetadataRS" type="msg:CreateMetadataRS"/>
+  <xsd:element name="ValidateMetadataRQ" type="msg:ValidateMetadataRQ"/>
+  <xsd:element name="ValidateMetadataRS" type="msg:ValidateMetadataRS"/>
+  <xsd:element name="RetrieveMetadataRQ" type="msg:RetrieveMetadataRQ"/>
+  <xsd:element name="RetrieveMetadataRS" type="msg:RetrieveMetadataRS"/>
+
+  <xsd:complexType name="CreateMetadataRQ">
+    <xsd:sequence>
+      <xsd:element name="User" type="msg:UserType"/>
+      <xsd:element name="Metadata" type="edrms:MetaDataElementType"/>
+      <xsd:element name="DocumentClasses">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="DocumentClass" maxOccurs="unbounded" type="common:C2"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="MetaDataElementType">
+    <xsd:sequence>
+      <xsd:element name="CCMS" type="edrms:MetaDataElementType"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="DocumentElementType">
+    <xsd:sequence>
+      <xsd:element name="Document" type="edrms:DocumentElementType"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="UserType">
+    <xsd:sequence>
+      <xsd:element name="UserName" type="common:C50">
+      </xsd:element>
+      <xsd:element name="NorthgateUser" type="common:C20"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CreateMetadataRS">
+    <xsd:sequence>
+      <xsd:element name="Status" type="common:C20">
+        <xsd:annotation>
+          <xsd:documentation>Whether the request was successful. The value of this is
+            either “Success” or “Failed”
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="FailureReason" type="common:C50" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>2. Error message for the failed request.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="ValidateMetadataRQ">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRQ"/>
+      <xsd:element name="User" type="msg:UserType"/>
+      <xsd:element name="Metadata" type="msg:MetaDataElementType" minOccurs="0"/>
+      <xsd:element name="NotificationID" type="common:ID15" minOccurs="0"/>
+      <xsd:element name="DocType" type="common:C50" minOccurs="0"/>
+      <xsd:element name="Channel" type="common:C50" minOccurs="0"/>
+      <xsd:element name="DocumentDescription" type="common:C240" minOccurs="0"/>
+      <xsd:element name="CCMSDocumentID" type="common:C50" minOccurs="0"/>
+      <xsd:element name="DocumentClasses">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="DocumentClass" maxOccurs="unbounded" type="common:C2"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="ValidateMetadataRS">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRS"/>
+      <xsd:element name="Metadata" type="msg:MetaDataElementType" minOccurs="0"/>
+      <xsd:element name="Document" type="msg:DocumentElementType" minOccurs="0"/>
+      <xsd:element name="CCMSDocumentID" type="common:C50" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="RetrieveMetadataRQ">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRQ"/>
+      <xsd:element name="Metadata" type="msg:MetaDataElementType" minOccurs="0"/>
+      <xsd:element name="NotificationID" type="common:ID15" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="RetrieveMetadataRS">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRS"/>
+      <xsd:element name="Metadata" type="msg:MetaDataElementType" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+</xsd:schema>

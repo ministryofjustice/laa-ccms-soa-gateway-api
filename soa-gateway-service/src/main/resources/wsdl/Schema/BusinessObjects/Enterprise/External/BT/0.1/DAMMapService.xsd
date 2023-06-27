@@ -1,0 +1,163 @@
+<xs:schema xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+  targetNamespace="http://cp.bt.com/dammap/domain" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:com="http://cp.bt.com/common/domain" xmlns:tns="http://cp.bt.com/dammap/domain">
+  <import namespace="http://cp.bt.com/common/domain" schemaLocation="common.xsd"/>
+  <!-- mappingListsRequest -->
+  <xs:element name="mappingListsRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="mappingListsResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="mappingListDetails" type="tns:MappingListDetails" minOccurs="0"
+          maxOccurs="unbounded"/>
+        <xs:element name="responseDetails" type="com:responseDetails"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getMappingListRequest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>This operation takes in the name of a legal list and returns the legal
+          list values that is associated with the Attribute.
+          This includes the integer legal list values and also the String label that the DAM
+          associated with each value.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="listName" type="xs:string" minOccurs="1" maxOccurs="1"/>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getMappingListResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="mappingListDetails" type="tns:MappingListDetails" minOccurs="0"
+          maxOccurs="1"/>
+        <xs:element name="responseDetails" type="com:responseDetails"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getAttributesRequest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>This operation queries the DAM Active datamodel and returns the names of
+          all Attributes defined in the model.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getAttributesResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="attributeDetails" type="tns:AttributeDetails" minOccurs="0"
+          maxOccurs="unbounded"/>
+        <xs:element name="responseDetails" type="com:responseDetails"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="MappingListDetails">
+    <xs:annotation>
+      <xs:documentation>Mappings - these include the name and id of each attribute.
+        listName : Name given to the list.
+        listId : Id of the list.
+        mappingListEntries : name/value pairs containing the name of the attribute and its value.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="listName" type="xs:string"/>
+      <xs:element name="listId" type="xs:string"/>
+      <xs:element name="mappingListEntries" type="com:NameValuePairs" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="AttributeDetails">
+    <xs:annotation>
+      <xs:documentation>Details for each attribute.
+        attributeName : Name given to attribute.
+        displayName : Name to display to user on user interface.
+        attributeGroup : Attribute group to which this attribute belongs.
+        type : Type of attribute.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="attributeName" type="xs:string" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="displayName" type="xs:string" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="attributeGroup" type="xs:string" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="type" type="xs:string" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="getAttributeListNameRequest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>This operation takes in the name of an Attribute and returns the legal
+          list name that is associated
+          with the Attribute. It queries the DAM Active datamodel to find this information. In order
+          to find the legal list
+          values, the 'getMappingList' operation can be called.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="attributeName" type="xs:string" minOccurs="1" maxOccurs="1"/>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getAttributeGroupNamesRequest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>This operation queries the DAM Active datamodel and returns the names of
+          all Attribute Groups defined in the model.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getStrataNamesRequest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>This operation queries the DAM Active datamodel and returns the names of
+          all Stratum defined in the model.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getHitlistsRequest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>This operation queries the DAM Active datamodel and returns the names of
+          all Hitlists defined in the model.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getRestrictedAttributesRequest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>This operation queries the DAM Active datamodel and returns only the names
+          of Attributes that use legal lists.
+          In order to find the actual name of the legal list that is used by one of these
+          attributes, the 'getAttributeListName' operation can be used.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

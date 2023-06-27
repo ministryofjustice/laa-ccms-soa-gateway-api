@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- edited with XMLSpy v2010 (http://www.altova.com) by Ashish (Capgemini) -->
+<!--Created with Liquid XML Studio - FREE Community Edition 7.1.6.1440 (http://www.liquid-technologies.com)-->
+<xsd:schema
+  xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common"
+  xmlns:msg="http://legalservices.gov.uk/CCMS/EDRMS/MetadataDocument/1.0/ReceiveNotificationBIM"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:edrms="http://legalservices.gov.uk/CCMS/EDRMS/MetadataDocument/1.0/EDRMSBIO"
+  targetNamespace="http://legalservices.gov.uk/CCMS/EDRMS/MetadataDocument/1.0/ReceiveNotificationBIM"
+  elementFormDefault="qualified" attributeFormDefault="unqualified"
+  version="1.0">
+  <xsd:import namespace="http://legalservices.gov.uk/Enterprise/Common/1.0/Header"
+    schemaLocation="../../../../Enterprise/Common/1.0/Header.xsd"/>
+  <xsd:import namespace="http://legalservices.gov.uk/Enterprise/Common/1.0/Common"
+    schemaLocation="../../../../Enterprise/Common/1.0/Common.xsd"/>
+  <xsd:import namespace="http://legalservices.gov.uk/CCMS/EDRMS/1.0/EDRMSBIO"
+    schemaLocation="EDRMSBIO.xsd"/>
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      <Version>1.0</Version>
+      <Definition>Strore Document BIM</Definition>
+      <Description>This schema will used for storing document at EDRMS</Description>
+      <Author>Milind A</Author>
+      <ModifiedBy>Milind A</ModifiedBy>
+      <VersionDate>03-12-2012</VersionDate>
+      <VersionDescription>Initial Version</VersionDescription>
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:element name="ReceiveNotificationRQ" type="msg:ReceiveNotificationRQ"/>
+  <xsd:element name="ReceiveNotificationRS" type="msg:ReceiveNotificationRS"/>
+  <xsd:complexType name="ReceiveNotificationRQ">
+    <xsd:sequence>
+      <xsd:element name="Document" type="edrms:DocumentType" minOccurs="0"/>
+      <xsd:element name="ReferenceList" type="msg:ReferenceType" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="DocumentType">
+    <xsd:sequence>
+      <xsd:element name="StorageDate" type="common:C14">
+        <xsd:annotation>
+          <xsd:documentation>(DDMMYYYYHH24:MI:SS)</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="FileName" type="common:C50"></xsd:element>
+      <xsd:element name="FileExtension" type="common:C20"></xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ReferenceType">
+    <xsd:sequence>
+      <xsd:element name="Reference" type="msg:ReferenceListType" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="ReferenceListType">
+    <xsd:sequence>
+      <xsd:element name="Name" type="common:C30" minOccurs="0"/>
+      <xsd:element name="Value" type="common:C50" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ReceiveNotificationRS">
+    <xsd:sequence>
+      <xsd:element name="EDRMSDocumentID" type="common:C40" minOccurs="0"></xsd:element>
+      <xsd:element name="EDRMSFilePath" type="common:C100" minOccurs="0"></xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>
