@@ -1,0 +1,332 @@
+<schema xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+  targetNamespace="http://cp.bt.com/ordermanagementservice/domain"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:com="http://cp.bt.com/common/domain"
+  xmlns:tns="http://cp.bt.com/ordermanagementservice/domain">
+  <import namespace="http://cp.bt.com/common/domain" schemaLocation="common.xsd"/>
+  <xs:complexType name="ArrayOfOrders">
+    <xs:sequence>
+      <xs:element name="orderList" type="tns:Order" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="addOrderRequest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>Add a new order to initiate a workflow. E.g. E24H, Workspaces.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+        <xs:element name="order" type="tns:Order"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="updateOrderRequest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>Update details of ONE order, this does not include children.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+        <xs:element name="order" type="tns:Order"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="addUpdateOrderStatusForChildrenRequest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>Update the status for all children of an order. Eg submitted, completed
+          etc.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+        <xs:element name="order" type="tns:Order"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="updateLoggingOrderRequest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>Update order and log it.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+        <xs:element name="order" type="tns:Order"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="Order">
+    <xs:annotation>
+      <xs:documentation>An order. This can be an order for an essence, clip etc.
+        orderId : The id for the order(created automatically by OrderManagement).
+        status : Status of order workflow
+        username : User name of service requestor.
+        ipAddress : IP address that service request initiated from.
+        parentOrderId : Order id of parent order (empty if the order is master).
+        receivedTime : Time that order was created.
+        lastUpdatedTime : Time that order was last updated.
+        startTime : Time that workflow started.
+        finishTime : Time that workflow completed or failed.
+        orderType : The workflow type associated with the order.
+        orderName : The name given by the user to the order.
+        progress : A percentage value showing the progress.
+        errorId : Unique error instance identifier.
+        orderAttributeList : List of attributes as a name/value pair list.
+        localisationAttributeList : List of name:value pairs for attributes that the user interface
+        may want to localise.
+        orderList : List of orders(order with its children).
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="orderId" type="xs:string"/>
+      <xs:element name="status" type="xs:string"/>
+      <xs:element name="username" type="xs:string"/>
+      <xs:element name="ipAddress" type="xs:string"/>
+      <xs:element name="parentOrderId" type="xs:string"/>
+      <xs:element name="receivedTime" type="xs:dateTime"/>
+      <xs:element name="lastUpdatedTime" type="xs:dateTime"/>
+      <xs:element name="startTime" type="xs:dateTime"/>
+      <xs:element name="finishTime" type="xs:dateTime"/>
+      <xs:element name="orderType" type="xs:string"/>
+      <xs:element name="orderName" type="xs:string"/>
+      <xs:element name="progress" type="xs:int"/>
+      <xs:element name="errorId" type="xs:string"/>
+      <xs:element name="orderAttributeList" type="tns:ArrayOfOrderAttributes"/>
+      <xs:element name="localisationAttributeList" type="tns:ArrayOfLocalisationAttributes"/>
+      <xs:element name="orderList" type="tns:ArrayOfOrders"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="OrderAttributeList">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="attributeList" type="tns:ArrayOfOrderAttributes"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="ArrayOfOrderAttributes">
+    <xs:annotation>
+      <xs:documentation>Array of Order Attributes (name/value pairs).</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="orderAttributeList" type="tns:OrderAttribute" minOccurs="0"
+        maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfLocalisationAttributes">
+    <xs:annotation>
+      <xs:documentation>Array of Localisation Attributes (name/value pairs).
+        These are attributes to be used in messages to the user that are not to be translated into
+        alternate languages. Eg filename.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="localisationAttributeList" type="tns:LocalisationAttribute" minOccurs="0"
+        maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="OrderAttribute">
+    <xs:sequence>
+      <xs:element name="name" type="xs:string"/>
+      <xs:element name="value" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="LocalisationAttribute">
+    <xs:sequence>
+      <xs:element name="name" type="xs:string"/>
+      <xs:element name="value" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="OrderList">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="orderList" type="tns:ArrayOfOrders"/>
+        <xs:element name="responseDetails" type="com:responseDetails"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="orderStatusByOrderIdRequest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>Get order status given an orderid.
+          orderid : The id for the order(created automatically by OrderManagement).
+          status : Status of order workflow.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+        <xs:element name="orderId" type="xs:string"/>
+        <xs:element name="status" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="orderProgressRequest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>Get the percentage completion of an order given an orderid.
+          orderid : The id for the order(created automatically by OrderManagement).
+          progress : A percentage value showing the progress.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+        <xs:element name="orderId" type="xs:string"/>
+        <xs:element name="progress" type="xs:int"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="orderByOrderIdRequest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>Get order details given an orderid.
+          orderid : The id for the order(created automatically by OrderManagement).
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+        <xs:element name="orderId" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="cancelOrderTreeRequest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>Cancel an order plus its children.
+          orderid : The id for the order(created automatically by OrderManagement).
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+        <xs:element name="orderId" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="orderNameByOrderIdRequest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>Get order name given an orderid.
+          orderid : The id for the order(created automatically by OrderManagement).
+          orderName : The name given by the user to the order.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+        <xs:element name="orderId" type="xs:string"/>
+        <xs:element name="orderName" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="orderStatusRequest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>Update status of an order given the orderid.
+          orderid : The id for the order(created automatically by OrderManagement).
+          status : Status of order workflow. Eg submitted, completed.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+        <xs:element name="orderId" type="xs:string"/>
+        <xs:element name="status" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="orderTypeRequest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>Get order details given an order type. Eg E24H
+          type : Type of order requested.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+        <xs:element name="type" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="orderRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getOrderByOrderIdRequest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>Get order details given an orderid.
+          orderid : The id for the order(created automatically by OrderManagement).
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+        <xs:element name="orderId" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getTreeOrderByOrderIdRequest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>Get order details for parent and its children.
+          orderid : The id for the order(created automatically by OrderManagement).
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+        <xs:element name="orderId" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getOrdersByStatusRequest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>Get all orders given a status. Eg submitted.
+          status : Status of order workflow.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+        <xs:element name="status" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getParentOrdersByTypeRequest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>Get parent orders given a type. Eg E24H
+          type : Type of order requested.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+        <xs:element name="type" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getOrdersRequest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>Returns an orders list which has all master orders and their children (a
+          recursive tree structure)
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="deleteOrderRequest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>Delete an order given an orderid.
+          orderid : The id for the order(created automatically by OrderManagement).
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+        <xs:element name="orderId" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</schema>

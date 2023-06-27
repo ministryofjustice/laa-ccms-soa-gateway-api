@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documentation xml:lang="en">
+  <Version>5.0</Version>
+  <Definition>CCMS Schemas</Definition>
+  <Author>Ramesh Madhavan</Author>
+  <ModifiedBy>Ramesh Madhavan</ModifiedBy>
+  <VersionDate>18-05-2011</VersionDate>
+  <Description>This file defines the change history in the Schemas</Description>
+  <ModificationHistory>
+    07-05-2010 Version 4.4 - Initial Development Version
+    12-12-2010 Version 4.7 - Updated as per comments from Dwayne and Julian
+    Updates to the Notification Element
+    25-03-2011 Version 4.8 - Updated as per Swipper 8.8 and issues faced while testing with the PUI
+    06-05-2011 Version 4.9 - The following updates have been done in this version
+    - WSDL for CaseStmtOfAccount and CreateInvoice services
+    - Updated BillingBIO.xsd/BillingBIM.xsd as per disucssion with Vaibhav
+    Added
+    CostLimitation.CertificateType, CostLimitation.CertificateDate, POA.AmountUnRecouped in
+    CaseSOAInqRS
+    POA.CalculatedNetCost, POA.ActualTotalCost in InvoiceAddRQ
+
+    Removed
+    InvoiceAddRQ.InvoiceDetails.Bill.VATRate
+    InvoiceAddRQ.InvoiceDetails.Bill.CourtAssessmentStatus
+    Updated
+    InvoiceType in CaseSOAInqRS to common:LOV from number type
+    - Updated CaseBIO.xsd/CaseBIM.xsd as per dicussion with Julian/Colin/CCACI issues
+    - Added DeleteAllowed & UpdateAllowed flags to the Awards element
+    - Case Sort Order is now on mandatory in the CaseInqRQ message
+    - Added CertificateType and Certificate Date in the Case object
+    19-05-2011 Version 5.0 - The following updates have been done in this version
+    - Updated/New WSDL with security credentials for all services to be called by PUI
+    ClientServices
+    CaseServices
+    SubmitProviderRequest
+    NotificationServices (New)
+    GetContractDetails
+    GetReferenceData
+    GetCaseStmtOfAccount
+    GetValidAddress
+    CreateInvoice
+    DocumentServices ( New)
+    - New excel sheet with the Service List and messages
+    - Updated Message Header Information. UserName renamed as UserLoginID
+    TransactionRequestID and UserLoginID as mandatory , rest as optional
+    - Security Impact : SOA service would expect two users to be passed . The PUI admin user ( from
+    property file)
+    in the SOAP header and the actual logged in user in the message header (UserLoginID)
+    - New messages for Dcoument Upload and Document Download as part of DocumentServices service
+    - New element EvidenceAllowed in the Notification Service
+    - New element LatestAssessmentResults (OPA) in the CaseServices
+    - Default values to the RecordCount element in the messages ( Query based)
+    20-05-2011 Version 5.1 - The following updates have been done in this version
+    - Updated WSDLs for NotiificationServices (Update to the message for GetNotification operation)
+    /
+    CreateInvoice ( was async now sync)
+    - Updated Note element in the Notification Object ( Reverted back type from NoteElementType to
+    Note)
+    - Updated Outcome element . There can be multiple outcomes within a proceeding now
+    - Reverted back Uploaded Document & Attached Documents . This now has the complete document
+    structure
+
+    30-05-2011 Version 5.2 - The following updates have been done in this version
+    - GetReferenceData service
+    - Add enum value CommonOrg to KeyType in ReferenceDataBIO/BIM.xsd
+    - Updated ResultSets element to have generic structure that can send multiple columns within a
+    record (table type)
+    - This structure will facilitate the Common Organization search. The PUI will call
+    GetReferenceData service and
+    pass ContextKey='CommonOrg' and SearchKey='<Full/Partial Party Name >' to the service.The
+    GetReferenceData
+    service will then pass back in the ResultSets element of the Response . The payload would be
+    contain a list
+    of records with the following structure
+
+    ResultSets.Results.Column1.Key ='PartyID'
+    ResultSets.Results.Column1.Value ='<PartyID>'
+    ResultSets.Results.Column2.Key ='PartyID'
+    ResultSets.Results.Column2.Value ='<Party Name>'
+    - New element for LatestAssessmentResults in CaseBIO/BIM.xsd. New operation in the
+    CaseServices.wsdl file
+    - New boolean element UserDefinedInd in the OPA structure. Update to the naming conventions in
+    the OPAAssessmentElement type
+    - Linked Cases Query . New elements ( as below) added to Linked Cases strcuture in the Case
+    Inquiry service (CaseBIO/BIM.xsd)
+
+    How is this application / case related to your application (LinkedType)
+    Has the opponent / other party applied for public funding (PublicFundingInd)
+    Provider Case Ref
+    Client name
+    Category of Law
+    Fee Earner
+    Status
+
+    - Proceeding Element. Schema updated to have one outcome per proceeding and the ability to pass
+    multiple proeeding outcomes
+    in the CaseUpdate service. The proceeding element also updated to include OrderType (
+    CaseBIO/BIM.xsd)
+    - Other Parties Element. Added boolean element SharedPartyInd ( CaseBIO/BIM.xsd)
+    - New element for Prior Authority added ( CaseBIO/BIM.xsd)
+    - Removed InvoiceReferenceID from InvoiceAddRQ ( BillingBIO/BIM.xsd)
+
+    03-06-2011 Version 5.3 - The following updates have been done in this version
+    - Reverted back changes to the ReferenceDataInqRQ message (ReferenceDataBIO/BIM.xsd)
+    - Added Attribute type to the get assessment data operation
+    - Added field Public funding applied ind - to linked case in Case update/create
+    (CaseBIO/BIM.xsd)
+    - Updated Link Case structure on case add operation (CaseBIO/BIM.xsd)
+    - Included Prior Authority structure on case add operation (CaseBIO/BIM.xsd)
+    - Removed duplicated AwardsJustification element in the financial award element
+    (CaseBIO/BIM.xsd)
+    - Removed validation error on Common.xsd
+    13-06-2011 Version 5.4 - The following updates have been done in this version
+    - Added CommonOrgInqRQ/RS in ReferenceDataBIO/BIM.xsd
+    - Added wsdl for new service GetCommonOrg
+
+    11-07-2011 Version 5.5 - The following updates have been done in this version
+
+    Issues regarding Document Upload Structure: (File Name - CaseBIO.xsd)
+
+    Document Type - populate using Doc type as entered on PD02/03
+    Document Name - Drop this field
+    FileExtn - add field as non mandatory - and populate with file extension on document upload and
+    leave blank on postal
+    Upload Link and BinData make non mandatory as mutually exclusive and only required for
+
+    Issues regarding cost limit structure:(File Name - CaseBIO.xsd)
+
+    Remove externalresourceid
+    Make CostCategory & Date Instructed non-mandatory
+
+    Issues regarding Awards element ( File Name - CaseBIO.xsd)
+    ElementType: Financial Award - Add �
+    Financial Award other information
+
+    ElementType: OtherAsset - Add�
+    Disputed Amount
+    Disputed Percent
+    Reason for Statutory Charge Exemption
+    Time related Flag
+
+
+    Issues regarding opponents structure - make (File Name - Common.xsd)
+    Update Surname @ birth - non mandatory
+
+
+    Issues regarding Other Party Person (File Name - CaseBIO.xsd)
+
+    ElementType: OtherPartyPersonType - add Employer's Name
+
+    Issue regarding Case Update Message (File Name - CaseBIM.xsd)
+    Message CaseUpdateRQ - add LegalHelpCosts, PreCertCosts
+
+
+    Issue regarding Case Address Structure (File Name - Common.xsd)
+
+    Address-C/O make this a separate field on case structure
+
+    Issue regarding Email Address (File Name - Common.xsd )
+    Increase length of field
+
+
+    Issue regarding document element (File Name - Common.xsd)
+    To match with changes for issue LSC-697 rasied by CACI
+
+
+    Issue - TimeRelated Element should be non mandatory (File Name - CaseBIO.xsd)
+
+    Issue - open flag in notification service to allow PUI to determine the conditional display of
+    Response field
+
+    29-07-2011 Version 5.6 - The following updates have been done in this version
+
+    1) Updating Outcome elements ( mandatory/optional) as per the wireframes .
+    2) ProviderDetails. The fee earner field is optional on page CA05 (question is "Name of
+    solicitor or Fellow of the Institiute of Legal Executives instructed")- Fee earner to be made
+    optional
+    3) OtherInformation, required for OtherPartyDetails - Person. The other information is optional
+    on screen CA04ab. - Other Information to be made optional
+    4) PreCertificateCosts  &  LegalHelpCosts (LSC -862) - These fields to be made optional
+    5) The following elements should be optional, they are marked as mandatory in the latest XSD
+    DateReceived,Amount,PaidToLSC in the RecoveryAmountElementType
+    ConditionsOfOffer in the OfferedAmount
+    Reason , OtherDetails in DischargeStatus
+    6) ProviderReferenceNumber to have length =35
+    7) CorresponenceAddress as non mandatory
+    10-08-2011 Version 5.7 - The following updates have been done in this version
+
+    1) Update to CaseInqRQ message . The SearchForLinkedCases element to be made non-mandatory (
+    LSC-910)
+    2) Update to Linked Case Update Element - PublicFundingAppliedInd to be made non-madatory (
+    LSC-906)
+
+    11-08-2011 Version 5.8 - The following updates have been done in this version
+
+    1) Update to Linked Case Update Element - PublicFundingAppliedInd to be made non-madatory (
+    LSC-906) Missed updating all values
+
+    15-09-2011 Version 5.9 - The following updates have been done in this version
+
+
+    CaseBIO/BIM.xsd
+
+    1) FixedHearingDateInd element made non-madatory
+    2) Address element & OtherInformation element in OtherPartyOrgType & OtherPartyPersonType made
+    non-madatory
+    3) IssueDate in OutcomeDetailElementType made non-madatory
+    4) ProviderReferenceNumber,FeeEarnerID,FeeEarnerName in LinkedCaseType made non-madatory
+    5) New messages DocumentCoverRQ,DocumentCoverRS for the GetCoverSheet service
+    6) Non mandatory DateGranted element in the Proceeding Details element
+
+    BillingBIO/BIM.xsd :
+
+    The InvoiceList element in CaseSOAInqRS has been made non-mandatory , since it is possible that
+    there would be no actual bills associated with a case when this query is run.
+
+    WSDL for GetCoverSheet service
+
+    04-10-2011 Version 6.0 - The following updates have been done in this version
+    1) Added elements MentalCapacityInd and PasswordReminder to ClientBIO.xsd
+    2) Notes element in Notification made non mandatory ( CaseBIO.xsd)
+    19-10-2011 Version 6.1 - The following updates have been done in this version
+    1) Added elements MentalCapacityInd and PasswordReminder to ClientUpdateRQ element in
+    ClientBIM.xsd
+    2) UserLoginID made 100 characters in Common.xsd and Header.xsd
+    3) Added UpdateType element to the CaseUpdateRQ element in CaseBIM.xsd
+    18-11-2011 Version 6.2 - The following updates have been done in this version
+    1) Updates to the Cost Limit Structure . Added Billing Provider Details
+    2) Scope Limitations ( under Proceedings) updated to have multiple scope limits
+    3) Provider Contact Id is non mandatory
+    4) Award Type details non-mandatory in Time related element
+    24-11-2011 Version 6.3 - The following updates have been done in this version
+    1) Updates to the OPA Structure . Increased lenghts of Caption to 1000 , Response Value
+    /Response Text - 2000
+    09-12-2011 Version 6.4 - The following updates have been done in this version
+    1) Updates to the Case Structure for CR 20/28. Added new elements
+    ApplicationAmendmentType,DevolvedPowersDate,CertificateType
+    2) Increased length of ReasonForRequest to 255 ( to match with database definition)
+    25-01-2012 Version 6.5 - The following updates have been done in this version
+    1) Updates to the Case Structure
+    2) Added new element ScopeLimitationID to ScopeLimitation element
+    2) Updated length of ProceedimgDescription element to 240
+    13-02-2012 Version 6.6 - The following updates have been done in this version
+    1) New element TotalPaidToDate in the category of Law element
+    2) Updated length of ProceedimgDescription element to 542
+    21-02-2012 Version 6.7 - The following updates have been done in this version
+    1) CostLimit element made non mandatory in the CategoryOfLawElement in CaseBIO.xsd
+    02-04-2012 Version 6.8 - The following updates have been done in this version
+    1) artf1876314 : Fee Earner Name has been updated to 300 characters for the following elements
+    CaseList.FeeEarnerName
+    NotificationLinksElementType.FeeEarner
+    NotificationListElementType.FeeEarner
+    LinkedCaseType.FeeEarnerName
+    2) artf1886013: Added new date element ProceedingDetElementType.DateCostsValid
+    10-04-2012 Version 6.9 - The following updates have been done in this version
+    1) Added new element C300 in common.xsd
+    24-05-2012 Version 7.0 - The following updates have been done in this version
+    1) Added new enum values to KeyType element ( ReferenceDataBIO.xsd)
+    2) New messages DWPCheckRequest.xml, DWPCheckResponse.xml added to the SampleMessages/Common
+    folder
+    05-06-2012 Version 7.1 - The following updates have been done in this version
+    1) Updates to the ProviderRequestTextElementType to support Bill Upload requirement
+    Added optional element "Document" to the ProviderRequestTextElementType
+    08-06-2012 Version 7.2 - The following updates have been done in this version
+    1) New messages InvoicePrintRQ / InvoicePrintRS in BillingBIM.xsd
+    2) Added wsdl PrintInvoice.wsdl for the PrintInvoice service
+    3) Added EDRMS schemas ( these are not to be used by CACI)
+    25-06-2012 Version 7.2.1 - EDRMS Schemas Updated
+    25-06-2012 Version 7.2.2 - EDRMS Schemas Updated
+    25-06-2012 Version 7.3 - OPA Response Type Changed. Updated InstanceLabel to 255 characters .
+    Impact on
+    CaseBIM.xsd/BillingBIM.xsd/Common.xsd
+    08-11-2012 Version 7.4 - Case BIO Changed.
+    AltAcceptanceReason updated to 1000 characters
+    AdditionalResultInfo updated to 1000 characters
+
+  </ModificationHistory>
+</documentation>
+

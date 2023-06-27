@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--Created with Liquid XML Studio - FREE Community Edition 7.1.6.1440 (http://www.liquid-technologies.com)-->
+<xsd:schema xmlns:header="http://legalservices.gov.uk/Enterprise/Common/1.0/Header"
+  xmlns:msg="http://legalservices.gov.uk/CCMS/PolicyAutomation/RuleBase/1.0/RuleBaseBIM"
+  xmlns:opa="http://legalservices.gov.uk/CCMS/PolicyAutomation/RuleBase/1.0/RuleBaseBIO"
+  attributeFormDefault="unqualified" elementFormDefault="qualified"
+  targetNamespace="http://legalservices.gov.uk/CCMS/PolicyAutomation/RuleBase/1.0/RuleBaseBIM"
+  version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+  <xsd:import schemaLocation="RuleBaseBIO.xsd"
+    namespace="http://legalservices.gov.uk/CCMS/PolicyAutomation/RuleBase/1.0/RuleBaseBIO"/>
+  <xsd:import schemaLocation="../../../../Enterprise/Common/1.0/Header.xsd"
+    namespace="http://legalservices.gov.uk/Enterprise/Common/1.0/Header"/>
+
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      <Version>1.0</Version>
+      <Definition>Header for all mesages</Definition>
+      <Author>Ramesh Madhavan</Author>
+      <ModifiedBy>Ramesh Madhavan</ModifiedBy>
+      <VersionDate>18-12-2009</VersionDate>
+      <Description>This schema defines the messages for calling the Oracle Policy Automation
+      </Description>
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <!-- List Goals Request and response -->
+
+  <xsd:element name="ListGoalsRQ" type="msg:ListGoalsRQ"/>
+  <xsd:element name="ListGoalsRS" type="msg:ListGoalsRS"/>
+
+  <!-- List Flows Request and response -->
+
+  <xsd:element name="ListFlowsRQ" type="msg:ListFlowsRQ"/>
+  <xsd:element name="ListFlowsRS" type="msg:ListFlowsRS"/>
+
+  <!-- Flow Screen Service -->
+
+  <xsd:element name="GetFlowScreenRQ" type="msg:GetFlowScreenRQ"/>
+  <xsd:element name="GetFlowScreenRS" type="msg:GetFlowScreenRS"/>
+
+  <!-- Assess Request and response -->
+
+  <xsd:element name="AssessRQ" type="msg:AssessRQ"/>
+  <xsd:element name="AssessRS" type="msg:AssessRS"/>
+
+  <!--  Get screen -->
+
+  <xsd:element name="GetScreenRQ" type="msg:GetScreenRQ"/>
+  <xsd:element name="GetScreenRS" type="msg:GetScreenRS"/>
+
+  <!-- List Screens Request and response -->
+
+  <xsd:element name="ListScreensRQ" type="msg:ListScreensRQ"/>
+  <xsd:element name="ListScreensRS" type="msg:ListScreensRS"/>
+
+  <xsd:element name="screen-definition" type="opa:ScreenDefinition"/>
+
+  <!--  Get Rulebase Version Response and Request -->
+
+  <xsd:element name="get-rulebase-version-response" type="xsd:string"/>
+
+  <xsd:element name="get-rulebase-version-request">
+    <xsd:complexType/>
+  </xsd:element>
+
+  <!-- error response -->
+
+  <xsd:element name="error-response" type="opa:Error"/>
+
+
+  <xsd:complexType name="ListGoalsRQ">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRQ"/>
+      <xsd:element name="list-goals-request">
+        <xsd:complexType/>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="ListGoalsRS">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRS"/>
+      <xsd:element name="list-goals-response" type="opa:ListGoalsResponse"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="ListFlowsRQ">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRQ"/>
+      <xsd:element name="list-flows-request">
+        <xsd:complexType/>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="ListFlowsRS">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRS"/>
+      <xsd:element name="list-flows-response" type="opa:ListFlowsResponse"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="GetFlowScreenRQ">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRQ"/>
+      <xsd:element name="get-screen-flow-request" type="opa:GetFlowScreenRequest"/>
+    </xsd:sequence>
+
+  </xsd:complexType>
+  <xsd:complexType name="GetFlowScreenRS">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRS"/>
+      <xsd:element name="get-screen-flow-response" type="opa:GetFlowScreenResponse"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="AssessRQ">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRQ"/>
+      <xsd:element name="assess-request" type="opa:AssessRequest"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="AssessRS">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRS"/>
+      <xsd:element name="assess-response" type="opa:AssessResponse"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="GetScreenRQ">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRQ"/>
+      <xsd:element name="get-screen-request" type="opa:GetScreenRequest"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="GetScreenRS">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRS"/>
+      <xsd:element name="get-screen-response" type="opa:GetScreenResponse"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="ListScreensRQ">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRQ"/>
+      <xsd:element name="list-screens-request">
+        <xsd:complexType/>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ListScreensRS">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRS"/>
+      <xsd:element name="list-screens-response" type="opa:ListScreensResponse"/>
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>

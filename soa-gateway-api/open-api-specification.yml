@@ -1,0 +1,131 @@
+openapi: '3.0.0'
+info:
+  title: 'SOA Gateway API'
+  version: '1.0.0'
+paths:
+  /users/{user-id}/notifications/summary:
+    get:
+      tags:
+        - notifications
+      summary: 'Get User Notification Summary'
+      operationId: 'getUserNotificationSummary'
+      parameters:
+        - name: 'user-id'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
+            example: 'abc123'
+        - $ref: '#/components/parameters/soaGatewayUserLoginId'
+        - $ref: '#/components/parameters/soaGatewayUserRole'
+        - $ref: '#/components/parameters/maxRecords'
+
+      responses:
+        '200':
+          description: 'Successful operation'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/notificationSummary"
+        '400':
+          description: 'Bad request'
+        '401':
+          description: 'Unauthorized'
+        '404':
+          description: 'Not found'
+        '500':
+          description: 'Internal server error'
+  /contract-details:
+    get:
+      tags:
+        - contract-details
+      summary: 'Get Contract Details'
+      operationId: 'getContractDetails'
+      parameters:
+        - name: 'providerFirmId'
+          in: 'query'
+          required: true
+          schema:
+            type: 'integer'
+            example: '1234'
+        - name: 'officeId'
+          in: 'query'
+          required: true
+          schema:
+            type: 'integer'
+            example: '1234'
+        - $ref: '#/components/parameters/soaGatewayUserLoginId'
+        - $ref: '#/components/parameters/soaGatewayUserRole'
+        - $ref: '#/components/parameters/maxRecords'
+      responses:
+        '200':
+          description: 'Successful operation'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/contractDetails"
+        '400':
+          description: 'Bad request'
+        '401':
+          description: 'Unauthorized'
+        '404':
+          description: 'Not found'
+        '500':
+          description: 'Internal server error'
+
+components:
+  parameters:
+    maxRecords:
+      in: query
+      name: 'maxRecords'
+      required: false
+      schema:
+        type: 'integer'
+        default: 100
+      example: 12345
+    soaGatewayUserLoginId:
+      in: header
+      name: 'SoaGateway-User-Login-Id'
+      required: true
+      schema:
+        type: 'string'
+      example: 'MARILYN@DESORANDCO.CO.UK'
+    soaGatewayUserRole:
+      in: header
+      name: 'SoaGateway-User-Role'
+      required: true
+      schema:
+        type: 'string'
+      example: 'EXTERNAL'
+  schemas:
+    notificationSummary:
+      type: 'object'
+      properties:
+        notifications:
+          type: 'integer'
+        standard_actions:
+          type: 'integer'
+        overdue_actions:
+          type: 'integer'
+    contractDetails:
+      type: 'object'
+      properties:
+        contracts:
+          type: 'array'
+          items:
+            $ref: '#/components/schemas/contractDetail'
+    contractDetail:
+      type: 'object'
+      properties:
+        categoryofLaw:
+          type: 'string'
+        subCategory:
+          type: 'string'
+        authorisationType:
+          type: 'string'
+        createNewMatters:
+          type: 'boolean'
+        contractualDevolvedPowers:
+          type: 'string'
+        remainderAuthorisation:
+          type: 'boolean'

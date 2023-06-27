@@ -1,0 +1,14 @@
+server:
+  port: 8007
+
+laa:
+  ccms:
+    soa-gateway:
+      username: soa-user
+      password: soa-password
+      notification:
+        service-name: http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/NotificationService
+        service-url: http://localhost:8051/soa-infra/services/default/NotificationServices/NotificationServices_ep
+      contract-details:
+        service-name: http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/GetReferenceData
+        service-url: http://localhost:8051/soa-infra/services/default/GetReferenceData/ContractDetailsService_ep

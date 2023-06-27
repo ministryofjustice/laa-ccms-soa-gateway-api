@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 sp1 (http://www.altova.com) by DB (ITVplc) -->
+<!-- 
+  
+  XML Schema
+  for iTunes Store Package: TV Profile 2.2draft
+  
+  December 5, 2006 - jsuitts - removed required genres
+  July 28, 2006 - jsuitts - refactored elements to complex types
+  May 26, 2006 - jsuitts - made release date optional per 2.0.1 spec
+  May 23, 2006 - jsuitts - initial experimental release
+  
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:itmsp="http://apple.com/itunes/importer" targetNamespace="http://apple.com/itunes/importer"
+  elementFormDefault="qualified" version="tv2.2d">
+  <xs:element name="package">
+    <xs:complexType>
+      <xs:all>
+        <xs:element name="provider" type="xs:token" default="itv"/>
+        <xs:element name="video" type="itmsp:video"/>
+      </xs:all>
+      <xs:attribute name="version" type="xs:NCName" use="required" fixed="tv2.2"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="video">
+    <xs:all>
+      <xs:element name="type" default="tv">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="tv"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="network_name" type="itmsp:String255" default="ITV"/>
+      <xs:element name="vendor_id">
+        <xs:annotation>
+          <xs:documentation>Vendor identifiers for video must be uppercase alphanumeric containing
+            no spaces and only underscore as a delimiter.
+          </xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="itmsp:String100">
+            <xs:pattern value="[A-Z0-9_]*"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="episode_production_number">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:maxLength value="50"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="series_name" type="itmsp:String1000"/>
+      <xs:element name="title" type="itmsp:String255"/>
+      <xs:element name="container_id" type="xs:NCName"/>
+      <xs:element name="container_position" type="xs:positiveInteger" minOccurs="0"/>
+      <xs:element name="release_date" type="xs:date"/>
+      <xs:element name="original_release_year" type="xs:gYear"/>
+      <xs:element name="genres" type="itmsp:genres" minOccurs="0"/>
+      <xs:element name="ratings" type="itmsp:ratings" minOccurs="0">
+        <xs:key name="Rating-Systems-Unique">
+          <xs:annotation>
+            <xs:documentation>There may be only one rating per system.</xs:documentation>
+          </xs:annotation>
+          <xs:selector xpath="itmsp:rating"/>
+          <xs:field xpath="@system"/>
+        </xs:key>
+      </xs:element>
+      <xs:element name="copyright_cline" type="itmsp:String1000" minOccurs="0"/>
+      <xs:element name="short_description" type="itmsp:String1000"/>
+      <xs:element name="long_description">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="4000"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="vendor_offer_code" type="itmsp:String100" minOccurs="0"/>
+      <xs:element name="data_file" type="itmsp:data_file" minOccurs="0"/>
+      <xs:element name="preview" type="itmsp:preview" minOccurs="0"/>
+      <xs:element name="products" type="itmsp:products">
+        <xs:key name="Product-Territories-Unique">
+          <xs:annotation>
+            <xs:documentation>There may be only one product per territory.</xs:documentation>
+          </xs:annotation>
+          <xs:selector xpath="itmsp:product"/>
+          <xs:field xpath="itmsp:territory"/>
+        </xs:key>
+      </xs:element>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="genres">
+    <xs:sequence>
+      <xs:element name="genre" type="xs:string" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ratings">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="rating" type="itmsp:rating"/>
+      <xs:element name="advisory" type="itmsp:advisory"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="rating">
+    <xs:simpleContent>
+      <xs:extension base="xs:NCName">
+        <xs:attribute name="system" type="itmsp:String100" use="required"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="advisory">
+    <xs:simpleContent>
+      <xs:extension base="xs:NCName">
+        <xs:attribute name="system" type="xs:token" use="required"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="data_file">
+    <xs:all>
+      <xs:element name="file_name" type="xs:token"/>
+      <xs:element name="size" type="xs:unsignedLong" minOccurs="0"/>
+      <xs:element name="checksum" type="itmsp:checksum"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="checksum">
+    <xs:simpleContent>
+      <xs:extension base="itmsp:Checksum-MD5-Value">
+        <xs:attribute name="type" type="xs:string" use="optional"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="preview">
+    <xs:attribute name="starttime" type="xs:nonNegativeInteger" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="products">
+    <xs:sequence>
+      <xs:element name="product" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="territory" type="xs:token"/>
+            <xs:element name="sales_start_date" type="itmsp:Optional-Date" minOccurs="0"/>
+            <xs:element name="sales_end_date" type="itmsp:Optional-Date" minOccurs="0"/>
+            <xs:element name="cleared_for_sale" type="xs:boolean"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <!--
+    
+    Common Types
+    
+  -->
+  <xs:simpleType name="Optional-Date">
+    <xs:annotation>
+      <xs:documentation>This type allows either an empty element or a date.</xs:documentation>
+    </xs:annotation>
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="0"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction base="xs:date"/>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="Checksum-MD5-Value">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[0-9a-fA-F]{32}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="String255">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="255"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="String100">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="100"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="String1000">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="1000"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

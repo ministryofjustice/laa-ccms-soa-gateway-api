@@ -1,0 +1,114 @@
+<?xml version='1.0' encoding='utf-8'?>
+<xsd:schema xmlns:header="http://legalservices.gov.uk/Enterprise/Common/1.0/Header"
+  xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common"
+  xmlns:msg="http://legalservices.gov.uk/CCMS/Finance/Payables/1.0/BillingBIM"
+  xmlns:inv="http://legalservices.gov.uk/CCMS/Finance/Payables/1.0/BillingBIO"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO"
+  targetNamespace="http://legalservices.gov.uk/CCMS/Finance/Payables/1.0/BillingBIM"
+  elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+  <xsd:import namespace="http://legalservices.gov.uk/CCMS/Finance/Payables/1.0/BillingBIO"
+    schemaLocation="BillingBIO.xsd"/>
+  <xsd:import namespace="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO"
+    schemaLocation="../../../CaseManagement/Case/1.0/CaseBIO.xsd"/>
+  <xsd:import namespace="http://legalservices.gov.uk/Enterprise/Common/1.0/Header"
+    schemaLocation="../../../../Enterprise/Common/1.0/Header.xsd"/>
+  <xsd:import namespace="http://legalservices.gov.uk/Enterprise/Common/1.0/Common"
+    schemaLocation="../../../../Enterprise/Common/1.0/Common.xsd"/>
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      <Version>1.0</Version>
+      <Definition>BILL BIM</Definition>
+      <Author>Mohammed Sajid Ali</Author>
+      <ModifiedBy>Mohammed Sajid Ali</ModifiedBy>
+      <VersionDate>08-11-2010</VersionDate>
+      <Description>This schema defines the objects to create invoices at Ebiz.</Description>
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:element name="InvoiceAddRQ" type="msg:InvoiceAddRQ"/>
+  <xsd:element name="InvoiceAddRS" type="msg:InvoiceAddRS"/>
+  <xsd:element name="CaseSOAInqRQ" type="msg:CaseSOAInqRQ"/>
+  <xsd:element name="CaseSOAInqRS" type="msg:CaseSOAInqRS"/>
+  <xsd:element name="GetRepricingDetailsRQ" type="msg:GetRepricingDetailsRQ"/>
+  <xsd:element name="GetRepricingDetailsRS" type="msg:GetRepricingDetailsRS"/>
+  <xsd:complexType name="InvoiceAddRQ">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRQ"/>
+      <xsd:element name="InvoiceDetails">
+        <xsd:complexType>
+          <xsd:choice>
+            <xsd:element name="Bill" type="inv:BillElementType" maxOccurs="unbounded"/>
+            <xsd:element name="POA" type="inv:POAElementType" maxOccurs="unbounded"/>
+          </xsd:choice>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="InvoiceAddRS">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRS"/>
+      <xsd:element name="InvoiceReferenceID" type="common:IDREF15" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CaseSOAInqRQ">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRQ"/>
+      <xsd:element name="RecordCount" type="common:RecordCount"/>
+      <xsd:element name="CaseReferenceNumber" type="common:IDREF30"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CaseSOAInqRS">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRS"/>
+      <xsd:element name="RecordCount" type="common:RecordCount"/>
+      <xsd:element name="StatementOfAccount" type="inv:SOAElementType" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="GetRepricingDetailsRQ">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRQ"/>
+      <xsd:element name="StoreAssessmentToDatabase" type="common:BooleanString" minOccurs="0"/>
+      <xsd:element name="CurrentAssessment">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Entity" maxOccurs="unbounded">
+              <xsd:complexType>
+                <xsd:sequence>
+                  <xsd:element name="EntityType" minOccurs="1" type="common:C150"/>
+                  <xsd:element name="Relationship" minOccurs="1" type="common:C150"/>
+                  <xsd:element name="Instance" maxOccurs="unbounded">
+                    <xsd:complexType>
+                      <xsd:sequence>
+                        <xsd:element name="InstanceLabel" type="common:C50"/>
+                        <xsd:element name="Caption" type="common:C150" minOccurs="0"/>
+                        <xsd:element name="InstanceID" type="common:C150" minOccurs="1"/>
+                        <xsd:element name="Attributes" minOccurs="1">
+                          <xsd:complexType>
+                            <xsd:sequence>
+                              <xsd:element name="Attribute" type="common:OPAAttributesType"
+                                maxOccurs="unbounded" minOccurs="0"/>
+                            </xsd:sequence>
+                          </xsd:complexType>
+                        </xsd:element>
+                      </xsd:sequence>
+                    </xsd:complexType>
+                  </xsd:element>
+                </xsd:sequence>
+              </xsd:complexType>
+            </xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="AssessmentID" type="common:IDREF30" minOccurs="1"/>
+      <xsd:element name="CasePartyID" type="common:ID30"/>
+      <xsd:element name="IncidentID" type="common:ID30"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="GetRepricingDetailsRS">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRS"/>
+      <xsd:element name="AssessmentID" type="common:IDREF30" minOccurs="1"/>
+      <xsd:element name="CurrentAssessment" type="case:AssessmentResultsElementType" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>

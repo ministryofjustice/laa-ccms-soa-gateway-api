@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+** CapGemini
+** SOA Object library 
+** Base Version : 7.4
+
+	XML Schema
+	Name : \lsc\Schema\BusinessObjects\CCMS\CaseManagement\Case\1.0\CaseBIM.xsd
+
+Date			Authour				Details
+2011-05-29		Ramesh Madhavan		Base Version
+2013-04-04		Bikash Agrawal		Added ABM and EBM for GetDocumentDetailsRQ/GetDocumentDetailsRS & DocumentDetails for Getting Document Status
+2013-10-09      Bikash Agrawal      Updated field type for UpdateMsgType in CaseUpdateRQ to string.
+2017-04-20      Matt Pickett        Updated for ME7 adding CaseDocs and assocaited XML types. 
+
+-->
+<xsd:schema xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO"
+  xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common"
+  xmlns:msg="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIM"
+  xmlns:header="http://legalservices.gov.uk/Enterprise/Common/1.0/Header"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIM"
+  elementFormDefault="qualified" attributeFormDefault="unqualified"
+  version="1.0">
+  <xsd:import namespace="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO"
+    schemaLocation="CaseBIO.xsd"/>
+  <xsd:import namespace="http://legalservices.gov.uk/Enterprise/Common/1.0/Header"
+    schemaLocation="../../../../Enterprise/Common/1.0/Header.xsd"/>
+  <xsd:import namespace="http://legalservices.gov.uk/Enterprise/Common/1.0/Common"
+    schemaLocation="../../../../Enterprise/Common/1.0/Common.xsd"/>
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      <Version>1.2</Version>
+      <Definition>Case BIM</Definition>
+      <Description>This schema defines the messages to create or update the Cases
+        at LSC
+      </Description>
+      <Author>Richard Lanchbruy</Author>
+      <ModifiedBy>Richard Lanchbruy, Ramesh Madhavan</ModifiedBy>
+      <VersionDate>09-08-2010</VersionDate>
+      <VersionDescription>Updated form Review Comments</VersionDescription>
+      <ModificationHistory>07-05-2010 Version 1.0 - Initial Development Version
+        11-05-2010 Version 1.1 - Added Added macOccurs="20" to
+        LinkedCase under complex type LinkedCases 19-05-2010
+        Version 1.2 - Changed User under CaseInfo to FeeEarner
+        Added NotificationInqRQ and NotificationInqRS Added
+        ServiceRequestAddRQ and ServiceRequestAddRS Added
+        CertificateLimitationsAddRQ and
+        CertificateLimitationsAddRS 01-06-2010 Version 1.3 -
+        Added CaseSortOrder to CaseInqRQ and CaseInqRS
+        02-06-2010 Version 1.4 - Updated NotificationRQ and
+        NotificationRS to reflect change in the CaseBIO schema
+        09-08-2010 Version 1.5 - Updated the schema as per
+        Swipper version 1.8 12-08-2010 Version 1.6 - Updated the
+        schema with Outcome and changes in other party details
+        25-08-2010 Version 1.7 Updated the schema to add Billing
+        28-03-2017 Case Document changes added for ME7
+      </ModificationHistory>
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:element name="CaseInqRQ" type="msg:CaseInqRQ"/>
+  <xsd:element name="CaseInqRS" type="msg:CaseInqRS"/>
+  <xsd:element name="CaseAddUpdtStatusRQ" type="msg:CaseAddUpdtStatusRQ"/>
+  <xsd:element name="CaseAddUpdtStatusRS" type="msg:CaseAddUpdtStatusRS"/>
+  <xsd:element name="CaseAddRQ" type="msg:CaseAddRQ"/>
+  <xsd:element name="CaseAddRS" type="msg:CaseAddRS"/>
+  <xsd:element name="CaseUpdateRQ" type="msg:CaseUpdateRQ"/>
+  <xsd:element name="CaseUpdateRS" type="msg:CaseUpdateRS"/>
+  <xsd:element name="CaseDeleteRQ" type="msg:CaseDeleteRQ"/>
+  <xsd:element name="CaseDeleteRS" type="msg:CaseDeleteRS"/>
+  <xsd:element name="NotificationInqRQ" type="msg:NotificationInqRQ"/>
+  <xsd:element name="NotificationInqRS" type="msg:NotificationInqRS"/>
+  <xsd:element name="NotificationUpdateRQ" type="msg:NotificationUpdateRQ"/>
+  <xsd:element name="NotificationUpdateRS" type="msg:NotificationUpdateRS"/>
+  <xsd:element name="NotificationCntInqRQ" type="msg:NotificationCntInqRQ"/>
+  <xsd:element name="NotificationCntInqRS" type="msg:NotificationCntInqRS"/>
+  <xsd:element name="DocumentUploadRQ" type="msg:DocumentUploadRQ"/>
+  <xsd:element name="DocumentUploadRS" type="msg:DocumentUploadRS"/>
+  <xsd:element name="DocumentDownloadRQ" type="msg:DocumentDownloadRQ"/>
+  <xsd:element name="DocumentDownloadRS" type="msg:DocumentDownloadRS"/>
+  <xsd:element name="DocumentCoverRQ" type="msg:DocumentCoverRQ"/>
+  <xsd:element name="DocumentCoverRS" type="msg:DocumentCoverRS"/>
+  <xsd:element name="ProviderRequestAddRQ" type="msg:ProviderRequestAddRQ"/>
+  <xsd:element name="ProviderRequestAddRS" type="msg:ProviderRequestAddRS"/>
+  <xsd:element name="GetAssessmentDataRQ" type="msg:GetAssessmentDataRQ"/>
+  <xsd:element name="GetAssessmentDataRS" type="msg:GetAssessmentDataRS"/>
+  <xsd:complexType name="CaseInqRQ">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRQ"/>
+      <xsd:element name="RecordCount" type="common:RecordCount"/>
+      <xsd:element name="SearchCriteria">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:choice>
+              <xsd:element name="CaseReferenceNumber" type="common:IDREF30"/>
+              <xsd:element name="CaseInfo" type="case:CaseInfo"/>
+            </xsd:choice>
+            <xsd:element name="CaseSortOrder" type="common:C50" minOccurs="0"/>
+            <xsd:element name="SearchForLinkedCases" type="common:BooleanString"
+              minOccurs="0"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CaseInqRS">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRS"/>
+      <xsd:element name="RecordCount" type="common:RecordCount"/>
+      <xsd:choice minOccurs="0">
+        <xsd:element name="Case" type="case:Case"/>
+        <xsd:element name="CaseList" type="case:CaseList" maxOccurs="unbounded"/>
+      </xsd:choice>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CaseAddUpdtStatusRQ">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRQ"/>
+      <xsd:element name="TransactionID" type="common:TransactionID"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CaseAddUpdtStatusRS">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRS"/>
+      <xsd:element name="CaseReferenceNumber" type="common:C30" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CaseAddRQ">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRQ"/>
+      <xsd:element name="Case" type="case:CaseAdd"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CaseAddRS">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRS"/>
+      <xsd:element name="TransactionID" type="common:TransactionID" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:simpleType name="UpdateType">
+    <xsd:annotation>
+      <xsd:documentation>Update Type</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="common:ClosedEnum">
+      <xsd:enumeration value="Amendment"/>
+      <xsd:enumeration value="Outcome"/>
+      <xsd:enumeration value="Undertaking"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="CaseUpdateRQ">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRQ"/>
+      <xsd:element name="CaseReferenceNumber" type="common:IDREF30"/>
+      <xsd:element name="UpdateMsgType" type="xsd:string"/>
+      <xsd:element name="ApplicationDetails" type="case:UpdateApplicationDetails"
+        minOccurs="0"/>
+      <xsd:element name="PreCertificateCosts" type="common:Amount" minOccurs="0"/>
+      <xsd:element name="LegalHelpCosts" type="common:Amount" minOccurs="0"/>
+      <xsd:element name="ActualCaseStatus" type="common:IDREF30" minOccurs="0"/>
+      <xsd:element name="Messages" type="case:Messages" minOccurs="0"/>
+      <xsd:element name="Notifications" type="case:Notifications" minOccurs="0"/>
+      <xsd:element name="LinkedCases" type="case:LinkedCasesUpdate" minOccurs="0"/>
+      <xsd:element name="Awards" type="case:AwardsElementType" minOccurs="0"/>
+      <xsd:element name="PriorAuthorities" type="case:PriorAuthorities"
+        minOccurs="0"/>
+      <xsd:element name="DischargeStatus" type="case:DischargeElementType"
+        minOccurs="0"/>
+      <xsd:element name="Undertakings" type="case:UndertakingElementType"
+        minOccurs="0"/>
+      <xsd:element name="Outcomes" type="case:Outcomes" minOccurs="0"/>
+      <xsd:element name="RecordHistory" type="common:RecordHistory"/>
+      <xsd:element name="CaseDocs" type="case:CaseDocs" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CaseUpdateRS">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRS"/>
+      <xsd:element name="TransactionID" type="common:TransactionID" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CaseDeleteRQ">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRQ"/>
+      <xsd:element name="CaseReferenceNumber" type="common:IDREF30"/>
+      <xsd:element name="LinkedCaseID" type="common:ID30" minOccurs="0"/>
+      <xsd:element name="AddressID" type="common:ID30" minOccurs="0"/>
+      <xsd:element name="OtherPartyID" type="common:ID30" minOccurs="0"/>
+      <xsd:element name="ExternalResourceID" type="common:ID30" minOccurs="0"/>
+      <xsd:element name="ProceedingCaseID" type="common:ID30" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CaseDeleteRS">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRS"/>
+      <xsd:element name="TransactionID" type="common:TransactionID" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="NotificationInqRQ">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRQ"/>
+      <xsd:element name="RecordCount" type="common:RecordCount"/>
+      <xsd:element name="SearchCriteria">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="AssignedToUserID" type="common:ID15" minOccurs="0"/>
+            <xsd:element name="DateFrom" type="common:Dt" minOccurs="0"/>
+            <xsd:element name="DateTo" type="common:Dt" minOccurs="0"/>
+            <xsd:element name="CaseReferenceNumber" type="common:IDREF30"
+              minOccurs="0"/>
+            <xsd:element name="ClientSurName" type="common:C35" minOccurs="0"/>
+            <xsd:element name="FeeEarnerID" type="common:ID15" minOccurs="0"/>
+            <xsd:element name="ProviderCaseReferenceNumber" type="common:IDREF30"
+              minOccurs="0"/>
+            <xsd:element name="NotitificationType" type="common:LOV" minOccurs="0"/>
+            <xsd:element name="IncludeClosedNotification" type="common:BooleanString"
+              minOccurs="0"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="NotificationInqRS">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRS"/>
+      <xsd:element name="RecordCount" type="common:RecordCount"/>
+      <xsd:element name="NotificationList" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Notifications" type="case:NotificationListElementType"
+              maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="NotificationUpdateRQ">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRQ"/>
+      <xsd:element name="NotificationID" type="common:ID15"/>
+      <xsd:element name="UserID" type="common:ID15"/>
+      <xsd:element name="Action" type="common:LOV"/>
+      <xsd:element name="Message" type="common:C240"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="NotificationUpdateRS">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRS"/>
+      <xsd:element name="NotificationID" type="common:ID30" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="NotificationCntInqRQ">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRQ"/>
+      <xsd:element name="RecordCount" type="common:RecordCount"/>
+      <xsd:element name="SearchCriteria">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="UserID" type="common:C100"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="NotificationCntInqRS">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRS"/>
+      <xsd:element name="RecordCount" type="common:RecordCount"/>
+      <xsd:element name="NotificationCntLists" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="NotificationsCnt" type="case:NotificationCntList"
+              maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="DocumentUploadRQ">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRQ"/>
+      <xsd:choice>
+        <xsd:element name="NotificationID" type="common:ID15"/>
+        <xsd:element name="CaseReferenceNumber" type="common:ID15"/>
+      </xsd:choice>
+      <xsd:element name="Document" type="case:DocumentUploadElementType"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="DocumentUploadRS">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRS"/>
+      <xsd:choice>
+        <xsd:element name="NotificationID" type="common:ID15" minOccurs="0"/>
+        <xsd:element name="CaseReferenceNumber" type="common:ID15" minOccurs="0"/>
+      </xsd:choice>
+      <xsd:element name="DocumentID" type="common:ID15" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="DocumentDownloadRQ">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRQ"/>
+      <xsd:element name="DocumentID" type="common:ID15" minOccurs="0"/>
+      <xsd:element name="DocumentName" type="common:C240" minOccurs="0"/>
+      <xsd:element name="DocumentLink" type="common:C240" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="DocumentDownloadRS">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRS"/>
+      <xsd:element name="Document" type="common:DocumentElementType"
+        minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="DocumentCoverRQ">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRQ"/>
+      <xsd:element name="ExpectedDocumentID" type="common:ID15"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="DocumentCoverRS">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRS"/>
+      <xsd:element name="CoverSheetDoc" type="common:BinData" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ProviderRequestAddRQ">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRQ"/>
+      <xsd:element name="RequestDetails" type="case:ProviderRequestElementType"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ProviderRequestAddRS">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRS"/>
+      <xsd:element name="NotificationID" type="common:ID15" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="GetAssessmentDataRQ">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRQ"/>
+      <xsd:element name="CaseReferenceNumber" type="common:ID15"/>
+      <xsd:element name="AssessmentType" type="common:LOV" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="GetAssessmentDataRS">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRS"/>
+      <xsd:element name="LatestAssessmentResults"
+        type="case:AssessmentResultsElementType" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="GetDocumentDetailsABMRQ">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRQ"/>
+      <xsd:element name="SearchCondition">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="CCMSDocumentId" type="common:C50"
+              maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:element name="GetDocumentDetailsABMRQ" type="msg:GetDocumentDetailsABMRQ"/>
+  <xsd:complexType name="GetDocumentDetailsABMRS">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRS"/>
+      <xsd:element name="DocumentDetails" minOccurs="0" maxOccurs="unbounded"
+        type="case:DocumentDetails"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:element name="GetDocumentDetailsABMRS" type="msg:GetDocumentDetailsABMRS"/>
+  <xsd:complexType name="GetDocumentDetailsEBMRQ">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRQ"/>
+      <xsd:element name="NameValuePair" type="common:NameValuePair" minOccurs="0"
+        maxOccurs="unbounded"/>
+
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:element name="GetDocumentDetailsEBMRQ" type="msg:GetDocumentDetailsEBMRQ"/>
+  <xsd:complexType name="GetDocumentDetailsEBMRS">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRS"/>
+      <xsd:element name="DocumentDetails" minOccurs="0" maxOccurs="unbounded"
+        type="case:DocumentDetails"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:element name="GetDocumentDetailsEBMRS" type="msg:GetDocumentDetailsEBMRS"/>
+
+</xsd:schema>

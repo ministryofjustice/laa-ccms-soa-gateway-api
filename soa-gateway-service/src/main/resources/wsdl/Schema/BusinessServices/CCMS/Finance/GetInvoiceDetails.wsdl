@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="GetInvoiceDetails"
+  targetNamespace="http://legalservices.gov.uk/CCMS/Finance/Payables/1.0/GetInvoiceDetails"
+  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+  xmlns:bsl="http://legalservices.gov.uk/CCMS/Finance/Payables/1.0/GetInvoiceDetails"
+  xmlns:msg="http://legalservices.gov.uk/CCMS/Finance/Payables/1.0/BillingBIM"
+  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+  xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   TYPE DEFINITION - List of services participating in this BPEL process
+   The default output of the BPEL designer uses strings as input and
+   output to the BPEL Process. But you can define or import any XML
+   Schema type and use them as part of the message types.
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <wsdl:types>
+    <schema xmlns="http://www.w3.org/2001/XMLSchema">
+      <import namespace="http://legalservices.gov.uk/CCMS/Finance/Payables/1.0/BillingBIM"
+        schemaLocation="../../../../Schema/BusinessObjects/CCMS/Finance/Payables/1.0/BillingBIM.xsd"/>
+      <import
+        namespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+        schemaLocation="../../../../Schema/BusinessObjects/Enterprise/External/oasis/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"/>
+    </schema>
+  </wsdl:types>
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   MESSAGE TYPE DEFINITION - Definition of the message types used as
+   part of the port type defintions
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <wsdl:message name="GetInvoiceDataRequestMessage">
+    <wsdl:part name="GetInvoiceDataRequestMessage"
+      element="msg:GetInvoiceDetailsRQ"/>
+  </wsdl:message>
+  <wsdl:message name="GetInvoiceDataResponseMessage">
+    <wsdl:part name="GetInvoiceDataResponseMessage"
+      element="msg:GetInvoiceDetailsRS"/>
+  </wsdl:message>
+  <wsdl:message name="UsernameToken">
+    <wsdl:part name="Security" element="wsse:Security"/>
+  </wsdl:message>
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   PORT TYPE DEFINITION - A port type groups a set of operations into
+   a logical service unit.
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <!-- portType implemented by the CreateInvoice BPEL process -->
+  <wsdl:portType name="InvoiceData">
+    <wsdl:operation name="GetInvoiceData">
+      <wsdl:input message="bsl:GetInvoiceDataRequestMessage"/>
+      <wsdl:output message="bsl:GetInvoiceDataResponseMessage"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="InvoiceDataBinding" type="bsl:InvoiceData">
+    <soap:binding xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+      transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="GetInvoiceData">
+      <soap:operation xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+        style="document" soapAction="GetInvoiceData"/>
+      <wsdl:input>
+        <soap:body xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" use="literal"
+          namespace="http://legalservices.gov.uk/CCMS/Finance/Payables/1.0/GetInvoiceDetails"/>
+        <soap:header message="bsl:UsernameToken" part="Security" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" use="literal"
+          namespace="http://legalservices.gov.uk/CCMS/Finance/Payables/1.0/GetInvoiceDetails"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="bpelprocess1_client_ep">
+    <wsdl:port name="InvoiceData_pt" binding="bsl:InvoiceDataBinding">
+      <soap:address xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+        location="http://bbplscapp02.lab.gov:8055/soa-infra/services/default/TestWSDL/bpelprocess1_client_ep"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

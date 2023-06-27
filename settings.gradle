@@ -1,0 +1,4 @@
+rootProject.name = 'laa-ccms-soa-gateway-api'
+
+include 'soa-gateway-api'
+include 'soa-gateway-service'

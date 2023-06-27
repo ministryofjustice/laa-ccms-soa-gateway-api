@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- edited with XMLSpy v2010 rel. 3 sp1 (http://www.altova.com) by Ashish (Capgemini) -->
+<!--Created with Liquid XML Studio - FREE Community Edition 7.1.6.1440 (http://www.liquid-technologies.com)-->
+<xsd:schema xmlns:header="http://legalservices.gov.uk/Enterprise/Common/1.0/Header"
+  xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common"
+  xmlns:msg="http://legalservices.gov.uk/CCMS/ClientManagement/Client/1.0/ClientBIM"
+  xmlns:client="http://legalservices.gov.uk/CCMS/ClientManagement/Client/1.0/ClientBIO"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="http://legalservices.gov.uk/CCMS/ClientManagement/Client/1.0/ClientBIM"
+  elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+  <xsd:import namespace="http://legalservices.gov.uk/CCMS/ClientManagement/Client/1.0/ClientBIO"
+    schemaLocation="ClientBIO.xsd"/>
+  <xsd:import namespace="http://legalservices.gov.uk/Enterprise/Common/1.0/Header"
+    schemaLocation="../../../../Enterprise/Common/1.0/Header.xsd"/>
+  <xsd:import namespace="http://legalservices.gov.uk/Enterprise/Common/1.0/Common"
+    schemaLocation="../../../../Enterprise/Common/1.0/Common.xsd"/>
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      <Version>1.0</Version>
+      <Definition>Client BIM</Definition>
+      <Description>This schema defines the messages to create or update the Clients at LSC
+      </Description>
+      <Author>Mohammed Sajid Ali</Author>
+      <ModifiedBy>Ramesh Madhavan</ModifiedBy>
+      <VersionDate>09-08-2010</VersionDate>
+      <VersionDescription>Updated the schema as per Swipper version 1.8</VersionDescription>
+      <ModificationHistory>
+        01-03-2010 Version 1.0 - Initial Development Version
+        25-03-2010 Version 1.1 - Updated
+        09-08-2010 Version 1.2 - Updated the schema as per Swipper version 1.8
+        09-23-2010 Version 1.3 - Incorporated comments from Dwayne ( Final Review ClientManagement
+        xsds. doc)
+        4. Client update request (ClientUpdRQ)
+
+        " In the XSD the element 'DisabilityMonitoring' is defined twice, just before and just after
+        'SpecialConsiderations'. Also it is defined as a repeating structure while wireframe CD05
+        only allows for one value to be selected. [Ramesh] Removed
+        " In the XSD the element 'NoFixedAbode' seems to be missing (defined on wireframe CD04).
+        [Ramesh] Added
+
+        " The XSD still contains the element 'CorrespondenceAddress', but in the Provider UI this is
+        moved from the client to the case/application. [Ramesh] Done, the changes were done on Add
+        request and needed to be replicated in the Update section too
+
+        " The XSD contains a single element 'Correspondence', but according to wireframe CD03,
+        'CorrespondenceMethod' and 'CorrespondenceLanguage' are two separate fields. [Ramesh] Done,
+        the changes were done on Add request and needed to be replicated in the Update section too
+
+
+      </ModificationHistory>
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:element name="ClientInqRQ" type="msg:ClientInqRQ"/>
+  <xsd:element name="ClientInqRS" type="msg:ClientInqRS"/>
+  <xsd:element name="ClientAddRQ" type="msg:ClientAddRQ"/>
+  <xsd:element name="ClientAddRS" type="msg:ClientAddRS"/>
+  <xsd:element name="ClientUpdateRQ" type="msg:ClientUpdateRQ"/>
+  <xsd:element name="ClientUpdateRS" type="msg:ClientUpdateRS"/>
+  <xsd:element name="ClientAddUpdtStatusRQ" type="msg:ClientAddUpdtStatusRQ"/>
+  <xsd:element name="ClientAddUpdtStatusRS" type="msg:ClientAddUpdtStatusRS"/>
+  <xsd:element name="ClientRQ" type="msg:ClientRQ"/>
+  <xsd:element name="ClientRS" type="msg:ClientRS"/>
+  <xsd:complexType name="ClientInqRQ">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRQ"/>
+      <xsd:element name="RecordCount" type="common:RecordCount"/>
+      <xsd:element name="SearchCriteria">
+        <xsd:complexType>
+          <xsd:choice>
+            <xsd:element name="ClientReferenceNumber" type="common:IDREF30"/>
+            <xsd:element name="ClientInfo" type="client:ClientInfo"/>
+          </xsd:choice>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ClientInqRS">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRS"/>
+      <xsd:element name="RecordCount" type="common:RecordCount"/>
+      <xsd:choice minOccurs="0">
+        <xsd:element name="Client" type="client:Client"/>
+        <xsd:element name="ClientList">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="Client" type="client:ClientList" maxOccurs="unbounded"/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:choice>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ClientAddRQ">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRQ"/>
+      <xsd:element name="Client" type="client:ClientDetails"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ClientAddRS">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRS"/>
+      <xsd:element name="TransactionID" type="common:TransactionID" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ClientAddUpdtStatusRQ">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRQ"/>
+      <xsd:element name="TransactionID" type="common:TransactionID"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ClientAddUpdtStatusRS">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRS"/>
+      <xsd:element name="ClientReferenceNumber" type="common:IDREF30" minOccurs="0"/>
+      <xsd:element name="ClientDetails" type="client:ClientDetails" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ClientUpdateRQ">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRQ"/>
+      <xsd:element name="ClientReferenceNumber" type="common:IDREF30"/>
+      <xsd:element name="Name" type="common:Name" minOccurs="0"/>
+      <xsd:element name="Address" type="common:Address" minOccurs="0"/>
+      <xsd:element name="NoFixedAbode" type="common:BooleanString" minOccurs="0"/>
+      <xsd:element name="EthnicMonitoring" type="common:LOV" minOccurs="0"/>
+      <xsd:element name="DisabilityMonitoring" type="client:DisabilityDetails" minOccurs="0"/>
+      <xsd:element name="SpecialConsiderations" type="common:C2000" minOccurs="0"/>
+      <xsd:element name="DateOfBirth" type="common:Dt" minOccurs="0"/>
+      <xsd:element name="DateOfDeath" type="common:Dt" minOccurs="0"/>
+      <xsd:element name="Gender" type="common:Gender" minOccurs="0"/>
+      <xsd:element name="MaritalStatus" type="common:MaritalStatus" minOccurs="0"/>
+      <xsd:element name="NINumber" type="common:NationalInsuranceNumber" minOccurs="0"/>
+      <xsd:element name="HomeOfficeReference" type="common:HomeOfficeReference" minOccurs="0"/>
+      <xsd:element name="VulnerableClient" type="common:BooleanString" minOccurs="0"/>
+      <xsd:element name="HighProfileClient" type="common:BooleanString" minOccurs="0"/>
+      <xsd:element name="VexatiousLitigant" type="common:BooleanString" minOccurs="0"/>
+      <xsd:element name="MentalCapacityInd" type="common:BooleanString" minOccurs="0"/>
+      <xsd:element name="CountryOfOrigin" type="common:CountryCode" minOccurs="0"/>
+      <xsd:element name="TelephoneHome" type="common:PhoneNum" minOccurs="0"/>
+      <xsd:element name="TelephoneWork" type="common:PhoneNum" minOccurs="0"/>
+      <xsd:element name="MobileNumber" type="common:PhoneNum" minOccurs="0"/>
+      <xsd:element name="EmailAddress" type="common:EmailAddress" minOccurs="0"/>
+      <xsd:element name="Password" type="common:C15" minOccurs="0"/>
+      <xsd:element name="PasswordReminder" type="common:C50" minOccurs="0"/>
+      <xsd:element name="CorrespondenceMethod" type="common:C50" minOccurs="0"/>
+      <xsd:element name="CorrespondenceLanguage" type="common:C50" minOccurs="0"/>
+      <xsd:element name="RecordHistory" type="common:RecordHistory"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ClientUpdateRS">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRS"/>
+      <xsd:element name="TransactionID" type="common:TransactionID" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ClientRQ">
+    <xsd:sequence>
+      <xsd:choice>
+        <xsd:element name="ClientInqRQ" type="msg:ClientInqRQ"/>
+        <xsd:element name="ClientAddRQ" type="msg:ClientAddRQ"/>
+        <xsd:element name="ClientUpdateRQ" type="msg:ClientUpdateRQ"/>
+        <xsd:element name="ClientAddUpdtStatusRQ" type="msg:ClientAddUpdtStatusRQ"/>
+      </xsd:choice>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ClientRS">
+    <xsd:sequence>
+      <xsd:choice>
+        <xsd:element name="ClientInqRS" type="msg:ClientInqRS"/>
+        <xsd:element name="ClientAddRS" type="msg:ClientAddRS"/>
+        <xsd:element name="ClientUpdateRS" type="msg:ClientUpdateRS"/>
+        <xsd:element name="ClientAddUpdtStatusRS" type="msg:ClientAddUpdtStatusRS"/>
+      </xsd:choice>
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>

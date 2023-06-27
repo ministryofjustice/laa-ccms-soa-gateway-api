@@ -1,0 +1,118 @@
+<schema xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+  targetNamespace="http://cp.bt.com/alarmservice/domain" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:com="http://cp.bt.com/common/domain" xmlns:tns="http://cp.bt.com/alarmservice/domain">
+  <import namespace="http://cp.bt.com/common/domain" schemaLocation="common.xsd"/>
+  <xs:complexType name="AlarmEvents">
+    <xs:sequence>
+      <xs:element name="AlarmEvents" type="tns:AlarmEvent" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="AlarmEvent">
+    <xs:annotation>
+      <xs:documentation>The Alarm Service allows the user to retrieve Alarm and error data from the
+        SOA DataBase.
+        An alarm event consists of :-
+        id : unique id of event.
+        category : alarm category, for example warning, error, severe error
+        userErrorMessage : error message to be displayed to end user
+        function : Function used in Content Processing, for example Transcode
+        jobId : unique id of the job that caused the error
+        username : user name of requestor of job
+        ipAddress : ip address of requestor of job
+        errorId : id of all errors relating to this event. All errors caused by this event have the
+        same error id.
+        errorMessage : error message returned by SOA layer
+        errorDetail : stack trace for error
+        logtime : date/time of event
+        clientId : id of client organisation
+        roleId : id of role of requestor of job
+        groupId : id of group that user belongs to
+        markForDelete : flag that indicates that this event has been marked for deletion. Values are
+        true and false.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="id" type="xs:long"/>
+      <xs:element name="category" type="xs:string"/>
+      <xs:element name="userErrorMessage" type="xs:string"/>
+      <xs:element name="function" type="xs:string"/>
+      <xs:element name="jobId" type="xs:string"/>
+      <xs:element name="username" type="xs:string"/>
+      <xs:element name="ipAddress" type="xs:string"/>
+      <xs:element name="errorId" type="xs:string"/>
+      <xs:element name="errorMessage" type="xs:string"/>
+      <xs:element name="errorDetail" type="xs:string"/>
+      <xs:element name="logtime" type="xs:dateTime"/>
+      <xs:element name="clientId" type="xs:string"/>
+      <xs:element name="roleId" type="xs:string"/>
+      <xs:element name="groupId" type="xs:string"/>
+      <xs:element name="markForDelete" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="alarmEventRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+        <xs:element name="AlarmEvent" type="tns:AlarmEvent"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="alarmRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+        <xs:element name="value" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="alarmEventsByJobIdRequest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>Retrieve alarm events given a job id.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+        <xs:element name="value" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="alarmEventsByErrorIdRequest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>Retrieve alarm events given an error id.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+        <xs:element name="value" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="AlarmServiceList">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="responseDetails" type="com:responseDetails"/>
+        <xs:element name="alarmEventList" type="tns:AlarmEvents"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="manageAlarmDateRange">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+        <xs:element name="LogDateRange" type="com:LogDateRange"/>
+        <xs:element name="displayAlarms" type="xs:int"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="manageAlarmRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+        <xs:element name="value" type="xs:string"/>
+        <xs:element name="displayAlarms" type="xs:int"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</schema>

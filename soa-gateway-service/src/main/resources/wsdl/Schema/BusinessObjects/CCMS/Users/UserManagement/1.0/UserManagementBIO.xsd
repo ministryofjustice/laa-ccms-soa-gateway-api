@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:userdata="http://legalaid.gsi.gov.uk/CCMS/Common/UserManagement/1.0/UserManagementBIO"
+  targetNamespace="http://legalaid.gsi.gov.uk/CCMS/Common/UserManagement/1.0/UserManagementBIO"
+  elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+  <!--
+  ** CapGemini
+  ** SOA Object library
+  ** Version : 1.0
+
+    XML Schema
+    Name : \lsc\Schema\BusinessObjects\CCMS\Common\UserManagement\1.0\UserManagementBI0.xsd
+
+  Date          Authour           Details
+  2013-06-08    Bikash Agrawal    User Managament - Update User - CR20 and CR21
+  -->
+  <xsd:complexType name="CCMSUser">
+    <xsd:sequence>
+      <xsd:element name="LoginID" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="ProviderFirmID" type="xsd:decimal" maxOccurs="1"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:element name="CCMSUser" type="userdata:CCMSUser"/>
+</xsd:schema>

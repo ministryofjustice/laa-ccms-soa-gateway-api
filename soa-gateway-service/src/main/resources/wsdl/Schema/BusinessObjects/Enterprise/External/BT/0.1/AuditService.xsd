@@ -1,0 +1,77 @@
+<schema xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+  targetNamespace="http://cp.bt.com/auditservice/domain" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:tns="http://cp.bt.com/auditservice/domain" xmlns:com="http://cp.bt.com/common/domain">
+  <import namespace="http://cp.bt.com/common/domain" schemaLocation="common.xsd"/>
+  <xs:complexType name="ArrayOfAuditEvent">
+    <xs:sequence>
+      <xs:element name="auditEventList" type="tns:LogEvent" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="LogEvent">
+    <xs:annotation>
+      <xs:documentation>The Audit service allows support to retrieve the audit trail from a system
+        call.
+        All service calls within the SOA content processing system get audited when an operation is
+        called.
+        A log event is as follows:-
+        username : user name of requestor of the service
+        ipaddress : ip address of the requestor
+        endpoint : end point of service
+        logtime : date/time of event
+        jobId : unique id of the job
+        requestId : Unique id for the request.
+        parentRequestId : Unique id for the parent request, null if no parent.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="username" type="xs:string"/>
+      <xs:element name="ipaddress" type="xs:string"/>
+      <xs:element name="endpoint" type="xs:string"/>
+      <xs:element name="logtime" type="xs:dateTime"/>
+      <xs:element name="jobId" type="xs:string"/>
+      <xs:element name="requestId" type="xs:string"/>
+      <xs:element name="parentRequestId" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="auditServiceList">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="responseDetails" type="com:responseDetails"/>
+        <xs:element name="auditEventList" type="tns:ArrayOfAuditEvent"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="auditEventRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+        <xs:element name="logEvent" type="tns:LogEvent"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="auditId">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+        <xs:element name="Id" type="xs:long"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="endPointTimeRangeDetails">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+        <xs:element name="Endpoint" type="xs:string"/>
+        <xs:element name="LogDateRange" type="com:LogDateRange"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="requestIdRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="requestDetails" type="com:requestDetails"/>
+        <xs:element name="jobId" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</schema>

@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 rel. 2 sp2 (http://www.altova.com) by David Hunter (ITV) -->
+<schema xmlns:evt="http://mosaic.bt.com/itv/Event/1.0" xmlns="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="http://mosaic.bt.com/itv/Event/1.0" elementFormDefault="qualified">
+  <include schemaLocation="SimpleType.xsd"/>
+  <element name="Event" type="evt:Event"/>
+  <complexType name="Event">
+    <sequence>
+      <element name="EventId" type="evt:EventId"/>
+      <element name="Type" type="evt:Type"/>
+      <element name="DateTime" type="evt:DateTime"/>
+      <element name="EventData" type="evt:EventData"/>
+    </sequence>
+    <!-- What about timecode data -->
+  </complexType>
+  <element name="FLAG">
+    <complexType>
+      <sequence>
+        <element name="FLAG_Type" type="evt:FLAG_TYPE"/>
+        <element name="VALUE" type="boolean"/>
+      </sequence>
+    </complexType>
+  </element>
+  <element name="TECHNICAL_COMPLIANCE">
+    <complexType>
+      <sequence>
+        <element name="TECHNICAL_COMPLIANCE_FAILURE_REASON"
+          type="evt:TECHNICAL_COMPLIANCE_FAILURE_REASON" minOccurs="0"/>
+        <element name="TECHNICAL_COMPLIANCE_FLAG" type="evt:TECHNICAL_COMPLIANCE_FLAG"
+          minOccurs="0"/>
+        <element name="TECHNICAL_COMPLIANCE_WORKFLOW_HISTORY"
+          type="evt:TECHNICAL_COMPLIANCE_WORKFLOW_HISTORY" minOccurs="0"/>
+      </sequence>
+    </complexType>
+  </element>
+  <element name="TECHNICAL_QC">
+    <complexType>
+      <sequence>
+        <element name="TECHNICAL_QC_FAILURE_REASON" type="evt:TECHNICAL_QC_FAILURE_REASON"
+          minOccurs="0"/>
+        <element name="TECHNICAL_QC_FLAG" type="evt:TECHNICAL_QC_FLAG" minOccurs="0"/>
+        <element name="TECHNICAL_QC_REPORT_FILENAME" type="evt:TECHNICAL_QC_REPORT_FILENAME"
+          minOccurs="0"/>
+        <element name="TECHNICAL_QC_WORKFLOW_HISTORY" type="evt:TECHNICAL_QC_WORKFLOW_HISTORY"
+          minOccurs="0"/>
+      </sequence>
+    </complexType>
+  </element>
+  <element name="COMPLIANCE">
+    <complexType>
+      <sequence>
+        <element name="USER" type="evt:USER" minOccurs="0"/>
+        <element name="COMPLIANCE_DATE" type="evt:COMPLIANCE_DATE" minOccurs="0"/>
+        <element name="EDITING_DECISION_INFORMATION" type="evt:EDITING_DECISION_INFORMATION"
+          minOccurs="0"/>
+        <element name="EDITORIAL_COMPLIANCE_FLAG" type="evt:EDITORIAL_COMPLIANCE_FLAG"/>
+        <element name="EDITORIAL_TECHNICAL_ASSESSMENT" type="evt:EDITORIAL_TECHNICAL_ASSESSMENT"
+          minOccurs="0"/>
+        <element name="CLASSIFICATION_TYPE" type="evt:CLASSIFICATION_TYPE"/>
+        <element name="KEYWORD" type="evt:KEYWORD" minOccurs="0"/>
+        <element name="TAPE_COMPLIANCE_IDENTIFIER" type="evt:TAPE_COMPLIANCE_IDENTIFIER"
+          minOccurs="0"/>
+        <element name="CAPTURE_ASPECT_RATIO" type="evt:CAPTURE_ASPECT_RATIO" minOccurs="0"/>
+        <element name="COMPLIANCE_SYNOPSIS" type="evt:COMPLIANCE_SYNOPSIS" minOccurs="0"/>
+        <element name="COMPLIANCE_NOTES" type="evt:COMPLIANCE_NOTES" minOccurs="0"/>
+        <element name="COMMERCIAL_REFERENCES" type="evt:COMMERCIAL_REFERENCES" minOccurs="0"/>
+        <element name="COMPLIANCE_EXPIRY_DATE" type="evt:COMPLIANCE_EXPIRY_DATE" minOccurs="0"/>
+        <element name="COMPLIANCE_CATEGORY" type="evt:COMPLIANCE_CATEGORY" minOccurs="0"/>
+        <element name="COMPLIANCE_WARNING" type="evt:COMPLIANCE_WARNING" minOccurs="0"/>
+        <element name="COMPLIANCE_WARNING_CHANNEL" type="evt:COMPLIANCE_WARNING_CHANNEL"
+          minOccurs="0"/>
+        <element name="COMPLIANCE_WARNING_NOTES" type="evt:COMPLIANCE_WARNING_NOTES" minOccurs="0"/>
+        <element name="EDITORIAL_COMPLIANCE_FAILURE_REASONS"
+          type="evt:EDITORIAL_COMPLIANCE_FAILURE_REASONS" minOccurs="0"/>
+        <element name="CLOCK_IDENTIFIER" type="evt:CLOCK_IDENTIFIER" minOccurs="0"/>
+        <element name="LEGAL_UNABLE_TO_REPEAT" type="evt:LEGAL_UNABLE_TO_REPEAT" minOccurs="0"/>
+        <element name="LEGAL_RELEGALLING_FOR_REPEAT" type="evt:LEGAL_RELEGALLING_FOR_REPEAT"
+          minOccurs="0"/>
+        <element name="LEGAL_RECORDED_TV_INTERVIEW" type="evt:LEGAL_RECORDED_TV_INTERVIEW"
+          minOccurs="0"/>
+        <element name="LEGAL_CONSENT_FOR_TRANSMISSION" type="evt:LEGAL_CONSENT_FOR_TRANSMISSION"
+          minOccurs="0"/>
+        <element name="LEGAL_KIDS_COURTS" type="evt:LEGAL_KIDS_COURTS" minOccurs="0"/>
+        <element name="LEGAL_LEGAL_PROCEEDINGS" type="evt:LEGAL_LEGAL_PROCEEDINGS" minOccurs="0"/>
+        <element name="LEGAL_LOCAL_AUTHORITY_LICENSE_NEEDED"
+          type="evt:LEGAL_LOCAL_AUTHORITY_LICENSE_NEEDED" minOccurs="0"/>
+        <element name="LEGAL_CONTEMPT_SEXUAL_OFFENCE" type="evt:LEGAL_CONTEMPT_SEXUAL_OFFENCE"
+          minOccurs="0"/>
+        <element name="LEGAL_CONTEMPT_CHECK_COURT_PROCEEDINGS"
+          type="evt:LEGAL_CONTEMPT_CHECK_COURT_PROCEEDINGS" minOccurs="0"/>
+        <element name="LEGAL_CONTEMPT_COURT_ORDERS" type="evt:LEGAL_CONTEMPT_COURT_ORDERS"
+          minOccurs="0"/>
+        <element name="LEGAL_FAIRNESS_ALLEGATIONS" type="evt:LEGAL_FAIRNESS_ALLEGATIONS"
+          minOccurs="0"/>
+        <element name="LEGAL_FAIRNESS_RESPONSE_REVIEW" type="evt:LEGAL_FAIRNESS_RESPONSE_REVIEW"
+          minOccurs="0"/>
+        <element name="LEGAL_PRIVACY_DOORSTEP_INTERVIEWS"
+          type="evt:LEGAL_PRIVACY_DOORSTEP_INTERVIEWS" minOccurs="0"/>
+        <element name="LEGAL_PRIVACY_TRAUMATIC_EVENTS" type="evt:LEGAL_PRIVACY_TRAUMATIC_EVENTS"
+          minOccurs="0"/>
+        <element name="LEGAL_PRIVACY_DECEASED_VICTIMS" type="evt:LEGAL_PRIVACY_DECEASED_VICTIMS"
+          minOccurs="0"/>
+        <element name="LEGAL_PRIVACY_SET_UPS" type="evt:LEGAL_PRIVACY_SET_UPS" minOccurs="0"/>
+        <element name="LEGAL_PRIVACY_FILMED_INSTITUTION" type="evt:LEGAL_PRIVACY_FILMED_INSTITUTION"
+          minOccurs="0"/>
+        <element name="LEGAL_PRIVACY_OTHER" type="evt:LEGAL_PRIVACY_OTHER" minOccurs="0"/>
+        <element name="LEGAL_COPYRIGHT" type="evt:LEGAL_COPYRIGHT" minOccurs="0"/>
+        <element name="LEGAL_GENERAL_COMPLAINTS" type="evt:LEGAL_GENERAL_COMPLAINTS" minOccurs="0"/>
+        <element name="LEGAL_GENERAL_OFCOM" type="evt:LEGAL_GENERAL_OFCOM" minOccurs="0"/>
+        <element name="LEGAL_GENERAL_IMPARTIALITY" type="evt:LEGAL_GENERAL_IMPARTIALITY"
+          minOccurs="0"/>
+        <element name="LEGAL_GENERAL_REPEATS" type="evt:LEGAL_GENERAL_REPEATS" minOccurs="0"/>
+        <element name="LEGAL_OTHER_LEGAL_INFORMATION" type="evt:LEGAL_OTHER_LEGAL_INFORMATION"
+          minOccurs="0"/>
+        <element name="CERTIFICATION_CHANNEL_HISTORY" type="evt:CERTIFICATION_CHANNEL_HISTORY"
+          minOccurs="0"/>
+        <element ref="evt:COMPLIANCE_CATEGORIES" minOccurs="0"/>
+        <element ref="evt:COMPLIANCE_WARNING_REASONS" minOccurs="0"/>
+        <element ref="evt:BROADCAST_CHANNELS" minOccurs="0"/>
+        <element ref="evt:EDITORIAL_COMPLIANCE_WORKFLOW_HISTORIES" minOccurs="0"/>
+        <element ref="evt:METADATA_TEMPLATE_VALUES" minOccurs="0"/>
+        <element ref="evt:RELATED_COMPLIANCE_DOCUMENTS" minOccurs="0"/>
+      </sequence>
+    </complexType>
+  </element>
+  <element name="COMPLIANCE_CATEGORIES">
+    <complexType>
+      <sequence>
+        <element name="COMPLIANCE_CATEGORY" type="evt:COMPLIANCE_CATEGORY" maxOccurs="unbounded"/>
+      </sequence>
+    </complexType>
+  </element>
+  <element name="COMPLIANCE_WARNING_REASONS">
+    <complexType>
+      <sequence>
+        <element name="COMPLIANCE_WARNING_REASON" type="evt:COMPLIANCE_WARNING_REASON"
+          maxOccurs="unbounded"/>
+      </sequence>
+    </complexType>
+  </element>
+  <element name="BROADCAST_CHANNELS">
+    <complexType>
+      <sequence>
+        <element name="BROADCAST_CHANNEL" type="evt:BROADCAST_CHANNEL" maxOccurs="unbounded"/>
+      </sequence>
+    </complexType>
+  </element>
+  <element name="EDITORIAL_COMPLIANCE_WORKFLOW_HISTORIES">
+    <complexType>
+      <sequence>
+        <element name="EDITORIAL_COMPLIANCE_WORKFLOW_HISTORY"
+          type="evt:EDITORIAL_COMPLIANCE_WORKFLOW_HISTORY" maxOccurs="unbounded"/>
+      </sequence>
+    </complexType>
+  </element>
+  <element name="METADATA_TEMPLATE_VALUES">
+    <complexType>
+      <sequence>
+        <element name="METADATA_TEMPLATE_VALUE" type="evt:METADATA_TEMPLATE_VALUE"
+          maxOccurs="unbounded"/>
+      </sequence>
+    </complexType>
+  </element>
+  <element name="RELATED_COMPLIANCE_DOCUMENTS">
+    <complexType>
+      <sequence>
+        <element name="RELATED_COMPLIANCE_DOCUMENT" type="evt:RELATED_COMPLIANCE_DOCUMENT"
+          maxOccurs="unbounded"/>
+      </sequence>
+    </complexType>
+  </element>
+  <element name="FULFILLMENT">
+    <complexType>
+      <sequence>
+        <element name="COLLECTION_ID" type="evt:COLLECTION_ID" minOccurs="0"/>
+        <element name="DATE_COMPLETED" type="evt:DATE_COMPLETED" minOccurs="0"/>
+        <element name="TIME_COMPLETED" type="evt:TIME_COMPLETED" minOccurs="0"/>
+        <element name="ORDER_STATUS" type="evt:ORDER_STATUS" minOccurs="0"/>
+        <element name="ORDER_FAILURE_REASON" type="evt:ORDER_FAILURE_REASON" minOccurs="0"/>
+        <element name="GENERIC_PROFILE" type="evt:GENERIC_PROFILE" minOccurs="0"/>
+        <element name="STATUS_WORKFLOW_HISTORY" type="evt:STATUS_WORKFLOW_HISTORY" minOccurs="0"/>
+      </sequence>
+    </complexType>
+  </element>
+  <element name="ENRICHMENT">
+    <complexType>
+      <sequence>
+        <element name="METADATA_CAPTURE_INFORMATION" type="evt:METADATA_CAPTURE_INFORMATION"
+          minOccurs="0"/>
+        <element name="METADATA_EDITOR_HISTORY" type="evt:METADATA_EDITOR_HISTORY" minOccurs="0"/>
+        <element name="METADATA_TEMPLATE_VALUE" type="evt:METADATA_TEMPLATE_VALUE" minOccurs="0"/>
+        <element name="METADATA_CAPTURE_FLAG" type="evt:METADATA_CAPTURE_FLAG" minOccurs="0"/>
+        <element name="METADATA_CAPTURE_WORKFLOW_HISTORY"
+          type="evt:METADATA_CAPTURE_WORKFLOW_HISTORY" minOccurs="0"/>
+        <element name="METADATA_PARTINGS_FLAG" type="evt:METADATA_PARTINGS_FLAG" minOccurs="0"/>
+        <element name="METADATA_PARTINGS_WORKFLOW_HISTORY"
+          type="evt:METADATA_PARTINGS_WORKFLOW_HISTORY" minOccurs="0"/>
+        <element name="COMPLIANCE_USER" type="evt:COMPLIANCE_USER" minOccurs="0"/>
+        <element name="COMPLIED" type="evt:COMPLIED" minOccurs="0"/>
+        <element name="EXPLOITATION_READY" type="evt:EXPLOITATION_READY" minOccurs="0"/>
+        <element name="NUMBER_OF_PARTS" type="evt:NUMBER_OF_PARTS" minOccurs="0"/>
+      </sequence>
+    </complexType>
+  </element>
+  <element name="PRODUCTION">
+    <complexType>
+      <sequence>
+        <element name="PRODUCTION_ID" type="evt:PRODUCTION_ID" minOccurs="0"/>
+        <element name="PRODUCTION_AREA" type="evt:PRODUCTION_AREA" minOccurs="0"/>
+        <element name="PRODUCTION_CAPTION_TEXT" type="evt:PRODUCTION_CAPTION_TEXT" minOccurs="0"/>
+        <element name="PRODUCTION_CATALOGUE_OWNER" type="evt:PRODUCTION_CATALOGUE_OWNER"
+          minOccurs="0"/>
+        <element name="PRODUCTION_YEAR" type="evt:PRODUCTION_YEAR" minOccurs="0"/>
+      </sequence>
+    </complexType>
+  </element>
+  <element name="EDITORIAL">
+    <complexType>
+      <sequence>
+        <element name="EDITORIAL_COMPLIANCE_FAILURE_REASONS"
+          type="evt:EDITORIAL_COMPLIANCE_FAILURE_REASONS" minOccurs="0"/>
+        <element name="EDITORIAL_COMPLIANCE_FLAG" type="evt:EDITORIAL_COMPLIANCE_FLAG"
+          minOccurs="0"/>
+        <element name="EDITORIAL_COMPLIANCE_WORKFLOW_HISTORY"
+          type="evt:EDITORIAL_COMPLIANCE_WORKFLOW_HISTORY" minOccurs="0"/>
+        <element name="EDITORIAL_TECHNICAL_ASSESSMENT" type="evt:EDITORIAL_TECHNICAL_ASSESSMENT"
+          minOccurs="0"/>
+      </sequence>
+    </complexType>
+  </element>
+  <element name="VERSION">
+    <complexType>
+      <sequence>
+        <element name="VERSION_DESCRIPTION" type="evt:VERSION_DESCRIPTION" minOccurs="0"/>
+        <element name="VERSION_EPISODE_LINKS" type="evt:VERSION_EPISODE_LINKS" minOccurs="0"/>
+        <element name="VERSION_INFORMATION" type="evt:VERSION_INFORMATION" minOccurs="0"/>
+        <element name="VERSION_NUMBER" type="evt:VERSION_NUMBER" minOccurs="0"/>
+        <element name="VERSION_TITLE" type="evt:VERSION_TITLE" minOccurs="0"/>
+        <element name="VERSION_TITLE_NEW" type="evt:VERSION_TITLE_NEW" minOccurs="0"/>
+      </sequence>
+    </complexType>
+  </element>
+  <element name="PROMOTION">
+    <complexType>
+      <sequence>
+        <element name="PROMOTION_DATA_CAPTURE_FLAG" type="evt:PROMOTION_DATA_CAPTURE_FLAG"
+          minOccurs="0"/>
+        <element name="PROMOTION_DATA_WORKFLOW_HISTORY" type="evt:PROMOTION_DATA_WORKFLOW_HISTORY"
+          minOccurs="0"/>
+      </sequence>
+    </complexType>
+  </element>
+  <element name="INGEST">
+    <complexType>
+      <sequence>
+        <element name="INGEST_DATE" type="evt:INGEST_DATE" minOccurs="0"/>
+        <element name="INGEST_TIME" type="evt:INGEST_TIME" minOccurs="0"/>
+        <element name="ORIGINAL_INGEST_STATUS_FLAG" type="evt:ORIGINAL_INGEST_STATUS_FLAG"
+          minOccurs="0"/>
+        <element name="INGEST_FAILURE_REASONS" type="evt:INGEST_FAILURE_REASONS" minOccurs="0"/>
+        <element name="AUTOMATED_QC_STATUS" type="evt:AUTOMATED_QC_STATUS" minOccurs="0"/>
+        <element name="AUTOMATED_QC_FAILURE_REASONS" type="evt:AUTOMATED_QC_FAILURE_REASONS"
+          minOccurs="0"/>
+        <element name="CONTENT_DELIVERED" type="evt:CONTENT_DELIVERED" minOccurs="0"/>
+      </sequence>
+    </complexType>
+  </element>
+  <complexType name="INGEST_FAILURE_REASONS">
+    <sequence>
+      <element name="INGEST_FAILURE_REASON" type="evt:INGEST_AND_AUTOMATED_QC_FAILURE_REASON"
+        minOccurs="0" maxOccurs="unbounded"/>
+    </sequence>
+  </complexType>
+  <complexType name="AUTOMATED_QC_FAILURE_REASONS">
+    <sequence>
+      <element name="AUTOMATED_QC_FAILURE_REASON" type="evt:INGEST_AND_AUTOMATED_QC_FAILURE_REASON"
+        minOccurs="0" maxOccurs="unbounded"/>
+    </sequence>
+  </complexType>
+  <element name="EPISODE">
+    <complexType>
+      <sequence>
+        <element name="EPISODE_NUMBER" type="evt:EPISODE_NUMBER" minOccurs="0"/>
+        <element name="EPISODE_TITLE" type="evt:EPISODE_TITLE" minOccurs="0"/>
+      </sequence>
+    </complexType>
+  </element>
+  <element name="TX">
+    <complexType>
+      <sequence>
+        <element name="User" type="string" minOccurs="0">
+          <annotation>
+            <documentation>Type needs to be confirmed by Matt/Dan</documentation>
+          </annotation>
+        </element>
+        <element name="BROADCAST_CHANNEL" type="evt:BROADCAST_CHANNEL" minOccurs="0"/>
+        <element name="PRIORITY" type="string" minOccurs="0">
+          <annotation>
+            <documentation>Type needs to be confirmed by Matt/Dan</documentation>
+          </annotation>
+        </element>
+        <element name="MXF_FILENAME" type="string" minOccurs="0">
+          <annotation>
+            <documentation>Type needs to be confirmed by Matt/Dan</documentation>
+          </annotation>
+        </element>
+        <element name="MXF_REVISION" type="string" minOccurs="0">
+          <annotation>
+            <documentation>Type needs to be confirmed by Matt/Dan</documentation>
+          </annotation>
+        </element>
+        <element ref="evt:COMPONENTS" minOccurs="0"/>
+      </sequence>
+    </complexType>
+  </element>
+  <element name="COMPONENTS">
+    <complexType>
+      <sequence>
+        <element ref="evt:COMPONENT" maxOccurs="unbounded"/>
+      </sequence>
+    </complexType>
+  </element>
+  <element name="COMPONENT">
+    <complexType>
+      <sequence>
+        <element name="FILENAME" type="evt:TX_FILE_NAME" minOccurs="0"/>
+        <element name="COMPONENT_TYPE" type="evt:COMPONENT_TYPE" minOccurs="0"/>
+        <element name="ASPECT_RATIO" type="evt:CONTRACTUAL_ASPECT_RATIO" minOccurs="0"/>
+        <element name="AUDIO_MIX_TYPE" type="evt:AUDIO_MIX_TYPE" minOccurs="0"/>
+        <element name="LANGUAGE" type="evt:LANGUAGE_CODE_ISO639" minOccurs="0"/>
+      </sequence>
+    </complexType>
+  </element>
+  <element name="ACCESS_SERVICES">
+    <complexType>
+      <sequence>
+        <element name="SUBTITLE_FLAG" type="evt:FLAG_SUBTITLED_HARD_OF_HEARING" minOccurs="0"/>
+        <element name="SUBTITLE_FILENAME" type="evt:SOURCE_FILENAME" minOccurs="0"/>
+        <element name="SUBTITLE_LANGUAGE" type="evt:LANGUAGE_CODE_ISO639" minOccurs="0"/>
+        <element name="AUDIO_DESCRIPTION_FLAG" type="evt:FLAG_AUDIO_DESCRIPTION" minOccurs="0"/>
+        <element name="AUDIO_DESCRIPTION_FORMAT" type="evt:AUDIO_DESCRIPTION_FORMAT" minOccurs="0"/>
+        <element name="AUDIO_DESCRIPTION_LANGUAGE" type="evt:LANGUAGE_CODE_ISO639" minOccurs="0"/>
+        <element name="VISUAL_SIGNING_FLAG" type="evt:FLAG_VISUAL_SIGNING" minOccurs="0"/>
+      </sequence>
+    </complexType>
+  </element>
+  <complexType name="EventData">
+    <sequence>
+      <element name="VERSION_NUMBER" type="evt:VERSION_NUMBER" minOccurs="0"/>
+      <element name="TAPE_IDENTIFIERS" type="evt:TAPE_IDENTIFIERS" minOccurs="0"/>
+      <element name="CLOCK_IDENTIFIER" type="evt:CLOCK_IDENTIFIER" minOccurs="0"/>
+      <element name="VERSION_DESCRIPTION" type="evt:VERSION_DESCRIPTION" minOccurs="0"/>
+      <element name="VERSION_EPISODE_LINKS" type="evt:VERSION_EPISODE_LINKS" minOccurs="0"/>
+      <element name="VERSION_INFORMATION" type="evt:VERSION_INFORMATION" minOccurs="0"/>
+      <element name="VERSION_TITLE" type="evt:VERSION_TITLE" minOccurs="0"/>
+      <element name="VERSION_TITLE_NEW" type="evt:VERSION_TITLE_NEW" minOccurs="0"/>
+      <element name="CONTRACTUAL_ASPECT_RATIO" type="evt:CONTRACTUAL_ASPECT_RATIO" minOccurs="0"/>
+      <element name="RECORDINGS_ID" type="evt:RECORDINGS_ID" minOccurs="0"/>
+      <element name="TECHNICAL_ASPECT_RATIO" type="evt:TECHNICAL_ASPECT_RATIO" minOccurs="0"/>
+      <element ref="evt:TECHNICAL_COMPLIANCE" minOccurs="0"/>
+      <element ref="evt:TECHNICAL_QC" minOccurs="0"/>
+      <element ref="evt:EPISODE" minOccurs="0"/>
+      <element name="TOTAL_NUMBER_IN_SEQUENCE" type="evt:TOTAL_NUMBER_IN_SEQUENCE" minOccurs="0"/>
+      <element name="SERIES_NUMBER" type="evt:SERIES_NUMBER" minOccurs="0"/>
+      <element name="SERIES_NUMERIC_ID" type="evt:SERIES_NUMERIC_ID" minOccurs="0"/>
+      <element name="FIRST_BROADCAST_FLAG" type="evt:FIRST_BROADCAST_FLAG" minOccurs="0"/>
+      <element name="ANNOTATION_SYNOPSIS" type="evt:ANNOTATION_SYNOPSIS" minOccurs="0"/>
+      <element name="CAST_LIST" type="evt:CAST_LIST" minOccurs="0"/>
+      <element name="CLASSIFICATION_TYPE" type="evt:CLASSIFICATION_TYPE" minOccurs="0"/>
+      <element name="COLOUR_DESCRIPTOR" type="evt:COLOUR_DESCRIPTOR" minOccurs="0"/>
+      <element name="GENRE" type="evt:GENRE" minOccurs="0"/>
+      <element name="KEYWORD" type="evt:KEYWORD" minOccurs="0"/>
+      <element name="SUB_GENRE" type="evt:SUB_GENRE" minOccurs="0"/>
+      <element name="CLIENT_INTERNAL_ID" type="evt:CLIENT_INTERNAL_ID" minOccurs="0"/>
+      <element name="CLIENT_NAME" type="evt:CLIENT_NAME" minOccurs="0"/>
+      <element name="PROGRAMME_NUMBER" type="evt:PROGRAMME_NUMBER" minOccurs="0"/>
+      <element name="PROGRAMME_TYPE" type="evt:PROGRAMME_TYPE" minOccurs="0"/>
+      <element name="TITLE_TITLE" type="evt:TITLE_TITLE" minOccurs="0"/>
+      <element name="TITLE_TYPE" type="evt:TITLE_TYPE" minOccurs="0"/>
+      <element name="UMID" type="evt:UMID" minOccurs="0"/>
+      <element name="ANNOTATION_SYNOPSIS_EPG" type="evt:ANNOTATION_SYNOPSIS_EPG" minOccurs="0"/>
+      <element name="ARCHIVE_METADATA_CAPTURE" type="evt:ARCHIVE_METADATA_CAPTURE" minOccurs="0"/>
+      <element name="ATVOD_AGE_RATING" type="evt:ATVOD_AGE_RATING" minOccurs="0"/>
+      <element name="CONTRACTUAL_ARCHIVE_FLAG" type="evt:CONTRACTUAL_ARCHIVE_FLAG" minOccurs="0"/>
+      <element name="COUNTRY_CODE_OF_COPYRIGHT_LICENSE" type="evt:COUNTRY_CODE_OF_COPYRIGHT_LICENSE"
+        minOccurs="0"/>
+      <element name="CREDIT_STYLE" type="evt:CREDIT_STYLE" minOccurs="0"/>
+      <element name="EDITING_DECISION_INFORMATION" type="evt:EDITING_DECISION_INFORMATION"
+        minOccurs="0"/>
+      <element name="END_OF_ESSENCE" type="evt:END_OF_ESSENCE" minOccurs="0"/>
+      <element name="FILM_RATING" type="evt:FILM_RATING" minOccurs="0"/>
+      <element ref="evt:FLAG" minOccurs="0" maxOccurs="unbounded"/>
+      <element ref="evt:INGEST" minOccurs="0"/>
+      <element ref="evt:ENRICHMENT" minOccurs="0"/>
+      <element ref="evt:COMPLIANCE" minOccurs="0"/>
+      <element ref="evt:FULFILLMENT" minOccurs="0" maxOccurs="unbounded"/>
+      <element ref="evt:TX" minOccurs="0"/>
+      <element ref="evt:ACCESS_SERVICES" minOccurs="0"/>
+      <element ref="evt:PRODUCTION" minOccurs="0"/>
+      <element name="SLOT_TIME" type="evt:SLOT_TIME" minOccurs="0"/>
+      <element name="START_OF_ESSENCE" type="evt:START_OF_ESSENCE" minOccurs="0"/>
+      <element name="TAPE_CLOCK_IDENTIFIER" type="evt:TAPE_CLOCK_IDENTIFIER" minOccurs="0"/>
+      <element name="TAPE_COMPLIANCE_IDENTIFIER" type="evt:TAPE_COMPLIANCE_IDENTIFIER"
+        minOccurs="0"/>
+      <element name="TAPE_START_OF_MESSAGE" type="evt:TAPE_START_OF_MESSAGE" minOccurs="0"/>
+      <element name="TIMECODE_ADDITIONAL_INFORMATION" type="evt:TIMECODE_ADDITIONAL_INFORMATION"
+        minOccurs="0"/>
+      <element name="STATUS_WORKFLOW_HISTORY" type="evt:STATUS_WORKFLOW_HISTORY" minOccurs="0"/>
+      <element name="ACTUAL_DURATION" type="evt:ACTUAL_DURATION" minOccurs="0"/>
+      <element name="AGGREGATED_PROGRAMME" type="evt:AGGREGATED_PROGRAMME" minOccurs="0"/>
+      <element name="CONTRACTUAL_DURATION" type="evt:CONTRACTUAL_DURATION" minOccurs="0"/>
+      <element ref="evt:EDITORIAL" minOccurs="0"/>
+      <element name="ESTIMATED_DURATION" type="evt:ESTIMATED_DURATION" minOccurs="0"/>
+      <element ref="evt:PROMOTION" minOccurs="0"/>
+      <element ref="evt:VERSION" minOccurs="0"/>
+    </sequence>
+    <!-- A lot of these elements belong inside Production, Episode, Version etc. -->
+  </complexType>
+</schema>

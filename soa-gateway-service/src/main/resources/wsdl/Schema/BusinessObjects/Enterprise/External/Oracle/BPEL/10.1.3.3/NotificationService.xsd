@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns="http://xmlns.oracle.com/ias/pcbpel/NotificationService"
+  targetNamespace="http://xmlns.oracle.com/ias/pcbpel/NotificationService"
+  elementFormDefault="qualified">
+
+  <xsd:complexType name="ContentType">
+    <xsd:sequence>
+      <xsd:element name="MimeType" default="text/plain" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="ContentBody" nillable="true" type="xsd:anyType"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="BodyPartType">
+    <xsd:sequence>
+      <xsd:element name="MimeType" default="text/plain" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="ContentBody" nillable="true" type="xsd:anyType"/>
+      <xsd:element name="BodyPartName" type="xsd:string"/>
+      <xsd:element name="Disposition" type="xsd:string" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:element name="MultiPart" type="MultiPartType"/>
+
+  <xsd:complexType name="MultiPartType">
+    <xsd:sequence>
+      <xsd:element name="BodyPart" type="BodyPartType" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="IMPayloadType">
+    <xsd:sequence>
+      <xsd:element name="To" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="Content" type="ContentType"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="FaxPayloadType">
+    <xsd:sequence>
+      <xsd:element name="To" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="Content" type="ContentType"/>
+      <xsd:element name="CoverPageName" type="xsd:string" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:element name="FaxPayload" type="FaxPayloadType"/>
+
+  <xsd:complexType name="VoicePayloadType">
+    <xsd:sequence>
+      <xsd:element name="To" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="Content" type="ContentType"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:element name="VoicePayload" type="VoicePayloadType"/>
+
+  <xsd:complexType name="SMSPayloadType">
+    <xsd:sequence>
+      <xsd:element name="From" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="To" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="Subject" type="xsd:string"/>
+      <xsd:element name="Content" type="ContentType"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:element name="SMSPayload" type="SMSPayloadType"/>
+
+  <xsd:complexType name="PagerPayloadType">
+    <xsd:sequence>
+      <xsd:element name="From" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="To" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="Content" type="ContentType"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:element name="PagerPayload" type="PagerPayloadType"/>
+
+  <xsd:complexType name="EmailPayloadType">
+    <xsd:sequence>
+      <xsd:element name="FromAccountName" minOccurs="0" type="xsd:string"/>
+      <xsd:element name="To" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="ReplyToAddress" minOccurs="0" type="xsd:string"/>
+      <xsd:element name="Subject" type="xsd:string"/>
+      <xsd:element name="Content" type="ContentType"/>
+      <xsd:element name="EmailHeaders" type="ArrayOfEmailHeaderType" minOccurs="0"/>
+      <xsd:element name="Cc" minOccurs="0" type="xsd:string"/>
+      <xsd:element name="Bcc" minOccurs="0" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:element name="EmailPayload" type="EmailPayloadType"/>
+
+  <xsd:complexType name="UserNotificationPayloadType">
+    <xsd:sequence>
+      <xsd:element name="UserId" type="xsd:string"/>
+      <xsd:element type="GenericPayloadType" name="GenericPayload"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="GroupNotificationPayloadType">
+    <xsd:sequence>
+      <xsd:element name="GroupId" type="xsd:string"/>
+      <xsd:element name="GenericPayload" type="GenericPayloadType"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="EmailHeaderType">
+    <xsd:sequence>
+      <xsd:element name="HeaderName" type="xsd:string"/>
+      <xsd:element name="HeaderValue" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="ArrayOfEmailHeaderType">
+    <xsd:sequence maxOccurs="1">
+      <xsd:element name="EmailHeader" maxOccurs="unbounded" type="EmailHeaderType"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="GenericPayloadType">
+    <xsd:sequence>
+      <xsd:element ref="FaxPayload" minOccurs="0"/>
+      <xsd:element ref="VoicePayload" minOccurs="0"/>
+      <xsd:element ref="SMSPayload" minOccurs="0"/>
+      <xsd:element ref="PagerPayload" minOccurs="0"/>
+      <xsd:element ref="EmailPayload" minOccurs="0"/>
+      <xsd:element ref="CommonPayload" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:element name="GenericPayload" type="GenericPayloadType"/>
+
+  <xsd:complexType name="ResponseType">
+    <xsd:sequence>
+      <xsd:element name="MessageId" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="ArrayOfResponseType">
+    <xsd:sequence>
+      <xsd:element name="Response" type="ResponseType" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="CommonPayloadType">
+    <xsd:sequence>
+      <xsd:element name="To" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="From" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="Subject" type="xsd:string"/>
+      <xsd:element name="Content" type="ContentType"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:element name="CommonPayload" type="CommonPayloadType"/>
+
+</xsd:schema>
+

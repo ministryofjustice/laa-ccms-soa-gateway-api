@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:header="http://legalservices.gov.uk/Enterprise/Common/1.0/Header"
+  xmlns:msg="http://legalaid.gsi.gov.uk/CCMS/Common/UserManagement/1.0/UserManagementBIM"
+  xmlns:userdata="http://legalaid.gsi.gov.uk/CCMS/Common/UserManagement/1.0/UserManagementBIO"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="http://legalaid.gsi.gov.uk/CCMS/Common/UserManagement/1.0/UserManagementBIM"
+  elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+  <xsd:import
+    namespace="http://legalaid.gsi.gov.uk/CCMS/Common/UserManagement/1.0/UserManagementBIO"
+    schemaLocation="UserManagementBIO.xsd"/>
+  <xsd:import namespace="http://legalservices.gov.uk/Enterprise/Common/1.0/Header"
+    schemaLocation="../../../../Enterprise/Common/1.0/Header.xsd"/>
+  <!--
+  ** CapGemini
+  ** SOA Object library
+  ** Version : 1.0
+
+    XML Schema
+    Name : \lsc\Schema\BusinessObjects\CCMS\Common\UserManagement\1.0\UserManagementBIM.xsd
+
+  Date          Authour           Details
+  2013-06-08    Bikash Agrawal    User Managament - Update User - CR20 and CR21
+  -->
+  <xsd:element name="UpdateUserRQ" type="msg:UpdateUserRQ"/>
+  <xsd:element name="UpdateUserRS" type="msg:UpdateUserRS"/>
+  <xsd:complexType name="UpdateUserRQ">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRQ"/>
+      <xsd:element ref="userdata:CCMSUser"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="UpdateUserRS">
+    <xsd:sequence>
+      <xsd:element ref="header:HeaderRS"/>
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>
