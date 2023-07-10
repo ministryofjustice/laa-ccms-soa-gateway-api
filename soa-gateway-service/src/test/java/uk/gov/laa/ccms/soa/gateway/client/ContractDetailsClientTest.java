@@ -18,16 +18,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.soap.client.core.SoapActionCallback;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationCntInqRQ;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationCntInqRS;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.ObjectFactory;
+import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabim.ContractDetailsInqRQ;
+import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabim.ContractDetailsInqRS;
+import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabim.ObjectFactory;
 
 @ExtendWith(MockitoExtension.class)
-public class NotificationClientTest {
+public class ContractDetailsClientTest {
 
   public static final String SERVICE_NAME = "myService";
   public static final String SERVICE_URL = "myUrl";
-
   @Mock
   Logger mockLogger;
 
@@ -35,42 +34,49 @@ public class NotificationClientTest {
   WebServiceTemplate webServiceTemplate;
 
   @Captor
-  ArgumentCaptor<JAXBElement<NotificationCntInqRQ>> requestCaptor;
+  ArgumentCaptor<JAXBElement<ContractDetailsInqRQ>> requestCaptor;
 
-  private NotificationClient client;
+  private ContractDetailsClient client;
 
   @BeforeEach
   void setup() {
-    this.client = new NotificationClient(webServiceTemplate, SERVICE_NAME, SERVICE_URL);
+    this.client = new ContractDetailsClient(webServiceTemplate, SERVICE_NAME, SERVICE_URL);
   }
 
   @Test
-  public void testGetNotificationCountBuildsCorrectRequest() {
+  public void testGetContractDetailsBuildsCorrectRequest() {
     ObjectFactory objectFactory = new ObjectFactory();
 
     when(webServiceTemplate.marshalSendAndReceive(
         eq(SERVICE_URL),
         any(JAXBElement.class),
         any(SoapActionCallback.class))).thenReturn(
-            objectFactory.createNotificationCntInqRS(new NotificationCntInqRS()));
+            objectFactory.createContractDetailsRS(new ContractDetailsInqRS()));
 
-    final String searchLoginId = "searchLogin";
+    final String searchFirmId = "searchFirmId";
+    final String searchOfficeId = "searchOfficeId";
     final String testLoginId = "testLogin";
     final String testUserType = "testType";
+    final Integer maxRecords = 50;
 
-    NotificationCntInqRS response = client.getNotificationCount(searchLoginId, testLoginId,
-        testUserType, 10);
+    ContractDetailsInqRS response = client.getContractDetails(
+        searchFirmId,
+        searchOfficeId,
+        testLoginId,
+        testUserType,
+        maxRecords);
 
     verify(webServiceTemplate).marshalSendAndReceive(
         eq(SERVICE_URL),
         requestCaptor.capture(),
         any(SoapActionCallback.class));
 
-    JAXBElement<NotificationCntInqRQ> payload = requestCaptor.getValue();
+    JAXBElement<ContractDetailsInqRQ> payload = requestCaptor.getValue();
     assertNotNull(payload.getValue().getHeaderRQ().getTimeStamp());
     assertEquals(testLoginId, payload.getValue().getHeaderRQ().getUserLoginID());
     assertEquals(testUserType, payload.getValue().getHeaderRQ().getUserRole());
-    assertEquals(searchLoginId, payload.getValue().getSearchCriteria().getUserID());
+    assertEquals(searchFirmId, payload.getValue().getSearchCriteria().getFirmID());
+    assertEquals(searchOfficeId, payload.getValue().getSearchCriteria().getOfficeID());
     assertNotNull(response);
   }
 }

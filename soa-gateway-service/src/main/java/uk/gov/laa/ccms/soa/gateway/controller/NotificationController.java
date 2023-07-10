@@ -20,11 +20,14 @@ public class NotificationController implements NotificationsApi {
            String userId,
             String soaGatewayUserLoginId,
             String soaGatewayUserRole,
-            Integer soaGatewayMaxRecords) {
+            Integer maxRecords) {
 
         try{
-            NotificationSummary notificationSummary = notificationService.getNotificationSummary(userId,
-                    soaGatewayUserLoginId, soaGatewayUserRole, soaGatewayMaxRecords);
+            NotificationSummary notificationSummary = notificationService.getNotificationSummary(
+                userId,
+                soaGatewayUserLoginId,
+                soaGatewayUserRole,
+                maxRecords);
             return ResponseEntity.ok(notificationSummary);
         } catch(Exception e){
             log.error("Notification Controller caught exception" , e);
