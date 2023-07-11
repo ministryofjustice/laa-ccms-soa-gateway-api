@@ -45,8 +45,8 @@ public class ContractDetailsMapperTest {
         assertEquals(catOfLaw, result.getContract().get(0).getCategoryofLaw());
         assertEquals(subCat, result.getContract().get(0).getSubCategory());
         assertEquals(conDevPowers, result.getContract().get(0).getContractualDevolvedPowers());
-        assertTrue(result.getContract().get(0).getCreateNewMatters());
-        assertTrue(result.getContract().get(0).getRemainderAuthorisation());
+        assertTrue(result.getContract().get(0).isCreateNewMatters());
+        assertTrue(result.getContract().get(0).isRemainderAuthorisation());
     }
 
     @Test
