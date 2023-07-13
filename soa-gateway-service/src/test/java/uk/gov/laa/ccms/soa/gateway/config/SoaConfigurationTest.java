@@ -22,18 +22,14 @@ public class SoaConfigurationTest {
     @Test
     public void testWebServiceTemplate() {
         // Create mock values for the properties
-        String url = "https://example.com/notification";
         String username = "testuser";
         String password = "testpassword";
 
         // Create a new instance of SoaConfiguration
-        SoaConfiguration soaConfiguration = new SoaConfiguration(url, username, password);
+        SoaConfiguration soaConfiguration = new SoaConfiguration(username, password);
 
         // Call the webServiceTemplate method
         WebServiceTemplate result = soaConfiguration.webServiceTemplate(marshaller);
-
-        // Verify that the default URI is set correctly
-        assertEquals(url, result.getDefaultUri());
 
         // Verify that the marshaller and unmarshaller are set correctly
         assertEquals(marshaller, result.getMarshaller());
@@ -43,7 +39,7 @@ public class SoaConfigurationTest {
     @Test
     public void testMarshaller() {
         // Create a new instance of SoaConfiguration
-        SoaConfiguration soaConfiguration = new SoaConfiguration("https://example.com/notification", "testuser", "testpassword");
+        SoaConfiguration soaConfiguration = new SoaConfiguration("testuser", "testpassword");
 
         // Call the marshaller() method
         Jaxb2Marshaller result = soaConfiguration.marshaller();
