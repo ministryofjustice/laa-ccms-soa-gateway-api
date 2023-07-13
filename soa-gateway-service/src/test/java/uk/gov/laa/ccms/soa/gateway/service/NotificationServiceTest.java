@@ -5,7 +5,6 @@ import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.math.BigInteger;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -50,10 +49,10 @@ public class NotificationServiceTest {
         String searchLoginId = "searchLoginId";
         String soaGatewayUserLoginId = "soaGatewayUserLoginId";
         String soaGatewayUserRole = "soaGatewayUserRole";
-        BigInteger soaGatewayMaxRecords = BigInteger.TEN;
+        Integer maxRecords = 10;
 
         // Stub the NotificationClient to return the mocked response
-        when(notificationClient.getNotificationCount(searchLoginId, soaGatewayUserLoginId, soaGatewayUserRole, soaGatewayMaxRecords))
+        when(notificationClient.getNotificationCount(searchLoginId, soaGatewayUserLoginId, soaGatewayUserRole, maxRecords))
                 .thenReturn(response);
 
         // Stub the NotificationMapper to return the mocked summary
@@ -65,7 +64,7 @@ public class NotificationServiceTest {
             searchLoginId,
             soaGatewayUserLoginId,
             soaGatewayUserRole,
-            soaGatewayMaxRecords.intValue()
+            maxRecords
         );
 
         // Verify that the NotificationClient method was called with the expected arguments
@@ -73,7 +72,7 @@ public class NotificationServiceTest {
             searchLoginId,
             soaGatewayUserLoginId,
             soaGatewayUserRole,
-            soaGatewayMaxRecords
+            maxRecords
         );
 
         // Verify that the map function in the NotificationMapper was called with the mocked response

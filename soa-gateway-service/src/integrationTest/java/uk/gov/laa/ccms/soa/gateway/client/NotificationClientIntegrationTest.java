@@ -7,7 +7,6 @@ import static org.springframework.ws.test.client.RequestMatchers.xpath;
 import static org.springframework.ws.test.client.ResponseCreators.withError;
 import static org.springframework.ws.test.client.ResponseCreators.withPayload;
 
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,9 +31,6 @@ public class NotificationClientIntegrationTest {
   private NotificationClient client;
 
   private static MockWebServiceServer mockServer;
-
-  @Value("classpath:/payload/NotificationCntInqRQ_valid.xml")
-  Resource notificationCntInqRQ_valid;
 
   @Value("classpath:/payload/NotificationCntInqRS_valid.xml")
   Resource notificationCntInqRS_valid;
@@ -68,7 +64,7 @@ public class NotificationClientIntegrationTest {
         .andRespond(withPayload(notificationCntInqRS_valid));
 
     NotificationCntInqRS response = client.getNotificationCount(searchLoginId, testLoginId, testUserType,
-        BigInteger.TEN);
+        10);
 
     assertNotNull(response.getNotificationCntLists());
     assertEquals("10", response.getNotificationCntLists().getNotificationsCnt().get(0).getNotificationCount());
@@ -79,7 +75,7 @@ public class NotificationClientIntegrationTest {
   }
 
   @Test
-  public void testGetNotificationCount_HandlesError() throws Exception {
+  public void testGetNotificationCount_HandlesError() {
     final String searchLoginId = "searchLogin";
     final String testLoginId = "testLogin";
     final String testUserType = "testType";
@@ -93,7 +89,7 @@ public class NotificationClientIntegrationTest {
         .andRespond(withError("Failed to call soap service"));
 
     assertThrows(RuntimeException.class, () -> client.getNotificationCount(searchLoginId, testLoginId, testUserType,
-        BigInteger.TEN));
+        10));
 
     mockServer.verify();
   }

@@ -14,12 +14,9 @@ import org.springframework.ws.soap.security.wss4j2.Wss4jSecurityInterceptor;
 public class SoaConfiguration {
     private final String username;
     private final String password;
-    private final String url;
 
-    public SoaConfiguration(@Value("${laa.ccms.soa-gateway.notification.url}")String url,
-                                     @Value("${laa.ccms.soa-gateway.username}")String username,
-                                     @Value("${laa.ccms.soa-gateway.password}")String password){
-        this.url = url;
+    public SoaConfiguration(@Value("${laa.ccms.soa-gateway.username}")String username,
+                            @Value("${laa.ccms.soa-gateway.password}")String password){
         this.username = username;
         this.password = password;
     }
@@ -34,7 +31,6 @@ public class SoaConfiguration {
     @Bean
     public WebServiceTemplate webServiceTemplate(Jaxb2Marshaller marshaller) {
         WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
-        webServiceTemplate.setDefaultUri(this.url);
         webServiceTemplate.setMarshaller(marshaller);
         webServiceTemplate.setUnmarshaller(marshaller);
         webServiceTemplate.setInterceptors(new ClientInterceptor[]{ securityInterceptor() });
@@ -50,5 +46,4 @@ public class SoaConfiguration {
         security.setSecurementPassword(this.password);
         return security;
     }
-
 }

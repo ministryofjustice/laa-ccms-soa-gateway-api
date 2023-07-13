@@ -53,7 +53,8 @@ openApiGenerate {
             useTags               : "true",
             skipDefaultInterface  : "true",
             useJakartaEe          : "true",
-            documentationProvider : "none"
+            documentationProvider : "none",
+            booleanGetterPrefix   : "is"
     ]
 }
 

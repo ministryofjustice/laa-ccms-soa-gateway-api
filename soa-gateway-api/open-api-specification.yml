@@ -16,24 +16,10 @@ paths:
           schema:
             type: 'string'
             example: 'abc123'
-        - name: 'SoaGateway-User-Login-Id'
-          in: 'header'
-          required: true
-          schema:
-            type: 'string'
-            example: 'MARILYN@DESORANDCO.CO.UK'
-        - name: 'SoaGateway-User-Role'
-          in: 'header'
-          required: true
-          schema:
-            type: 'string'
-            example: 'EXTERNAL'
-        - name: 'SoaGateway-Max-Records'
-          in: 'header'
-          required: false
-          schema:
-            type: 'integer'
-            default: 100
+        - $ref: '#/components/parameters/soaGatewayUserLoginId'
+        - $ref: '#/components/parameters/soaGatewayUserRole'
+        - $ref: '#/components/parameters/maxRecords'
+
       responses:
         '200':
           description: 'Successful operation'
@@ -49,8 +35,68 @@ paths:
           description: 'Not found'
         '500':
           description: 'Internal server error'
+  /contract-details:
+    get:
+      tags:
+        - contract-details
+      summary: 'Get Contract Details'
+      operationId: 'getContractDetails'
+      parameters:
+        - name: 'providerFirmId'
+          in: 'query'
+          required: true
+          schema:
+            type: 'integer'
+            example: '1234'
+        - name: 'officeId'
+          in: 'query'
+          required: true
+          schema:
+            type: 'integer'
+            example: '1234'
+        - $ref: '#/components/parameters/soaGatewayUserLoginId'
+        - $ref: '#/components/parameters/soaGatewayUserRole'
+        - $ref: '#/components/parameters/maxRecords'
+      responses:
+        '200':
+          description: 'Successful operation'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/contractDetails"
+        '400':
+          description: 'Bad request'
+        '401':
+          description: 'Unauthorized'
+        '404':
+          description: 'Not found'
+        '500':
+          description: 'Internal server error'
 
 components:
+  parameters:
+    maxRecords:
+      in: query
+      name: 'maxRecords'
+      required: false
+      schema:
+        type: 'integer'
+        default: 100
+      example: 12345
+    soaGatewayUserLoginId:
+      in: header
+      name: 'SoaGateway-User-Login-Id'
+      required: true
+      schema:
+        type: 'string'
+      example: 'MARILYN@DESORANDCO.CO.UK'
+    soaGatewayUserRole:
+      in: header
+      name: 'SoaGateway-User-Role'
+      required: true
+      schema:
+        type: 'string'
+      example: 'EXTERNAL'
   schemas:
     notificationSummary:
       type: 'object'
@@ -61,3 +107,25 @@ components:
           type: 'integer'
         overdue_actions:
           type: 'integer'
+    contractDetails:
+      type: 'object'
+      properties:
+        contracts:
+          type: 'array'
+          items:
+            $ref: '#/components/schemas/contractDetail'
+    contractDetail:
+      type: 'object'
+      properties:
+        categoryofLaw:
+          type: 'string'
+        subCategory:
+          type: 'string'
+        authorisationType:
+          type: 'string'
+        createNewMatters:
+          type: 'boolean'
+        contractualDevolvedPowers:
+          type: 'string'
+        remainderAuthorisation:
+          type: 'boolean'
