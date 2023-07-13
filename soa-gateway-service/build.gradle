@@ -1,6 +1,6 @@
 plugins {
     id 'org.springframework.boot' version '3.1.0'
-    id 'uk.co.boothen.gradle.wsimport' version '0.19'
+    id 'uk.co.boothen.gradle.wsimport' version '0.21'
     id 'jacoco'
 }
 
