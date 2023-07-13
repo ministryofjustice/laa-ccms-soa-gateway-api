@@ -54,7 +54,7 @@ class ContractDetailsControllerTest {
         String subCat = "subCat";
         String conDevPowers = "conDevPowers";
         ContractDetails contractDetails = new ContractDetails();
-        contractDetails.addContractItem(
+        contractDetails.addContractsItem(
             new uk.gov.laa.ccms.soa.gateway.model.ContractDetail()
                 .authorisationType(authType)
                 .categoryofLaw(catOfLaw)

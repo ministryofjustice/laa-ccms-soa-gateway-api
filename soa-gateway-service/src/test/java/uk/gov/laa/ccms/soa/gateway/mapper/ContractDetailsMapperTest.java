@@ -40,13 +40,13 @@ public class ContractDetailsMapperTest {
         ContractDetails result = contractDetailsMapper.toContractDetails(response);
 
         assertNotNull(result);
-        assertEquals(1, result.getContract().size());
-        assertEquals(authType, result.getContract().get(0).getAuthorisationType());
-        assertEquals(catOfLaw, result.getContract().get(0).getCategoryofLaw());
-        assertEquals(subCat, result.getContract().get(0).getSubCategory());
-        assertEquals(conDevPowers, result.getContract().get(0).getContractualDevolvedPowers());
-        assertTrue(result.getContract().get(0).isCreateNewMatters());
-        assertTrue(result.getContract().get(0).isRemainderAuthorisation());
+        assertEquals(1, result.getContracts().size());
+        assertEquals(authType, result.getContracts().get(0).getAuthorisationType());
+        assertEquals(catOfLaw, result.getContracts().get(0).getCategoryofLaw());
+        assertEquals(subCat, result.getContracts().get(0).getSubCategory());
+        assertEquals(conDevPowers, result.getContracts().get(0).getContractualDevolvedPowers());
+        assertTrue(result.getContracts().get(0).isCreateNewMatters());
+        assertTrue(result.getContracts().get(0).isRemainderAuthorisation());
     }
 
     @Test

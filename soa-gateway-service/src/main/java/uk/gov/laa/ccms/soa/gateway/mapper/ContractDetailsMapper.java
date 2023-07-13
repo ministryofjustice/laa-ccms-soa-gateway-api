@@ -7,6 +7,6 @@ import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabim.Cont
 
 @Mapper(componentModel = "spring")
 public interface ContractDetailsMapper {
-  @Mapping(target = "contract", source = "contractDetails.contractDetail")
+  @Mapping(target = "contracts", source = "contractDetails.contractDetail")
   ContractDetails toContractDetails(ContractDetailsInqRS contractDetailsInqRS);
 }

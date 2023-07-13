@@ -110,7 +110,7 @@ components:
     contractDetails:
       type: 'object'
       properties:
-        contract:
+        contracts:
           type: 'array'
           items:
             $ref: '#/components/schemas/contractDetail'

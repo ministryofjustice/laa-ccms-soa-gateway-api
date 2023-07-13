@@ -52,7 +52,7 @@ public class ContractDetailsServiceTest {
 
         // Create a mocked instance of gateway response
         ContractDetails contractDetails = new ContractDetails();
-        contractDetails.addContractItem(
+        contractDetails.addContractsItem(
             new ContractDetail()
                 .authorisationType(authType)
                 .categoryofLaw(catOfLaw)
