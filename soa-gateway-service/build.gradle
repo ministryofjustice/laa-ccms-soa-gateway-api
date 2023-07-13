@@ -34,7 +34,7 @@ dependencies {
     implementation "org.mapstruct:mapstruct:1.4.2.Final"
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
-    annotationProcessor "org.mapstruct:mapstruct-processor:1.4.2.Final"
+    annotationProcessor "org.mapstruct:mapstruct-processor:1.5.5.Final"
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.ws:spring-ws-test'
