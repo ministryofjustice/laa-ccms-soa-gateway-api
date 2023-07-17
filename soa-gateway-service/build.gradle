@@ -26,7 +26,7 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
-    implementation 'org.springframework.boot:spring-boot-starter-validation:2.4.0'
+    implementation 'org.springframework.boot:spring-boot-starter-validation:3.1.1'
 
     implementation 'org.springframework.ws:spring-ws-security'
     implementation 'org.modelmapper:modelmapper:3.1.1'
