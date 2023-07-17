@@ -58,6 +58,11 @@ wsimport {
         xjcarg("-XautoNameResolution")
         wsdlLocation = 'classpath:wsdl/Schema/BusinessServices/CCMS/Common/GetContractDetails.wsdl'
     }
+
+    wsdl('/Schema/BusinessServices/CCMS/ClientManagement/ClientServices.wsdl') {
+        xjcarg("-XautoNameResolution")
+        wsdlLocation = 'classpath:wsdl/Schema/BusinessServices/CCMS/ClientManagement/ClientServices.wsdl'
+    }
 }
 
 test {

@@ -9,3 +9,6 @@ laa:
       contract-details:
         service-name: http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/GetReferenceData
         service-url: http://localhost:8051/soa-infra/services/default/GetReferenceData/ContractDetailsService_ep
+      client:
+        service-name: http://legalservices.gov.uk/CCMS/ClientManagement/Client/1.0/ClientServices
+        service-url: http://localhost:8051/soa-infra/services/default/ClientServices/ClientServices_ep
