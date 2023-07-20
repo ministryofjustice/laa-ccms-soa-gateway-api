@@ -72,7 +72,67 @@ paths:
           description: 'Not found'
         '500':
           description: 'Internal server error'
-
+  /clients:
+    get:
+      tags:
+        - clients
+      summary: 'Get Clients'
+      operationId: 'getClients'
+      parameters:
+        - name: 'first-name'
+          in: 'query'
+          schema:
+            type: 'string'
+            example: 'john'
+        - name: 'surname'
+          in: 'query'
+          schema:
+            type: 'string'
+            example: 'smith'
+        - name: 'date-of-birth'
+          in: 'query'
+          schema:
+            type: 'string'
+            example: "2017-01-01"
+            format: date
+        - name: 'gender'
+          in: 'query'
+          schema:
+            type: 'string'
+            example: 'Male'
+        - name: 'client-reference-number'
+          in: 'query'
+          schema:
+            type: 'string'
+            example: '1234567890'
+        - name: 'home-office-reference'
+          in: 'query'
+          schema:
+            type: 'string'
+            example: '1234567890'
+        - name: 'national-insurance-number'
+          in: 'query'
+          schema:
+            type: 'string'
+            example: 'AB123456C'
+        - $ref: '#/components/parameters/soaGatewayUserLoginId'
+        - $ref: '#/components/parameters/soaGatewayUserRole'
+        - $ref: '#/components/parameters/maxRecords'
+      responses:
+        '200':
+          description: 'Successful operation'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/clientDetails"
+        '400':
+          description: 'Bad request'
+        '401':
+          description: 'Unauthorized'
+        '404':
+          description: 'Not found'
+        '500':
+          description: 'Internal server error'
 components:
   parameters:
     maxRecords:
@@ -129,3 +189,34 @@ components:
           type: 'string'
         remainderAuthorisation:
           type: 'boolean'
+    clientDetails:
+      type: 'object'
+      properties:
+        clients:
+          type: 'array'
+          items:
+            $ref: '#/components/schemas/clientDetail'
+    clientDetail:
+      type: 'object'
+      properties:
+        first_name:
+          type: 'string'
+        surname:
+          type: 'string'
+        surname_at_birth:
+          type: 'string'
+        full_name:
+          type: 'string'
+        date_of_birth:
+          type: 'string'
+          format: 'date'
+        gender:
+          type: 'string'
+        postal_code:
+          type: 'string'
+        client_reference_number:
+          type: 'string'
+        home_office_reference:
+          type: 'string'
+        national_insurance_number:
+          type: 'string'
