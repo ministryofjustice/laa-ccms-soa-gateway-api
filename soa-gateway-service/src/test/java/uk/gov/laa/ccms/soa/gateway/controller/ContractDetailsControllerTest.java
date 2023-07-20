@@ -63,7 +63,6 @@ class ContractDetailsControllerTest {
                 .remainderAuthorisation(true)
                 .createNewMatters(true));
 
-        // Mock the notificationService to return the mock notification summary
         when(contractDetailsService.getContractDetails(
             providerFirmId,
             officeId,
@@ -72,7 +71,6 @@ class ContractDetailsControllerTest {
             maxRecords))
                 .thenReturn(contractDetails);
 
-        // Call the getUserNotificationSummary method
         mockMvc.perform(
             get("/contract-details?providerFirmId={providerFirmId}&officeId={officeId}&maxRecords={maxRecords}",
                 providerFirmId,
@@ -82,7 +80,6 @@ class ContractDetailsControllerTest {
                 .header("SoaGateway-User-Role", soaGatewayUserRole))
                 .andExpect(status().isOk());
 
-        // Verify that the notificationService method was called with the correct parameters
         verify(contractDetailsService).getContractDetails(providerFirmId,
             officeId, soaGatewayUserLoginId, soaGatewayUserRole, maxRecords);
     }
