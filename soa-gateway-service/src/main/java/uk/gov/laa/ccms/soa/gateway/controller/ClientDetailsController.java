@@ -1,9 +1,11 @@
 package uk.gov.laa.ccms.soa.gateway.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,14 +34,15 @@ public class ClientDetailsController implements ClientsApi{
                                                     String caseReferenceNumber,
                                                     String homeOfficeReference,
                                                     String nationalInsuranceNumber,
-                                                    Integer maxRecords) {
+                                                    Integer maxRecords,
+                                                    Pageable pageable) {
         try{
             ClientDetail clientDetail = new ClientDetail()
                     .firstName(firstName)
                     .surname(surname)
                     .dateOfBirth(dateOfBirth)
                     .gender(gender)
-                    .clientReferenceNumber(caseReferenceNumber)
+                    .caseReferenceNumber(caseReferenceNumber)
                     .homeOfficeReference(homeOfficeReference)
                     .nationalInsuranceNumber(nationalInsuranceNumber);
 
@@ -49,7 +52,8 @@ public class ClientDetailsController implements ClientsApi{
                     soaGatewayUserLoginId,
                     soaGatewayUserRole,
                     maxRecords,
-                    clientDetail);
+                    clientDetail,
+                    pageable);
 
             return ResponseEntity.ok(clientDetails);
         } catch(Exception e){
