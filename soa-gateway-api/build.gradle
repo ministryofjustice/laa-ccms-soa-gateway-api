@@ -54,7 +54,8 @@ openApiGenerate {
             skipDefaultInterface  : "true",
             useJakartaEe          : "true",
             documentationProvider : "none",
-            booleanGetterPrefix   : "is"
+            booleanGetterPrefix   : "is",
+            serializableModel     : "true"
     ]
 }
 
