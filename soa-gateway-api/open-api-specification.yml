@@ -78,6 +78,7 @@ paths:
         - clients
       summary: 'Get Clients'
       operationId: 'getClients'
+      x-spring-paginated: true
       parameters:
         - name: 'first-name'
           in: 'query'
@@ -100,7 +101,7 @@ paths:
           schema:
             type: 'string'
             example: 'Male'
-        - name: 'client-reference-number'
+        - name: 'case-reference-number'
           in: 'query'
           schema:
             type: 'string'
@@ -190,12 +191,14 @@ components:
         remainderAuthorisation:
           type: 'boolean'
     clientDetails:
+      allOf:
+        - $ref: "#/components/schemas/page"
       type: 'object'
       properties:
-        clients:
+        content:
           type: 'array'
           items:
-            $ref: '#/components/schemas/clientDetail'
+            $ref: "#/components/schemas/clientDetail"
     clientDetail:
       type: 'object'
       properties:
@@ -214,9 +217,20 @@ components:
           type: 'string'
         postal_code:
           type: 'string'
-        client_reference_number:
+        case_reference_number:
           type: 'string'
         home_office_reference:
           type: 'string'
         national_insurance_number:
           type: 'string'
+    page:
+      type: 'object'
+      properties:
+        total_pages:
+          type: 'integer'
+        total_elements:
+          type: 'integer'
+        number:
+          type: 'integer'
+        size:
+          type: 'integer'

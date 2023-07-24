@@ -7,6 +7,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -39,23 +41,29 @@ public class ClientDetailsControllerTest {
     private String firstName;
     private String surname;
     private String gender;
-    private String clientReferenceNumber;
+    private String caseReferenceNumber;
     private String homeOfficeReference;
     private String nationalInsuranceNumber;
     private Integer maxRecords;
 
+    private Pageable pageable;
+
     @BeforeEach
     public void setup() {
-        this.mockMvc = MockMvcBuilders.standaloneSetup(clientDetailsController).build();
+        this.mockMvc = MockMvcBuilders.standaloneSetup(clientDetailsController)
+                .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
+                .build();
+
         this.soaGatewayUserLoginId = "user";
         this.soaGatewayUserRole = "EXTERNAL";
         this.firstName = "John";
         this.surname = "Doe";
         this.gender = "Male";
-        this.clientReferenceNumber = "1234567890";
+        this.caseReferenceNumber = "1234567890";
         this.homeOfficeReference = "ABC123";
         this.nationalInsuranceNumber = "AB123456C";
         this.maxRecords = 50;
+        this.pageable = Pageable.ofSize(20);
     }
 
 
@@ -71,20 +79,21 @@ public class ClientDetailsControllerTest {
                 soaGatewayUserLoginId,
                 soaGatewayUserRole,
                 maxRecords,
-                clientDetail))
+                clientDetail,
+                pageable))
                 .thenReturn(clientDetails);
 
         mockMvc.perform(
                         get("/clients?first-name={firstName}&surname={surname}&maxRecords={maxRecords}" +
                                         "&gender={gender}"+
-                                        "&client-reference-number={clientReferenceNumber}" +
+                                        "&case-reference-number={caseReferenceNumber}" +
                                         "&home-office-reference={homeOfficeReference}" +
                                         "&national-insurance-number={nationalInsuranceNumber}",
                                 firstName,
                                 surname,
                                 maxRecords,
                                 gender,
-                                clientReferenceNumber,
+                                caseReferenceNumber,
                                 homeOfficeReference,
                                 nationalInsuranceNumber)
                                 .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
@@ -92,7 +101,7 @@ public class ClientDetailsControllerTest {
                 .andExpect(status().isOk());
 
         verify(clientDetailsService).getClientDetails(soaGatewayUserLoginId,
-                soaGatewayUserRole, maxRecords, clientDetail);
+                soaGatewayUserRole, maxRecords, clientDetail, pageable);
     }
 
     @Test
@@ -104,20 +113,21 @@ public class ClientDetailsControllerTest {
                 soaGatewayUserLoginId,
                 soaGatewayUserRole,
                 maxRecords,
-                new ClientDetail()))
+                new ClientDetail(),
+                pageable))
                 .thenThrow(new WebServiceIOException("Test exception"));
 
         mockMvc.perform(
                         get("/clients?first-name={firstName}&surname={surname}&maxRecords={maxRecords}" +
                                         "&gender={gender}"+
-                                        "&client-reference-number={clientReferenceNumber}" +
+                                        "&case-reference-number={caseReferenceNumber}" +
                                         "&home-office-reference={homeOfficeReference}" +
                                         "&national-insurance-number={nationalInsuranceNumber}",
                                 firstName,
                                 surname,
                                 maxRecords,
                                 gender,
-                                clientReferenceNumber,
+                                caseReferenceNumber,
                                 homeOfficeReference,
                                 nationalInsuranceNumber)
                                 .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
@@ -125,7 +135,7 @@ public class ClientDetailsControllerTest {
                 .andExpect(status().isInternalServerError());
 
         verify(clientDetailsService).getClientDetails(soaGatewayUserLoginId,
-                soaGatewayUserRole, maxRecords, clientDetail);
+                soaGatewayUserRole, maxRecords, clientDetail, pageable);
     }
 
     private ClientDetail buildClientDetail(){
@@ -133,7 +143,7 @@ public class ClientDetailsControllerTest {
                 .firstName(firstName)
                 .surname(surname)
                 .gender(gender)
-                .clientReferenceNumber(clientReferenceNumber)
+                .caseReferenceNumber(caseReferenceNumber)
                 .homeOfficeReference(homeOfficeReference)
                 .nationalInsuranceNumber(nationalInsuranceNumber);
     }
