@@ -1,20 +1,15 @@
 package uk.gov.laa.ccms.soa.gateway.controller;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.laa.ccms.soa.gateway.api.ClientsApi;
-import uk.gov.laa.ccms.soa.gateway.model.ClientDetails;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetail;
+import uk.gov.laa.ccms.soa.gateway.model.ClientDetails;
+import uk.gov.laa.ccms.soa.gateway.model.ClientSummary;
 import uk.gov.laa.ccms.soa.gateway.service.ClientDetailsService;
-import uk.gov.laa.ccms.soa.gateway.util.DateUtil;
 
 import java.util.Date;
 
@@ -24,6 +19,29 @@ import java.util.Date;
 public class ClientDetailsController implements ClientsApi{
 
     private final ClientDetailsService clientDetailsService;
+
+
+    @Override
+    public ResponseEntity<ClientDetail> getClient(String clientReferenceNumber,
+                                                  String soaGatewayUserLoginId,
+                                                  String soaGatewayUserRole,
+                                                  Integer maxRecords) {
+        log.info("GET /clients/{}", clientReferenceNumber);
+        try{
+
+            ClientDetail clientDetail = clientDetailsService.getClientDetail(
+                    soaGatewayUserLoginId,
+                    soaGatewayUserRole,
+                    maxRecords,
+                    clientReferenceNumber);
+
+            return ResponseEntity.ok(clientDetail);
+        } catch(Exception e){
+            log.error("ClientDetailsController caught exception" , e);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
     @Override
     public ResponseEntity<ClientDetails> getClients(String soaGatewayUserLoginId,
                                                     String soaGatewayUserRole,
@@ -36,8 +54,9 @@ public class ClientDetailsController implements ClientsApi{
                                                     String nationalInsuranceNumber,
                                                     Integer maxRecords,
                                                     Pageable pageable) {
+        log.info("GET /clients");
         try{
-            ClientDetail clientDetail = new ClientDetail()
+            ClientSummary clientSummary= new ClientSummary()
                     .firstName(firstName)
                     .surname(surname)
                     .dateOfBirth(dateOfBirth)
@@ -46,13 +65,13 @@ public class ClientDetailsController implements ClientsApi{
                     .homeOfficeReference(homeOfficeReference)
                     .nationalInsuranceNumber(nationalInsuranceNumber);
 
-            log.info("clientDetail: " + clientDetail.toString());
+            log.info("clientSummary: " + clientSummary.toString());
 
             ClientDetails clientDetails = clientDetailsService.getClientDetails(
                     soaGatewayUserLoginId,
                     soaGatewayUserRole,
                     maxRecords,
-                    clientDetail,
+                    clientSummary,
                     pageable);
 
             return ResponseEntity.ok(clientDetails);

@@ -1,8 +1,6 @@
 package uk.gov.laa.ccms.soa.gateway.client;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.ws.test.client.RequestMatchers.xpath;
 import static org.springframework.ws.test.client.ResponseCreators.withError;
 import static org.springframework.ws.test.client.ResponseCreators.withPayload;
@@ -35,6 +33,9 @@ public class ClientServicesClientIntegrationTest {
 
     @Value("classpath:/payload/ClientInqRS_valid.xml")
     Resource clientInqRS_valid;
+
+    @Value("classpath:/payload/ClientInqRS_valid_one.xml")
+    Resource clientInqRS_valid_one;
 
     private static final String HEADER_NS = "http://legalservices.gov.uk/Enterprise/Common/1.0/Header";
     private static final String MSG_NS = "http://legalservices.gov.uk/CCMS/ClientManagement/Client/1.0/ClientBIM";
@@ -96,6 +97,49 @@ public class ClientServicesClientIntegrationTest {
 
         assertThrows(RuntimeException.class, () -> client.getClientDetails(
                 testLoginId, testUserType, maxRecords, clientInfo));
+
+        mockServer.verify();
+    }
+
+    @Test
+    public void testGetClientDetail_ReturnsData() throws Exception {
+        String clientReferenceNumber = "12345";
+
+        mockServer.expect(xpath("/msg:ClientInqRQ/header:HeaderRQ/header:TransactionRequestID", namespaces).exists())
+                .andExpect(xpath("/msg:ClientInqRQ/header:HeaderRQ/header:UserLoginID", namespaces).evaluatesTo(testLoginId))
+                .andExpect(xpath("/msg:ClientInqRQ/header:HeaderRQ/header:UserRole", namespaces).evaluatesTo(testUserType))
+                .andExpect(xpath("/msg:ClientInqRQ/msg:SearchCriteria/msg:ClientReferenceNumber", namespaces).evaluatesTo(clientReferenceNumber))
+                .andRespond(withPayload(clientInqRS_valid_one));
+
+        ClientInqRS response = client.getClientDetail(testLoginId, testUserType, maxRecords, clientReferenceNumber);
+
+        assertNotNull(response);
+        assertNotNull(response.getHeaderRS());
+        assertNotNull(response.getHeaderRS().getRequestDetails());
+
+        assertNotNull(response.getRecordCount());
+
+        assertNotNull(response.getClient());
+        assertEquals("9428827", response.getClient().getClientReferenceNumber());
+
+        assertNotNull(response.getClient().getDetails());
+        assertNotNull(response.getClient().getDetails().getName());
+        assertEquals("MRS.", response.getClient().getDetails().getName().getTitle());
+        assertEquals("Mcgettigan", response.getClient().getDetails().getName().getSurname());
+        assertEquals("Vivienne", response.getClient().getDetails().getName().getFirstName());
+
+        mockServer.verify();
+    }
+
+    @Test
+    public void testGetClientDetail_HandlesError() {
+        String clientReferenceNumber = "12345";
+
+        mockServer.expect(xpath("/msg:ClientInqRQ/header:HeaderRQ/header:TransactionRequestID", namespaces).exists())
+                .andRespond(withError("Failed to call soap service"));
+
+        assertThrows(RuntimeException.class, () -> client.getClientDetail(
+                testLoginId, testUserType, maxRecords, clientReferenceNumber));
 
         mockServer.verify();
     }
