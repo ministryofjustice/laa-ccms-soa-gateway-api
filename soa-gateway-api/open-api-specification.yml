@@ -134,6 +134,37 @@ paths:
           description: 'Not found'
         '500':
           description: 'Internal server error'
+  /clients/{client-reference-number}:
+    get:
+      tags:
+        - clients
+      summary: 'Get Client'
+      operationId: 'getClient'
+      parameters:
+        - name: 'client-reference-number'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
+            example: 'abc123'
+        - $ref: '#/components/parameters/soaGatewayUserLoginId'
+        - $ref: '#/components/parameters/soaGatewayUserRole'
+        - $ref: '#/components/parameters/maxRecords'
+      responses:
+        '200':
+          description: 'Successful operation'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/clientDetail"
+        '400':
+          description: 'Bad request'
+        '401':
+          description: 'Unauthorized'
+        '404':
+          description: 'Not found'
+        '500':
+          description: 'Internal server error'
 components:
   parameters:
     maxRecords:
@@ -198,8 +229,8 @@ components:
         content:
           type: 'array'
           items:
-            $ref: "#/components/schemas/clientDetail"
-    clientDetail:
+            $ref: "#/components/schemas/clientSummary"
+    clientSummary:
       type: 'object'
       properties:
         first_name:
@@ -223,6 +254,145 @@ components:
           type: 'string'
         national_insurance_number:
           type: 'string'
+    clientNameDetail:
+      type: 'object'
+      properties:
+        title:
+          type: 'string'
+        surname:
+          type: 'string'
+        first_name:
+          type: 'string'
+        middle_name:
+          type: 'string'
+        surname_at_birth:
+          type: 'string'
+        full_name:
+          type: 'string'
+    clientPersonalDetail:
+      type: 'object'
+      properties:
+        date_of_birth:
+          type: 'string'
+          format: date
+        date_of_death:
+          type: 'string'
+          format: date
+        gender:
+          type: 'string'
+        marital_status:
+          type: 'string'
+        national_insurance_number:
+          type: 'string'
+        home_office_number:
+          type: 'string'
+        vulnerable_client:
+          type: 'string'
+        high_profile_client:
+          type: 'string'
+        vexatious_litigant:
+          type: 'string'
+        country_of_origin:
+          type: 'string'
+        mental_capacity_ind:
+          type: 'string'
+    clientContactDetail:
+      type: 'object'
+      properties:
+        telephone_home:
+          type: 'string'
+        telephone_work:
+          type: 'string'
+        mobile_number:
+          type: 'string'
+        email_address:
+          type: 'string'
+        password:
+          type: 'string'
+        password_reminder:
+          type: 'string'
+        correspondence_method:
+          type: 'string'
+        correspondence_language:
+          type: 'string'
+    clientAddressDetail:
+      type: 'object'
+      properties:
+        address_id:
+          type: 'string'
+        house:
+          type: 'string'
+        coff_name:
+          type: 'string'
+        address_line1:
+          type: 'string'
+        address_line2:
+          type: 'string'
+        address_line3:
+          type: 'string'
+        address_line4:
+          type: 'string'
+        city:
+          type: 'string'
+        country:
+          type: 'string'
+        county:
+          type: 'string'
+        province:
+          type: 'string'
+        postal_code:
+          type: 'string'
+    clientUserDetail:
+      type: object
+      properties:
+        user_login_id:
+          type: string
+        user_name:
+          type: string
+        user_type:
+          type: string
+    clientDetail:
+      type: 'object'
+      properties:
+        client_reference_number:
+          type: 'string'
+        details:
+          type: 'object'
+          properties:
+            name:
+              $ref: '#/components/schemas/clientNameDetail'
+            personal_information:
+              $ref: '#/components/schemas/clientPersonalDetail'
+            contacts:
+              $ref: '#/components/schemas/clientContactDetail'
+            disability_monitoring:
+              type: 'object'
+              properties:
+                disability_type:
+                  type: 'array'
+                  items:
+                    type: 'string'
+            no_fixed_abode:
+              type: 'string'
+            address:
+              $ref: '#/components/schemas/clientAddressDetail'
+            ethnic_monitoring:
+              type: 'string'
+            special_considerations:
+              type: 'string'
+        record_history:
+          type: 'object'
+          properties:
+            created_by:
+              $ref: '#/components/schemas/clientUserDetail'
+            date_created:
+              type: 'string'
+              format: date-time
+            last_updated_by:
+              $ref: '#/components/schemas/clientUserDetail'
+            date_last_updated:
+              type: 'string'
+              format: date-time
     page:
       type: 'object'
       properties:
