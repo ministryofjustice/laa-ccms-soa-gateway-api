@@ -1,0 +1,78 @@
+<ClientInqRS xmlns:msg="http://legalservices.gov.uk/CCMS/ClientManagement/Client/1.0/ClientBIM" xmlns:ns3="http://legalservices.gov.uk/CCMS/ClientManagement/Client/1.0/ClientBIO"
+             xmlns="http://legalservices.gov.uk/CCMS/ClientManagement/Client/1.0/ClientBIM" xmlns:ns2="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">
+    <header:HeaderRS xmlns:header="http://legalservices.gov.uk/Enterprise/Common/1.0/Header">
+        <header:TransactionID>202307181445172120046953692</header:TransactionID>
+        <header:RequestDetails>
+            <header:TransactionRequestID>202307181445172120046953692</header:TransactionRequestID>
+            <header:Language>ENG</header:Language>
+            <header:UserLoginID>PENNY.WALL@SWITALSKIS.COM</header:UserLoginID>
+            <header:UserRole>EXTERNAL</header:UserRole>
+        </header:RequestDetails>
+        <header:Status>
+            <header:Status>Success</header:Status>
+            <header:StatusFreeText>End of Get Party details process.</header:StatusFreeText>
+        </header:Status>
+    </header:HeaderRS>
+    <msg:RecordCount>
+        <common:MaxRecordsToFetch xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">200</common:MaxRecordsToFetch>
+        <common:RecordsFetched xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">1</common:RecordsFetched>
+        <common:RetriveDataOnMaxCount xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">false</common:RetriveDataOnMaxCount>
+    </msg:RecordCount>
+    <msg:Client>
+        <ns3:ClientReferenceNumber>9428827</ns3:ClientReferenceNumber>
+        <ns3:Details>
+            <ns3:Name>
+                <ns2:Title>MRS.</ns2:Title>
+                <ns2:Surname>Mcgettigan</ns2:Surname>
+                <ns2:FirstName>Vivienne</ns2:FirstName>
+                <ns2:MiddleName>Claire</ns2:MiddleName>
+                <ns2:SurnameAtBirth>Mcgettigan</ns2:SurnameAtBirth>
+                <ns2:FullName>Vivienne Mcgettigan</ns2:FullName>
+            </ns3:Name>
+            <ns3:PersonalInformation>
+                <ns3:DateOfBirth>1970-03-26</ns3:DateOfBirth>
+                <ns3:Gender>FEMALE</ns3:Gender>
+                <ns3:MaritalStatus>M</ns3:MaritalStatus>
+                <ns3:NINumber>NS827314A</ns3:NINumber>
+                <ns3:VulnerableClient>false</ns3:VulnerableClient>
+                <ns3:HighProfileClient>false</ns3:HighProfileClient>
+                <ns3:VexatiousLitigant>false</ns3:VexatiousLitigant>
+                <ns3:CountryOfOrigin>GBR</ns3:CountryOfOrigin>
+                <ns3:MentalCapacityInd>false</ns3:MentalCapacityInd>
+            </ns3:PersonalInformation>
+            <ns3:Contacts>
+                <ns3:TelephoneWork>01143492300</ns3:TelephoneWork>
+                <ns3:Password>Switalskis1</ns3:Password>
+                <ns3:PasswordReminder>Swits</ns3:PasswordReminder>
+                <ns3:CorrespondenceMethod>PHONE</ns3:CorrespondenceMethod>
+                <ns3:CorrespondenceLanguage>ENGLISH</ns3:CorrespondenceLanguage>
+            </ns3:Contacts>
+            <ns3:DisabilityMonitoring>
+                <ns3:DisabilityType>NOTDIS</ns3:DisabilityType>
+            </ns3:DisabilityMonitoring>
+            <ns3:NoFixedAbode>false</ns3:NoFixedAbode>
+            <ns3:Address>
+                <ns2:AddressID>978841</ns2:AddressID>
+                <ns2:House>45</ns2:House>
+                <ns2:AddressLine1>45, Blakeney Road</ns2:AddressLine1>
+                <ns2:City>SHEFFIELD</ns2:City>
+                <ns2:Country>GBR</ns2:Country>
+                <ns2:County>South Yorkshire</ns2:County>
+                <ns2:PostalCode>S10 1FD</ns2:PostalCode>
+            </ns3:Address>
+            <ns3:EthnicMonitoring>WB</ns3:EthnicMonitoring>
+        </ns3:Details>
+        <ns3:RecordHistory>
+            <ns2:CreatedBy>
+                <ns2:UserLoginID>65420</ns2:UserLoginID>
+                <ns2:UserName>SADIE.SIMPSON@SWITALSKIS.COM</ns2:UserName>
+            </ns2:CreatedBy>
+            <ns2:DateCreated>2019-04-02T10:35:04.0Z</ns2:DateCreated>
+            <ns2:LastUpdatedBy>
+                <ns2:UserLoginID>65420</ns2:UserLoginID>
+                <ns2:UserName>SADIE.SIMPSON@SWITALSKIS.COM</ns2:UserName>
+            </ns2:LastUpdatedBy>
+            <ns2:DateLastUpdated>2019-04-02T10:35:04.0Z</ns2:DateLastUpdated>
+        </ns3:RecordHistory>
+    </msg:Client>
+</ClientInqRS>

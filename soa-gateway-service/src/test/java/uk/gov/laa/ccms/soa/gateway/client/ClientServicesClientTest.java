@@ -16,8 +16,7 @@ import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientIn
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ObjectFactory;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientInfo;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
@@ -98,6 +97,39 @@ class ClientServicesClientTest {
         assertEquals(clientReferenceNumber, payload.getValue().getSearchCriteria().getClientInfo().getCaseReferenceNumber());
         assertNotNull(response);
     }
+
+    @Test
+    public void testGetClientDetailWithValidReferenceNumber() throws Exception {
+        ObjectFactory objectFactory = new ObjectFactory();
+
+        // Mock the response of the WebServiceTemplate
+        when(webServiceTemplate.marshalSendAndReceive(
+                eq(SERVICE_URL),
+                any(JAXBElement.class),
+                any(SoapActionCallback.class)))
+                .thenReturn(objectFactory.createClientInqRS(new ClientInqRS()));
+
+        String clientReferenceNumber = "1234567890";
+
+        ClientInqRS response = client.getClientDetail(
+                soaGatewayUserLoginId, soaGatewayUserRole, maxRecords, clientReferenceNumber
+        );
+
+        // Verify interactions
+        verify(webServiceTemplate, times(1)).marshalSendAndReceive(
+                eq(SERVICE_URL),
+                requestCaptor.capture(),
+                any(SoapActionCallback.class));
+
+        JAXBElement<ClientInqRQ> payload = requestCaptor.getValue();
+        assertNotNull(payload.getValue().getHeaderRQ().getTimeStamp());
+        assertEquals(soaGatewayUserLoginId, payload.getValue().getHeaderRQ().getUserLoginID());
+        assertEquals(soaGatewayUserRole, payload.getValue().getHeaderRQ().getUserRole());
+        assertNull(payload.getValue().getSearchCriteria().getClientInfo());
+        assertEquals(clientReferenceNumber, payload.getValue().getSearchCriteria().getClientReferenceNumber());
+        assertNotNull(response);
+    }
+
 
     private ClientInfo buildClientInfo(){
         ClientInfo clientInfo = new ClientInfo();

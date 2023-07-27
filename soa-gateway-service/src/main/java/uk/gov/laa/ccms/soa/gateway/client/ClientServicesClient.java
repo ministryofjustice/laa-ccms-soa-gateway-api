@@ -47,6 +47,29 @@ public class ClientServicesClient extends AbstractSoaClient{
 
         searchCriteria.setClientInfo(clientInfo);
 
+        return getClientInqRS(maxRecords, soapAction, clientInqRQ, searchCriteria);
+    }
+
+    public ClientInqRS getClientDetail(
+            String loggedInUserId,
+            String loggedInUserType,
+            Integer maxRecords,
+            String clientReferenceNumber
+    ) {
+
+        final String soapAction = String.format("%s/GetClientDetails", serviceName);
+        ClientInqRQ clientInqRQ = CASE_FACTORY.createClientInqRQ();
+        clientInqRQ.setHeaderRQ(createHeaderRQ(loggedInUserId, loggedInUserType));
+
+        ClientInqRQ.SearchCriteria searchCriteria = CASE_FACTORY
+                .createClientInqRQSearchCriteria();
+
+        searchCriteria.setClientReferenceNumber(clientReferenceNumber);
+
+        return getClientInqRS(maxRecords, soapAction, clientInqRQ, searchCriteria);
+    }
+
+    private ClientInqRS getClientInqRS(Integer maxRecords, String soapAction, ClientInqRQ clientInqRQ, ClientInqRQ.SearchCriteria searchCriteria) {
         clientInqRQ.setSearchCriteria(searchCriteria);
         clientInqRQ.setRecordCount(createRecordCount(maxRecords));
 
