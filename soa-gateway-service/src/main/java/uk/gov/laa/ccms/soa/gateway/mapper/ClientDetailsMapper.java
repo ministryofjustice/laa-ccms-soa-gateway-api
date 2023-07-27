@@ -59,7 +59,7 @@ public interface ClientDetailsMapper {
     ClientDetailDetails toClientDetailDetails(uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientDetails clientDetails);
 
     @Mapping(target = "addressId", source = "address.addressID")
-    ClientAddressDetail toClientDetailDetails(uk.gov.legalservices.enterprise.common._1_0.common.Address address);
+    ClientAddressDetail toClientAddressDetails(uk.gov.legalservices.enterprise.common._1_0.common.Address address);
 
     @Mapping(target = "createdBy.userLoginId", source = "recordHistory.createdBy.userLoginID")
     @Mapping(target = "lastUpdatedBy.userLoginId", source = "recordHistory.lastUpdatedBy.userLoginID")

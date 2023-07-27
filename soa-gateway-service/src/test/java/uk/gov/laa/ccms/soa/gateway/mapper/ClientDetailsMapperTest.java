@@ -169,7 +169,7 @@ public class ClientDetailsMapperTest {
         address.setCountry("UK");
         address.setPostalCode("N1 1AA");
 
-        ClientAddressDetail result = clientDetailsMapper.toClientDetailDetails(address);
+        ClientAddressDetail result = clientDetailsMapper.toClientAddressDetails(address);
 
         assertNotNull(result);
         assertEquals("12345", result.getAddressId());
