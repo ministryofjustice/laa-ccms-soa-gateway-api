@@ -15,8 +15,8 @@ public class ReferenceDataService {
 
     private final ReferenceDataMapper referenceDataMapper;
 
-    public CaseReferenceSummary getCaseReference(String soaGatewayUserLoginId,
-                                                 String soaGatewayUserRole){
+    public CaseReferenceSummary getCaseReference(final String soaGatewayUserLoginId,
+                                                 final String soaGatewayUserRole){
 
         ReferenceDataInqRS response = referenceDataClient.getCaseReference(
                 soaGatewayUserLoginId,

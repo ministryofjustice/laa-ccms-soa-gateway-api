@@ -23,16 +23,16 @@ public class ReferenceDataClient extends AbstractSoaClient{
 
     private static final ObjectFactory CASE_FACTORY = new ObjectFactory();
 
-    public ReferenceDataClient(WebServiceTemplate webServiceTemplate,
-                              @Value("${laa.ccms.soa-gateway.reference-data.service-name}") String serviceName,
-                              @Value("${laa.ccms.soa-gateway.reference-data.service-url}") String serviceUrl) {
+    public ReferenceDataClient(final WebServiceTemplate webServiceTemplate,
+                              @Value("${laa.ccms.soa-gateway.reference-data.service-name}")final  String serviceName,
+                              @Value("${laa.ccms.soa-gateway.reference-data.service-url}")final  String serviceUrl) {
         this.webServiceTemplate = webServiceTemplate;
         this.serviceName = serviceName;
         this.serviceUrl = serviceUrl;
     }
 
-    public ReferenceDataInqRS getCaseReference(String loggedInUserId,
-                                               String loggedInUserType){
+    public ReferenceDataInqRS getCaseReference(final String loggedInUserId,
+                                               final String loggedInUserType){
 
         final String soapAction = String.format("%s/process", serviceName);
         ReferenceDataInqRQ referenceDataInqRQ = CASE_FACTORY.createReferenceDataInqRQ();

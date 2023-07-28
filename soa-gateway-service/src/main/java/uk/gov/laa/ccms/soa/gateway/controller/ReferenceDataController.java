@@ -18,8 +18,8 @@ public class ReferenceDataController implements CaseReferenceApi {
     private final ReferenceDataService referenceDataService;
 
     @Override
-    public ResponseEntity<CaseReferenceSummary> getCaseReference(String soaGatewayUserLoginId,
-                                                                 String soaGatewayUserRole) {
+    public ResponseEntity<CaseReferenceSummary> getCaseReference(final String soaGatewayUserLoginId,
+                                                                 final String soaGatewayUserRole) {
         try{
             CaseReferenceSummary caseReferenceSummary = referenceDataService.getCaseReference(
                     soaGatewayUserLoginId,

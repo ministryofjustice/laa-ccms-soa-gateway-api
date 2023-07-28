@@ -19,19 +19,19 @@ public class ClientServicesClient extends AbstractSoaClient{
 
     private static final ObjectFactory CASE_FACTORY = new ObjectFactory();
 
-    public ClientServicesClient(WebServiceTemplate webServiceTemplate,
-                                @Value("${laa.ccms.soa-gateway.client.service-name}") String serviceName,
-                                @Value("${laa.ccms.soa-gateway.client.service-url}") String serviceUrl) {
+    public ClientServicesClient(final WebServiceTemplate webServiceTemplate,
+                                @Value("${laa.ccms.soa-gateway.client.service-name}") final String serviceName,
+                                @Value("${laa.ccms.soa-gateway.client.service-url}") final String serviceUrl) {
         this.webServiceTemplate = webServiceTemplate;
         this.serviceName = serviceName;
         this.serviceUrl= serviceUrl;
     }
 
     public ClientInqRS getClientDetails(
-            String loggedInUserId,
-            String loggedInUserType,
-            Integer maxRecords,
-            ClientInfo clientInfo
+            final String loggedInUserId,
+            final String loggedInUserType,
+            final Integer maxRecords,
+            final ClientInfo clientInfo
     ) {
 
         final String soapAction = String.format("%s/GetClientDetails", serviceName);
@@ -47,10 +47,10 @@ public class ClientServicesClient extends AbstractSoaClient{
     }
 
     public ClientInqRS getClientDetail(
-            String loggedInUserId,
-            String loggedInUserType,
-            Integer maxRecords,
-            String clientReferenceNumber
+            final String loggedInUserId,
+            final String loggedInUserType,
+            final Integer maxRecords,
+            final String clientReferenceNumber
     ) {
 
         final String soapAction = String.format("%s/GetClientDetails", serviceName);

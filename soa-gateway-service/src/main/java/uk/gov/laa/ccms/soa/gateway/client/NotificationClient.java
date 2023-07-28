@@ -16,19 +16,19 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.ObjectFactory
 public class NotificationClient extends AbstractSoaClient {
     private static final ObjectFactory CASE_FACTORY = new ObjectFactory();
 
-    public NotificationClient(WebServiceTemplate webServiceTemplate,
-        @Value("${laa.ccms.soa-gateway.notification.service-name}") String serviceName,
-        @Value("${laa.ccms.soa-gateway.notification.service-url}") String serviceUrl) {
+    public NotificationClient(final WebServiceTemplate webServiceTemplate,
+        @Value("${laa.ccms.soa-gateway.notification.service-name}")final  String serviceName,
+        @Value("${laa.ccms.soa-gateway.notification.service-url}")final  String serviceUrl) {
         this.webServiceTemplate = webServiceTemplate;
         this.serviceName = serviceName;
         this.serviceUrl = serviceUrl;
     }
 
     public NotificationCntInqRS getNotificationCount(
-        String searchLoginId,
-        String loggedInUserId,
-        String loggedInUserType,
-        Integer maxSearchResults) {
+            final String searchLoginId,
+            final String loggedInUserId,
+            final String loggedInUserType,
+            final Integer maxSearchResults) {
 
         final String soapAction = String.format("%s/GetNotificationCount", serviceName);
         NotificationCntInqRQ inquiryRequest = CASE_FACTORY.createNotificationCntInqRQ();
