@@ -17,10 +17,6 @@ import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientIn
 @Component
 public class ClientServicesClient extends AbstractSoaClient{
 
-    private final String serviceName;
-
-    private final String serviceUrl;
-
     private static final ObjectFactory CASE_FACTORY = new ObjectFactory();
 
     public ClientServicesClient(WebServiceTemplate webServiceTemplate,

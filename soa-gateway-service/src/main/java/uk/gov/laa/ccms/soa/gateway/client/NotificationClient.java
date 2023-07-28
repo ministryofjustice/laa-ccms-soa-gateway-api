@@ -14,11 +14,6 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.ObjectFactory
 @SuppressWarnings("unchecked")
 @Component
 public class NotificationClient extends AbstractSoaClient {
-
-    private final String serviceName;
-
-    private final String serviceUrl;
-
     private static final ObjectFactory CASE_FACTORY = new ObjectFactory();
 
     public NotificationClient(WebServiceTemplate webServiceTemplate,

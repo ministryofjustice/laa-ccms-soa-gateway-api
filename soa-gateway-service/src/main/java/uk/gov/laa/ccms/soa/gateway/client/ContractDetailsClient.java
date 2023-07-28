@@ -14,11 +14,6 @@ import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabim.Obje
 @SuppressWarnings("unchecked")
 @Component
 public class ContractDetailsClient extends AbstractSoaClient {
-
-    private final String serviceName;
-
-    private final String serviceUrl;
-
     private static final ObjectFactory CASE_FACTORY = new ObjectFactory();
 
     public ContractDetailsClient(WebServiceTemplate webServiceTemplate,
