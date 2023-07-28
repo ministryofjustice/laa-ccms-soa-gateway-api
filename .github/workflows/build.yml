@@ -32,6 +32,11 @@ jobs:
           uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
           with:
             arguments: build
+        - name: upload jarfile
+          uses: actions/upload-artifact@v3
+          with:
+            name: soa-jar
+            path: build/libs/laa-ccms-soa-gateway-api-0.0.1-SNAPSHOT.jar
 
         - name: Test
           uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
@@ -54,3 +59,20 @@ jobs:
             arguments: publish
           env:
               GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    ecr:
+      needs: build-test-publish
+      runs-on: ubuntu-latest
+      permissions:
+        id-token: write # for requesting jwt
+        contents: read  # for actions/checkout
+      steps:
+        # Checkout github repo
+        - uses: actions/checkout@v3
+        # Assume role in cloud platform
+        - name: download jar
+          uses: actions/download-artifact@v3
+          with:
+            name: soa-jar
+        - name: display structure of downloaded files
+          run: ls -R
