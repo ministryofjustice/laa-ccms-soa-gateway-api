@@ -19,9 +19,9 @@ spec:
   ingressClassName: default
   tls:
     - hosts:
-        - laa-ccms-civil.apps.live.cloud-platform.service.justice.gov.uk
+        - laa-ccms-civil.soa-gateway-api.apps.live.cloud-platform.service.justice.gov.uk
   rules:
-    - host: laa-ccms-civil.apps.live.cloud-platform.service.justice.gov.uk
+    - host: laa-ccms-civil.soa-gateway-api.apps.live.cloud-platform.service.justice.gov.uk
       http:
         paths:
           - path: /
