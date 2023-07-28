@@ -74,5 +74,19 @@ jobs:
           uses: actions/download-artifact@v3
           with:
             name: soa-jar
-        - name: display structure of downloaded files
-          run: ls -R
+        - name: ecr login
+          uses: aws-actions/configure-aws-credentials@v2
+          with:
+            role-to-assume: ${{ secrets.ECR_ROLE_TO_ASSUME }}
+            aws-region: ${{ vars.ECR_REGION }}
+        # Login to container repo
+        - uses: aws-actions/amazon-ecr-login@v1
+          id: login-ecr
+        # Build and push docker image to container repo
+        - run: |
+            docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+            docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+          env:
+            REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+            REPOSITORY: ${{ vars.ECR_REPOSITORY }}
+            IMAGE_TAG: ${{ github.sha }}
