@@ -74,6 +74,8 @@ jobs:
           uses: actions/download-artifact@v3
           with:
             name: soa-jar
+        - name: Display structure of downloaded files
+          run: ls -R
         - name: ecr login
           uses: aws-actions/configure-aws-credentials@v2
           with:
