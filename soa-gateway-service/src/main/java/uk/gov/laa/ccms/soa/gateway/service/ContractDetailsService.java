@@ -16,11 +16,11 @@ public class ContractDetailsService {
     private final ContractDetailsMapper contractDetailsMapper;
 
     public ContractDetails getContractDetails(
-        Integer searchFirmId,
-        Integer searchOfficeId,
-        String soaGatewayUserLoginId,
-        String soaGatewayUserRole,
-        Integer maxRecords){
+            final Integer searchFirmId,
+            final Integer searchOfficeId,
+            final String soaGatewayUserLoginId,
+            final String soaGatewayUserRole,
+            final Integer maxRecords){
         ContractDetailsInqRS response = contractDetailsClient.getContractDetails(
             searchFirmId.toString(),
             searchOfficeId.toString(),

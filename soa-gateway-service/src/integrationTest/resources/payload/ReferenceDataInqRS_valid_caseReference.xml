@@ -1,0 +1,19 @@
+<ReferenceDataInqRS xmlns:msg="http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/ReferenceDataBIM"
+                    xmlns:oracle-xsl-mapper="http://www.oracle.com/xsl/mapper/schemas"
+                    xmlns="http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/ReferenceDataBIM">
+    <header:HeaderRS xmlns:header="http://legalservices.gov.uk/Enterprise/Common/1.0/Header">
+        <header:RequestDetails>
+            <header:TransactionRequestID>202009240930144190000000009397166491</header:TransactionRequestID>
+            <header:Language>ENG</header:Language>
+            <header:Source>PUI</header:Source>
+            <header:Target>Oracle EBusiness</header:Target>
+            <header:UserLoginID>MARILYN@DESORANDCO.CO.UK</header:UserLoginID>
+            <header:UserRole>EXTERNAL</header:UserRole>
+        </header:RequestDetails>
+        <header:Status>
+            <header:Status>Success</header:Status>
+            <header:StatusFreeText>GetReferenceData Successfully Completed.</header:StatusFreeText>
+        </header:Status>
+    </header:HeaderRS>
+    <msg:Results>300001644195</msg:Results>
+</ReferenceDataInqRS>
