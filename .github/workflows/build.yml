@@ -36,7 +36,7 @@ jobs:
           uses: actions/upload-artifact@v3
           with:
             name: soa-jar
-            path: soa-gateway-api/build/libs/soa-gateway-api-0.0.1-SNAPSHOT-plain.jar
+            path: soa-gateway-service/build/libs/soa-gateway-service-0.0.1-SNAPSHOT.jar
 
         - name: Test
           uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
