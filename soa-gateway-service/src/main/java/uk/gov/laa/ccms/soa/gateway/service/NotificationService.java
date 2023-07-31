@@ -15,10 +15,10 @@ public class NotificationService {
 
     private final NotificationMapper notificationMapper;
 
-    public NotificationSummary getNotificationSummary(String searchLoginId,
-                                                      String soaGatewayUserLoginId,
-                                                      String soaGatewayUserRole,
-                                                      Integer maxRecords){
+    public NotificationSummary getNotificationSummary(final String searchLoginId,
+                                                      final String soaGatewayUserLoginId,
+                                                      final String soaGatewayUserRole,
+                                                      final Integer maxRecords){
         NotificationCntInqRS response = notificationClient.getNotificationCount(
                 searchLoginId,
                 soaGatewayUserLoginId,

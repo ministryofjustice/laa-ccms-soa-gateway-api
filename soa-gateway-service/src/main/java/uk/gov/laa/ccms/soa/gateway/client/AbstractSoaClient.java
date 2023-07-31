@@ -21,6 +21,10 @@ import uk.gov.legalservices.enterprise.common._1_0.header.ObjectFactory;
 @Slf4j
 public abstract class AbstractSoaClient {
 
+  protected String serviceName;
+
+  protected String serviceUrl;
+
   private static final ObjectFactory COMMON_HEADER_FACTORY = new ObjectFactory();
 
   private static final uk.gov.legalservices.enterprise.common._1_0.common.ObjectFactory COMMON_FACTORY =
