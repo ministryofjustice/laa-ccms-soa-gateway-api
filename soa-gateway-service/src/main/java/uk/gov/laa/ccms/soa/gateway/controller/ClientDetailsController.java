@@ -22,10 +22,10 @@ public class ClientDetailsController implements ClientsApi{
 
 
     @Override
-    public ResponseEntity<ClientDetail> getClient(String clientReferenceNumber,
-                                                  String soaGatewayUserLoginId,
-                                                  String soaGatewayUserRole,
-                                                  Integer maxRecords) {
+    public ResponseEntity<ClientDetail> getClient(final String clientReferenceNumber,
+                                                  final String soaGatewayUserLoginId,
+                                                  final String soaGatewayUserRole,
+                                                  final Integer maxRecords) {
         log.info("GET /clients/{}", clientReferenceNumber);
         try{
 
@@ -43,17 +43,17 @@ public class ClientDetailsController implements ClientsApi{
     }
 
     @Override
-    public ResponseEntity<ClientDetails> getClients(String soaGatewayUserLoginId,
-                                                    String soaGatewayUserRole,
-                                                    String firstName,
-                                                    String surname,
-                                                    Date dateOfBirth,
-                                                    String gender,
-                                                    String caseReferenceNumber,
-                                                    String homeOfficeReference,
-                                                    String nationalInsuranceNumber,
-                                                    Integer maxRecords,
-                                                    Pageable pageable) {
+    public ResponseEntity<ClientDetails> getClients(final String soaGatewayUserLoginId,
+                                                    final String soaGatewayUserRole,
+                                                    final String firstName,
+                                                    final String surname,
+                                                    final Date dateOfBirth,
+                                                    final String gender,
+                                                    final String caseReferenceNumber,
+                                                    final String homeOfficeReference,
+                                                    final String nationalInsuranceNumber,
+                                                    final Integer maxRecords,
+                                                    final Pageable pageable) {
         log.info("GET /clients");
         try{
             ClientSummary clientSummary= new ClientSummary()

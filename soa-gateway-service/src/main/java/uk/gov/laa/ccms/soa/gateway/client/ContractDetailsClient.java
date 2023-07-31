@@ -14,27 +14,22 @@ import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabim.Obje
 @SuppressWarnings("unchecked")
 @Component
 public class ContractDetailsClient extends AbstractSoaClient {
-
-    private final String serviceName;
-
-    private final String serviceUrl;
-
     private static final ObjectFactory CASE_FACTORY = new ObjectFactory();
 
-    public ContractDetailsClient(WebServiceTemplate webServiceTemplate,
-        @Value("${laa.ccms.soa-gateway.contract-details.service-name}") String serviceName,
-        @Value("${laa.ccms.soa-gateway.contract-details.service-url}") String serviceUrl) {
+    public ContractDetailsClient(final WebServiceTemplate webServiceTemplate,
+        @Value("${laa.ccms.soa-gateway.contract-details.service-name}")final  String serviceName,
+        @Value("${laa.ccms.soa-gateway.contract-details.service-url}")final  String serviceUrl) {
         this.webServiceTemplate = webServiceTemplate;
         this.serviceName = serviceName;
         this.serviceUrl= serviceUrl;
     }
 
     public ContractDetailsInqRS getContractDetails(
-        String searchFirmId,
-        String searchOfficeId,
-        String loggedInUserId,
-        String loggedInUserType,
-        Integer maxRecords) {
+            final String searchFirmId,
+            final String searchOfficeId,
+            final String loggedInUserId,
+            final String loggedInUserType,
+            final Integer maxRecords) {
 
         final String soapAction = String.format("%s/process", serviceName);
         ContractDetailsInqRQ contractDetailsInqRQ = CASE_FACTORY.createContractDetailsInqRQ();

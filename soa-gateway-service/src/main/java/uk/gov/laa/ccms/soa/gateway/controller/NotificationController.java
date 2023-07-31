@@ -17,10 +17,10 @@ public class NotificationController implements NotificationsApi {
 
     @Override
     public ResponseEntity<NotificationSummary> getUserNotificationSummary(
-           String userId,
-            String soaGatewayUserLoginId,
-            String soaGatewayUserRole,
-            Integer maxRecords) {
+            final String userId,
+            final String soaGatewayUserLoginId,
+            final String soaGatewayUserRole,
+            final Integer maxRecords) {
 
         try{
             NotificationSummary notificationSummary = notificationService.getNotificationSummary(

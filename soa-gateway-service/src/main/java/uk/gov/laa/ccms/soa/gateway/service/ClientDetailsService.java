@@ -28,11 +28,11 @@ public class ClientDetailsService {
 
 
     public ClientDetails getClientDetails(
-            String soaGatewayUserLoginId,
-            String soaGatewayUserRole,
-            Integer maxRecords,
-            ClientSummary clientSummary,
-            Pageable pageable
+            final String soaGatewayUserLoginId,
+            final String soaGatewayUserRole,
+            final Integer maxRecords,
+            final ClientSummary clientSummary,
+            final Pageable pageable
     ) {
         log.info("ClientDetailsService - getClientDetails");
         ClientInfo clientInfo =  clientDetailsMapper.toClientInfo(clientSummary);
@@ -53,10 +53,10 @@ public class ClientDetailsService {
     }
 
     public ClientDetail getClientDetail(
-            String soaGatewayUserLoginId,
-            String soaGatewayUserRole,
-            Integer maxRecords,
-            String clientReferenceNumber
+            final String soaGatewayUserLoginId,
+            final String soaGatewayUserRole,
+            final Integer maxRecords,
+            final String clientReferenceNumber
     ) {
         log.info("ClientDetailsService - getClientDetail");
         ClientInqRS response = clientServicesClient.getClientDetail(
