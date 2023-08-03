@@ -17,11 +17,11 @@ public class ContractDetailsController implements ContractDetailsApi {
 
     @Override
     public ResponseEntity<ContractDetails> getContractDetails(
-        Integer providerFirmId,
-        Integer officeId,
-        String soaGatewayUserLoginId,
-        String soaGatewayUserRole,
-        Integer maxRecords) {
+            final Integer providerFirmId,
+            final Integer officeId,
+            final String soaGatewayUserLoginId,
+            final String soaGatewayUserRole,
+            final Integer maxRecords) {
 
         try{
             ContractDetails contractDetails = contractDetailsService.getContractDetails(

@@ -18,16 +18,16 @@ public class CaseDetailsController implements CasesApi {
 
   @Override
   public ResponseEntity<CaseDetails> getCases(
-      String soaGatewayUserLoginId,
-      String soaGatewayUserRole,
-      String caseReferenceNumber,
-      String providerCaseReference,
-      String caseStatus,
-      String clientSurname,
-      Integer feeEarnerId,
-      Integer officeId,
-      Integer maxRecords,
-      Pageable pageable) {
+      final String soaGatewayUserLoginId,
+      final String soaGatewayUserRole,
+      final String caseReferenceNumber,
+      final String providerCaseReference,
+      final String caseStatus,
+      final String clientSurname,
+      final Integer feeEarnerId,
+      final Integer officeId,
+      final Integer maxRecords,
+      final Pageable pageable) {
     log.info("GET /cases");
     try {
       CaseDetails caseDetails = caseDetailsService.getCaseDetails(
