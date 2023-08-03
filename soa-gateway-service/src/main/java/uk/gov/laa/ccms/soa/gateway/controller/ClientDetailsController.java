@@ -56,12 +56,14 @@ public class ClientDetailsController implements ClientsApi{
                                                     Pageable pageable) {
         log.info("GET /clients");
         try{
+            // Build a ClientSummary to hold the search criteria.
+            // Note: caseReferenceNumber can actually hold a case or client reference.
             ClientSummary clientSummary= new ClientSummary()
                     .firstName(firstName)
                     .surname(surname)
                     .dateOfBirth(dateOfBirth)
                     .gender(gender)
-                    .caseReferenceNumber(caseReferenceNumber)
+                    .clientReferenceNumber(caseReferenceNumber)
                     .homeOfficeReference(homeOfficeReference)
                     .nationalInsuranceNumber(nationalInsuranceNumber);
 

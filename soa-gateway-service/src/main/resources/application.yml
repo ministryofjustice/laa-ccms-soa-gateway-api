@@ -12,3 +12,6 @@ laa:
       client:
         service-name: http://legalservices.gov.uk/CCMS/ClientManagement/Client/1.0/ClientServices
         service-url: http://localhost:8051/soa-infra/services/default/ClientServices/ClientServices_ep
+      case:
+        service-name: http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseServices
+        service-url: http://localhost:8051/soa-infra/services/default/CaseServices/CaseServices_ep

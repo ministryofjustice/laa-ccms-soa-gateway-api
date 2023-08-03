@@ -165,11 +165,67 @@ paths:
           description: 'Not found'
         '500':
           description: 'Internal server error'
+  /cases:
+    get:
+      tags:
+        - cases
+      summary: 'Get Cases'
+      operationId: 'getCases'
+      x-spring-paginated: true
+      parameters:
+        - name: 'case-reference-number'
+          in: 'query'
+          schema:
+            type: 'string'
+            example: '1234567890'
+        - name: 'provider-case-reference'
+          in: 'query'
+          schema:
+            type: 'string'
+            example: "1234567890"
+        - name: 'case-status'
+          in: 'query'
+          schema:
+            type: 'string'
+            example: 'APPL'
+        - name: 'client-surname'
+          in: 'query'
+          schema:
+            type: 'string'
+            example: 'smith'
+        - name: 'fee-earner-id'
+          in: 'query'
+          schema:
+            type: 'integer'
+            example: 1234567890
+        - name: 'office-id'
+          in: 'query'
+          schema:
+            type: 'integer'
+            example: 1234567890
+        - $ref: '#/components/parameters/soaGatewayUserLoginId'
+        - $ref: '#/components/parameters/soaGatewayUserRole'
+        - $ref: '#/components/parameters/maxRecords'
+      responses:
+        '200':
+          description: 'Successful operation'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/caseDetails"
+        '400':
+          description: 'Bad request'
+        '401':
+          description: 'Unauthorized'
+        '404':
+          description: 'Not found'
+        '500':
+          description: 'Internal server error'
 components:
   parameters:
     maxRecords:
       in: query
-      name: 'maxRecords'
+      name: 'max-records'
       required: false
       schema:
         type: 'integer'
@@ -190,6 +246,53 @@ components:
         type: 'string'
       example: 'EXTERNAL'
   schemas:
+    page:
+      type: 'object'
+      properties:
+        total_pages:
+          type: 'integer'
+        total_elements:
+          type: 'integer'
+        number:
+          type: 'integer'
+        size:
+          type: 'integer'
+    addressDetail:
+      type: 'object'
+      properties:
+        address_id:
+          type: 'string'
+        house:
+          type: 'string'
+        coff_name:
+          type: 'string'
+        address_line1:
+          type: 'string'
+        address_line2:
+          type: 'string'
+        address_line3:
+          type: 'string'
+        address_line4:
+          type: 'string'
+        city:
+          type: 'string'
+        country:
+          type: 'string'
+        county:
+          type: 'string'
+        province:
+          type: 'string'
+        postal_code:
+          type: 'string'
+    baseClient:
+      type: 'object'
+      properties:
+        client_reference_number:
+          type: 'string'
+        first_name:
+          type: 'string'
+        surname:
+          type: 'string'
     notificationSummary:
       type: 'object'
       properties:
@@ -231,12 +334,10 @@ components:
           items:
             $ref: "#/components/schemas/clientSummary"
     clientSummary:
+      allOf:
+        - $ref: '#/components/schemas/baseClient'
       type: 'object'
       properties:
-        first_name:
-          type: 'string'
-        surname:
-          type: 'string'
         surname_at_birth:
           type: 'string'
         full_name:
@@ -247,8 +348,6 @@ components:
         gender:
           type: 'string'
         postal_code:
-          type: 'string'
-        case_reference_number:
           type: 'string'
         home_office_reference:
           type: 'string'
@@ -315,33 +414,6 @@ components:
           type: 'string'
         correspondence_language:
           type: 'string'
-    clientAddressDetail:
-      type: 'object'
-      properties:
-        address_id:
-          type: 'string'
-        house:
-          type: 'string'
-        coff_name:
-          type: 'string'
-        address_line1:
-          type: 'string'
-        address_line2:
-          type: 'string'
-        address_line3:
-          type: 'string'
-        address_line4:
-          type: 'string'
-        city:
-          type: 'string'
-        country:
-          type: 'string'
-        county:
-          type: 'string'
-        province:
-          type: 'string'
-        postal_code:
-          type: 'string'
     clientUserDetail:
       type: object
       properties:
@@ -375,7 +447,7 @@ components:
             no_fixed_abode:
               type: 'string'
             address:
-              $ref: '#/components/schemas/clientAddressDetail'
+              $ref: '#/components/schemas/addressDetail'
             ethnic_monitoring:
               type: 'string'
             special_considerations:
@@ -393,14 +465,28 @@ components:
             date_last_updated:
               type: 'string'
               format: date-time
-    page:
+
+    caseDetails:
+      allOf:
+        - $ref: "#/components/schemas/page"
       type: 'object'
       properties:
-        total_pages:
-          type: 'integer'
-        total_elements:
-          type: 'integer'
-        number:
-          type: 'integer'
-        size:
-          type: 'integer'
+        content:
+          type: 'array'
+          items:
+            $ref: "#/components/schemas/caseSummary"
+    caseSummary:
+      type: 'object'
+      properties:
+        case_reference_number:
+          type: 'string'
+        provider_case_reference_number:
+          type: 'string'
+        client:
+          $ref: '#/components/schemas/baseClient'
+        fee_earner_name:
+          type: 'string'
+        category_of_law:
+          type: 'string'
+        case_status_display:
+          type: 'string'

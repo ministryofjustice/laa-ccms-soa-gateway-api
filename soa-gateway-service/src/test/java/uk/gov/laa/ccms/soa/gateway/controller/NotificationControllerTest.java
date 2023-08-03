@@ -58,7 +58,7 @@ class NotificationControllerTest {
                 .thenReturn(notificationSummary);
 
         // Call the getUserNotificationSummary method
-        mockMvc.perform(get("/users/{user-id}/notifications/summary?maxRecords={maxRecords}", userId, maxRecords)
+        mockMvc.perform(get("/users/{user-id}/notifications/summary?max-records={maxRecords}", userId, maxRecords)
                         .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
                         .header("SoaGateway-User-Role", soaGatewayUserRole))
                 .andExpect(status().isOk());
@@ -80,7 +80,7 @@ class NotificationControllerTest {
                 .thenThrow(new WebServiceIOException("Test exception"));
 
         // Call the getUserNotificationSummary method
-        mockMvc.perform(get("/users/{user-id}/notifications/summary?maxRecords={maxRecords}", userId, maxRecords)
+        mockMvc.perform(get("/users/{user-id}/notifications/summary?max-records={maxRecords}", userId, maxRecords)
                         .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
                         .header("SoaGateway-User-Role", soaGatewayUserRole))
                 .andExpect(status().isInternalServerError());
@@ -97,7 +97,7 @@ class NotificationControllerTest {
     public void testGetUserNotificationSummary_HeaderBadRequest(String userLoginId, String userRole) throws Exception {
         // Call the getUserNotificationSummary method with null headers
         MockHttpServletRequestBuilder requestBuilder =
-            get("/users/{user-id}/notifications/summary?maxRecords={maxRecords}",
+            get("/users/{user-id}/notifications/summary?max-records={maxRecords}",
                 "userId",
                 "50");
 
