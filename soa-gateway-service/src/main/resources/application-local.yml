@@ -18,3 +18,6 @@ laa:
       reference-data:
         service-name: http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/GetReferenceData
         service-url: http://localhost:8051/soa-infra/services/default/GetReferenceData/getreferencedata_ep
+      case:
+        service-name: http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseServices
+        service-url: http://localhost:8051/soa-infra/services/default/CaseServices/CaseServices_ep

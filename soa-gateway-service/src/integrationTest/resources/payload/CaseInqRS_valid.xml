@@ -1,0 +1,143 @@
+<CaseInqRS xmlns="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIM" xmlns:msg="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIM" xmlns:oracle-xsl-mapper="http://www.oracle.com/xsl/mapper/schemas">
+    <header:HeaderRS xmlns:header="http://legalservices.gov.uk/Enterprise/Common/1.0/Header">
+        <header:TransactionID>202307271721594920902571921</header:TransactionID>
+        <header:RequestDetails>
+            <header:TransactionRequestID>202307271721594920902571921</header:TransactionRequestID>
+            <header:Language>ENG</header:Language>
+            <header:Source>PUI</header:Source>
+            <header:Target>Oracle EBusiness</header:Target>
+            <header:UserLoginID>KENSAUNDERS</header:UserLoginID>
+            <header:UserRole>EXTERNAL</header:UserRole>
+            <header:TimeStamp>2023-07-27T17:21:59.492</header:TimeStamp>
+        </header:RequestDetails>
+        <header:Status>
+            <header:Status>Success</header:Status>
+            <header:StatusFreeText>GetCaseDetails completed Successfully.</header:StatusFreeText>
+        </header:Status>
+    </header:HeaderRS>
+    <msg:RecordCount>
+        <common:MaxRecordsToFetch xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">300</common:MaxRecordsToFetch>
+        <common:RecordsFetched xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">269</common:RecordsFetched>
+        <common:RetriveDataOnMaxCount xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">false</common:RetriveDataOnMaxCount>
+    </msg:RecordCount>
+    <msg:CaseList>
+        <case:CaseReferenceNumber xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">300001443779</case:CaseReferenceNumber>
+        <case:ProviderCaseReferenceNumber xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">SJ/Wood469271</case:ProviderCaseReferenceNumber>
+        <case:Client xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">
+            <case:ClientReferenceNumber>60106794</case:ClientReferenceNumber>
+            <case:FirstName>Daniel</case:FirstName>
+            <case:Surname>Wood</case:Surname>
+        </case:Client>
+        <case:FeeEarnerName xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">Brooke Robdrup-Kilgour</case:FeeEarnerName>
+        <case:CategoryOfLaw xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">Family</case:CategoryOfLaw>
+        <case:DisplayStatus xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">Live</case:DisplayStatus>
+    </msg:CaseList>
+    <msg:CaseList>
+        <case:CaseReferenceNumber xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">300000494602</case:CaseReferenceNumber>
+        <case:ProviderCaseReferenceNumber xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">AMR/Davey-Bean</case:ProviderCaseReferenceNumber>
+        <case:Client xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">
+            <case:ClientReferenceNumber>7289568</case:ClientReferenceNumber>
+            <case:FirstName>Matilda</case:FirstName>
+            <case:Surname>Davey</case:Surname>
+        </case:Client>
+        <case:FeeEarnerName xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">ANNE-MARIE RAINSFORD</case:FeeEarnerName>
+        <case:CategoryOfLaw xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">Family</case:CategoryOfLaw>
+        <case:DisplayStatus xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">Live</case:DisplayStatus>
+    </msg:CaseList>
+    <msg:CaseList>
+        <case:CaseReferenceNumber xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">300000781964</case:CaseReferenceNumber>
+        <case:ProviderCaseReferenceNumber xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">BRK/MITCHELL</case:ProviderCaseReferenceNumber>
+        <case:Client xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">
+            <case:ClientReferenceNumber>16198793</case:ClientReferenceNumber>
+            <case:FirstName>Rebecca</case:FirstName>
+            <case:Surname>Mitchell</case:Surname>
+        </case:Client>
+        <case:FeeEarnerName xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">Brooke Robdrup-Kilgour</case:FeeEarnerName>
+        <case:CategoryOfLaw xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">Family</case:CategoryOfLaw>
+        <case:DisplayStatus xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">Live</case:DisplayStatus>
+    </msg:CaseList>
+    <msg:CaseList>
+        <case:CaseReferenceNumber xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">300000515499</case:CaseReferenceNumber>
+        <case:ProviderCaseReferenceNumber xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">AMR/Race/467766DC</case:ProviderCaseReferenceNumber>
+        <case:Client xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">
+            <case:ClientReferenceNumber>9159152</case:ClientReferenceNumber>
+            <case:FirstName>BONNIE</case:FirstName>
+            <case:Surname>RACE</case:Surname>
+        </case:Client>
+        <case:FeeEarnerName xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">ANNE-MARIE RAINSFORD</case:FeeEarnerName>
+        <case:CategoryOfLaw xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">Family</case:CategoryOfLaw>
+        <case:DisplayStatus xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">Live</case:DisplayStatus>
+    </msg:CaseList>
+    <msg:CaseList>
+        <case:CaseReferenceNumber xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">300001288031</case:CaseReferenceNumber>
+        <case:ProviderCaseReferenceNumber xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">AJM/DALI</case:ProviderCaseReferenceNumber>
+        <case:Client xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">
+            <case:ClientReferenceNumber>53977569</case:ClientReferenceNumber>
+            <case:FirstName>Paige</case:FirstName>
+            <case:Surname>Dali</case:Surname>
+        </case:Client>
+        <case:FeeEarnerName xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">Brooke Robdrup-Kilgour</case:FeeEarnerName>
+        <case:CategoryOfLaw xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">Family</case:CategoryOfLaw>
+        <case:DisplayStatus xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">Live</case:DisplayStatus>
+    </msg:CaseList>
+    <msg:CaseList>
+        <case:CaseReferenceNumber xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">300001397789</case:CaseReferenceNumber>
+        <case:ProviderCaseReferenceNumber xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">BRK/Woodcraft</case:ProviderCaseReferenceNumber>
+        <case:Client xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">
+            <case:ClientReferenceNumber>59570162</case:ClientReferenceNumber>
+            <case:FirstName>Joanne</case:FirstName>
+            <case:Surname>Kirkham-Woodcraft</case:Surname>
+        </case:Client>
+        <case:FeeEarnerName xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">Brooke Robdrup-Kilgour</case:FeeEarnerName>
+        <case:CategoryOfLaw xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">Family</case:CategoryOfLaw>
+        <case:DisplayStatus xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">Live</case:DisplayStatus>
+    </msg:CaseList>
+    <msg:CaseList>
+        <case:CaseReferenceNumber xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">300001427748</case:CaseReferenceNumber>
+        <case:ProviderCaseReferenceNumber xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">BRK/McConnell</case:ProviderCaseReferenceNumber>
+        <case:Client xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">
+            <case:ClientReferenceNumber>59923089</case:ClientReferenceNumber>
+            <case:FirstName>Leo</case:FirstName>
+            <case:Surname>McConnell</case:Surname>
+        </case:Client>
+        <case:FeeEarnerName xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">Brooke Robdrup-Kilgour</case:FeeEarnerName>
+        <case:CategoryOfLaw xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">Family</case:CategoryOfLaw>
+        <case:DisplayStatus xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">Live</case:DisplayStatus>
+    </msg:CaseList>
+    <msg:CaseList>
+        <case:CaseReferenceNumber xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">300001504666</case:CaseReferenceNumber>
+        <case:ProviderCaseReferenceNumber xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">BRK470821/HunterBray</case:ProviderCaseReferenceNumber>
+        <case:Client xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">
+            <case:ClientReferenceNumber>60813496</case:ClientReferenceNumber>
+            <case:FirstName>Eli</case:FirstName>
+            <case:Surname>Hunter-Bray</case:Surname>
+        </case:Client>
+        <case:FeeEarnerName xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">Brooke Robdrup-Kilgour</case:FeeEarnerName>
+        <case:CategoryOfLaw xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">Family</case:CategoryOfLaw>
+        <case:DisplayStatus xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">Live</case:DisplayStatus>
+    </msg:CaseList>
+    <msg:CaseList>
+        <case:CaseReferenceNumber xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">300001502466</case:CaseReferenceNumber>
+        <case:ProviderCaseReferenceNumber xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">AMR470816/Smith-Huson</case:ProviderCaseReferenceNumber>
+        <case:Client xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">
+            <case:ClientReferenceNumber>60788069</case:ClientReferenceNumber>
+            <case:FirstName>Billy</case:FirstName>
+            <case:Surname>Smith-Huson</case:Surname>
+        </case:Client>
+        <case:FeeEarnerName xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">ANNE-MARIE RAINSFORD</case:FeeEarnerName>
+        <case:CategoryOfLaw xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">Family</case:CategoryOfLaw>
+        <case:DisplayStatus xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">Live</case:DisplayStatus>
+    </msg:CaseList>
+    <msg:CaseList>
+        <case:CaseReferenceNumber xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">300001465725</case:CaseReferenceNumber>
+        <case:ProviderCaseReferenceNumber xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">AMR/Austin/470328</case:ProviderCaseReferenceNumber>
+        <case:Client xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">
+            <case:ClientReferenceNumber>60362987</case:ClientReferenceNumber>
+            <case:FirstName>Mandy</case:FirstName>
+            <case:Surname>Austin</case:Surname>
+        </case:Client>
+        <case:FeeEarnerName xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">ANNE-MARIE RAINSFORD</case:FeeEarnerName>
+        <case:CategoryOfLaw xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">Family</case:CategoryOfLaw>
+        <case:DisplayStatus xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">Live</case:DisplayStatus>
+    </msg:CaseList>
+</CaseInqRS>

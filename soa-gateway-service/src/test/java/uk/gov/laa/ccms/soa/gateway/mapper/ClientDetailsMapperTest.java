@@ -1,6 +1,14 @@
 package uk.gov.laa.ccms.soa.gateway.mapper;
 
-import org.junit.jupiter.api.BeforeEach;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -8,32 +16,27 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import uk.gov.laa.ccms.soa.gateway.model.ClientSummary;
-import uk.gov.laa.ccms.soa.gateway.model.ClientDetails;
-import uk.gov.laa.ccms.soa.gateway.model.ClientAddressDetail;
+import uk.gov.laa.ccms.soa.gateway.model.AddressDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ClientContactDetail;
-import uk.gov.laa.ccms.soa.gateway.model.ClientUserDetail;
-import uk.gov.laa.ccms.soa.gateway.model.ClientNameDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetailRecordHistory;
-import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientInqRS;
-import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.*;
-import uk.gov.legalservices.enterprise.common._1_0.common.Name;
+import uk.gov.laa.ccms.soa.gateway.model.ClientDetails;
+import uk.gov.laa.ccms.soa.gateway.model.ClientNameDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ClientPersonalDetail;
+import uk.gov.laa.ccms.soa.gateway.model.ClientSummary;
+import uk.gov.laa.ccms.soa.gateway.model.ClientUserDetail;
+import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientInqRS;
+import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.Client;
+import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientInfo;
+import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientList;
+import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ContactDetails;
+import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.DisabilityDetails;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.PersonalDetails;
 import uk.gov.legalservices.enterprise.common._1_0.common.Address;
+import uk.gov.legalservices.enterprise.common._1_0.common.Name;
 import uk.gov.legalservices.enterprise.common._1_0.common.RecordHistory;
 import uk.gov.legalservices.enterprise.common._1_0.common.User;
-
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 public class ClientDetailsMapperTest {
@@ -41,21 +44,8 @@ public class ClientDetailsMapperTest {
     @InjectMocks
     ClientDetailsMapperImpl clientDetailsMapper;
 
-    private DatatypeFactory datatypeFactory;
-
-    @BeforeEach
-    public void setup() throws DatatypeConfigurationException {
-        datatypeFactory = DatatypeFactory.newInstance();
-    }
-
     @Test
     public void testToClientDetails() {
-        ClientInqRS response = new ClientInqRS();
-        ClientInqRS.ClientList clientListObject = new ClientInqRS.ClientList();
-        List<ClientList> clientList = Collections.singletonList(new ClientList());
-        clientListObject.getClient().addAll(clientList);
-        response.setClientList(clientListObject);
-
         List<ClientSummary> clientSummaryList = Collections.singletonList(new ClientSummary());
         Page<ClientSummary> clientDetailPage = new PageImpl<>(clientSummaryList, Pageable.unpaged(), clientSummaryList.size());
 
@@ -92,7 +82,7 @@ public class ClientDetailsMapperTest {
         assertEquals("John Doe", result.getFullName());
         assertEquals("HO12345", result.getHomeOfficeReference());
         assertEquals("AB123456C", result.getNationalInsuranceNumber());
-        assertEquals("CR123", result.getCaseReferenceNumber());
+        assertEquals("CR123", result.getClientReferenceNumber());
     }
 
     @Test
@@ -105,7 +95,7 @@ public class ClientDetailsMapperTest {
         clientSummary.setSurname("Doe");
         clientSummary.setDateOfBirth(new Date());
         clientSummary.setHomeOfficeReference("HO12345");
-        clientSummary.setCaseReferenceNumber("CR123");
+        clientSummary.setClientReferenceNumber("CR123");
 
         // Test execution
         ClientInfo result = clientDetailsMapper.toClientInfo(clientSummary);
@@ -143,7 +133,8 @@ public class ClientDetailsMapperTest {
         uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientDetails clientDetails =
                 new uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientDetails();
 
-        Address address = new Address();
+        uk.gov.legalservices.enterprise.common._1_0.common.Address address =
+            new uk.gov.legalservices.enterprise.common._1_0.common.Address();
         address.setAddressID("12345");
         clientDetails.setAddress(address);
 
@@ -169,7 +160,7 @@ public class ClientDetailsMapperTest {
         address.setCountry("UK");
         address.setPostalCode("N1 1AA");
 
-        ClientAddressDetail result = clientDetailsMapper.toClientAddressDetails(address);
+        AddressDetail result = clientDetailsMapper.toAddressDetail(address);
 
         assertNotNull(result);
         assertEquals("12345", result.getAddressId());
