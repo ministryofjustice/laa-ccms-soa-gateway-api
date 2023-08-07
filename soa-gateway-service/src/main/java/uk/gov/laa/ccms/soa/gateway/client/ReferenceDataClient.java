@@ -1,20 +1,17 @@
 package uk.gov.laa.ccms.soa.gateway.client;
 
 import jakarta.xml.bind.JAXBElement;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.soap.client.core.SoapActionCallback;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationCntInqRQ;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationCntInqRS;
 import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabim.ObjectFactory;
 import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabim.ReferenceDataInqRQ;
 import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabim.ReferenceDataInqRS;
 import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabio.KeyType;
 import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabio.SearchContext;
-
-import java.util.List;
 
 @Slf4j
 @SuppressWarnings("unchecked")

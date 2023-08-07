@@ -1,6 +1,5 @@
 package uk.gov.laa.ccms.soa.gateway.controller;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -8,7 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 import uk.gov.laa.ccms.soa.gateway.api.CaseReferenceApi;
 import uk.gov.laa.ccms.soa.gateway.model.CaseReferenceSummary;
 import uk.gov.laa.ccms.soa.gateway.service.ReferenceDataService;
-import uk.gov.laa.ccms.soa.gateway.model.CaseReferenceSummary;
 
 @RestController
 @RequiredArgsConstructor
