@@ -41,7 +41,7 @@ public class ClientDetailsServiceTest {
     private String firstName;
     private String surname;
     private String gender;
-    private String caseReferenceNumber;
+    private String clientReferenceNumber;
     private String homeOfficeReference;
     private String nationalInsuranceNumber;
     private Integer maxRecords;
@@ -56,7 +56,7 @@ public class ClientDetailsServiceTest {
         this.firstName = "John";
         this.surname = "Doe";
         this.gender = "Male";
-        this.caseReferenceNumber = "1234567890";
+        this.clientReferenceNumber = "1234567890";
         this.homeOfficeReference = "ABC123";
         this.nationalInsuranceNumber = "AB123456C";
         this.maxRecords = 50;
@@ -165,7 +165,7 @@ public class ClientDetailsServiceTest {
                 .firstName(firstName)
                 .surname(surname)
                 .gender(gender)
-                .caseReferenceNumber(caseReferenceNumber)
+                .clientReferenceNumber(clientReferenceNumber)
                 .homeOfficeReference(homeOfficeReference)
                 .nationalInsuranceNumber(nationalInsuranceNumber);
     }
@@ -176,7 +176,7 @@ public class ClientDetailsServiceTest {
         clientInfo.setSurname(surname);
         clientInfo.setNINumber(nationalInsuranceNumber);
         clientInfo.setHomeOfficeReference(homeOfficeReference);
-        clientInfo.setCaseReferenceNumber(caseReferenceNumber);
+        clientInfo.setCaseReferenceNumber(clientReferenceNumber);
         return clientInfo;
     }
 }

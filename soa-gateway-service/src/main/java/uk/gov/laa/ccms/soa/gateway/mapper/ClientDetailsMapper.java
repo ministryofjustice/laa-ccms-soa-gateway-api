@@ -9,7 +9,7 @@ import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientIn
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientInfo;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientList;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetail;
-import uk.gov.laa.ccms.soa.gateway.model.ClientAddressDetail;
+import uk.gov.laa.ccms.soa.gateway.model.AddressDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails;
 import  uk.gov.laa.ccms.soa.gateway.model.ClientDetailRecordHistory;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.PersonalDetails;
@@ -44,11 +44,11 @@ public interface ClientDetailsMapper {
 
     @Mapping(target = ".", source = "name")
     @Mapping(target = "nationalInsuranceNumber", source = "NINumber")
-    @Mapping(target = "caseReferenceNumber", source = "clientReferenceNumber")
     ClientSummary toClientSummary(ClientList clientList);
 
     @Mapping(target = ".", source = "clientSummary")
     @Mapping(target = "NINumber", source = "clientSummary.nationalInsuranceNumber")
+    @Mapping(target = "caseReferenceNumber", source = "clientReferenceNumber")
     ClientInfo toClientInfo(ClientSummary clientSummary);
 
     // Inside the toClientPersonalDetail method
@@ -59,7 +59,7 @@ public interface ClientDetailsMapper {
     ClientDetailDetails toClientDetailDetails(uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientDetails clientDetails);
 
     @Mapping(target = "addressId", source = "address.addressID")
-    ClientAddressDetail toClientAddressDetails(uk.gov.legalservices.enterprise.common._1_0.common.Address address);
+    AddressDetail toAddressDetail(uk.gov.legalservices.enterprise.common._1_0.common.Address address);
 
     @Mapping(target = "createdBy.userLoginId", source = "recordHistory.createdBy.userLoginID")
     @Mapping(target = "lastUpdatedBy.userLoginId", source = "recordHistory.lastUpdatedBy.userLoginID")

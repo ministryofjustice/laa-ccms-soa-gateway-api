@@ -38,7 +38,6 @@ public class ClientDetailsControllerTest {
     private String firstName;
     private String surname;
     private String gender;
-    private String caseReferenceNumber;
 
     private String clientReferenceNumber;
 
@@ -60,7 +59,6 @@ public class ClientDetailsControllerTest {
         this.surname = "Doe";
         this.gender = "Male";
         this.clientReferenceNumber = "1234567890";
-        this.caseReferenceNumber = "1234567890";
         this.homeOfficeReference = "ABC123";
         this.nationalInsuranceNumber = "AB123456C";
         this.maxRecords = 50;
@@ -82,7 +80,7 @@ public class ClientDetailsControllerTest {
 
         mockMvc.perform(
                         get("/clients/{clientReferenceNumber}", clientReferenceNumber)
-                                .param("maxRecords", String.valueOf(maxRecords))
+                                .param("max-records", String.valueOf(maxRecords))
                                 .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
                                 .header("SoaGateway-User-Role", soaGatewayUserRole))
                 .andExpect(status().isOk());
@@ -98,7 +96,7 @@ public class ClientDetailsControllerTest {
 
         mockMvc.perform(
                         get("/clients/{clientReferenceNumber}", clientReferenceNumber)
-                                .param("maxRecords", String.valueOf(maxRecords))
+                                .param("max-records", String.valueOf(maxRecords))
                                 .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
                                 .header("SoaGateway-User-Role", soaGatewayUserRole))
                 .andExpect(status().isInternalServerError());
@@ -124,7 +122,8 @@ public class ClientDetailsControllerTest {
                 .thenReturn(clientDetails);
 
         mockMvc.perform(
-                        get("/clients?first-name={firstName}&surname={surname}&maxRecords={maxRecords}" +
+                        get("/clients?first-name={firstName}&surname={surname}" +
+                                        "&max-records={maxRecords}" +
                                         "&gender={gender}"+
                                         "&case-reference-number={caseReferenceNumber}" +
                                         "&home-office-reference={homeOfficeReference}" +
@@ -133,7 +132,7 @@ public class ClientDetailsControllerTest {
                                 surname,
                                 maxRecords,
                                 gender,
-                                caseReferenceNumber,
+                                clientReferenceNumber,
                                 homeOfficeReference,
                                 nationalInsuranceNumber)
                                 .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
@@ -158,7 +157,8 @@ public class ClientDetailsControllerTest {
                 .thenThrow(new WebServiceIOException("Test exception"));
 
         mockMvc.perform(
-                        get("/clients?first-name={firstName}&surname={surname}&maxRecords={maxRecords}" +
+                        get("/clients?first-name={firstName}&surname={surname}" +
+                                        "&max-records={maxRecords}" +
                                         "&gender={gender}"+
                                         "&case-reference-number={caseReferenceNumber}" +
                                         "&home-office-reference={homeOfficeReference}" +
@@ -167,7 +167,7 @@ public class ClientDetailsControllerTest {
                                 surname,
                                 maxRecords,
                                 gender,
-                                caseReferenceNumber,
+                                clientReferenceNumber,
                                 homeOfficeReference,
                                 nationalInsuranceNumber)
                                 .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
@@ -183,7 +183,7 @@ public class ClientDetailsControllerTest {
                 .firstName(firstName)
                 .surname(surname)
                 .gender(gender)
-                .caseReferenceNumber(caseReferenceNumber)
+                .clientReferenceNumber(clientReferenceNumber)
                 .homeOfficeReference(homeOfficeReference)
                 .nationalInsuranceNumber(nationalInsuranceNumber);
     }

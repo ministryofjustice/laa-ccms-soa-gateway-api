@@ -1,0 +1,246 @@
+<CaseInqRS xmlns:msg="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIM"
+  xmlns:oracle-xsl-mapper="http://www.oracle.com/xsl/mapper/schemas"
+  xmlns="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIM">
+  <header:HeaderRS xmlns:header="http://legalservices.gov.uk/Enterprise/Common/1.0/Header">
+    <header:RequestDetails>
+      <header:Language>ENG</header:Language>
+      <header:Source>PUI</header:Source>
+      <header:Target>Oracle EBusiness</header:Target>
+      <header:TimeStamp>2023-07-27T17:22:40.841</header:TimeStamp>
+      <header:TransactionRequestID>202307271722408410233066412</header:TransactionRequestID>
+      <header:UserLoginID>KENSAUNDERS</header:UserLoginID>
+      <header:UserRole>EXTERNAL</header:UserRole>
+    </header:RequestDetails>
+    <header:Status>
+      <header:Status>Success</header:Status>
+      <header:StatusFreeText>GetCaseDetails completed Successfully.</header:StatusFreeText>
+    </header:Status>
+    <header:TransactionID>202307271722408410233066412</header:TransactionID>
+  </header:HeaderRS>
+  <msg:Case>
+    <case:CaseDetails xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">
+      <case:ApplicationDetails>
+        <case:ApplicationAmendmentType>SUB</case:ApplicationAmendmentType>
+        <case:CategoryOfLaw>
+          <case:CategoryOfLawCode>MAT</case:CategoryOfLawCode>
+          <case:CategoryOfLawDescription>Family</case:CategoryOfLawDescription>
+          <case:GrantedAmount>5000</case:GrantedAmount>
+          <case:RequestedAmount>5000</case:RequestedAmount>
+          <case:TotalPaidToDate>0</case:TotalPaidToDate>
+        </case:CategoryOfLaw>
+        <case:Client>
+          <case:ClientReferenceNumber>4930526</case:ClientReferenceNumber>
+          <case:FirstName>Tegan</case:FirstName>
+          <case:Surname>Prosser</case:Surname>
+        </case:Client>
+        <case:CorrespondenceAddress>
+          <common:AddressID xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">
+            478480
+          </common:AddressID>
+          <common:AddressLine1
+            xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">3rd Floor
+            Dencora Court
+          </common:AddressLine1>
+          <common:AddressLine2
+            xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">Tylers Avenue
+          </common:AddressLine2>
+          <common:City xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">
+            Southend
+          </common:City>
+          <common:CoffName xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">
+            Jefferies Essex LLP
+          </common:CoffName>
+          <common:Country xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">
+            GBR
+          </common:Country>
+          <common:County xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">
+            Essex
+          </common:County>
+          <common:PostalCode
+            xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">SS1 2BB
+          </common:PostalCode>
+        </case:CorrespondenceAddress>
+        <case:FixedHearingDateInd>false</case:FixedHearingDateInd>
+        <case:HighProfileCaseInd>false</case:HighProfileCaseInd>
+        <case:LARDetails>
+          <case:LARScopeFlag>true</case:LARScopeFlag>
+        </case:LARDetails>
+        <case:OtherParties>
+          <case:OtherParty>
+            <case:OtherPartyDetail>
+              <case:Organization>
+                <case:ContactName>Not Available</case:ContactName>
+                <case:CurrentlyTrading>Y</case:CurrentlyTrading>
+                <case:OrganizationName>Southend Borough Council</case:OrganizationName>
+                <case:OrganizationType>LA</case:OrganizationType>
+                <case:RelationToCase>OPP</case:RelationToCase>
+                <case:RelationToClient>LOCAL AUTHORITY</case:RelationToClient>
+              </case:Organization>
+            </case:OtherPartyDetail>
+            <case:OtherPartyID>5038238</case:OtherPartyID>
+            <case:SharedInd>false</case:SharedInd>
+          </case:OtherParty>
+          <case:OtherParty>
+            <case:OtherPartyDetail>
+              <case:Person>
+                <case:AssessedAsstes>0</case:AssessedAsstes>
+                <case:AssessedIncome>0</case:AssessedIncome>
+                <case:ContactName>Not Available</case:ContactName>
+                <case:CourtOrderedMeansAssesment>false</case:CourtOrderedMeansAssesment>
+                <case:Name>
+                  <common:FirstName
+                    xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">Caron
+                  </common:FirstName>
+                  <common:FullName
+                    xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">Caron
+                    Prosser
+                  </common:FullName>
+                  <common:Surname
+                    xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">Prosser
+                  </common:Surname>
+                  <common:Title
+                    xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">MS.
+                  </common:Title>
+                </case:Name>
+                <case:PartyLegalAidedInd>false</case:PartyLegalAidedInd>
+                <case:PublicFundingAppliedInd>false</case:PublicFundingAppliedInd>
+                <case:RelationToCase>OPP</case:RelationToCase>
+                <case:RelationToClient>PARENT</case:RelationToClient>
+              </case:Person>
+            </case:OtherPartyDetail>
+            <case:OtherPartyID>5038240</case:OtherPartyID>
+            <case:SharedInd>false</case:SharedInd>
+          </case:OtherParty>
+        </case:OtherParties>
+        <case:PreferredAddress>PROVIDER</case:PreferredAddress>
+        <case:Proceedings>
+          <case:Proceeding>
+            <case:AvailableFunctions>
+              <case:Function>ADDPROC</case:Function>
+              <case:Function>UPDPROC</case:Function>
+              <case:Function>VIEWPROC</case:Function>
+              <case:Function>UPDOUT</case:Function>
+              <case:Function>CLROUT</case:Function>
+            </case:AvailableFunctions>
+            <case:DateApplied>2016-09-11</case:DateApplied>
+            <case:LeadProceedingIndicator>true</case:LeadProceedingIndicator>
+            <case:OutcomeCourtCaseNumber>CM16C05288</case:OutcomeCourtCaseNumber>
+            <case:ProceedingCaseID>364534</case:ProceedingCaseID>
+            <case:ProceedingDetails>
+              <case:ClientInvolvementType>W</case:ClientInvolvementType>
+              <case:DateCostsValid>2016-09-02</case:DateCostsValid>
+              <case:DateDevolvedPowersUsed>2016-09-02</case:DateDevolvedPowersUsed>
+              <case:DateGranted>2016-09-11</case:DateGranted>
+              <case:DevolvedPowersInd>true</case:DevolvedPowersInd>
+              <case:LevelOfService>3</case:LevelOfService>
+              <case:MatterType>KPBLB</case:MatterType>
+              <case:ProceedingDescription>App for a care order - Pub Law - Fam
+              </case:ProceedingDescription>
+              <case:ProceedingType>PBM23</case:ProceedingType>
+              <case:ScopeLimitations>
+                <case:ScopeLimitation>
+                  <case:DelegatedFunctionsApply>false</case:DelegatedFunctionsApply>
+                  <case:ScopeLimitation>FM062</case:ScopeLimitation>
+                  <case:ScopeLimitationID>647715</case:ScopeLimitationID>
+                  <case:ScopeLimitationWording>Limited to all steps up to and including final
+                    hearing and any action necessary to implement (but not enforce) the order.
+                  </case:ScopeLimitationWording>
+                </case:ScopeLimitation>
+              </case:ScopeLimitations>
+              <case:Stage>8</case:Stage>
+            </case:ProceedingDetails>
+            <case:Status>LIVE</case:Status>
+          </case:Proceeding>
+        </case:Proceedings>
+        <case:ProviderDetails>
+          <case:ContactUserID>
+            <common:UserLoginID
+              xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">4650796
+            </common:UserLoginID>
+            <common:UserName
+              xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">SHANNONTOMKINS
+            </common:UserName>
+          </case:ContactUserID>
+          <case:ProviderCaseReferenceNumber>SMY/457802DC</case:ProviderCaseReferenceNumber>
+          <case:ProviderFirmID>23114</case:ProviderFirmID>
+          <case:ProviderOfficeID>86633</case:ProviderOfficeID>
+        </case:ProviderDetails>
+        <case:PurposeOfApplication>NA</case:PurposeOfApplication>
+        <case:PurposeOfHearing>NA</case:PurposeOfHearing>
+      </case:ApplicationDetails>
+      <case:AvailableFunctions>
+        <case:Function>POA</case:Function>
+        <case:Function>NOT</case:Function>
+        <case:Function>CB</case:Function>
+        <case:Function>BILL</case:Function>
+        <case:Function>VC</case:Function>
+        <case:Function>DB</case:Function>
+        <case:Function>ACL</case:Function>
+        <case:Function>VCD</case:Function>
+        <case:Function>VO</case:Function>
+        <case:Function>PD</case:Function>
+        <case:Function>POD</case:Function>
+        <case:Function>PRC</case:Function>
+        <case:Function>AC</case:Function>
+        <case:Function>PRO</case:Function>
+        <case:Function>CC</case:Function>
+        <case:Function>CD</case:Function>
+        <case:Function>CD</case:Function>
+        <case:Function>MNSB</case:Function>
+        <case:Function>CCP</case:Function>
+        <case:Function>MNR</case:Function>
+        <case:Function>PA</case:Function>
+        <case:Function>UND</case:Function>
+        <case:Function>VIEWPROC</case:Function>
+        <case:Function>CLROUT</case:Function>
+        <case:Function>UPDOUT</case:Function>
+        <case:Function>UPDPROC</case:Function>
+        <case:Function>VIEWOUT</case:Function>
+        <case:Function>DELPROC</case:Function>
+        <case:Function>ADDPROC</case:Function>
+      </case:AvailableFunctions>
+      <case:CaseStatus>
+        <case:ActualCaseStatus>Live</case:ActualCaseStatus>
+        <case:DisplayCaseStatus>Live</case:DisplayCaseStatus>
+        <case:StatusUpdateInd>false</case:StatusUpdateInd>
+      </case:CaseStatus>
+      <case:CertificateDate>1900-01-01</case:CertificateDate>
+      <case:CertificateType>SUB</case:CertificateType>
+      <case:DischargeStatus>
+        <case:ClientContinuePvtInd>false</case:ClientContinuePvtInd>
+      </case:DischargeStatus>
+      <case:LegalHelpCosts>0</case:LegalHelpCosts>
+      <case:PreCertificateCosts>0</case:PreCertificateCosts>
+      <case:RecordHistory>
+        <common:CreatedBy xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">
+          <common:UserLoginID>50171</common:UserLoginID>
+          <common:UserName>RYANCADDELL</common:UserName>
+        </common:CreatedBy>
+        <common:DateCreated xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">
+          2016-09-05T09:45:57.0Z
+        </common:DateCreated>
+        <common:DateLastUpdated
+          xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">
+          2016-09-30T09:24:59.0Z
+        </common:DateLastUpdated>
+        <common:LastUpdatedBy
+          xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">
+          <common:UserLoginID>52662</common:UserLoginID>
+          <common:UserName>BROOKEROBDRUP-KILGOUR</common:UserName>
+        </common:LastUpdatedBy>
+      </case:RecordHistory>
+    </case:CaseDetails>
+    <case:CaseReferenceNumber xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">300000195071</case:CaseReferenceNumber>
+  </msg:Case>
+  <msg:RecordCount>
+    <common:MaxRecordsToFetch
+      xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">300
+    </common:MaxRecordsToFetch>
+    <common:RecordsFetched xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">
+      1
+    </common:RecordsFetched>
+    <common:RetriveDataOnMaxCount
+      xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">false
+    </common:RetriveDataOnMaxCount>
+  </msg:RecordCount>
+</CaseInqRS>

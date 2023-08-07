@@ -72,7 +72,7 @@ class ContractDetailsControllerTest {
                 .thenReturn(contractDetails);
 
         mockMvc.perform(
-            get("/contract-details?providerFirmId={providerFirmId}&officeId={officeId}&maxRecords={maxRecords}",
+            get("/contract-details?providerFirmId={providerFirmId}&officeId={officeId}&max-records={maxRecords}",
                 providerFirmId,
                 officeId,
                 maxRecords)
@@ -100,7 +100,7 @@ class ContractDetailsControllerTest {
 
         // Call the getUserNotificationSummary method
         mockMvc.perform(
-            get("/contract-details?providerFirmId={providerFirmId}&officeId={officeId}&maxRecords={maxRecords}",
+            get("/contract-details?providerFirmId={providerFirmId}&officeId={officeId}&max-records={maxRecords}",
                 providerFirmId,
                 officeId,
                 maxRecords)
@@ -120,7 +120,7 @@ class ContractDetailsControllerTest {
     }, nullValues={"null"})
     public void testGetContractDetails_HeaderBadRequest(String userLoginId, String userRole) throws Exception {
         // Call the getUserNotificationSummary method with null headers
-        MockHttpServletRequestBuilder requestBuilder = get("/contract-details?providerFirmId={providerFirmId}&officeId={officeId}&maxRecords={maxRecords}",
+        MockHttpServletRequestBuilder requestBuilder = get("/contract-details?providerFirmId={providerFirmId}&officeId={officeId}&max-records={maxRecords}",
             "providerFirmId",
             "officeId",
             "50");
