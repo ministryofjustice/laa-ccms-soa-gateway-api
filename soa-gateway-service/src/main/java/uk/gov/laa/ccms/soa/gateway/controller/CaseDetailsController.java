@@ -9,6 +9,13 @@ import uk.gov.laa.ccms.soa.gateway.api.CasesApi;
 import uk.gov.laa.ccms.soa.gateway.model.CaseDetails;
 import uk.gov.laa.ccms.soa.gateway.service.CaseDetailsService;
 
+/**
+ * Controller for handling case details related requests.
+ *
+ * <p>Provides an endpoint for retrieving detailed case information based on various search
+ * criteria. Implements the {@link CasesApi} for consistent behavior with other API
+ * implementations.</p>
+ */
 @RestController
 @RequiredArgsConstructor
 @Slf4j
