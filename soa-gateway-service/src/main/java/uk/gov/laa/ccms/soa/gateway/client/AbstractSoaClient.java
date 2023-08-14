@@ -18,6 +18,19 @@ import uk.gov.legalservices.enterprise.common._1_0.header.HeaderRQType;
 import uk.gov.legalservices.enterprise.common._1_0.header.HeaderRSType;
 import uk.gov.legalservices.enterprise.common._1_0.header.ObjectFactory;
 
+/**
+ * Provides an abstract base for SOA (Service-Oriented Architecture) client implementations.
+ *
+ * <p>The `AbstractSoaClient` class serves as a foundational layer for interacting with
+ * SOA-based services. It provides utility methods for header creation, transaction ID
+ * generation, and SOA call success validation. Derived classes can extend this to
+ * implement specific service calls.</p>
+ *
+ * <p>Transaction ID generation adopts a specific format and constraints, as explained
+ * in the `generateTransactionId` method documentation.</p>
+ *
+ * @author [Your Name]  // Optional, if you want to include the author's name
+ */
 @Slf4j
 public abstract class AbstractSoaClient {
 
@@ -27,13 +40,14 @@ public abstract class AbstractSoaClient {
 
   private static final ObjectFactory COMMON_HEADER_FACTORY = new ObjectFactory();
 
-  private static final uk.gov.legalservices.enterprise.common._1_0.common.ObjectFactory COMMON_FACTORY =
-      new uk.gov.legalservices.enterprise.common._1_0.common.ObjectFactory();
+  private static final uk.gov.legalservices.enterprise.common._1_0.common.ObjectFactory
+          COMMON_FACTORY = new uk.gov.legalservices.enterprise.common._1_0.common.ObjectFactory();
 
   protected WebServiceTemplate webServiceTemplate;
 
   /**
-   * Get the WebServiceTemplate for this SoaClient
+   * Get the WebServiceTemplate for this SoaClient.
+   *
    * @return WebServiceTemplate
    */
   protected WebServiceTemplate getWebServiceTemplate() {
@@ -41,34 +55,31 @@ public abstract class AbstractSoaClient {
   }
 
   /**
+   * Create the headers for this SoaClient.
+   *
    * @param loggedInUserId The logged in user id
    * @param loggedInUserType The type of the logged in user
    * @return HeaderRQType
    */
-  protected HeaderRQType createHeaderRQ(final String loggedInUserId, final String loggedInUserType) {
-    HeaderRQType headerRQType = COMMON_HEADER_FACTORY.createHeaderRQType();
-
-//        if (userInfo.getLocale().getLanguage().equalsIgnoreCase("en")) {
-    headerRQType.setLanguage("ENG");
-//        } else {
-//            // must be welsh
-//            headerRQType.setLanguage("CYM");
-//        }
-    headerRQType.setUserLoginID(loggedInUserId);
-    headerRQType.setUserRole(loggedInUserType);
-    headerRQType.setTransactionRequestID(generateTransactionId());
-    headerRQType.setSource(SystemsList.PUI);
-    headerRQType.setTarget(SystemsList.ORACLE_E_BUSINESS);
+  protected HeaderRQType createHeaderRq(
+          final String loggedInUserId, final String loggedInUserType) {
+    HeaderRQType headerRqType = COMMON_HEADER_FACTORY.createHeaderRQType();
+    headerRqType.setLanguage("ENG");
+    headerRqType.setUserLoginID(loggedInUserId);
+    headerRqType.setUserRole(loggedInUserType);
+    headerRqType.setTransactionRequestID(generateTransactionId());
+    headerRqType.setSource(SystemsList.PUI);
+    headerRqType.setTarget(SystemsList.ORACLE_E_BUSINESS);
 
     try {
-      headerRQType.setTimeStamp(DatatypeFactory.newInstance().newXMLGregorianCalendar(
+      headerRqType.setTimeStamp(DatatypeFactory.newInstance().newXMLGregorianCalendar(
           LocalDate.now().toString()));
     } catch (DatatypeConfigurationException e) {
       log.error("Failed to create DatatypeFactory", e);
       throw new RuntimeException(e);
     }
 
-    return headerRQType;
+    return headerRqType;
   }
 
   protected RecordCount createRecordCount(Integer maxRecords) {
@@ -89,6 +100,7 @@ public abstract class AbstractSoaClient {
    * added a 5 digit random number (zero packed) to act as noise/millis
    * I found that with just 4 digits I was getting a number of duplicates.
    * this reduced significantly with 5 digit noise.
+   *
    * @return String
    */
   protected static String generateTransactionId() {
@@ -99,11 +111,12 @@ public abstract class AbstractSoaClient {
     // e.g. 2016051215540200506053
   }
 
-  protected void checkSoaCallSuccess(String serviceName, HeaderRSType headerRSType) {
-    Optional.ofNullable(headerRSType)
+  protected void checkSoaCallSuccess(String serviceName, HeaderRSType headerRsType) {
+    Optional.ofNullable(headerRsType)
         .filter(h -> h.getStatus().getStatus() != SUCCESS)
         .map(headerRSType1 -> {
-          final String errorMsg = String.format("Failure in SOA call %s. Status Code: %s. Status Text: %s",
+          final String errorMsg = String.format(
+                  "Failure in SOA call %s. Status Code: %s. Status Text: %s",
               serviceName,
               headerRSType1.getStatus().getExceptions().getStatusCode(),
               headerRSType1.getStatus().getExceptions().getStatusText());

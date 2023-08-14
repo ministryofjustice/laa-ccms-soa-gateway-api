@@ -15,30 +15,56 @@ import uk.gov.laa.ccms.soa.gateway.util.PaginationUtil;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseInqRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseInfo;
 
+/**
+ * Service class responsible for fetching and processing case details.
+ *
+ * <p>This service interacts with the external Case Services system to fetch case details. It then
+ * processes and converts these details to the desired format using the {@link CaseDetailsMapper}.
+ * Pagination of results is handled by the {@link PaginationUtil} utility.</p>
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class CaseDetailsService {
 
-    private final CaseServicesClient caseServicesClient;
+  private final CaseServicesClient caseServicesClient;
 
-    private final CaseDetailsMapper caseDetailsMapper;
+  private final CaseDetailsMapper caseDetailsMapper;
 
-
-    public CaseDetails getCaseDetails(
-        final String soaGatewayUserLoginId,
-        final String soaGatewayUserRole,
-        final String caseReferenceNumber,
-        final  String providerCaseRefNumber,
-        final String caseStatus,
-        final String clientSurname,
-        final Integer feeEarnerId,
-        final Integer officeId,
-        final Integer maxRecords,
-        final Pageable pageable
-    ) {
-        log.info("CaseDetailsService - getCaseDetails");
-        CaseInfo caseInfo = buildCaseInfo(
+  /**
+   * Retrieves case details based on the provided search criteria.
+   *
+   * <p>This method communicates with the external Case Services system using the provided
+   * search criteria, fetches the relevant case details, and then maps and paginates these details
+   * to the desired format.</p>
+   *
+   * @param soaGatewayUserLoginId      The user login ID for the SOA Gateway.
+   * @param soaGatewayUserRole         The user role in the SOA Gateway.
+   * @param caseReferenceNumber        The reference number for the case.
+   * @param providerCaseRefNumber      The provider's reference number for the case.
+   * @param caseStatus                 The status of the case.
+   * @param clientSurname              The surname of the client associated with the case.
+   * @param feeEarnerId                The ID of the fee earner associated with the case.
+   * @param officeId                   The ID of the office handling the case.
+   * @param maxRecords                 The maximum number of records to retrieve.
+   * @param pageable                   The pagination details.
+   * @return                           A {@link CaseDetails} object containing the retrieved
+   *                                   and processed case details.
+   */
+  public CaseDetails getCaseDetails(
+          final String soaGatewayUserLoginId,
+          final String soaGatewayUserRole,
+          final String caseReferenceNumber,
+          final  String providerCaseRefNumber,
+          final String caseStatus,
+          final String clientSurname,
+          final Integer feeEarnerId,
+          final Integer officeId,
+          final Integer maxRecords,
+          final Pageable pageable
+  ) {
+    log.info("CaseDetailsService - getCaseDetails");
+    CaseInfo caseInfo = buildCaseInfo(
             caseReferenceNumber,
             providerCaseRefNumber,
             caseStatus,
@@ -46,36 +72,36 @@ public class CaseDetailsService {
             feeEarnerId,
             officeId);
 
-        CaseInqRS response = caseServicesClient.getCaseDetails(
-                soaGatewayUserLoginId,
-                soaGatewayUserRole,
-                maxRecords,
-                caseInfo);
+    CaseInqRS response = caseServicesClient.getCaseDetails(
+            soaGatewayUserLoginId,
+            soaGatewayUserRole,
+            maxRecords,
+            caseInfo);
 
-        List<CaseSummary> caseSummaryList = caseDetailsMapper.toCaseSummaryList(response);
+    List<CaseSummary> caseSummaryList = caseDetailsMapper.toCaseSummaryList(response);
 
-        Page<CaseSummary> page = PaginationUtil.paginateList(pageable, caseSummaryList);
+    Page<CaseSummary> page = PaginationUtil.paginateList(pageable, caseSummaryList);
 
-        return caseDetailsMapper.toCaseDetails(page);
-    }
+    return caseDetailsMapper.toCaseDetails(page);
+  }
 
-    private CaseInfo buildCaseInfo(
-        String caseReferenceNumber,
-        String providerCaseRefNumber,
-        String caseStatus,
-        String clientSurname,
-        Integer feeEarnerId,
-        Integer officeId) {
-        CaseInfo caseInfo =  new CaseInfo();
-        caseInfo.setCaseReferenceNumber(caseReferenceNumber);
-        caseInfo.setProviderCaseReferenceNumber(providerCaseRefNumber);
-        caseInfo.setCaseStatus(caseStatus);
-        caseInfo.setClientSurname(clientSurname);
-        caseInfo.setFeeEarnerContactID(
+  private CaseInfo buildCaseInfo(
+          String caseReferenceNumber,
+          String providerCaseRefNumber,
+          String caseStatus,
+          String clientSurname,
+          Integer feeEarnerId,
+          Integer officeId) {
+    CaseInfo caseInfo =  new CaseInfo();
+    caseInfo.setCaseReferenceNumber(caseReferenceNumber);
+    caseInfo.setProviderCaseReferenceNumber(providerCaseRefNumber);
+    caseInfo.setCaseStatus(caseStatus);
+    caseInfo.setClientSurname(clientSurname);
+    caseInfo.setFeeEarnerContactID(
             Optional.ofNullable(feeEarnerId).map(String::valueOf).orElse(null));
-        caseInfo.setOfficeID(
+    caseInfo.setOfficeID(
             Optional.ofNullable(officeId).map(String::valueOf).orElse(null));
-        return caseInfo;
-    }
+    return caseInfo;
+  }
 
 }
