@@ -2,6 +2,11 @@ plugins {
     id 'org.springframework.boot' version '3.1.2'
     id 'uk.co.boothen.gradle.wsimport' version '0.21'
     id 'jacoco'
+    id 'checkstyle'
+}
+
+ext {
+    checkstyleVersion = '10.12.2'
 }
 
 sourceSets {
@@ -127,4 +132,16 @@ jacocoTestCoverageVerification {
     dependsOn tasks['test']
 }
 
+checkstyleMain {
+    //exclude auto generated files
+    exclude '**/uk/gov/legalservices/**'
+    exclude '**/org/oasis_open/**'
+}
+
+checkstyle {
+    maxWarnings = 0
+    toolVersion = "${checkstyleVersion}"
+    sourceSets = [sourceSets.main]
+    showViolations = true
+}
 
