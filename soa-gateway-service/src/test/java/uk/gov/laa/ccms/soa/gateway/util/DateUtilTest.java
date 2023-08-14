@@ -23,7 +23,7 @@ public class DateUtilTest {
         Date date = calendar.getTime();
 
         // Convert the date to XMLGregorianCalendar
-        XMLGregorianCalendar result = DateUtil.convertDateToXMLDateOnly(date);
+        XMLGregorianCalendar result = DateUtil.convertDateToXmlDateOnly(date);
 
         // Verify the converted XMLGregorianCalendar
         assertEquals(18, result.getDay());
@@ -34,7 +34,7 @@ public class DateUtilTest {
     @Test
     public void testConvertDateToXMLDateOnly_NullDate() throws DatatypeConfigurationException {
         // Convert null date to XMLGregorianCalendar
-        XMLGregorianCalendar result = DateUtil.convertDateToXMLDateOnly(null);
+        XMLGregorianCalendar result = DateUtil.convertDateToXmlDateOnly(null);
 
         // Verify that null is returned
         assertNull(result);
