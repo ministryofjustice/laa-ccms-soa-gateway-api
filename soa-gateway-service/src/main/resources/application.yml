@@ -7,17 +7,18 @@ laa:
       username: pui_user
       password: THj9f52dH2NV
       notification:
-        service-name: http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/NotificationService
-        service-url: http://localhost:8051/soa-infra/services/default/NotificationServices/NotificationServices_ep
+        service-name: ${NOTIFICATIONS_SERVICE_NAME}
+        service-url: ${NOTIFICATIONS_SERVICE_URL}
       contract-details:
-        service-name: http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/GetReferenceData
-        service-url: http://localhost:8051/soa-infra/services/default/GetContractDetails/getcontractdetails_ep
+        service-name: ${CONTRACT_DETAILS_SERVICE_NAME}
+        service-url: ${CONTRACT_DETAILS_SERVICE_URL}
       client:
-        service-name: http://legalservices.gov.uk/CCMS/ClientManagement/Client/1.0/ClientServices
-        service-url: http://localhost:8051/soa-infra/services/default/ClientServices/ClientServices_ep
+        service-name: ${CLIENT_SERVICE_NAME}
+        service-url: ${CLIENT_SERVICE_URL}
       reference-data:
         service-name: http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/GetReferenceData
         service-url: http://localhost:8051/soa-infra/services/default/GetReferenceData/getreferencedata_ep
       case:
         service-name: http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseServices
         service-url: http://localhost:8051/soa-infra/services/default/CaseServices/CaseServices_ep
+
