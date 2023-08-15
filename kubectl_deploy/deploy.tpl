@@ -51,3 +51,23 @@ spec:
                 secretKeyRef:
                   name: saml-metadata-uri
                   key: client-service-url
+            - name: REFERENCE_DATA_SERVICE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: saml-metadata-uri
+                  key: reference-data-service-name
+            - name: REFERENCE_DATA_SERVICE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: saml-metadata-uri
+                  key: reference-data-service-url
+            - name: CASE_SERVICE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: saml-metadata-uri
+                  key: case-service-name
+            - name: CASE_SERVICE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: saml-metadata-uri
+                  key: case-service-url
