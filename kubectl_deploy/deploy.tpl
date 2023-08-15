@@ -21,6 +21,16 @@ spec:
           ports:
             - containerPort: 8007
           env:
+            - name: SOA_GATEWAY_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: saml-metadata-uri
+                  key: soa-gateway-username
+            - name: SOA_GATEWAY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: saml-metadata-uri
+                  key: soa-gateway-password
             - name: NOTIFICATIONS_SERVICE_NAME
               valueFrom:
                 secretKeyRef:

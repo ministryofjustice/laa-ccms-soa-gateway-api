@@ -4,8 +4,8 @@ server:
 laa:
   ccms:
     soa-gateway:
-      username: pui_user
-      password: THj9f52dH2NV
+      username: ${SOA_GATEWAY_USERNAME}
+      password: ${SOA_GATEWAY_PASSWORD}
       notification:
         service-name: ${NOTIFICATIONS_SERVICE_NAME}
         service-url: ${NOTIFICATIONS_SERVICE_URL}
