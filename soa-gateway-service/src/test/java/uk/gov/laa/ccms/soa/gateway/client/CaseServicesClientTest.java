@@ -2,6 +2,7 @@ package uk.gov.laa.ccms.soa.gateway.client;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
@@ -85,6 +86,36 @@ class CaseServicesClientTest {
         assertEquals(caseInfo.getProviderCaseReferenceNumber(), payloadCaseInfo.getProviderCaseReferenceNumber());
         assertEquals(caseInfo.getOfficeID(), payloadCaseInfo.getOfficeID());
         assertEquals(caseInfo.getFeeEarnerContactID(), payloadCaseInfo.getFeeEarnerContactID());
+        assertNotNull(response);
+    }
+
+    @Test
+    public void testGetCaseDetailBuildsCorrectRequest() {
+        ObjectFactory objectFactory = new ObjectFactory();
+
+        // Mock the response of the WebServiceTemplate
+        when(webServiceTemplate.marshalSendAndReceive(
+            eq(SERVICE_URL),
+            any(JAXBElement.class),
+            any(SoapActionCallback.class)))
+            .thenReturn(objectFactory.createCaseInqRS(new CaseInqRS()));
+
+        CaseInqRS response = client.getCaseDetail(
+            SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE, "123"
+        );
+
+        // Verify interactions
+        verify(webServiceTemplate, times(1)).marshalSendAndReceive(
+            eq(SERVICE_URL),
+            requestCaptor.capture(),
+            any(SoapActionCallback.class));
+
+        JAXBElement<CaseInqRQ> payload = requestCaptor.getValue();
+        assertNotNull(payload.getValue().getHeaderRQ().getTimeStamp());
+        assertEquals(SOA_GATEWAY_USER_LOGIN_ID, payload.getValue().getHeaderRQ().getUserLoginID());
+        assertEquals(SOA_GATEWAY_USER_ROLE, payload.getValue().getHeaderRQ().getUserRole());
+        assertNull(payload.getValue().getSearchCriteria().getCaseInfo());
+        assertEquals("123", payload.getValue().getSearchCriteria().getCaseReferenceNumber());
         assertNotNull(response);
     }
 

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.laa.ccms.soa.gateway.client.CaseServicesClient;
 import uk.gov.laa.ccms.soa.gateway.mapper.CaseDetailsMapper;
 import uk.gov.laa.ccms.soa.gateway.model.CaseDetails;
+import uk.gov.laa.ccms.soa.gateway.model.CaseDetail;
 import uk.gov.laa.ccms.soa.gateway.model.CaseSummary;
 import uk.gov.laa.ccms.soa.gateway.util.PaginationUtil;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseInqRS;
@@ -27,9 +28,9 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseInfo;
 @Slf4j
 public class CaseDetailsService {
 
-  private final CaseServicesClient caseServicesClient;
+    private final CaseServicesClient caseServicesClient;
 
-  private final CaseDetailsMapper caseDetailsMapper;
+    private final CaseDetailsMapper caseDetailsMapper;
 
   /**
    * Retrieves case details based on the provided search criteria.
@@ -72,36 +73,51 @@ public class CaseDetailsService {
             feeEarnerId,
             officeId);
 
-    CaseInqRS response = caseServicesClient.getCaseDetails(
+        CaseInqRS response = caseServicesClient.getCaseDetails(
+                soaGatewayUserLoginId,
+                soaGatewayUserRole,
+                maxRecords,
+                caseInfo);
+
+        List<CaseSummary> caseSummaryList = caseDetailsMapper.toCaseSummaryList(response);
+
+        Page<CaseSummary> page = PaginationUtil.paginateList(pageable, caseSummaryList);
+
+        return caseDetailsMapper.toCaseDetails(page);
+    }
+
+    public CaseDetail getCaseDetail(
+        final String soaGatewayUserLoginId,
+        final String soaGatewayUserRole,
+        final String caseReferenceNumber
+    ) {
+        log.info("CaseDetailsService - getCaseDetail");
+
+        CaseInqRS response = caseServicesClient.getCaseDetail(
             soaGatewayUserLoginId,
             soaGatewayUserRole,
-            maxRecords,
-            caseInfo);
+            caseReferenceNumber);
 
-    List<CaseSummary> caseSummaryList = caseDetailsMapper.toCaseSummaryList(response);
+        return caseDetailsMapper.toCaseDetail(response.getCase());
+    }
 
-    Page<CaseSummary> page = PaginationUtil.paginateList(pageable, caseSummaryList);
-
-    return caseDetailsMapper.toCaseDetails(page);
-  }
-
-  private CaseInfo buildCaseInfo(
-          String caseReferenceNumber,
-          String providerCaseRefNumber,
-          String caseStatus,
-          String clientSurname,
-          Integer feeEarnerId,
-          Integer officeId) {
-    CaseInfo caseInfo =  new CaseInfo();
-    caseInfo.setCaseReferenceNumber(caseReferenceNumber);
-    caseInfo.setProviderCaseReferenceNumber(providerCaseRefNumber);
-    caseInfo.setCaseStatus(caseStatus);
-    caseInfo.setClientSurname(clientSurname);
-    caseInfo.setFeeEarnerContactID(
+    private CaseInfo buildCaseInfo(
+        String caseReferenceNumber,
+        String providerCaseRefNumber,
+        String caseStatus,
+        String clientSurname,
+        Integer feeEarnerId,
+        Integer officeId) {
+        CaseInfo caseInfo =  new CaseInfo();
+        caseInfo.setCaseReferenceNumber(caseReferenceNumber);
+        caseInfo.setProviderCaseReferenceNumber(providerCaseRefNumber);
+        caseInfo.setCaseStatus(caseStatus);
+        caseInfo.setClientSurname(clientSurname);
+        caseInfo.setFeeEarnerContactID(
             Optional.ofNullable(feeEarnerId).map(String::valueOf).orElse(null));
-    caseInfo.setOfficeID(
+        caseInfo.setOfficeID(
             Optional.ofNullable(officeId).map(String::valueOf).orElse(null));
-    return caseInfo;
-  }
+        return caseInfo;
+    }
 
 }
