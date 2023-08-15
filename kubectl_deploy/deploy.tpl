@@ -1,20 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: laa-ccms-civil-soa-gateway-api
+  name: caab-soa-api
+  namespace: laa-ccms-civil
+  labels:
+    app.kubernetes.io/name: caab-soa-api
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: laa-ccms-civil
+      app.kubernetes.io/name: caab-soa-api
   template:
     metadata:
       labels:
-        app: laa-ccms-civil
+        app.kubernetes.io/name: caab-soa-api
     spec:
       containers:
-        - name: laa-ccms-civil-soa-gateway-api
+        - name: caab-soa-api
           image: ${ECR_URL}:${IMAGE_TAG}
           ports:
-            - containerPort: 3000
+            - containerPort: 8007
 

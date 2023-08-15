@@ -35,7 +35,7 @@ jobs:
         - name: upload jarfile
           uses: actions/upload-artifact@v3
           with:
-            name: soa-jar
+            name: soa-api-jar
             path: soa-gateway-service/build/libs/soa-gateway-service-0.0.1-SNAPSHOT.jar
 
         - name: Test
@@ -60,6 +60,7 @@ jobs:
           env:
               GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+
     ecr:
       needs: build-test-publish
       runs-on: ubuntu-latest
@@ -73,7 +74,7 @@ jobs:
         - name: download jar
           uses: actions/download-artifact@v3
           with:
-            name: soa-jar
+            name: soa-api-jar
         - name: ecr login
           uses: aws-actions/configure-aws-credentials@v2
           with:
@@ -93,7 +94,7 @@ jobs:
         - name: delete artifact
           uses: geekyeggo/delete-artifact@v2
           with:
-            name: soa-jar
+            name: soa-api-jar
 
     deploy-dev:
       runs-on: ubuntu-latest
