@@ -4,8 +4,8 @@ server:
 laa:
   ccms:
     soa-gateway:
-      username: pui_user
-      password: THj9f52dH2NV
+      username: soa-user
+      password: soa-password
       notification:
         service-name: http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/NotificationService
         service-url: http://localhost:8051/soa-infra/services/default/NotificationServices/NotificationServices_ep
