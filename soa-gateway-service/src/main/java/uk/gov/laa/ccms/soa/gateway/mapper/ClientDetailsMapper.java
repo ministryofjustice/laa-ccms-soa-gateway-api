@@ -55,7 +55,6 @@ public interface ClientDetailsMapper {
   @Mapping(target = "nationalInsuranceNumber", source = "NINumber")
   ClientSummary toClientSummary(ClientList clientList);
 
-//    @Mapping(target = ".", source = "clientSummary")
     @Mapping(target = "NINumber", source = "nationalInsuranceNumber")
     @Mapping(target = "caseReferenceNumber", source = "clientReferenceNumber")
     ClientInfo toClientInfo(ClientSummary clientSummary);
@@ -64,7 +63,6 @@ public interface ClientDetailsMapper {
     @Mapping(target = "nationalInsuranceNumber", source = "NINumber")
     ClientPersonalDetail toClientPersonalDetail(PersonalDetails personalInformation);
 
-//    @Mapping(target = "address", source = "address")
     @Mapping(target = "contacts.fax", ignore = true)
     ClientDetailDetails toClientDetailDetails(
         uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientDetails
@@ -83,6 +81,4 @@ public interface ClientDetailsMapper {
     @Mapping(target = ".", source = "client")
     @Mapping(target = "details", source = "client.details")
     ClientDetail toClientDetail(ClientInqRS clientInqRS);
-
-
 }

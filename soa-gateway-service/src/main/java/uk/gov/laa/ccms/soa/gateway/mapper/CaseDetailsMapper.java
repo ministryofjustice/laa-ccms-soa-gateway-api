@@ -75,6 +75,14 @@ public interface CaseDetailsMapper {
 
     CaseDetails toCaseDetails(Page<CaseSummary> page);
 
+    @Mapping(target = ".", source = "caseDetails")
+    @Mapping(target = "linkedCases", source = "caseDetails.linkedCases.linkedCase")
+    @Mapping(target = "awards", source = "caseDetails.awards.award")
+    @Mapping(target = "priorAuthorities", source = "caseDetails.priorAuthorities.priorAuthority")
+    @Mapping(target = "availableFunctions", source = "caseDetails.availableFunctions.function")
+    @Mapping(target = "caseDocs", source = "caseDetails.caseDocs.caseDoc")
+    CaseDetail toCaseDetail(Case sourceCase);
+
     /**
      * Converts the {@link CaseInqRS} object to a list of {@link CaseSummary} objects.
      *
@@ -98,14 +106,6 @@ public interface CaseDetailsMapper {
 
     @Mapping(target = "caseStatusDisplay", source = "displayStatus")
     CaseSummary toCaseSummary(CaseList clientList);
-
-    @Mapping(target = ".", source = "caseDetails")
-    @Mapping(target = "linkedCases", source = "caseDetails.linkedCases.linkedCase")
-    @Mapping(target = "awards", source = "caseDetails.awards.award")
-    @Mapping(target = "priorAuthorities", source = "caseDetails.priorAuthorities.priorAuthority")
-    @Mapping(target = "availableFunctions", source = "caseDetails.availableFunctions.function")
-    @Mapping(target = "caseDocs", source = "caseDetails.caseDocs.caseDoc")
-    CaseDetail toCaseDetail(Case sourceCase);
 
     @Mapping(target="addressId", source="addressID")
     @Mapping(target="careOfName", source="coffName")

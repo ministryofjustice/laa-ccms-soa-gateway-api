@@ -320,6 +320,8 @@ components:
           type: 'string'
         province:
           type: 'string'
+        state:
+          type: 'string'
         postal_code:
           type: 'string'
     baseClient:
@@ -640,7 +642,7 @@ components:
           type: 'string'
     categoryOfLaw:
       type: object
-      properties: 
+      properties:
         category_of_law_code:
           type: 'string'
         category_of_law_description:
@@ -653,7 +655,7 @@ components:
           type: number
         cost_limitations:
           type: 'array'
-          items: 
+          items:
             $ref: '#/components/schemas/costLimitation'
     costLimitation:
       type: 'object'
@@ -686,7 +688,7 @@ components:
           type: 'string'
         available_functions:
           type: 'array'
-          items: 
+          items:
             type: 'string'
         proceeding_type:
           type: 'string'
@@ -707,10 +709,10 @@ components:
           type: 'string'
         scope_limitations:
           type: 'array'
-          items: 
+          items:
             $ref: '#/components/schemas/scopeLimitation'
         scope_limitation_applied:
-          type: 'boolean'
+          type: 'string'
         devolved_powers_ind:
           type: 'boolean'
         date_devolved_powers_used:
@@ -750,7 +752,7 @@ components:
           type: 'string'
     otherParty:
       type: 'object'
-      properties: 
+      properties:
         other_party_id:
           type: 'string'
         shared_ind:
@@ -794,7 +796,7 @@ components:
         court_ordered_means_assesment:
           type: 'boolean'
         assessed_income_frequency:
-          type: 'number'
+          type: 'string'
         assessed_income:
           type: 'number'
         assessed_assets:
@@ -848,7 +850,7 @@ components:
           format: date
         cost_ceiling:
           type: 'array'
-          items: 
+          items:
             $ref: '#/components/schemas/costLimitation'
         location:
           type: 'string'
@@ -869,7 +871,7 @@ components:
           $ref: '#/components/schemas/offeredAmount'
     recoveredAmount:
       type: 'object'
-      properties: 
+      properties:
         solicitor:
           $ref: '#/components/schemas/recoveryAmount'
         court:
@@ -878,7 +880,7 @@ components:
           $ref: '#/components/schemas/recoveryAmount'
     recoveryAmount:
       type: 'object'
-      properties: 
+      properties:
         amount:
           type: 'number'
         date_received:
@@ -888,7 +890,7 @@ components:
           type: 'number'
     offeredAmount:
       type: 'object'
-      properties: 
+      properties:
         amount:
           type: 'number'
         conditions_of_offer:
@@ -916,57 +918,57 @@ components:
           format: date
         results:
           type: 'array'
-          items: 
+          items:
             $ref: '#/components/schemas/opaGoal'
         assessment_details:
           type: 'array'
-          items: 
+          items:
             $ref: '#/components/schemas/assessmentScreen'
     opaGoal:
       type: 'object'
-      properties: 
+      properties:
         attribute:
           type: 'string'
         attribute_value:
           type: 'string'
     assessmentScreen:
       type: 'object'
-      properties: 
+      properties:
         screen_name:
           type: 'string'
         caption:
           type: 'string'
         entity:
           type: 'array'
-          items: 
+          items:
             $ref: '#/components/schemas/opaEntity'
     opaEntity:
       type: 'object'
-      properties: 
+      properties:
         sequence_number:
-          type: 'number'
+          type: 'integer'
         entity_name:
           type: 'string'
         caption:
           type: 'string'
         instances:
           type: 'array'
-          items: 
+          items:
             $ref: '#/components/schemas/opaInstance'
     opaInstance:
       type: 'object'
-      properties: 
+      properties:
         instance_label:
           type: 'string'
         caption:
           type: 'string'
         attributes:
           type: 'array'
-          items: 
+          items:
             $ref: '#/components/schemas/opaAttribute'
     opaAttribute:
       type: 'object'
-      properties: 
+      properties:
         attribute:
           type: 'string'
         caption:
@@ -981,7 +983,7 @@ components:
           type: 'boolean'
     linkedCase:
       type: 'object'
-      properties: 
+      properties:
         case_reference_number:
           type: 'string'
         provider_reference_number:
@@ -1099,7 +1101,7 @@ components:
           $ref: '#/components/schemas/recovery'
     landAward:
       type: 'object'
-      properties: 
+      properties:
         orderDate:
           type: 'string'
           format: date
@@ -1149,7 +1151,7 @@ components:
           format: date
     timeRelatedAward:
       type: 'object'
-      properties:         
+      properties:
         award_type:
           type: 'string'
         description:
@@ -1193,7 +1195,7 @@ components:
           type: 'string'
         held_by:
           type: 'array'
-          items: 
+          items:
             type: 'string'
         time_related_award:
           $ref: '#/components/schemas/timeRelatedAward'
