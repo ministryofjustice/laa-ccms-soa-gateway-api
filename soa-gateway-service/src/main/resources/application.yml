@@ -1,24 +1,21 @@
-server:
-  port: 8007
-
 laa:
   ccms:
     soa-gateway:
       username: ${SOA_GATEWAY_USERNAME}
       password: ${SOA_GATEWAY_PASSWORD}
       notification:
-        service-name: ${NOTIFICATIONS_SERVICE_NAME}
-        service-url: ${NOTIFICATIONS_SERVICE_URL}
+        service-name: http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/NotificationService
+        service-url: ${SOA_SERVICE_URL}/soa-infra/services/default/NotificationServices/NotificationServices_ep
       contract-details:
-        service-name: ${CONTRACT_DETAILS_SERVICE_NAME}
-        service-url: ${CONTRACT_DETAILS_SERVICE_URL}
+        service-name: http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/GetReferenceData
+        service-url: ${SOA_SERVICE_URL}/soa-infra/services/default/GetContractDetails/getcontractdetails_ep
       client:
-        service-name: ${CLIENT_SERVICE_NAME}
-        service-url: ${CLIENT_SERVICE_URL}
+        service-name: http://legalservices.gov.uk/CCMS/ClientManagement/Client/1.0/ClientServices
+        service-url: ${SOA_SERVICE_URL}/soa-infra/services/default/ClientServices/ClientServices_ep
       reference-data:
-        service-name: ${REFERENCE_DATA_SERVICE_NAME}
-        service-url: ${REFERENCE_DATA_SERVICE_URL}
+        service-name: http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/GetReferenceData
+        service-url: ${SOA_SERVICE_URL}/soa-infra/services/default/GetReferenceData/getreferencedata_ep
       case:
-        service-name: ${CASE_SERVICE_NAME}
-        service-url: ${CASE_SERVICE_URL}
+        service-name: http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseServices
+        service-url: ${SOA_SERVICE_URL}/soa-infra/services/default/CaseServices/CaseServices_ep
 
