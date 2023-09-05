@@ -18,7 +18,6 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseInfo;
  * <p>This client extends the foundational utilities provided by {@link AbstractSoaClient} and
  * specifically focuses on case management services. It allows for the retrieval of case details
  * based on search criteria provided. Service name and URL details are injected at runtime.</p>
- *
  */
 @Slf4j
 @SuppressWarnings("unchecked")
@@ -39,8 +38,8 @@ public class CaseServicesClient extends AbstractSoaClient {
    * @param serviceUrl         The URL endpoint for the case management service.
    */
   public CaseServicesClient(WebServiceTemplate webServiceTemplate,
-                            @Value("${laa.ccms.soa-gateway.case.service-name}") String serviceName,
-                            @Value("${laa.ccms.soa-gateway.case.service-url}") String serviceUrl) {
+      @Value("${laa.ccms.soa-gateway.case.service-name}") String serviceName,
+      @Value("${laa.ccms.soa-gateway.case.service-url}") String serviceUrl) {
     this.webServiceTemplate = webServiceTemplate;
     this.serviceName = serviceName;
     this.serviceUrl = serviceUrl;
@@ -49,17 +48,17 @@ public class CaseServicesClient extends AbstractSoaClient {
   /**
    * Retrieve a List of Cases based on the supplied CaseInfo search criteria.
    *
-   * @param loggedInUserId - the logged in UserId
+   * @param loggedInUserId   - the logged in UserId
    * @param loggedInUserType - the logged in UserType
-   * @param maxRecords - the maximum records to be returned
-   * @param caseInfo - the search criteria
+   * @param maxRecords       - the maximum records to be returned
+   * @param caseInfo         - the search criteria
    * @return List of Cases
    */
   public CaseInqRS getCaseDetails(
-          String loggedInUserId,
-          String loggedInUserType,
-          Integer maxRecords,
-          CaseInfo caseInfo
+      String loggedInUserId,
+      String loggedInUserType,
+      Integer maxRecords,
+      CaseInfo caseInfo
   ) {
 
     final String soapAction = String.format("%s/GetCaseDetails", serviceName);
@@ -72,16 +71,43 @@ public class CaseServicesClient extends AbstractSoaClient {
     caseInqRq.setSearchCriteria(searchCriteria);
     caseInqRq.setRecordCount(createRecordCount(maxRecords));
 
+    return retrieveCaseDetails(soapAction, caseInqRq).getValue();
+  }
+
+  /**
+   * Retrieve a single Case for the supplied case reference number.
+   *
+   * @param loggedInUserId      - the logged in UserId
+   * @param loggedInUserType    - the logged in UserType
+   * @param caseReferenceNumber - the case reference number
+   * @return Response object containing the full details for a single Case
+   */
+  public CaseInqRS getCaseDetail(
+      String loggedInUserId,
+      String loggedInUserType,
+      String caseReferenceNumber) {
+
+    final String soapAction = String.format("%s/GetCaseDetails", serviceName);
+    CaseInqRQ caseInqRq = CASE_FACTORY.createCaseInqRQ();
+    caseInqRq.setHeaderRQ(createHeaderRq(loggedInUserId, loggedInUserType));
+
+    caseInqRq.setSearchCriteria(CASE_FACTORY.createCaseInqRQSearchCriteria());
+    caseInqRq.getSearchCriteria().setCaseReferenceNumber(caseReferenceNumber);
+    caseInqRq.setRecordCount(createRecordCount(1));
+
+    return retrieveCaseDetails(soapAction, caseInqRq).getValue();
+  }
+
+  private JAXBElement<CaseInqRS> retrieveCaseDetails(String soapAction, CaseInqRQ caseInqRq) {
     JAXBElement<CaseInqRS> response =
-            (JAXBElement<CaseInqRS>) getWebServiceTemplate()
-                    .marshalSendAndReceive(
-                            serviceUrl,
-                            CASE_FACTORY.createCaseInqRQ(caseInqRq),
-                            new SoapActionCallback(soapAction));
+        (JAXBElement<CaseInqRS>) getWebServiceTemplate()
+            .marshalSendAndReceive(
+                serviceUrl,
+                CASE_FACTORY.createCaseInqRQ(caseInqRq),
+                new SoapActionCallback(soapAction));
 
     // Check and throw exception if the SOA call was not successful
     checkSoaCallSuccess(serviceName, response.getValue().getHeaderRS());
-
-    return response.getValue();
+    return response;
   }
 }

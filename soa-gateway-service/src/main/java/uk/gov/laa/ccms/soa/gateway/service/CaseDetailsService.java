@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import uk.gov.laa.ccms.soa.gateway.client.CaseServicesClient;
 import uk.gov.laa.ccms.soa.gateway.mapper.CaseDetailsMapper;
+import uk.gov.laa.ccms.soa.gateway.model.CaseDetail;
 import uk.gov.laa.ccms.soa.gateway.model.CaseDetails;
 import uk.gov.laa.ccms.soa.gateway.model.CaseSummary;
 import uk.gov.laa.ccms.soa.gateway.util.PaginationUtil;
@@ -38,45 +39,44 @@ public class CaseDetailsService {
    * search criteria, fetches the relevant case details, and then maps and paginates these details
    * to the desired format.</p>
    *
-   * @param soaGatewayUserLoginId      The user login ID for the SOA Gateway.
-   * @param soaGatewayUserRole         The user role in the SOA Gateway.
-   * @param caseReferenceNumber        The reference number for the case.
-   * @param providerCaseRefNumber      The provider's reference number for the case.
-   * @param caseStatus                 The status of the case.
-   * @param clientSurname              The surname of the client associated with the case.
-   * @param feeEarnerId                The ID of the fee earner associated with the case.
-   * @param officeId                   The ID of the office handling the case.
-   * @param maxRecords                 The maximum number of records to retrieve.
-   * @param pageable                   The pagination details.
-   * @return                           A {@link CaseDetails} object containing the retrieved
-   *                                   and processed case details.
+   * @param soaGatewayUserLoginId The user login ID for the SOA Gateway.
+   * @param soaGatewayUserRole    The user role in the SOA Gateway.
+   * @param caseReferenceNumber   The reference number for the case.
+   * @param providerCaseRefNumber The provider's reference number for the case.
+   * @param caseStatus            The status of the case.
+   * @param clientSurname         The surname of the client associated with the case.
+   * @param feeEarnerId           The ID of the fee earner associated with the case.
+   * @param officeId              The ID of the office handling the case.
+   * @param maxRecords            The maximum number of records to retrieve.
+   * @param pageable              The pagination details.
+   * @return A {@link CaseDetails} object containing the retrieved and processed case details.
    */
   public CaseDetails getCaseDetails(
-          final String soaGatewayUserLoginId,
-          final String soaGatewayUserRole,
-          final String caseReferenceNumber,
-          final  String providerCaseRefNumber,
-          final String caseStatus,
-          final String clientSurname,
-          final Integer feeEarnerId,
-          final Integer officeId,
-          final Integer maxRecords,
-          final Pageable pageable
+      final String soaGatewayUserLoginId,
+      final String soaGatewayUserRole,
+      final String caseReferenceNumber,
+      final String providerCaseRefNumber,
+      final String caseStatus,
+      final String clientSurname,
+      final Integer feeEarnerId,
+      final Integer officeId,
+      final Integer maxRecords,
+      final Pageable pageable
   ) {
     log.info("CaseDetailsService - getCaseDetails");
     CaseInfo caseInfo = buildCaseInfo(
-            caseReferenceNumber,
-            providerCaseRefNumber,
-            caseStatus,
-            clientSurname,
-            feeEarnerId,
-            officeId);
+        caseReferenceNumber,
+        providerCaseRefNumber,
+        caseStatus,
+        clientSurname,
+        feeEarnerId,
+        officeId);
 
     CaseInqRS response = caseServicesClient.getCaseDetails(
-            soaGatewayUserLoginId,
-            soaGatewayUserRole,
-            maxRecords,
-            caseInfo);
+        soaGatewayUserLoginId,
+        soaGatewayUserRole,
+        maxRecords,
+        caseInfo);
 
     List<CaseSummary> caseSummaryList = caseDetailsMapper.toCaseSummaryList(response);
 
@@ -85,22 +85,49 @@ public class CaseDetailsService {
     return caseDetailsMapper.toCaseDetails(page);
   }
 
+  /**
+   * Retrieve the full details of a single Case based on the supplied caseReferenceNumber.
+   *
+   * <p>This method communicates with the external Case Services system using the provided
+   * case reference, fetches the relevant case details, and then maps these details
+   * to the desired format.</p>
+   *
+   * @param soaGatewayUserLoginId The user login ID for the SOA Gateway.
+   * @param soaGatewayUserRole    The user role in the SOA Gateway.
+   * @param caseReferenceNumber   The reference number for the case.
+   * @return A {@link CaseDetail} object containing the retrieved and processed case detail.
+   */
+  public CaseDetail getCaseDetail(
+      final String soaGatewayUserLoginId,
+      final String soaGatewayUserRole,
+      final String caseReferenceNumber
+  ) {
+    log.info("CaseDetailsService - getCaseDetail");
+
+    CaseInqRS response = caseServicesClient.getCaseDetail(
+        soaGatewayUserLoginId,
+        soaGatewayUserRole,
+        caseReferenceNumber);
+
+    return caseDetailsMapper.toCaseDetail(response.getCase());
+  }
+
   private CaseInfo buildCaseInfo(
-          String caseReferenceNumber,
-          String providerCaseRefNumber,
-          String caseStatus,
-          String clientSurname,
-          Integer feeEarnerId,
-          Integer officeId) {
-    CaseInfo caseInfo =  new CaseInfo();
+      String caseReferenceNumber,
+      String providerCaseRefNumber,
+      String caseStatus,
+      String clientSurname,
+      Integer feeEarnerId,
+      Integer officeId) {
+    CaseInfo caseInfo = new CaseInfo();
     caseInfo.setCaseReferenceNumber(caseReferenceNumber);
     caseInfo.setProviderCaseReferenceNumber(providerCaseRefNumber);
     caseInfo.setCaseStatus(caseStatus);
     caseInfo.setClientSurname(clientSurname);
     caseInfo.setFeeEarnerContactID(
-            Optional.ofNullable(feeEarnerId).map(String::valueOf).orElse(null));
+        Optional.ofNullable(feeEarnerId).map(String::valueOf).orElse(null));
     caseInfo.setOfficeID(
-            Optional.ofNullable(officeId).map(String::valueOf).orElse(null));
+        Optional.ofNullable(officeId).map(String::valueOf).orElse(null));
     return caseInfo;
   }
 

@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.laa.ccms.soa.gateway.api.CasesApi;
+import uk.gov.laa.ccms.soa.gateway.model.CaseDetail;
 import uk.gov.laa.ccms.soa.gateway.model.CaseDetails;
 import uk.gov.laa.ccms.soa.gateway.service.CaseDetailsService;
 
@@ -50,6 +51,25 @@ public class CaseDetailsController implements CasesApi {
           pageable);
 
       return ResponseEntity.ok(caseDetails);
+    } catch (Exception e) {
+      log.error("CaseDetailsController caught exception", e);
+      return ResponseEntity.internalServerError().build();
+    }
+  }
+
+  @Override
+  public ResponseEntity<CaseDetail> getCase(
+      final String caseReferenceNumber,
+      final String soaGatewayUserLoginId,
+      final String soaGatewayUserRole) {
+    log.info("GET /cases/{}", caseReferenceNumber);
+    try {
+      CaseDetail caseDetail = caseDetailsService.getCaseDetail(
+          soaGatewayUserLoginId,
+          soaGatewayUserRole,
+          caseReferenceNumber);
+
+      return ResponseEntity.ok(caseDetail);
     } catch (Exception e) {
       log.error("CaseDetailsController caught exception", e);
       return ResponseEntity.internalServerError().build();
