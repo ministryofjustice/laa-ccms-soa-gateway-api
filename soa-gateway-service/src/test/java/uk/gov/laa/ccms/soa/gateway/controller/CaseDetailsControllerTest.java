@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ws.client.WebServiceIOException;
 import uk.gov.laa.ccms.soa.gateway.model.CaseDetails;
+import uk.gov.laa.ccms.soa.gateway.model.CaseDetail;
 import uk.gov.laa.ccms.soa.gateway.service.CaseDetailsService;
 
 @ExtendWith(MockitoExtension.class)
@@ -148,5 +149,53 @@ public class CaseDetailsControllerTest {
         OFFICE_ID,
         MAX_RECORDS,
         PAGEABLE);
+  }
+
+  @Test
+  public void testGetCase_Success() throws Exception {
+    // Create a mock response
+    CaseDetail caseDetail = new CaseDetail();
+
+    // Stub the clientDetailsService to return the mock response
+    when(caseDetailsService.getCaseDetail(
+        SOA_GATEWAY_USER_LOGIN_ID,
+        SOA_GATEWAY_USER_ROLE,
+        CASE_REFERENCE_NUMBER))
+        .thenReturn(caseDetail);
+
+    mockMvc.perform(
+            get("/cases/{caseReferenceNumber}",
+                CASE_REFERENCE_NUMBER)
+                .header("SoaGateway-User-Login-Id", SOA_GATEWAY_USER_LOGIN_ID)
+                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE))
+        .andExpect(status().isOk());
+
+    verify(caseDetailsService).getCaseDetail(
+        SOA_GATEWAY_USER_LOGIN_ID,
+        SOA_GATEWAY_USER_ROLE,
+        CASE_REFERENCE_NUMBER);
+  }
+
+  @Test
+  public void testGetCase_Exception() throws Exception {
+
+    // Stub the mock response
+    when(caseDetailsService.getCaseDetail(
+        SOA_GATEWAY_USER_LOGIN_ID,
+        SOA_GATEWAY_USER_ROLE,
+        CASE_REFERENCE_NUMBER))
+        .thenThrow(new WebServiceIOException("Test exception"));
+
+    mockMvc.perform(
+            get("/cases/{caseReferenceNumber}",
+                CASE_REFERENCE_NUMBER)
+                .header("SoaGateway-User-Login-Id", SOA_GATEWAY_USER_LOGIN_ID)
+                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE))
+        .andExpect(status().isInternalServerError());
+
+    verify(caseDetailsService).getCaseDetail(
+        SOA_GATEWAY_USER_LOGIN_ID,
+        SOA_GATEWAY_USER_ROLE,
+        CASE_REFERENCE_NUMBER);
   }
 }

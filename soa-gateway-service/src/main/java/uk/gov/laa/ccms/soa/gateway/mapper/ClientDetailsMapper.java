@@ -24,7 +24,7 @@ import uk.gov.legalservices.enterprise.common._1_0.common.RecordHistory;
 @Mapper(componentModel = "spring")
 public interface ClientDetailsMapper {
 
-  @Mapping(target = ".", source = "clientList.client")
+  @Mapping(target = ".", source = "client")
   List<ClientSummary> toClientSummaryList(List<ClientList> clientList);
 
   /**
@@ -57,33 +57,31 @@ public interface ClientDetailsMapper {
   @Mapping(target = "nationalInsuranceNumber", source = "NINumber")
   ClientSummary toClientSummary(ClientList clientList);
 
-  @Mapping(target = ".", source = "clientSummary")
-  @Mapping(target = "NINumber", source = "clientSummary.nationalInsuranceNumber")
+  @Mapping(target = "NINumber", source = "nationalInsuranceNumber")
   @Mapping(target = "caseReferenceNumber", source = "clientReferenceNumber")
   ClientInfo toClientInfo(ClientSummary clientSummary);
 
   // Inside the toClientPersonalDetail method
-  @Mapping(target = "nationalInsuranceNumber", source = "personalInformation.NINumber")
+  @Mapping(target = "nationalInsuranceNumber", source = "NINumber")
   ClientPersonalDetail toClientPersonalDetail(PersonalDetails personalInformation);
 
-  @Mapping(target = "address", source = "clientDetails.address")
+  @Mapping(target = "contacts.fax", ignore = true)
   ClientDetailDetails toClientDetailDetails(
-          uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientDetails
-                  clientDetails);
+      uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientDetails
+          clientDetails);
 
-  @Mapping(target = "addressId", source = "address.addressID")
+  @Mapping(target = "addressId", source = "addressID")
+  @Mapping(target = "careOfName", source = "coffName")
   AddressDetail toAddressDetail(
-          uk.gov.legalservices.enterprise.common._1_0.common.Address address);
+      uk.gov.legalservices.enterprise.common._1_0.common.Address address);
 
-  @Mapping(target = "createdBy.userLoginId", source = "recordHistory.createdBy.userLoginID")
-  @Mapping(target = "lastUpdatedBy.userLoginId", source = "recordHistory.lastUpdatedBy.userLoginID")
+  @Mapping(target = "createdBy.userLoginId", source = "createdBy.userLoginID")
+  @Mapping(target = "lastUpdatedBy.userLoginId", source = "lastUpdatedBy.userLoginID")
   ClientDetailRecordHistory toClientDetailRecordHistory(RecordHistory recordHistory);
 
   // Now, the modified toClientDetail method will use the above method to map the
   // 'personalInformation' fields
-  @Mapping(target = ".", source = "clientInqRs.client")
-  @Mapping(target = "details", source = "clientInqRs.client.details")
+  @Mapping(target = ".", source = "client")
+  @Mapping(target = "details", source = "client.details")
   ClientDetail toClientDetail(ClientInqRS clientInqRs);
-
-
 }

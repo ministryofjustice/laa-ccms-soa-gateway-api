@@ -17,15 +17,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import uk.gov.laa.ccms.soa.gateway.model.AddressDetail;
-import uk.gov.laa.ccms.soa.gateway.model.ClientContactDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetailRecordHistory;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetails;
-import uk.gov.laa.ccms.soa.gateway.model.ClientNameDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ClientPersonalDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ClientSummary;
-import uk.gov.laa.ccms.soa.gateway.model.ClientUserDetail;
+import uk.gov.laa.ccms.soa.gateway.model.NameDetail;
+import uk.gov.laa.ccms.soa.gateway.model.UserDetail;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientInqRS;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.Client;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientInfo;
@@ -217,7 +216,7 @@ public class ClientDetailsMapperTest {
         name.setSurname("Smith");
         name.setFirstName("John");
 
-        ClientNameDetail result = clientDetailsMapper.nameToClientNameDetail(name);
+        NameDetail result = clientDetailsMapper.nameToNameDetail(name);
 
         assertNotNull(result);
         assertEquals("Mr.", result.getTitle());
@@ -231,7 +230,7 @@ public class ClientDetailsMapperTest {
         contactDetails.setTelephoneHome("123456");
         contactDetails.setEmailAddress("john@doe.com");
 
-        ClientContactDetail result = clientDetailsMapper.contactDetailsToClientContactDetail(contactDetails);
+        uk.gov.laa.ccms.soa.gateway.model.ContactDetail result = clientDetailsMapper.contactDetailsToContactDetail(contactDetails);
 
         assertNotNull(result);
         assertEquals("123456", result.getTelephoneHome());
@@ -244,7 +243,7 @@ public class ClientDetailsMapperTest {
         user.setUserLoginID("userID");
         user.setUserName("username");
 
-        ClientUserDetail result = clientDetailsMapper.userToClientUserDetail(user);
+        UserDetail result = clientDetailsMapper.userToUserDetail(user);
 
         assertNotNull(result);
         assertEquals("userID", result.getUserLoginId());
