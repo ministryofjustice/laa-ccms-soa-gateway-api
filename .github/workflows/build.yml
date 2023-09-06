@@ -31,47 +31,47 @@ jobs:
         id: extract_tag_name
 
 
-    build-test-publish:
-      runs-on: ubuntu-latest
+  build-test-publish:
+    runs-on: ubuntu-latest
 
-      steps:
-        - uses: actions/checkout@v3
-        - name: Set up JDK 17
-          uses: actions/setup-java@v3
-          with:
-            java-version: '17'
-            distribution: 'temurin'
-        - name: Build with Gradle
-          uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
-          with:
-            arguments: build
-        - name: upload jarfile
-          uses: actions/upload-artifact@v3
-          with:
-            name: soa-api-jar
-            path: soa-gateway-service/build/libs/soa-gateway-service-0.0.1-SNAPSHOT.jar
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
+        with:
+          arguments: build
+      - name: upload jarfile
+        uses: actions/upload-artifact@v3
+        with:
+          name: soa-api-jar
+          path: soa-gateway-service/build/libs/soa-gateway-service-0.0.1-SNAPSHOT.jar
 
-        - name: Test
-          uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
-          with:
-            arguments: jacocoTestCoverageVerification
+      - name: Test
+        uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
+        with:
+          arguments: jacocoTestCoverageVerification
 
-        - name: Integration Test
-          uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
-          with:
-            arguments: integrationTest
+      - name: Integration Test
+        uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
+        with:
+          arguments: integrationTest
 
-        - name: Update snapshot version
-          uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
-          with:
-            arguments: updateSnapshotVersion
+      - name: Update snapshot version
+        uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
+        with:
+          arguments: updateSnapshotVersion
 
-        - name: Publish package
-          uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
-          with:
-            arguments: publish
-          env:
-              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish package
+        uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
+        with:
+          arguments: publish
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
   ecr:
