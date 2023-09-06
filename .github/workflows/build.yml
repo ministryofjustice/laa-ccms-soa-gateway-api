@@ -75,7 +75,7 @@ jobs:
 
 
   ecr:
-    if: github.ref == 'main'
+    if: github.event.pull_request
     needs: [build-test-publish, define-image-tag]
     runs-on: ubuntu-latest
     permissions:
@@ -112,7 +112,7 @@ jobs:
           name: soa-api-jar
 
   delete-artifact:
-    if: github.ref != 'main'
+    if: !github.event.pull_request
     needs: build-test-publish
     runs-on: ubuntu-latest
     permissions:
