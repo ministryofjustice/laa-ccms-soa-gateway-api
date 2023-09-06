@@ -112,7 +112,7 @@ jobs:
           name: soa-api-jar
 
   delete-artifact:
-    if: !github.event.pull_request
+    if: github.event_name != 'pull_request'
     needs: build-test-publish
     runs-on: ubuntu-latest
     permissions:
