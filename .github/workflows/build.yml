@@ -75,6 +75,7 @@ jobs:
 
 
   ecr:
+    if: github.ref == 'main'
     needs: [build-test-publish, define-image-tag]
     runs-on: ubuntu-latest
     permissions:
@@ -91,8 +92,8 @@ jobs:
       - name: ecr login
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: ${{ secrets.ECR_ROLE_TO_ASSUME }}
-          aws-region: ${{ vars.ECR_REGION }}
+          role-to-assume: ${{ secrets.DEV_ECR_ROLE_TO_ASSUME }}
+          aws-region: ${{ vars.DEV_ECR_REGION }}
       # Login to container repo
       - uses: aws-actions/amazon-ecr-login@v1
         id: login-ecr
@@ -109,6 +110,19 @@ jobs:
         uses: geekyeggo/delete-artifact@v2
         with:
           name: soa-api-jar
+
+  delete-artifact:
+    if: github.ref != 'main'
+    needs: build-test-publish
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: delete artifact
+        uses: geekyeggo/delete-artifact@v2
+        with:
+          name: data-api-jar
 
   update-helm-chart:
     needs: [ ecr, define-image-tag ]
