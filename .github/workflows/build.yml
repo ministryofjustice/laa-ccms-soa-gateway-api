@@ -74,43 +74,41 @@ jobs:
               GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
-
-
-    ecr:
-      needs: [build-test-publish, define-image-tag]
-      runs-on: ubuntu-latest
-      permissions:
-        id-token: write # for requesting jwt
-        contents: read  # for actions/checkout
-      steps:
-        # Checkout github repo
-        - uses: actions/checkout@v3
-        # Assume role in cloud platform
-        - name: download jar
-          uses: actions/download-artifact@v3
-          with:
-            name: soa-api-jar
-        - name: ecr login
-          uses: aws-actions/configure-aws-credentials@v2
-          with:
-            role-to-assume: ${{ secrets.ECR_ROLE_TO_ASSUME }}
-            aws-region: ${{ vars.ECR_REGION }}
-        # Login to container repo
-        - uses: aws-actions/amazon-ecr-login@v1
-          id: login-ecr
-        # Build and push docker image to container repo
-        - name: docker build and push
-          run: |
-            docker build -t $REGISTRY/$REPOSITORY:${{ env.IMAGE_TAG }} .
-            docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
-          env:
-            REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-            REPOSITORY: ${{ vars.DEV_ECR_REPOSITORY }}
-            IMAGE_TAG: ${{ needs.define-image-tag.outputs.tag_name }}
-        - name: delete artifact
-          uses: geekyeggo/delete-artifact@v2
-          with:
-            name: soa-api-jar
+  ecr:
+    needs: [build-test-publish, define-image-tag]
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # for requesting jwt
+      contents: read  # for actions/checkout
+    steps:
+      # Checkout github repo
+      - uses: actions/checkout@v3
+      # Assume role in cloud platform
+      - name: download jar
+        uses: actions/download-artifact@v3
+        with:
+          name: soa-api-jar
+      - name: ecr login
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.ECR_ROLE_TO_ASSUME }}
+          aws-region: ${{ vars.ECR_REGION }}
+      # Login to container repo
+      - uses: aws-actions/amazon-ecr-login@v1
+        id: login-ecr
+      # Build and push docker image to container repo
+      - name: docker build and push
+        run: |
+          docker build -t $REGISTRY/$REPOSITORY:${{ env.IMAGE_TAG }} .
+          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: ${{ vars.DEV_ECR_REPOSITORY }}
+          IMAGE_TAG: ${{ needs.define-image-tag.outputs.tag_name }}
+      - name: delete artifact
+        uses: geekyeggo/delete-artifact@v2
+        with:
+          name: soa-api-jar
 
   update-helm-chart:
     needs: [ ecr, define-image-tag ]
