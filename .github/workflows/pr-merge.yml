@@ -9,6 +9,8 @@ name: CI ccms SOA Gateway
 
 on:
   pull_request:
+    branches:
+      main
     types:
       closed
 

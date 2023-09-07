@@ -9,6 +9,8 @@ name: CI ccms SOA Gateway
 
 on:
   push:
+    branches-ignore:
+      - main
 
 permissions:
   contents: read
