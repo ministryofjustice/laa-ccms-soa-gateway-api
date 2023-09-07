@@ -34,7 +34,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation:3.1.2'
 
     //Required for pagination
-    implementation 'org.springframework.data:spring-data-commons:3.1.2'
+    implementation 'org.springframework.data:spring-data-commons:3.1.3'
 
     implementation 'org.springframework.ws:spring-ws-security'
     implementation 'org.modelmapper:modelmapper:3.1.1'
