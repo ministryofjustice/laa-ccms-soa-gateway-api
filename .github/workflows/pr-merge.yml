@@ -8,7 +8,11 @@
 name: CI ccms SOA Gateway
 
 on:
-  push:
+  pull_request:
+    branches:
+      main
+    types:
+      closed
 
 permissions:
   contents: read
@@ -16,6 +20,7 @@ permissions:
 
 jobs:
   define-image-tag:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     # map a step output to job output
     outputs:
@@ -32,8 +37,8 @@ jobs:
 
 
   build-test-publish:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 17
@@ -75,7 +80,6 @@ jobs:
 
 
   ecr:
-    if: github.ref == 'main'
     needs: [build-test-publish, define-image-tag]
     runs-on: ubuntu-latest
     permissions:
@@ -106,20 +110,7 @@ jobs:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           REPOSITORY: ${{ vars.DEV_ECR_REPOSITORY }}
           IMAGE_TAG: ${{ needs.define-image-tag.outputs.tag_name }}
-      - name: delete artifact
-        uses: geekyeggo/delete-artifact@v2
-        with:
-          name: soa-api-jar
-
-  delete-artifact:
-    if: github.ref != 'main'
-    needs: build-test-publish
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
-    steps:
-      - name: delete artifact
+      - name: delete jarfile
         uses: geekyeggo/delete-artifact@v2
         with:
           name: soa-api-jar
