@@ -35,6 +35,81 @@ paths:
           description: 'Not found'
         '500':
           description: 'Internal server error'
+
+  /notifications:
+    get:
+      tags:
+        - notifications
+      summary: 'Get Notifications'
+      operationId: 'getNotifications'
+      x-spring-paginated: true
+      parameters:
+        - name: 'case-reference-number'
+          in: 'query'
+          schema:
+            type: 'string'
+            example: '1234567890'
+        - name: 'provider-case-reference'
+          in: 'query'
+          schema:
+            type: 'string'
+            example: "1234567890"
+        - name: 'assigned-to-user-id'
+          in: 'query'
+          schema:
+            type: 'string'
+            example: 'abc123'
+        - name: 'client-surname'
+          in: 'query'
+          schema:
+            type: 'string'
+            example: 'smith'
+        - name: 'fee-earner-id'
+          in: 'query'
+          schema:
+            type: 'integer'
+            example: 1234567890
+        - name: 'include-closed'
+          in: 'query'
+          schema:
+            type: boolean
+          allowEmptyValue: true
+        - name: 'notification-type'
+          in: 'query'
+          schema:
+            type: 'string'
+            example: 'A'
+        - name: 'date-from'
+          in: 'query'
+          schema:
+            type: 'string'
+            example: "2017-01-01"
+            format: date
+        - name: 'date-to'
+          in: 'query'
+          schema:
+            type: 'string'
+            example: "2017-01-01"
+            format: date
+        - $ref: '#/components/parameters/soaGatewayUserLoginId'
+        - $ref: '#/components/parameters/soaGatewayUserRole'
+        - $ref: '#/components/parameters/maxRecords'
+      responses:
+        '200':
+          description: 'Successful operation'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/notifications"
+        '400':
+          description: 'Bad request'
+        '401':
+          description: 'Unauthorized'
+        '404':
+          description: 'Not found'
+        '500':
+          description: 'Internal server error'
+
   /contract-details:
     get:
       tags:
@@ -1296,3 +1371,106 @@ components:
           type: 'string'
         document_subject:
           type: 'string'
+    notifications:
+      allOf:
+        - $ref: "#/components/schemas/page"
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/notification'
+    notification:
+      type: 'object'
+      properties:
+        client_reference_number:
+          type: 'string'
+        case_reference_number:
+          type: 'string'
+        provider_case_reference_number:
+          type: 'string'
+        user:
+          $ref: '#/components/schemas/userDetail'
+        client_name:
+          type: 'string'
+        category_of_law:
+          type: 'string'
+        fee_earner:
+          type: 'string'
+        notification_detail:
+          $ref: '#/components/schemas/notificationDetail'
+    notificationDetail:
+      type: 'object'
+      properties:
+        notification_id:
+          type: 'string'
+        provider_firm_id:
+          type: 'string'
+        subject:
+          type: 'string'
+        assign_date:
+          type: 'string'
+          format: date
+        due_date:
+          type: 'string'
+          format: date
+        notification_type:
+          type: 'string'
+        status:
+          type: 'string'
+        notes:
+          type: 'array'
+          items:
+            $ref: '#/components/schemas/note'
+        evidence_allowed:
+          type: 'boolean'
+        notification_open_indicator:
+          type: 'boolean'
+        attached_documents:
+          type: 'array'
+          items:
+            $ref: '#/components/schemas/document'
+        uploaded_documents:
+          type: 'array'
+          items:
+            $ref: '#/components/schemas/document'
+        available_responses:
+          type: array
+          items:
+            type: 'string'
+    note:
+      type: 'object'
+      properties:
+        notes_id:
+          type: 'string'
+        user:
+          $ref: '#/components/schemas/userDetail'
+        date:
+          type: 'string'
+          format: date
+        message:
+          type: 'string'
+
+    document:
+      type: 'object'
+      properties:
+        document_id:
+          type: 'string'
+        document_type:
+          type: 'string'
+        file_extension:
+          type: 'string'
+        channel:
+          type: 'string'
+        text:
+          type: 'string'
+        document_link:
+          type: 'string'
+        bin_data:
+          format: byte
+          type: 'string'
+        status:
+          type: 'string'
+        status_description:
+          type: 'string'
+

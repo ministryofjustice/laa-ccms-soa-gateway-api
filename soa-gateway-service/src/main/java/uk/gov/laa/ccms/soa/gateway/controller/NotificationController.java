@@ -1,19 +1,23 @@
 package uk.gov.laa.ccms.soa.gateway.controller;
 
+import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.laa.ccms.soa.gateway.api.NotificationsApi;
 import uk.gov.laa.ccms.soa.gateway.model.NotificationSummary;
+import uk.gov.laa.ccms.soa.gateway.model.Notifications;
 import uk.gov.laa.ccms.soa.gateway.service.NotificationService;
+import uk.gov.laa.ccms.soa.gateway.util.DateUtil;
 
 /**
  * Controller responsible for managing user notifications within the system.
  *
  * <p>Acts as an implementation of the {@link NotificationsApi}, leveraging the
- * {@link NotificationService} to handle the associated business logic and data retrieval
- * related to user notifications.</p>
+ * {@link NotificationService} to handle the associated business logic and data retrieval related to
+ * user notifications.</p>
  */
 @RestController
 @RequiredArgsConstructor
@@ -23,18 +27,56 @@ public class NotificationController implements NotificationsApi {
   private final NotificationService notificationService;
 
   @Override
+  public ResponseEntity<Notifications> getNotifications(
+      final String soaGatewayUserLoginId,
+      final String soaGatewayUserRole,
+      final String caseReferenceNumber,
+      final String providerCaseReference,
+      final String assignedToUserId,
+      final String clientSurname,
+      final Integer feeEarnerId,
+      final Boolean includeClosed,
+      final String notificationType,
+      final Date dateFrom,
+      final Date dateTo,
+      final Integer maxRecords,
+      final Pageable pageable) {
+    try {
+      Notifications notifications = notificationService.getNotifications(
+          soaGatewayUserLoginId,
+          soaGatewayUserRole,
+          caseReferenceNumber,
+          providerCaseReference,
+          assignedToUserId,
+          clientSurname,
+          feeEarnerId,
+          includeClosed,
+          notificationType,
+          DateUtil.convertDateToXmlDateOnly(dateFrom),
+          DateUtil.convertDateToXmlDateOnly(dateTo),
+          maxRecords,
+          pageable);
+      return ResponseEntity.ok(notifications);
+    } catch (Exception e) {
+      log.error("Notification Controller caught exception in getNotifications", e);
+      return ResponseEntity.internalServerError().build();
+    }
+
+  }
+
+  @Override
   public ResponseEntity<NotificationSummary> getUserNotificationSummary(
-          final String userId,
-          final String soaGatewayUserLoginId,
-          final String soaGatewayUserRole,
-          final Integer maxRecords) {
+      final String userId,
+      final String soaGatewayUserLoginId,
+      final String soaGatewayUserRole,
+      final Integer maxRecords) {
 
     try {
       NotificationSummary notificationSummary = notificationService.getNotificationSummary(
-              userId,
-              soaGatewayUserLoginId,
-              soaGatewayUserRole,
-              maxRecords);
+          userId,
+          soaGatewayUserLoginId,
+          soaGatewayUserRole,
+          maxRecords);
       return ResponseEntity.ok(notificationSummary);
     } catch (Exception e) {
       log.error("Notification Controller caught exception", e);
@@ -42,4 +84,5 @@ public class NotificationController implements NotificationsApi {
     }
 
   }
+
 }
