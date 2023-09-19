@@ -18,6 +18,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.soap.client.core.SoapActionCallback;
+import uk.gov.laa.ccms.soa.gateway.model.Notification;
+import uk.gov.laa.ccms.soa.gateway.model.UserDetail;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationCntInqRQ;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationCntInqRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationInqRQ;
@@ -29,7 +31,7 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.ObjectFactory
  * Test class for {@link NotificationClient}.
  */
 @ExtendWith(MockitoExtension.class)
-public class NotificationClientTest {
+ class NotificationClientTest {
 
   public static final String SERVICE_NAME = "myService";
   public static final String SERVICE_URL = "myUrl";
@@ -59,7 +61,7 @@ public class NotificationClientTest {
   }
 
   @Test
-  public void testGetNotificationCountBuildsCorrectRequest() {
+  void testGetNotificationCountBuildsCorrectRequest() {
     ObjectFactory objectFactory = new ObjectFactory();
 
     when(webServiceTemplate.marshalSendAndReceive(
@@ -96,10 +98,17 @@ public class NotificationClientTest {
     SearchCriteria searchCriteria =
         createSearchCriteria(objectFactory.createNotificationInqRQSearchCriteria());
 
-    NotificationInqRS response = client.getNotifications(testLoginId, testUserType,
-        null, null, "ding ding",
-        null, null, false, null, null,
-        null, 10);
+    NotificationInqRS response = client.getNotifications(
+        new Notification()
+            .user(
+                new UserDetail()
+                    .userLoginId(testLoginId)
+                    .userType(testUserType)
+                    .userName("ding ding")
+            )
+            .caseReferenceNumber(null),
+        false, null, null,
+        10);
 
     verify(webServiceTemplate).marshalSendAndReceive(
         eq(SERVICE_URL),

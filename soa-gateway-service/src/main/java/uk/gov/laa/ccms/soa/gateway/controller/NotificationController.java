@@ -1,14 +1,18 @@
 package uk.gov.laa.ccms.soa.gateway.controller;
 
 import java.util.Date;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.laa.ccms.soa.gateway.api.NotificationsApi;
+import uk.gov.laa.ccms.soa.gateway.model.Notification;
+import uk.gov.laa.ccms.soa.gateway.model.NotificationDetail;
 import uk.gov.laa.ccms.soa.gateway.model.NotificationSummary;
 import uk.gov.laa.ccms.soa.gateway.model.Notifications;
+import uk.gov.laa.ccms.soa.gateway.model.UserDetail;
 import uk.gov.laa.ccms.soa.gateway.service.NotificationService;
 import uk.gov.laa.ccms.soa.gateway.util.DateUtil;
 
@@ -42,16 +46,27 @@ public class NotificationController implements NotificationsApi {
       final Integer maxRecords,
       final Pageable pageable) {
     try {
+
+      //Build a Notification domain bject to hold the search criteria
+
+      Notification notification = new Notification()
+          .caseReferenceNumber(caseReferenceNumber)
+          .providerCaseReferenceNumber(providerCaseReference)
+          .clientName(clientSurname)
+          .feeEarner(Optional.ofNullable(feeEarnerId).map(String::valueOf).orElse(""))
+          .user(
+              new UserDetail()
+                  .userLoginId(soaGatewayUserLoginId)
+                  .userType(soaGatewayUserRole)
+                  .userName(assignedToUserId)
+          )
+          .notificationDetail(
+              new NotificationDetail()
+                  .notificationType(notificationType)
+          );
       Notifications notifications = notificationService.getNotifications(
-          soaGatewayUserLoginId,
-          soaGatewayUserRole,
-          caseReferenceNumber,
-          providerCaseReference,
-          assignedToUserId,
-          clientSurname,
-          feeEarnerId,
+          notification,
           includeClosed,
-          notificationType,
           DateUtil.convertDateToXmlDateOnly(dateFrom),
           DateUtil.convertDateToXmlDateOnly(dateTo),
           maxRecords,

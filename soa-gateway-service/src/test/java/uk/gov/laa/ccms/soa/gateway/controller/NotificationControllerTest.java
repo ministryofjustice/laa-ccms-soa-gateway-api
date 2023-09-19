@@ -54,7 +54,7 @@ class NotificationControllerTest {
   }
 
   @Test
-  public void testGetUserNotificationSummary_Success() throws Exception {
+  void testGetUserNotificationSummary_Success() throws Exception {
     // Mock input parameters
 
     // Create a mock notification summary
@@ -85,7 +85,7 @@ class NotificationControllerTest {
   }
 
   @Test
-  public void testGetUserNotificationSummary_Exception() throws Exception {
+  void testGetUserNotificationSummary_Exception() throws Exception {
     // Mock input parameters
     String userId = "123";
     String soaGatewayUserLoginId = "user";
@@ -115,7 +115,7 @@ class NotificationControllerTest {
       "null, EXTERNAL", // SoaGateway-User-Login-Id is null
       "user, null" // SoaGateway-User-Role is null
   }, nullValues = {"null"})
-  public void testGetUserNotificationSummary_HeaderBadRequest(String userLoginId, String userRole)
+  void testGetUserNotificationSummary_HeaderBadRequest(String userLoginId, String userRole)
       throws Exception {
     // Call the getUserNotificationSummary method with null headers
     MockHttpServletRequestBuilder requestBuilder =
@@ -138,7 +138,7 @@ class NotificationControllerTest {
   @ParameterizedTest
   @CsvSource(value = {"user, role, null, null, user2, null, null, false, N, null, null, 10"},
       nullValues = {"null"})
-  public void testGetNotificationsSuccess(String soaGatewayUserLoginId, String soaGatewayUserRole,
+  void testGetNotificationsSuccess(String soaGatewayUserLoginId, String soaGatewayUserRole,
       String caseReferenceNumber, String providerCaseReference, String assignedToUserId,
       String clientSurname, Integer feeEarnerId, Boolean includeClosed, String notificationType,
       Date dateFrom, Date dateTo, Integer maxRecords) throws Exception {
@@ -147,8 +147,7 @@ class NotificationControllerTest {
     notifications.addContentItem(new Notification());
 
     //Stub the call to the service
-    when(notificationService.getNotifications(any(), any(), any(), any(), any(), any(), any(),
-        any(), any(), any(), any(), any(), any()))
+    when(notificationService.getNotifications(any(), any(), any(), any(), any(), any()))
         .thenReturn(notifications);
     //Call the Notifications endpoint
     mockMvc.perform(
@@ -164,7 +163,7 @@ class NotificationControllerTest {
   @CsvSource(value = {"user, null, null, null, user2, null, null, false, N, null, null, 10",
       "null, role, null, null, user2, null, null, false, N, null, null, 10"},
       nullValues = {"null"})
-  public void testGetNotifications_HeaderBadRequest(String soaGatewayUserLoginId,
+  void testGetNotifications_HeaderBadRequest(String soaGatewayUserLoginId,
       String soaGatewayUserRole,
       String caseReferenceNumber, String providerCaseReference, String assignedToUserId,
       String clientSurname, Integer feeEarnerId, Boolean includeClosed, String notificationType,
@@ -195,8 +194,7 @@ class NotificationControllerTest {
       String caseReferenceNumber, String providerCaseReference, String assignedToUserId,
       String clientSurname, Integer feeEarnerId, Boolean includeClosed, String notificationType,
       Date dateFrom, Date dateTo, Integer maxRecords) throws Exception {
-    when(notificationService.getNotifications(any(), any(), any(), any(), any(), any(), any(),
-        any(), any(), any(), any(), any(), any()))
+    when(notificationService.getNotifications(any(), any(), any(), any(), any(), any()))
         .thenThrow(new WebServiceIOException("Test exception"));
     mockMvc.perform(
             get("/notifications?assigned-to-user-id={assignedToUserId}&maxRecords={maxRecords}",
@@ -205,9 +203,7 @@ class NotificationControllerTest {
                 .header("SoaGateway-User-Role", soaGatewayUserRole))
         .andExpect(status().isInternalServerError());
 
-    verify(notificationService, times(1)).getNotifications(any(), any(), any(), any(), any(), any(),
-        any(),
-        any(), any(), any(), any(), any(), any());
+    verify(notificationService, times(1)).getNotifications(any(), any(), any(), any(), any(), any());
   }
 
 }

@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.soap.client.core.SoapActionCallback;
+import uk.gov.laa.ccms.soa.gateway.model.Notification;
+import uk.gov.laa.ccms.soa.gateway.model.NotificationDetail;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationCntInqRQ;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationCntInqRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationInqRQ;
@@ -16,17 +18,17 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationI
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.ObjectFactory;
 
 /**
- * Provides a client interface for interacting with Notification services in the SOA-based
- * system.
+ * Provides a client interface for interacting with Notification services in the SOA-based system.
  *
  * <p>This client extends the foundational utilities provided by {@link AbstractSoaClient} and
- * specifically focuses on retrieving notification counts based on certain search criteria.
- * Service name and URL details are injected at runtime.</p>
+ * specifically focuses on retrieving notification counts based on certain search criteria. Service
+ * name and URL details are injected at runtime.</p>
  */
 @Slf4j
 @SuppressWarnings("unchecked")
 @Component
 public class NotificationClient extends AbstractSoaClient {
+
   private static final ObjectFactory CASE_FACTORY = new ObjectFactory();
 
   /**
@@ -37,9 +39,9 @@ public class NotificationClient extends AbstractSoaClient {
    * @param serviceUrl         The URL endpoint for the notification service.
    */
   public NotificationClient(
-          final WebServiceTemplate webServiceTemplate,
-          @Value("${laa.ccms.soa-gateway.notification.service-name}") final String serviceName,
-          @Value("${laa.ccms.soa-gateway.notification.service-url}") final String serviceUrl) {
+      final WebServiceTemplate webServiceTemplate,
+      @Value("${laa.ccms.soa-gateway.notification.service-name}") final String serviceName,
+      @Value("${laa.ccms.soa-gateway.notification.service-url}") final String serviceUrl) {
     this.webServiceTemplate = webServiceTemplate;
     this.serviceName = serviceName;
     this.serviceUrl = serviceUrl;
@@ -48,17 +50,17 @@ public class NotificationClient extends AbstractSoaClient {
   /**
    * Retrieves the notification count based on provided search criteria.
    *
-   * @param searchLoginId       ID associated with the login/search operation.
-   * @param loggedInUserId     The logged in user's ID.
-   * @param loggedInUserType   Type of user that is logged in.
-   * @param maxSearchResults   Maximum results for the search operation.
+   * @param searchLoginId    ID associated with the login/search operation.
+   * @param loggedInUserId   The logged-in user's ID.
+   * @param loggedInUserType Type of user that is logged in.
+   * @param maxSearchResults Maximum results for the search operation.
    * @return NotificationCntInqRS  Response containing the notification count details.
    */
   public NotificationCntInqRS getNotificationCount(
-          final String searchLoginId,
-          final String loggedInUserId,
-          final String loggedInUserType,
-          final Integer maxSearchResults) {
+      final String searchLoginId,
+      final String loggedInUserId,
+      final String loggedInUserType,
+      final Integer maxSearchResults) {
 
     final String soapAction = String.format("%s/GetNotificationCount", serviceName);
     NotificationCntInqRQ inquiryRequest = CASE_FACTORY.createNotificationCntInqRQ();
@@ -66,16 +68,16 @@ public class NotificationClient extends AbstractSoaClient {
     inquiryRequest.setRecordCount(createRecordCount(maxSearchResults));
 
     NotificationCntInqRQ.SearchCriteria searchCriteria = CASE_FACTORY
-            .createNotificationCntInqRQSearchCriteria();
+        .createNotificationCntInqRQSearchCriteria();
     searchCriteria.setUserID(searchLoginId);
     inquiryRequest.setSearchCriteria(searchCriteria);
 
     JAXBElement<NotificationCntInqRS> response =
-            (JAXBElement<NotificationCntInqRS>) getWebServiceTemplate()
+        (JAXBElement<NotificationCntInqRS>) getWebServiceTemplate()
             .marshalSendAndReceive(
-                    serviceUrl,
-                    CASE_FACTORY.createNotificationCntInqRQ(inquiryRequest),
-                    new SoapActionCallback(soapAction));
+                serviceUrl,
+                CASE_FACTORY.createNotificationCntInqRQ(inquiryRequest),
+                new SoapActionCallback(soapAction));
 
     checkSoaCallSuccess(serviceName, response.getValue().getHeaderRS());
 
@@ -83,84 +85,64 @@ public class NotificationClient extends AbstractSoaClient {
   }
 
 
-
-
   /**
    * Retrieves the notification list based on the provided search criteria.
    *
-   * @param soaGatewayUserLoginId The soa-gateway logged-in user Id.
-   * @param soaGatewayUserRole    The type of user logged-in
-   * @param caseReferenceNumber   The case reference number (optional).
-   * @param providerCaseReference The provider case reference number (optional).
-   * @param assignedToUserId      The user to whom the notifications are assigned (mandatory).
-   * @param clientSurname         The surname of the Client (optional).
-   * @param feeEarnerId           The Fee Earner ID (optional).
-   * @param includeClosed         Include closed notifications (optional) default: false.
-   * @param notificationType      The notification type to retrieve: Values "A" | "N"
-   * @param dateFrom              The from date for the search (optional).
-   * @param dateTo                The to date for the search (optional).
-   * @param maxRecords            Maximum results for the search operation.
+   * @param notification  The {#{@link Notification}} builder for the search criteria.
+   * @param includeClosed Include closed notifications (optional) default: false.
+   * @param dateFrom      The  date from which to search (optional).
+   * @param dateTo        The to date for the search (optional).
+   * @param maxRecords    Maximum results for the search operation.
    * @return NotificationInqRS    Response containing the list of notifications.
    */
   public NotificationInqRS getNotifications(
-      final String soaGatewayUserLoginId,
-      final String soaGatewayUserRole,
-      final String caseReferenceNumber,
-      final String providerCaseReference,
-      final String assignedToUserId,
-      final String clientSurname,
-      final Integer feeEarnerId,
+      final Notification notification,
       final Boolean includeClosed,
-      final String notificationType,
       final XMLGregorianCalendar dateFrom,
       final XMLGregorianCalendar dateTo,
       final Integer maxRecords) {
 
-    SearchCriteria searchCriteria = buildSearchCriteria(assignedToUserId,
+    SearchCriteria searchCriteria = buildSearchCriteria(
+        notification,
         dateFrom,
         dateTo,
-        caseReferenceNumber,
-        clientSurname,
-        feeEarnerId,
-        providerCaseReference,
-        notificationType,
         includeClosed);
     final String soapAction = String.format("%s/GetNotifications", serviceName);
     NotificationInqRQ inquiryRequest = CASE_FACTORY.createNotificationInqRQ();
-    inquiryRequest.setHeaderRQ(createHeaderRq(soaGatewayUserLoginId, soaGatewayUserRole));
+    inquiryRequest.setHeaderRQ(createHeaderRq(notification.getUser().getUserLoginId(),
+        notification.getUser().getUserType()));
     inquiryRequest.setRecordCount(createRecordCount(maxRecords));
     inquiryRequest.setSearchCriteria(searchCriteria);
 
     JAXBElement<NotificationInqRS> response =
-            (JAXBElement<NotificationInqRS>) getWebServiceTemplate()
+        (JAXBElement<NotificationInqRS>) getWebServiceTemplate()
             .marshalSendAndReceive(
-                    serviceUrl,
-                    CASE_FACTORY.createNotificationInqRQ(inquiryRequest),
-                    new SoapActionCallback(soapAction));
+                serviceUrl,
+                CASE_FACTORY.createNotificationInqRQ(inquiryRequest),
+                new SoapActionCallback(soapAction));
 
     checkSoaCallSuccess(serviceName, response.getValue().getHeaderRS());
     return response.getValue();
   }
 
   private SearchCriteria buildSearchCriteria(
-      String assignedToUserId,
-      XMLGregorianCalendar dateFrom,
-      XMLGregorianCalendar dateTo,
-      String caseReferenceNumber,
-      String clientSurname,
-      Integer feeEarnerId,
-      String providerCaseReference,
-      String notificationType,
-      Boolean includeClosed) {
+      final Notification notification,
+      final XMLGregorianCalendar dateFrom,
+      final XMLGregorianCalendar dateTo,
+      final Boolean includeClosed) {
     SearchCriteria criteria = CASE_FACTORY.createNotificationInqRQSearchCriteria();
-    criteria.setAssignedToUserID(assignedToUserId);
+    criteria.setAssignedToUserID(notification.getUser().getUserName());
     criteria.setDateFrom(dateFrom);
     criteria.setDateTo(dateTo);
-    criteria.setCaseReferenceNumber(caseReferenceNumber);
-    criteria.setClientSurName(clientSurname);
-    criteria.setFeeEarnerID(Optional.ofNullable(feeEarnerId).map(String::valueOf).orElse(null));
-    criteria.setProviderCaseReferenceNumber(providerCaseReference);
-    criteria.setNotitificationType(notificationType);
+    criteria.setCaseReferenceNumber(notification.getCaseReferenceNumber());
+    criteria.setClientSurName(notification.getClientName());
+    criteria.setFeeEarnerID(
+        Optional.ofNullable(notification.getFeeEarner()).map(String::valueOf).orElse(""));
+    criteria.setProviderCaseReferenceNumber(notification.getProviderCaseReferenceNumber());
+    criteria.setNotitificationType(
+        Optional.ofNullable(notification.getNotificationDetail()).map(
+            NotificationDetail::getNotificationType).map(String::valueOf).orElse(null)
+    );
     criteria.setIncludeClosedNotification(includeClosed);
     return criteria;
   }

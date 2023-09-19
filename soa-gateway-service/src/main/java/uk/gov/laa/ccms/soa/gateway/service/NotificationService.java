@@ -1,7 +1,6 @@
 package uk.gov.laa.ccms.soa.gateway.service;
 
 import java.util.List;
-import java.util.Optional;
 import javax.xml.datatype.XMLGregorianCalendar;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -14,9 +13,7 @@ import uk.gov.laa.ccms.soa.gateway.model.NotificationSummary;
 import uk.gov.laa.ccms.soa.gateway.model.Notifications;
 import uk.gov.laa.ccms.soa.gateway.util.PaginationUtil;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationCntInqRS;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationInqRQ.SearchCriteria;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationInqRS;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.ObjectFactory;
 
 /**
  * Service class responsible for handling notification-related operations.
@@ -29,8 +26,6 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.ObjectFactory
 @Service
 @RequiredArgsConstructor
 public class NotificationService {
-
-  private static final ObjectFactory CASE_FACTORY = new ObjectFactory();
   private final NotificationClient notificationClient;
   private final NotificationMapper notificationMapper;
 
@@ -64,46 +59,25 @@ public class NotificationService {
   /**
    * Retrieves a list of notifications for a given user with selected search criteria.
    *
-   * @param soaGatewayUserLoginId The SOA Gateway user login ID.
-   * @param soaGatewayUserRole    The SOA Gateway user role.
-   * @param caseReferenceNumber   The case reference number (optional).
-   * @param providerCaseReference The provider case reference number (optional).
-   * @param assignedToUserId      The user to whom the notifications are assigned (mandatory).
-   * @param clientSurname         The surname of the Client (optional).
-   * @param feeEarnerId           The Fee Earner ID (optional).
-   * @param includeClosed         Include closed notifications (optional) default: false.
-   * @param notificationType      The notification type to retrieve: Values "A" | "N"
-   * @param dateFrom              The from date for the search (optional).
-   * @param dateTo                The to date for the search (optional).
-   * @param maxRecords            The maximum number of records to retrieve.
-   * @param pageable              The pagination details.
+   * @param notification  The {#{@link Notification}} builder for the search criteria.
+   * @param includeClosed Include closed notifications (optional) default: false.
+   * @param dateFrom      The  date from which to search (optional).
+   * @param dateTo        The to date for the search (optional).
+   * @param maxRecords    The maximum number of records to retrieve.
+   * @param pageable      The pagination details.
    * @return {@link Notification} object holding the list of {@link Notification}
    */
   public Notifications getNotifications(
-      String soaGatewayUserLoginId,
-      String soaGatewayUserRole,
-      String caseReferenceNumber,
-      String providerCaseReference,
-      String assignedToUserId,
-      String clientSurname,
-      Integer feeEarnerId,
+      Notification notification,
       Boolean includeClosed,
-      String notificationType,
       XMLGregorianCalendar dateFrom,
       XMLGregorianCalendar dateTo,
       Integer maxRecords, Pageable pageable) {
     //pass params through to client
 
     NotificationInqRS notificationResponse = notificationClient.getNotifications(
-        soaGatewayUserLoginId,
-        soaGatewayUserRole,
-        caseReferenceNumber,
-        providerCaseReference,
-        assignedToUserId,
-        clientSurname,
-        feeEarnerId,
+        notification,
         includeClosed,
-        notificationType,
         dateFrom,
         dateTo,
         maxRecords);

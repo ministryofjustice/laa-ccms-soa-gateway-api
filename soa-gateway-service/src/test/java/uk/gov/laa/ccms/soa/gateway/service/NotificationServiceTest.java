@@ -28,6 +28,7 @@ import uk.gov.laa.ccms.soa.gateway.mapper.NotificationMapper;
 import uk.gov.laa.ccms.soa.gateway.model.Notification;
 import uk.gov.laa.ccms.soa.gateway.model.NotificationSummary;
 import uk.gov.laa.ccms.soa.gateway.model.Notifications;
+import uk.gov.laa.ccms.soa.gateway.model.UserDetail;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationCntInqRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationInqRQ.SearchCriteria;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationInqRS;
@@ -48,7 +49,7 @@ import uk.gov.legalservices.enterprise.common._1_0.common.User;
  * Test class for {@link NotificationService}.
  */
 @ExtendWith(MockitoExtension.class)
-public class NotificationServiceTest {
+class NotificationServiceTest {
 
 
   private static final Pageable PAGEABLE = Pageable.ofSize(20);
@@ -84,7 +85,7 @@ public class NotificationServiceTest {
   }
 
   @Test
-  public void testGetNotificationSummary() {
+  void testGetNotificationSummary() {
     // Create a mocked instance of NotificationCntInqRS
 
     NotificationCntList notificationCntList = new NotificationCntList();
@@ -162,8 +163,7 @@ public class NotificationServiceTest {
     List<Notification> testNotificationList = Collections.singletonList(new Notification());
 
     //Stub NotficationClient getNotifications method to return mocked response
-    when(notificationClient.getNotifications(any(), any(), any(), any(), any(), any(), any(),
-        any(), any(), any(), any(), any()))
+    when(notificationClient.getNotifications(any(), any(), any(), any(), any()))
         .thenReturn(response);
 
     // Stub NotificationMapper to return mock
@@ -172,14 +172,24 @@ public class NotificationServiceTest {
 
     // Call the service method
 
-    Notifications result = notificationService.getNotifications(soaGatewayUserLoginId,
-        soaGatewayUserRole, null, null,
-        "ding ding", null, 1, false,
-        null, null, null, maxRecords, PAGEABLE);
+    Notifications result = notificationService.getNotifications(
+        new Notification()
+            .user(
+            new UserDetail()
+                .userLoginId(soaGatewayUserLoginId)
+                .userType(soaGatewayUserRole)
+                .userName("ding ding")
+            )
+            .caseReferenceNumber(null),
+    false,
+    null,
+    null,
+    maxRecords, PAGEABLE);
+
 
     // Verify correct call to NotificationClient
     verify(notificationClient, times(1)).getNotifications(any(), any(),
-        any(), any(), any(), any(), any(), any(), any(), any(), any(), any());
+        any(), any(), any());
 
     verify(notificationMapper).toNotificationsList(response);
 
