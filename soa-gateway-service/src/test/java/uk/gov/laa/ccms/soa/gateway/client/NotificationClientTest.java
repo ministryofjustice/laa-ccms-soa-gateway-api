@@ -95,8 +95,6 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.ObjectFactory
         any(SoapActionCallback.class))).thenReturn(
         objectFactory.createNotificationInqRS(new NotificationInqRS()));
 
-    SearchCriteria searchCriteria =
-        createSearchCriteria(objectFactory.createNotificationInqRQSearchCriteria());
 
     NotificationInqRS response = client.getNotifications(
         new Notification()

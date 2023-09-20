@@ -19,8 +19,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.test.client.MockWebServiceServer;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationCntInqRS;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationInqRQ;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationInqRQ.SearchCriteria;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationInqRS;
 
 /**
@@ -146,13 +144,20 @@ public class NotificationClientIntegrationTest {
             .evaluatesTo(10))
         .andExpect(xpath(
             "/ns5:NotificationInqRQ/ns5:SearchCriteria/ns5:AssignedToUserID",
-            namespaces).evaluatesTo("ding ding"))
+            namespaces).evaluatesTo(testLoginId))
         .andRespond(withPayload(notificationInqRs_valid));
 
-    NotificationInqRS response = client.getNotifications(testLoginId, testUserType,
-        null, null, "ding ding",
-        null, null, false, null, null,
-        null, 10);
+    NotificationInqRS response = client.getNotifications(
+        new uk.gov.laa.ccms.soa.gateway.model.Notification()
+            .user(
+                new uk.gov.laa.ccms.soa.gateway.model.UserDetail()
+                    .userLoginId(testLoginId)
+                    .userType(testUserType)
+                    .userName(testLoginId)
+            )
+            .caseReferenceNumber(null),
+        false, null, null,
+        10);
 
     assertNotNull(response.getNotificationList());
     assertEquals(1, response.getNotificationList().getNotifications().size());
@@ -180,10 +185,16 @@ public class NotificationClientIntegrationTest {
         .andRespond(withError("Failed to call soap service"));
 
     assertThrows(RuntimeException.class,
-        () -> client.getNotifications(testLoginId, testUserType,
-            null, null, "ding ding",
-            null, null, false, null, null,
-            null, 10));
+        () -> client.getNotifications(new uk.gov.laa.ccms.soa.gateway.model.Notification()
+                .user(
+                    new uk.gov.laa.ccms.soa.gateway.model.UserDetail()
+                        .userLoginId(testLoginId)
+                        .userType(testUserType)
+                        .userName("ding ding")
+                )
+                .caseReferenceNumber(null),
+            false, null, null,
+            10));
 
     mockServer.verify();
   }
