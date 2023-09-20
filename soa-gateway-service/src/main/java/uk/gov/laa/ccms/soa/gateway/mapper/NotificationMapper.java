@@ -1,19 +1,34 @@
 package uk.gov.laa.ccms.soa.gateway.mapper;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+import org.springframework.data.domain.Page;
+import uk.gov.laa.ccms.soa.gateway.model.Document;
+import uk.gov.laa.ccms.soa.gateway.model.Note;
+import uk.gov.laa.ccms.soa.gateway.model.Notification;
+import uk.gov.laa.ccms.soa.gateway.model.NotificationDetail;
 import uk.gov.laa.ccms.soa.gateway.model.NotificationSummary;
+import uk.gov.laa.ccms.soa.gateway.model.Notifications;
+import uk.gov.laa.ccms.soa.gateway.model.UserDetail;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationCntInqRS;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationInqRS;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.NotesElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.NotificationCntList;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.NotificationElementType;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.NotificationListElementType;
+import uk.gov.legalservices.enterprise.common._1_0.common.DocumentElementType;
+import uk.gov.legalservices.enterprise.common._1_0.common.User;
 
 /**
  * Mapper for transforming data related to notifications.
  *
  * <p>Uses the MapStruct framework to facilitate the conversion between the Legal Services endpoint
- * data model and the internal SoA gateway's {@link NotificationSummary} model.</p>
+ * data model and the internal SoA gateway's {@link NotificationSummary} and {@link Notification}
+ * models.</p>
  */
 @Mapper(componentModel = "spring")
 public interface NotificationMapper {
@@ -25,14 +40,14 @@ public interface NotificationMapper {
    * @return The transformed {@link NotificationSummary}.
    */
   @Mapping(target = "notifications",
-          source = "notificationCntLists.notificationsCnt",
-          qualifiedByName = "notificationCountTranslator")
+      source = "notificationCntLists.notificationsCnt",
+      qualifiedByName = "notificationCountTranslator")
   @Mapping(target = "standardActions",
-          source = "notificationCntLists.notificationsCnt",
-          qualifiedByName = "standardActionCountTranslator")
+      source = "notificationCntLists.notificationsCnt",
+      qualifiedByName = "standardActionCountTranslator")
   @Mapping(target = "overdueActions",
-          source = "notificationCntLists.notificationsCnt",
-          qualifiedByName = "overdueActionCountTranslator")
+      source = "notificationCntLists.notificationsCnt",
+      qualifiedByName = "overdueActionCountTranslator")
   NotificationSummary toNotificationSummary(NotificationCntInqRS response);
 
   /**
@@ -45,8 +60,8 @@ public interface NotificationMapper {
   @Named("notificationCountTranslator")
   default Integer toNotificationCount(List<NotificationCntList> notificationCntLists) {
     return getNotificationCntList(notificationCntLists)
-            .map(n -> Integer.parseInt(n.getNotificationCount()))
-            .orElseThrow(() -> new RuntimeException("notificationCount not found in response"));
+        .map(n -> Integer.parseInt(n.getNotificationCount()))
+        .orElseThrow(() -> new RuntimeException("notificationCount not found in response"));
   }
 
   /**
@@ -59,8 +74,8 @@ public interface NotificationMapper {
   @Named("standardActionCountTranslator")
   default Integer toStandardActionCount(List<NotificationCntList> notificationCntLists) {
     return getNotificationCntList(notificationCntLists)
-            .map(n -> Integer.parseInt(n.getStandardActionCount()))
-            .orElseThrow(() -> new RuntimeException("standardActionCount not found in response"));
+        .map(n -> Integer.parseInt(n.getStandardActionCount()))
+        .orElseThrow(() -> new RuntimeException("standardActionCount not found in response"));
   }
 
   /**
@@ -73,8 +88,8 @@ public interface NotificationMapper {
   @Named("overdueActionCountTranslator")
   default Integer toOverdueActionCount(List<NotificationCntList> notificationCntLists) {
     return getNotificationCntList(notificationCntLists)
-            .map(n -> Integer.parseInt(n.getOverdueActionCount()))
-            .orElseThrow(() -> new RuntimeException("overdueActionCount not found in response"));
+        .map(n -> Integer.parseInt(n.getOverdueActionCount()))
+        .orElseThrow(() -> new RuntimeException("overdueActionCount not found in response"));
   }
 
   /**
@@ -85,9 +100,72 @@ public interface NotificationMapper {
    * @throws RuntimeException if notification count list is not found in the response.
    */
   default Optional<NotificationCntList> getNotificationCntList(
-          List<NotificationCntList> notificationCntLists) {
+      List<NotificationCntList> notificationCntLists) {
     return Optional.ofNullable(notificationCntLists)
         .map(cntList -> cntList.stream().findFirst())
         .orElseThrow(() -> new RuntimeException("notificationCntList not found in response"));
   }
+
+  // ----------------------               Notifications             --------------------------
+
+  /**
+   * Converts the {@link NotificationInqRS} object to a list of
+   * {@link uk.gov.laa.ccms.soa.gateway.model.Notification} objects.
+   *
+   * <p>This default method takes a {@link NotificationInqRS} instance and extracts the list of
+   * notifications from it. It then delegates the conversion of this list to the
+   * {@link #getNotificationCntList(List)} )} method. If the {@link NotificationInqRS} instance is
+   * null, or if it does not contain any notification data, an empty list is returned.</p>
+   *
+   * @param notificationInqRs The notificaiton inquiry response to be converted.
+   * @return A list of {@link uk.gov.laa.ccms.soa.gateway.model.Notification} objects or an empty
+   *     list if no notification data is available.
+   */
+  default List<Notification> toNotificationsList(NotificationInqRS notificationInqRs) {
+    if (notificationInqRs.getNotificationList() != null) {
+      NotificationInqRS.NotificationList notificationListObject
+          = notificationInqRs.getNotificationList();
+
+      if (notificationListObject.getNotifications() != null) {
+        List<NotificationListElementType> notificationList
+            = notificationListObject.getNotifications();
+        if (notificationList != null) {
+          return toNotificationList(notificationList);
+        }
+      }
+    }
+    return Collections.emptyList();
+  }
+
+  Notifications toNotifications(Page<Notification> page);
+
+  @Mapping(source = ".", target = "notifications")
+  List<uk.gov.laa.ccms.soa.gateway.model.Notification> toNotificationList(
+      List<NotificationListElementType> notificationList);
+
+
+  @Mapping(target = "notificationDetail", source = "notification")
+  @Mapping(target = ".", source = "notificationElement")
+  Notification toNotification(NotificationListElementType notificationElement);
+
+  @Mapping(target = "notes", source = "notes.note")
+  @Mapping(target = "availableResponses", source = "availableResponses.response")
+  @Mapping(target = "attachedDocuments", source = "uploadedDocuments.document")
+  @Mapping(target = "uploadedDocuments", source = "attachedDocuments.document")
+  @Mapping(target = "notificationType", source = "notitificationType")
+  @Mapping(target = "notificationOpenIndicator", source = "notificationOpenInd")
+  @Mapping(target = "notificationId", source = "notificationID")
+  @Mapping(target = "providerFirmId", source = "providerFirmID")
+  @Mapping(target = ".", source = "notificationElement")
+  NotificationDetail toNotificationDetail(NotificationElementType notificationElement);
+
+  @Mapping(target = "documentId", source = "documentID")
+  Document toDocument(DocumentElementType documentElementType);
+
+  @Mapping(target = "notesId", source = "notesID")
+  Note toNote(NotesElementType notesElementType);
+
+  @Mapping(target = "userLoginId", source = "userLoginID")
+  UserDetail toUserDetail(User user);
+
 }

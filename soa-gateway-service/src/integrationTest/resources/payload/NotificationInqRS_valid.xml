@@ -1,0 +1,82 @@
+<NotificationInqRS xmlns:oracle-xsl-mapper="http://www.oracle.com/xsl/mapper/schemas" xmlns:msg="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIM" xmlns="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIM" xmlns:wsa="http://www.w3.org/2005/08/addressing">
+  <header:HeaderRS xmlns:header="http://legalservices.gov.uk/Enterprise/Common/1.0/Header">
+    <header:TransactionID>202006261909163340135693654</header:TransactionID>
+    <header:RequestDetails>
+      <header:TransactionRequestID>202006261909163340135693654</header:TransactionRequestID>
+      <header:Language>ENG</header:Language>
+      <header:TransactionIDREF/>
+      <header:TransactionName/>
+      <header:Source>PUI</header:Source>
+      <header:Target>Oracle EBusiness</header:Target>
+      <header:HostName/>
+      <header:UserLoginID>ANDREAS@ABBOTSTONELAW.COM</header:UserLoginID>
+      <header:UserRole>EXTERNAL</header:UserRole>
+      <header:ApplicationResponsibility/>
+      <header:TimeStamp>2023-06-26T19:09:16.334</header:TimeStamp>
+    </header:RequestDetails>
+    <header:Status>
+      <header:Status>Success</header:Status>
+      <header:StatusFreeText>GetNotifications completed successfully.</header:StatusFreeText>
+    </header:Status>
+  </header:HeaderRS>
+  <msg:RecordCount>
+    <common:MaxRecordsToFetch xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">500</common:MaxRecordsToFetch>
+    <common:RecordsFetched xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">1</common:RecordsFetched>
+    <common:RetriveDataOnMaxCount xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">true</common:RetriveDataOnMaxCount>
+    <common:SortCriteria xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common"/>
+  </msg:RecordCount>
+  <msg:NotificationList>
+    <msg:Notifications>
+      <case:ClientReferenceNumber xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">59787119</case:ClientReferenceNumber>
+      <case:CaseReferenceNumber xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">300001416143</case:CaseReferenceNumber>
+      <case:ProviderCaseReferenceNumber xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">15181</case:ProviderCaseReferenceNumber>
+      <case:User xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">
+        <common:UserLoginID xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">ANDREAS@ABBOTSTONELAW.COM</common:UserLoginID>
+        <common:UserName xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">ANDREAS@ABBOTSTONELAW.COM</common:UserName>
+        <common:UserType xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common"/>
+      </case:User>
+      <case:ClientName xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">Alan Windsor</case:ClientName>
+      <case:CategoryOfLaw xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">MHE</case:CategoryOfLaw>
+      <case:FeeEarner xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">ANDREA SPROU</case:FeeEarner>
+      <case:Notification xmlns:case="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO">
+        <case:NotificationID>48049311</case:NotificationID>
+        <case:ProviderFirmID>2412196</case:ProviderFirmID>
+        <case:Subject>Inactive Case Please Review</case:Subject>
+        <case:AssignDate>2023-09-03</case:AssignDate>
+        <case:DueDate>2023-09-10</case:DueDate>
+        <case:NotitificationType>A</case:NotitificationType>
+        <case:Status>Action Reqd</case:Status>
+        <case:Notes>
+          <case:Note>
+            <case:NotesID>48049311</case:NotesID>
+            <case:User>
+              <common:UserLoginID xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common"/>
+              <common:UserName xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">LAA</common:UserName>
+              <common:UserType xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common"/>
+            </case:User>
+            <case:Date>2023-09-03</case:Date>
+            <case:Message>**LAA 03/09/2023 07:04**
+              Dear Sirs,
+
+              Our records show that the above certificate has been inactive for 12 months. Please respond to this notification as soon as possible to advise that the case is: no longer ongoing and the certificate is no longer required or still ongoing and provide an update as to your current position in this matter. Please note that if you carry out any activity under the certificate online (e.g. request an amendment), then it will not be necessary to respond to this notification.
+
+              If we do not receive a response within 14 days of the date of this letter, we will commence the discharge process and any outstanding payments on account will be recouped.
+
+              Yours faithfully,
+
+              The Legal Aid Agency
+
+            </case:Message>
+          </case:Note>
+        </case:Notes>
+        <case:EvidenceAllowed>false</case:EvidenceAllowed>
+        <case:NotificationOpenInd>true</case:NotificationOpenInd>
+        <case:AttachedDocuments/>
+        <case:UploadedDocuments/>
+        <case:AvailableResponses>
+          <case:Response>Action Taken</case:Response>
+        </case:AvailableResponses>
+      </case:Notification>
+    </msg:Notifications>
+  </msg:NotificationList>
+</NotificationInqRS>
