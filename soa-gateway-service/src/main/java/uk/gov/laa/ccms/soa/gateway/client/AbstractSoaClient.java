@@ -118,8 +118,8 @@ public abstract class AbstractSoaClient {
           final String errorMsg = String.format(
                   "Failure in SOA call %s. Status Code: %s. Status Text: %s",
               serviceName,
-              headerRSType1.getStatus().getExceptions().getStatusCode(),
-              headerRSType1.getStatus().getExceptions().getStatusText());
+              headerRSType1.getStatus().getStatus().value(),
+              headerRSType1.getStatus().getStatusFreeText());
           log.error(errorMsg);
           throw new RuntimeException(errorMsg);
         });
