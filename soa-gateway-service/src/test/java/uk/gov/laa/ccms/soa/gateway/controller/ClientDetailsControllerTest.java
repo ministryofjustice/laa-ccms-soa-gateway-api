@@ -1,5 +1,6 @@
 package uk.gov.laa.ccms.soa.gateway.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -8,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ws.client.WebServiceIOException;
@@ -20,6 +22,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
@@ -176,6 +179,76 @@ public class ClientDetailsControllerTest {
 
         verify(clientDetailsService).getClientDetails(soaGatewayUserLoginId,
                 soaGatewayUserRole, maxRecords, clientSummary, pageable);
+    }
+
+    @Test
+    public void testPostClient_Success() throws Exception {
+        uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails clientDetailDetails = new uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails();  // You may need to set some data for this object.
+        String expectedTransactionId = "trans123";
+
+        when(clientDetailsService.postClient(soaGatewayUserLoginId, soaGatewayUserRole, clientDetailDetails))
+            .thenReturn(expectedTransactionId);
+
+        mockMvc.perform(
+                post("/clients")  // Assuming the endpoint for postClient method is "/clients"
+                    .content(new ObjectMapper().writeValueAsString(clientDetailDetails))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
+                    .header("SoaGateway-User-Role", soaGatewayUserRole))
+            .andExpect(status().isOk());
+
+        verify(clientDetailsService).postClient(soaGatewayUserLoginId, soaGatewayUserRole, clientDetailDetails);
+    }
+
+    @Test
+    public void testPostClient_Exception() throws Exception {
+        uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails clientDetailDetails = new uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails();
+
+        when(clientDetailsService.postClient(any(), any(), any()))
+            .thenThrow(new RuntimeException("Test exception"));
+
+        mockMvc.perform(
+                post("/clients")
+                    .content(new ObjectMapper().writeValueAsString(clientDetailDetails))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
+                    .header("SoaGateway-User-Role", soaGatewayUserRole))
+            .andExpect(status().isInternalServerError());
+
+        verify(clientDetailsService).postClient(any(), any(), any());
+    }
+
+    @Test
+    public void testGetClientStatus_Success() throws Exception {
+        String transactionRequestId = "trans123";
+        String expectedStatus = "COMPLETED";
+
+        when(clientDetailsService.getClientStatus(soaGatewayUserLoginId, soaGatewayUserRole, transactionRequestId))
+            .thenReturn(expectedStatus);
+
+        mockMvc.perform(
+                get("/clients/status/{transactionRequestId}", transactionRequestId)
+                    .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
+                    .header("SoaGateway-User-Role", soaGatewayUserRole))
+            .andExpect(status().isOk());
+
+        verify(clientDetailsService).getClientStatus(soaGatewayUserLoginId, soaGatewayUserRole, transactionRequestId);
+    }
+
+    @Test
+    public void testGetClientStatus_Exception() throws Exception {
+        String transactionRequestId = "trans123";
+
+        when(clientDetailsService.getClientStatus(any(), any(), any()))
+            .thenThrow(new RuntimeException("Test exception"));
+
+        mockMvc.perform(
+                get("/clients/status/{transactionRequestId}", transactionRequestId)
+                    .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
+                    .header("SoaGateway-User-Role", soaGatewayUserRole))
+            .andExpect(status().isInternalServerError());
+
+        verify(clientDetailsService).getClientStatus(any(), any(), any());
     }
 
     private ClientSummary buildClientSummary(){

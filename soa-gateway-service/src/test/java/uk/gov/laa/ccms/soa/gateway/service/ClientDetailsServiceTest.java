@@ -11,14 +11,20 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import uk.gov.laa.ccms.soa.gateway.client.ClientServicesClient;
 import uk.gov.laa.ccms.soa.gateway.mapper.ClientDetailsMapper;
+import uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails;
 import uk.gov.laa.ccms.soa.gateway.model.ClientSummary;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetails;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetail;
+import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientAddRS;
+import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientAddUpdtStatusRS;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientInqRS;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientInfo;
 
 import java.util.Collections;
 import java.util.List;
+import uk.gov.legalservices.enterprise.common._1_0.header.HeaderRSType;
+import uk.gov.legalservices.enterprise.common._1_0.header.Status;
+import uk.gov.legalservices.enterprise.common._1_0.header.StatusTextType;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -158,6 +164,61 @@ public class ClientDetailsServiceTest {
 
         // Assert the result
         assertEquals(clientDetail, result);
+    }
+
+    @Test
+    public void testPostClient() {
+        // Create test data
+        ClientDetailDetails clientDetailDetails = new ClientDetailDetails();
+
+        uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientDetails mockClientDetails
+            = new uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientDetails();
+
+        String expectedTransactionId = "1234567890";
+        ClientAddRS mockClientAddRS = new ClientAddRS();
+        mockClientAddRS.setTransactionID(expectedTransactionId);
+
+        when(clientDetailsMapper.toSoaClientDetails(clientDetailDetails)).thenReturn(mockClientDetails);
+
+        when(clientServicesClient.postClientDetails(
+            soaGatewayUserLoginId,
+            soaGatewayUserRole,
+            mockClientDetails)).thenReturn(mockClientAddRS);
+
+        String result = clientDetailsService.postClient(
+            soaGatewayUserLoginId,
+            soaGatewayUserRole,
+            clientDetailDetails);
+
+        assertEquals(result,expectedTransactionId);
+
+        verify(clientDetailsMapper).toSoaClientDetails(clientDetailDetails);
+        verify(clientServicesClient).postClientDetails(soaGatewayUserLoginId,soaGatewayUserRole, mockClientDetails);
+    }
+
+    @Test
+    public void testGetClientStatus() {
+        String transactionId = "sampleTransactionId";
+
+        Status mockStatus =  new Status();
+        mockStatus.setStatus(StatusTextType.SUCCESS);
+
+        HeaderRSType mockHeader = new HeaderRSType();
+        mockHeader.setStatus(mockStatus);
+
+        ClientAddUpdtStatusRS mockClientAddUpdtStatusRS = new ClientAddUpdtStatusRS();
+        mockClientAddUpdtStatusRS.setHeaderRS(mockHeader);
+
+        when(clientServicesClient.getClientStatus(
+            soaGatewayUserLoginId,
+            soaGatewayUserRole,
+            transactionId)).thenReturn(mockClientAddUpdtStatusRS);
+
+        String status = clientDetailsService.getClientStatus(soaGatewayUserLoginId, soaGatewayUserRole, transactionId);
+
+        assertEquals(status, "Success");
+
+        verify(clientServicesClient).getClientStatus(soaGatewayUserLoginId,soaGatewayUserRole, transactionId);
     }
 
     private ClientSummary buildClientSummary(){

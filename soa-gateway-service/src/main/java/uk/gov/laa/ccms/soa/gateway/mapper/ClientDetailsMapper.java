@@ -1,9 +1,16 @@
 package uk.gov.laa.ccms.soa.gateway.mapper;
 
 import java.util.Collections;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeConstants;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 import org.springframework.data.domain.Page;
 import uk.gov.laa.ccms.soa.gateway.model.AddressDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetail;
@@ -12,6 +19,7 @@ import uk.gov.laa.ccms.soa.gateway.model.ClientDetailRecordHistory;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetails;
 import uk.gov.laa.ccms.soa.gateway.model.ClientPersonalDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ClientSummary;
+import uk.gov.laa.ccms.soa.gateway.util.DateUtil;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientInqRS;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientInfo;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientList;
@@ -84,4 +92,28 @@ public interface ClientDetailsMapper {
   @Mapping(target = ".", source = "client")
   @Mapping(target = "details", source = "client.details")
   ClientDetail toClientDetail(ClientInqRS clientInqRs);
+
+  @Mapping(target = "addressID", source = "addressId")
+  @Mapping(target = "coffName", source = "careOfName")
+  uk.gov.legalservices.enterprise.common._1_0.common.Address toAddress(AddressDetail address);
+
+
+  uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientDetails
+      toSoaClientDetails(ClientDetailDetails clientDetailDetails);
+
+  @Mapping(target = "NINumber",
+      source = "nationalInsuranceNumber")
+  @Mapping(target = "dateOfBirth",
+      source = "dateOfBirth",
+      qualifiedByName = "dateToXmlGregorianCalendarWithoutTimeZone")
+  @Mapping(target = "dateOfDeath",
+      source = "dateOfDeath",
+      qualifiedByName = "dateToXmlGregorianCalendarWithoutTimeZone")
+  PersonalDetails toPersonalDetail(ClientPersonalDetail personalInformation);
+
+  @Named("dateToXmlGregorianCalendarWithoutTimeZone")
+  default XMLGregorianCalendar dateToXmlGregorianCalendarWithoutTimeZone(Date date)
+      throws DatatypeConfigurationException {
+    return DateUtil.convertDateToXmlDateOnly(date);
+  }
 }

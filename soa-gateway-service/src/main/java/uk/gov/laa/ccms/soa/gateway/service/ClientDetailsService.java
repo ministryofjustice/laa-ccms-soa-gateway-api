@@ -9,9 +9,12 @@ import org.springframework.stereotype.Service;
 import uk.gov.laa.ccms.soa.gateway.client.ClientServicesClient;
 import uk.gov.laa.ccms.soa.gateway.mapper.ClientDetailsMapper;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetail;
+import uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetails;
 import uk.gov.laa.ccms.soa.gateway.model.ClientSummary;
 import uk.gov.laa.ccms.soa.gateway.util.PaginationUtil;
+import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientAddRS;
+import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientAddUpdtStatusRS;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientInqRS;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientInfo;
 
@@ -103,6 +106,57 @@ public class ClientDetailsService {
     log.debug("clientDetail, received: {}", clientDetail);
 
     return clientDetail;
+  }
+
+  /**
+   * Submits new client details to the external Client Services system. The client details are
+   * mapped and transformed before they're sent for submission. The method returns the transaction
+   * ID of the submission.
+   *
+   * @param soaGatewayUserLoginId      User login ID for the SOA Gateway.
+   * @param soaGatewayUserRole         User role in the SOA Gateway.
+   * @param clientDetailDetails        The details of the client to be submitted.
+   * @return                           The transaction ID for the submitted client details.
+   */
+  public String postClient(
+      final String soaGatewayUserLoginId,
+      final String soaGatewayUserRole,
+      final ClientDetailDetails clientDetailDetails
+  ) {
+    log.info("ClientDetailsService - getClientDetail");
+    uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientDetails clientDetails
+        =  clientDetailsMapper.toSoaClientDetails(clientDetailDetails);
+
+    ClientAddRS response = clientServicesClient.postClientDetails(
+        soaGatewayUserLoginId,
+        soaGatewayUserRole,
+        clientDetails);
+
+    return response.getTransactionID();
+  }
+
+  /**
+   * Fetches the status of a client transaction using its transaction ID. The method communicates
+   * with the external Client Services system and retrieves the current status of the specified
+   * transaction.
+   *
+   * @param soaGatewayUserLoginId      User login ID for the SOA Gateway.
+   * @param soaGatewayUserRole         User role in the SOA Gateway.
+   * @param transactionId              The transaction ID for which the status is to be fetched.
+   * @return                           The status of the specified client transaction.
+   */
+  public String getClientStatus(
+      final String soaGatewayUserLoginId,
+      final String soaGatewayUserRole,
+      final String transactionId
+  ) {
+    log.info("ClientDetailsService - getClientDetail");
+    ClientAddUpdtStatusRS response = clientServicesClient.getClientStatus(
+        soaGatewayUserLoginId,
+        soaGatewayUserRole,
+        transactionId);
+
+    return response.getHeaderRS().getStatus().getStatus().value();
   }
 
 }

@@ -147,6 +147,7 @@ paths:
           description: 'Not found'
         '500':
           description: 'Internal server error'
+
   /clients:
     get:
       tags:
@@ -201,6 +202,67 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/clientDetails"
+        '400':
+          description: 'Bad request'
+        '401':
+          description: 'Unauthorized'
+        '404':
+          description: 'Not found'
+        '500':
+          description: 'Internal server error'
+
+    post:
+      tags:
+        - clients
+      summary: 'Create Client'
+      operationId: 'postClient'
+      requestBody:
+        description: Create a client
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/clientDetailDetails"
+      parameters:
+        - $ref: '#/components/parameters/soaGatewayUserLoginId'
+        - $ref: '#/components/parameters/soaGatewayUserRole'
+      responses:
+        '200':
+          description: 'Successful operation'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/clientCreated"
+        '400':
+          description: 'Bad request'
+        '401':
+          description: 'Unauthorized'
+        '404':
+          description: 'Not found'
+        '500':
+          description: 'Internal server error'
+
+  /clients/status/{transaction-request-id}:
+    get:
+      tags:
+        - clients
+      summary: 'Get Client transaction status'
+      operationId: 'getClientStatus'
+      parameters:
+        - name: 'transaction-request-id'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
+            example: 'abc123'
+        - $ref: '#/components/parameters/soaGatewayUserLoginId'
+        - $ref: '#/components/parameters/soaGatewayUserRole'
+      responses:
+        '200':
+          description: 'Successful operation'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/transactionStatusResponse"
         '400':
           description: 'Bad request'
         '401':
@@ -381,6 +443,18 @@ components:
       properties:
         case_reference_number:
           type: 'string'
+    transactionStatusResponse:
+      type: 'object'
+      properties:
+        status:
+          type: 'string'
+          example: 'success'
+    clientCreated:
+      type: 'object'
+      properties:
+        transaction_id:
+          type: 'string'
+          example: '1234567890'
     page:
       type: 'object'
       properties:
@@ -438,6 +512,30 @@ components:
         first_name:
           type: 'string'
         surname:
+          type: 'string'
+    clientDetailDetails:
+      type: 'object'
+      properties:
+        name:
+          $ref: '#/components/schemas/nameDetail'
+        personal_information:
+          $ref: '#/components/schemas/clientPersonalDetail'
+        contacts:
+          $ref: '#/components/schemas/contactDetail'
+        disability_monitoring:
+          type: 'object'
+          properties:
+            disability_type:
+              type: 'array'
+              items:
+                type: 'string'
+        no_fixed_abode:
+          type: 'boolean'
+        address:
+          $ref: '#/components/schemas/addressDetail'
+        ethnic_monitoring:
+          type: 'string'
+        special_considerations:
           type: 'string'
     nameDetail:
       type: 'object'
@@ -568,29 +666,7 @@ components:
         client_reference_number:
           type: 'string'
         details:
-          type: 'object'
-          properties:
-            name:
-              $ref: '#/components/schemas/nameDetail'
-            personal_information:
-              $ref: '#/components/schemas/clientPersonalDetail'
-            contacts:
-              $ref: '#/components/schemas/contactDetail'
-            disability_monitoring:
-              type: 'object'
-              properties:
-                disability_type:
-                  type: 'array'
-                  items:
-                    type: 'string'
-            no_fixed_abode:
-              type: 'boolean'
-            address:
-              $ref: '#/components/schemas/addressDetail'
-            ethnic_monitoring:
-              type: 'string'
-            special_considerations:
-              type: 'string'
+          $ref: '#/components/schemas/clientDetailDetails'
         record_history:
           type: 'object'
           properties:
