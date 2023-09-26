@@ -52,8 +52,7 @@ public class ClientServicesClientIntegrationTest {
     @Value("classpath:/payload/ClientAddRS_valid.xml")
     Resource clientAddRS_valid;
 
-
-    @Value("classpath:/payload/ClientAddUpdtStatusRS_valid.xml")
+    @Value("classpath:/payload/ClientAddUpdtStatusRS_Valid.xml")
     Resource ClientAddUpdtStatusRS_valid;
     private static final String HEADER_NS = "http://legalservices.gov.uk/Enterprise/Common/1.0/Header";
     private static final String MSG_NS = "http://legalservices.gov.uk/CCMS/ClientManagement/Client/1.0/ClientBIM";
