@@ -11,6 +11,7 @@ import uk.gov.laa.ccms.soa.gateway.mapper.ClientDetailsMapper;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetails;
+import uk.gov.laa.ccms.soa.gateway.model.ClientStatus;
 import uk.gov.laa.ccms.soa.gateway.model.ClientSummary;
 import uk.gov.laa.ccms.soa.gateway.util.PaginationUtil;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientAddRS;
@@ -145,7 +146,7 @@ public class ClientDetailsService {
    * @param transactionId              The transaction ID for which the status is to be fetched.
    * @return                           The status of the specified client transaction.
    */
-  public String getClientStatus(
+  public uk.gov.laa.ccms.soa.gateway.model.ClientStatus getClientStatus(
       final String soaGatewayUserLoginId,
       final String soaGatewayUserRole,
       final String transactionId
@@ -156,7 +157,10 @@ public class ClientDetailsService {
         soaGatewayUserRole,
         transactionId);
 
-    return response.getHeaderRS().getStatus().getStatus().value();
+    uk.gov.laa.ccms.soa.gateway.model.ClientStatus clientStatus =
+        clientDetailsMapper.toClientStatus(response);
+
+    return clientStatus;
   }
 
 }

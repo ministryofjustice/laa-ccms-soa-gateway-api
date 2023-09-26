@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ws.client.WebServiceIOException;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetails;
+import uk.gov.laa.ccms.soa.gateway.model.ClientStatus;
 import uk.gov.laa.ccms.soa.gateway.model.ClientSummary;
 import uk.gov.laa.ccms.soa.gateway.service.ClientDetailsService;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetail;
@@ -223,8 +224,10 @@ public class ClientDetailsControllerTest {
         String transactionRequestId = "trans123";
         String expectedStatus = "COMPLETED";
 
+        uk.gov.laa.ccms.soa.gateway.model.ClientStatus clientStatus = new ClientStatus().clientSubmissionStatus(expectedStatus);
+
         when(clientDetailsService.getClientStatus(soaGatewayUserLoginId, soaGatewayUserRole, transactionRequestId))
-            .thenReturn(expectedStatus);
+            .thenReturn(clientStatus);
 
         mockMvc.perform(
                 get("/clients/status/{transactionRequestId}", transactionRequestId)

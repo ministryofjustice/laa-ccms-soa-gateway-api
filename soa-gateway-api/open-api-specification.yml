@@ -262,7 +262,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/transactionStatusResponse"
+                $ref: "#/components/schemas/clientStatus"
         '400':
           description: 'Bad request'
         '401':
@@ -443,10 +443,13 @@ components:
       properties:
         case_reference_number:
           type: 'string'
-    transactionStatusResponse:
+    clientStatus:
       type: 'object'
       properties:
-        status:
+        client_submission_status:
+          type: 'string'
+          example: 'success'
+        client_reference_number:
           type: 'string'
           example: 'success'
     clientCreated:

@@ -12,8 +12,8 @@ import uk.gov.laa.ccms.soa.gateway.model.ClientCreated;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetails;
+import uk.gov.laa.ccms.soa.gateway.model.ClientStatus;
 import uk.gov.laa.ccms.soa.gateway.model.ClientSummary;
-import uk.gov.laa.ccms.soa.gateway.model.TransactionStatusResponse;
 import uk.gov.laa.ccms.soa.gateway.service.ClientDetailsService;
 
 /**
@@ -51,18 +51,18 @@ public class ClientDetailsController implements ClientsApi {
   }
 
   @Override
-  public ResponseEntity<TransactionStatusResponse> getClientStatus(
+  public ResponseEntity<ClientStatus> getClientStatus(
       String transactionRequestId,
       String soaGatewayUserLoginId,
       String soaGatewayUserRole) {
     log.info("GET /clients/status/{}", transactionRequestId);
     try {
-      String status = clientDetailsService.getClientStatus(
+      ClientStatus status = clientDetailsService.getClientStatus(
           soaGatewayUserLoginId,
           soaGatewayUserRole,
           transactionRequestId);
 
-      return ResponseEntity.ok(new TransactionStatusResponse().status(status));
+      return ResponseEntity.ok(status);
     } catch (Exception e) {
       log.error("ClientDetailsController caught exception", e);
       return ResponseEntity.internalServerError().build();

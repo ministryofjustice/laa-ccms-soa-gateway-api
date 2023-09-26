@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import uk.gov.laa.ccms.soa.gateway.client.ClientServicesClient;
 import uk.gov.laa.ccms.soa.gateway.mapper.ClientDetailsMapper;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails;
+import uk.gov.laa.ccms.soa.gateway.model.ClientStatus;
 import uk.gov.laa.ccms.soa.gateway.model.ClientSummary;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetails;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetail;
@@ -200,6 +201,9 @@ public class ClientDetailsServiceTest {
     public void testGetClientStatus() {
         String transactionId = "sampleTransactionId";
 
+        uk.gov.laa.ccms.soa.gateway.model.ClientStatus mockClientStatus
+            = new ClientStatus().clientSubmissionStatus(StatusTextType.SUCCESS.value());
+
         Status mockStatus =  new Status();
         mockStatus.setStatus(StatusTextType.SUCCESS);
 
@@ -214,9 +218,13 @@ public class ClientDetailsServiceTest {
             soaGatewayUserRole,
             transactionId)).thenReturn(mockClientAddUpdtStatusRS);
 
-        String status = clientDetailsService.getClientStatus(soaGatewayUserLoginId, soaGatewayUserRole, transactionId);
+        when(clientDetailsMapper.toClientStatus(mockClientAddUpdtStatusRS))
+            .thenReturn(mockClientStatus);
 
-        assertEquals(status, "Success");
+        uk.gov.laa.ccms.soa.gateway.model.ClientStatus clientStatus
+            = clientDetailsService.getClientStatus(soaGatewayUserLoginId, soaGatewayUserRole, transactionId);
+
+        assertEquals(clientStatus.getClientSubmissionStatus(), "Success");
 
         verify(clientServicesClient).getClientStatus(soaGatewayUserLoginId,soaGatewayUserRole, transactionId);
     }
