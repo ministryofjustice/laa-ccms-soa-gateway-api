@@ -1,14 +1,18 @@
 package uk.gov.laa.ccms.soa.gateway.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import javax.xml.datatype.DatatypeConfigurationException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -287,6 +291,190 @@ public class ClientDetailsMapperTest {
         assertTrue(result.getDisabilityType().isEmpty());
     }
 
+    @Test
+    public void whenPersonalInformationIsNotNull_ReturnPersonalDetails() throws
+        DatatypeConfigurationException {
+        ClientPersonalDetail personalInformation = new ClientPersonalDetail();
+        personalInformation.setNationalInsuranceNumber("AB123456C");
+        personalInformation.setDateOfBirth(new Date());
+        personalInformation.setDateOfDeath(new Date());
+        personalInformation.setGender("Male");
+        personalInformation.setMaritalStatus("Single");
+        personalInformation.setHomeOfficeNumber("HO123456");
+        personalInformation.setVulnerableClient(true);
+        personalInformation.setHighProfileClient(true);
+        personalInformation.setVexatiousLitigant(false);
+        personalInformation.setCountryOfOrigin("UK");
+        personalInformation.setMentalCapacityInd(true);
+
+        PersonalDetails personalDetails = clientDetailsMapper.toPersonalDetail(personalInformation);
+        assertNotNull(personalDetails);
+        assertEquals("AB123456C", personalDetails.getNINumber());
+        assertNotNull(personalDetails.getDateOfBirth());
+        assertNotNull(personalDetails.getDateOfDeath());
+        assertEquals("Male", personalDetails.getGender());
+        assertEquals("Single", personalDetails.getMaritalStatus());
+        assertEquals("HO123456", personalDetails.getHomeOfficeNumber());
+        assertTrue(personalDetails.isVulnerableClient());
+        assertTrue(personalDetails.isHighProfileClient());
+        assertFalse(personalDetails.isVexatiousLitigant());
+        assertEquals("UK", personalDetails.getCountryOfOrigin());
+        assertTrue(personalDetails.isMentalCapacityInd());
+    }
+
+    @Test
+    public void whenAddressDetailIsNotNull_ReturnAddress() {
+        AddressDetail addressDetail = new AddressDetail();
+        addressDetail.setAddressId("Id");
+        addressDetail.setCareOfName("John Doe");
+        addressDetail.setHouse("100");
+        addressDetail.setAddressLine1("Street 1");
+        addressDetail.setAddressLine2("Street 2");
+        addressDetail.setAddressLine3("Street 3");
+        addressDetail.setAddressLine4("Street 4");
+        addressDetail.setCity("City");
+        addressDetail.setCountry("Country");
+        addressDetail.setCounty("County");
+        addressDetail.setState("State");
+        addressDetail.setProvince("Province");
+        addressDetail.setPostalCode("12345");
+
+        Address address = clientDetailsMapper.toAddress(addressDetail);
+        assertNotNull(address);
+        assertEquals("Id", address.getAddressID());
+        assertEquals("John Doe", address.getCoffName());
+        assertEquals("100", address.getHouse());
+        assertEquals("Street 1", address.getAddressLine1());
+        assertEquals("Street 2", address.getAddressLine2());
+        assertEquals("Street 3", address.getAddressLine3());
+        assertEquals("Street 4", address.getAddressLine4());
+        assertEquals("City", address.getCity());
+        assertEquals("Country", address.getCountry());
+        assertEquals("County", address.getCounty());
+        assertEquals("State", address.getState());
+        assertEquals("Province", address.getProvince());
+        assertEquals("12345", address.getPostalCode());
+    }
+
+    @Test
+    public void whenNameDetailIsNull_ReturnsNull() {
+        assertNull(clientDetailsMapper.nameDetailToName(null));
+    }
+
+    @Test
+    public void whenNameDetailIsNotNull_ReturnsName() {
+        NameDetail nameDetail = new NameDetail();
+        nameDetail.setTitle("Mr.");
+        nameDetail.setSurname("Doe");
+        nameDetail.setFirstName("John");
+        nameDetail.setMiddleName("Middle");
+        nameDetail.setSurnameAtBirth("Smith");
+        nameDetail.setFullName("Mr. John Middle Doe");
+
+        Name name = clientDetailsMapper.nameDetailToName(nameDetail);
+
+        assertNotNull(name);
+        assertEquals("Mr.", name.getTitle());
+        assertEquals("Doe", name.getSurname());
+        assertEquals("John", name.getFirstName());
+        assertEquals("Middle", name.getMiddleName());
+        assertEquals("Smith", name.getSurnameAtBirth());
+        assertEquals("Mr. John Middle Doe", name.getFullName());
+    }
+
+    @Test
+    public void whenAddressDetailIsNull_ReturnNull() {
+        assertNull(clientDetailsMapper.toAddress(null));
+    }
+
+    @Test
+    public void whenClientDetailDetailsDisabilityMonitoringIsNull_ReturnsNull() {
+        assertNull(clientDetailsMapper.clientDetailDetailsDisabilityMonitoringToDisabilityDetails(null));
+    }
+
+    @Test
+    public void whenClientDetailDetailsDisabilityMonitoringIsNotNull_ReturnsDisabilityDetails() {
+        uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetailsDisabilityMonitoring monitoring = new uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetailsDisabilityMonitoring();
+        List<String> disabilityTypes = Arrays.asList("Visual", "Hearing", "Mobility");
+        monitoring.setDisabilityType(disabilityTypes);
+
+        DisabilityDetails disabilityDetails = clientDetailsMapper.clientDetailDetailsDisabilityMonitoringToDisabilityDetails(monitoring);
+
+        assertNotNull(disabilityDetails);
+        assertEquals(disabilityTypes, disabilityDetails.getDisabilityType());
+    }
+
+    @Test
+    public void whenClientDetailDetailsDisabilityMonitoringHasNoDisabilityType_ReturnsDisabilityDetailsWithEmptyList() {
+        uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetailsDisabilityMonitoring monitoring = new uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetailsDisabilityMonitoring();
+
+        DisabilityDetails disabilityDetails = clientDetailsMapper.clientDetailDetailsDisabilityMonitoringToDisabilityDetails(monitoring);
+
+        assertNotNull(disabilityDetails);
+        assertTrue(disabilityDetails.getDisabilityType().isEmpty());
+    }
+
+    @Test
+    public void whenContactDetailIsNull_ReturnsNull() {
+        assertNull(clientDetailsMapper.contactDetailToContactDetails(null));
+    }
+
+    @Test
+    public void whenContactDetailIsNotNull_ReturnsContactDetails() {
+        uk.gov.laa.ccms.soa.gateway.model.ContactDetail contactDetail = new uk.gov.laa.ccms.soa.gateway.model.ContactDetail();
+        contactDetail.setTelephoneHome("0123456789");
+        contactDetail.setTelephoneWork("9876543210");
+        contactDetail.setMobileNumber("1234567890");
+        contactDetail.setEmailAddress("test@example.com");
+        contactDetail.setPassword("password123");
+        contactDetail.setPasswordReminder("My reminder");
+        contactDetail.setCorrespondenceMethod("Email");
+        contactDetail.setCorrespondenceLanguage("English");
+
+        ContactDetails contactDetails = clientDetailsMapper.contactDetailToContactDetails(contactDetail);
+
+        assertNotNull(contactDetails);
+        assertEquals("0123456789", contactDetails.getTelephoneHome());
+        assertEquals("9876543210", contactDetails.getTelephoneWork());
+        assertEquals("1234567890", contactDetails.getMobileNumber());
+        assertEquals("test@example.com", contactDetails.getEmailAddress());
+        assertEquals("password123", contactDetails.getPassword());
+        assertEquals("My reminder", contactDetails.getPasswordReminder());
+        assertEquals("Email", contactDetails.getCorrespondenceMethod());
+        assertEquals("English", contactDetails.getCorrespondenceLanguage());
+    }
+
+    @Test
+    public void whenClientDetailDetailsIsNull_ReturnsNull() {
+        assertNull(clientDetailsMapper.toSoaClientDetails(null));
+    }
+
+    @Test
+    public void whenClientDetailDetailsIsNotNull_ReturnsClientDetails() {
+        ClientDetailDetails clientDetailDetails = new ClientDetailDetails();
+        // Assuming setters for each field are present; populate them with mock data:
+        clientDetailDetails.setName(new NameDetail());
+        clientDetailDetails.setPersonalInformation(new ClientPersonalDetail());
+        clientDetailDetails.setContacts(new uk.gov.laa.ccms.soa.gateway.model.ContactDetail());
+        clientDetailDetails.setDisabilityMonitoring(new uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetailsDisabilityMonitoring());
+        clientDetailDetails.setNoFixedAbode(true);
+        clientDetailDetails.setAddress(new AddressDetail());
+        clientDetailDetails.setEthnicMonitoring("SomeValue");
+        clientDetailDetails.setSpecialConsiderations("Some considerations");
+
+        uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientDetails result = clientDetailsMapper.toSoaClientDetails(clientDetailDetails);
+
+        assertNotNull(result);
+        // Validate each field (based on mock data):
+        assertNotNull(result.getName());
+        assertNotNull(result.getPersonalInformation());
+        assertNotNull(result.getContacts());
+        assertNotNull(result.getDisabilityMonitoring());
+        assertTrue(result.isNoFixedAbode());
+        assertNotNull(result.getAddress());
+        assertEquals("SomeValue", result.getEthnicMonitoring());
+        assertEquals("Some considerations", result.getSpecialConsiderations());
+    }
 
     private ClientList buildClientList() {
         ClientList clientList = new ClientList();

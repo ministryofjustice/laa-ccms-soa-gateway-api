@@ -11,9 +11,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.soap.client.core.SoapActionCallback;
+import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientAddRQ;
+import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientAddRS;
+import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientAddUpdtStatusRQ;
+import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientAddUpdtStatusRS;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientInqRQ;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientInqRS;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ObjectFactory;
+import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientDetails;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientInfo;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -129,6 +134,68 @@ class ClientServicesClientTest {
         assertEquals(clientReferenceNumber, payload.getValue().getSearchCriteria().getClientReferenceNumber());
         assertNotNull(response);
     }
+
+    @Test
+    public void testGetClientStatusBuildsCorrectRequest() throws Exception {
+        // Mocking expected values
+        String transactionId = "txn12345";
+
+        ObjectFactory objectFactory = new ObjectFactory();
+        ClientAddUpdtStatusRS mockResponse = objectFactory.createClientAddUpdtStatusRS();
+
+        when(webServiceTemplate.marshalSendAndReceive(
+            eq(SERVICE_URL),
+            any(JAXBElement.class),
+            any(SoapActionCallback.class)))
+            .thenReturn(objectFactory.createClientAddUpdtStatusRS(mockResponse));
+
+        ClientAddUpdtStatusRS response = client.getClientStatus(
+            soaGatewayUserLoginId, soaGatewayUserRole, transactionId
+        );
+
+        // Verify interactions
+        verify(webServiceTemplate, times(1)).marshalSendAndReceive(
+            eq(SERVICE_URL),
+            requestCaptor.capture(),
+            any(SoapActionCallback.class));
+
+        JAXBElement<?> payload = requestCaptor.getValue();
+        assertEquals(transactionId, ((ClientAddUpdtStatusRQ) payload.getValue()).getTransactionID());
+        assertNotNull(response);
+    }
+
+    @Captor
+    ArgumentCaptor<JAXBElement<ClientAddRQ>> clientAddRequestCaptor;
+
+    @Test
+    public void testPostClientDetailsBuildsCorrectRequest() throws Exception {
+        // Mocking expected values
+        ClientDetails mockClientDetails = new ClientDetails();
+
+        ObjectFactory objectFactory = new ObjectFactory();
+        ClientAddRS mockResponse = objectFactory.createClientAddRS();
+
+        when(webServiceTemplate.marshalSendAndReceive(
+            eq(SERVICE_URL),
+            any(JAXBElement.class),
+            any(SoapActionCallback.class)))
+            .thenReturn(objectFactory.createClientAddRS(mockResponse));
+
+        ClientAddRS response = client.postClientDetails(
+            soaGatewayUserLoginId, soaGatewayUserRole, mockClientDetails
+        );
+
+        // Verify interactions
+        verify(webServiceTemplate, times(1)).marshalSendAndReceive(
+            eq(SERVICE_URL),
+            clientAddRequestCaptor.capture(),
+            any(SoapActionCallback.class));
+
+        JAXBElement<?> payload = clientAddRequestCaptor.getValue();
+        assertEquals(mockClientDetails, ((ClientAddRQ) payload.getValue()).getClient());
+        assertNotNull(response);
+    }
+
 
 
     private ClientInfo buildClientInfo(){
