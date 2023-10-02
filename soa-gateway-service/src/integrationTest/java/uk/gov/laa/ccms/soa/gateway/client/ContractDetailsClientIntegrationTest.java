@@ -13,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.Resource;
 import org.springframework.test.context.ContextConfiguration;
@@ -21,7 +22,9 @@ import org.springframework.ws.test.client.MockWebServiceServer;
 import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabim.ContractDetailsInqRS;
 
 @SpringBootTest
-@ContextConfiguration
+@EnableAutoConfiguration(exclude = {
+    org.springdoc.core.configuration.SpringDocSecurityConfiguration.class
+})
 public class ContractDetailsClientIntegrationTest {
 
   @Autowired
