@@ -26,9 +26,6 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationI
  * Integration tests for {@link NotificationClient}.
  */
 @SpringBootTest
-@EnableAutoConfiguration(exclude = {
-    org.springdoc.core.configuration.SpringDocSecurityConfiguration.class
-})
 public class NotificationClientIntegrationTest {
 
   private static final String HEADER_NS
