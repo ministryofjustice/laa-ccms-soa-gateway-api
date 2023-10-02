@@ -22,9 +22,6 @@ import org.springframework.ws.test.client.MockWebServiceServer;
 import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabim.ContractDetailsInqRS;
 
 @SpringBootTest
-@EnableAutoConfiguration(exclude = {
-    org.springdoc.core.configuration.SpringDocSecurityConfiguration.class
-})
 public class ContractDetailsClientIntegrationTest {
 
   @Autowired
