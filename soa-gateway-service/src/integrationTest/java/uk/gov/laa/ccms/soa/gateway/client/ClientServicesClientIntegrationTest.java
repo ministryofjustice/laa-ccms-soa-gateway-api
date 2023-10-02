@@ -33,9 +33,6 @@ import uk.gov.legalservices.enterprise.common._1_0.common.Address;
 import uk.gov.legalservices.enterprise.common._1_0.common.Name;
 
 @SpringBootTest
-@EnableAutoConfiguration(exclude = {
-    org.springdoc.core.configuration.SpringDocSecurityConfiguration.class
-})
 public class ClientServicesClientIntegrationTest {
 
     @Autowired

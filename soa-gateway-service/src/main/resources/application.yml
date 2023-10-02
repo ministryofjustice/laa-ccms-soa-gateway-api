@@ -1,3 +1,6 @@
+springdoc:
+  enable-spring-security: false
+
 laa:
   ccms:
     soa-gateway:

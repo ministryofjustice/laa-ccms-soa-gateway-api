@@ -1,6 +1,9 @@
 server:
   port: 8007
 
+springdoc:
+  enable-spring-security: false
+
 laa:
   ccms:
     soa-gateway:

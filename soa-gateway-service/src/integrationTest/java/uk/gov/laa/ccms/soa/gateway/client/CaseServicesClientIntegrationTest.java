@@ -24,9 +24,6 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseInqRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseInfo;
 
 @SpringBootTest
-@EnableAutoConfiguration(exclude = {
-    org.springdoc.core.configuration.SpringDocSecurityConfiguration.class
-})
 public class CaseServicesClientIntegrationTest {
 
   @Autowired
