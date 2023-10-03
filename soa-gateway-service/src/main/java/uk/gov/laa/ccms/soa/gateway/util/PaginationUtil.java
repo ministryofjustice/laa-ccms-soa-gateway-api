@@ -21,9 +21,20 @@ import uk.gov.laa.ccms.soa.gateway.SoaGatewaySortingException;
  */
 public final class PaginationUtil {
 
+  /**
+   * Predicate field to determine if field is a domain field.
+   */
   private static final Predicate<Field> isDomain = field -> field.getType().getPackage() != null;
+
+  /**
+   * Predictate to determine if field is a gateway domain object.
+   */
   private static final Predicate<Field> isPackage = field -> field.getType()
       .getPackage().getName().equals("uk.gov.laa.ccms.soa.gateway.model");
+
+  /**
+   * Predicate that joins the above predicates into a single condition.
+   */
   private static final Predicate<Field> isInDomainPackage = isDomain.and(isPackage);
 
   private PaginationUtil() {
