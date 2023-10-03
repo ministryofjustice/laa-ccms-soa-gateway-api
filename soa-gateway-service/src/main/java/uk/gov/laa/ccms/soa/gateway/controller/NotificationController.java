@@ -1,6 +1,7 @@
 package uk.gov.laa.ccms.soa.gateway.controller;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.laa.ccms.soa.gateway.api.NotificationsApi;
 import uk.gov.laa.ccms.soa.gateway.model.Notification;
-import uk.gov.laa.ccms.soa.gateway.model.NotificationDetail;
 import uk.gov.laa.ccms.soa.gateway.model.NotificationSummary;
 import uk.gov.laa.ccms.soa.gateway.model.Notifications;
 import uk.gov.laa.ccms.soa.gateway.model.UserDetail;
@@ -43,27 +43,26 @@ public class NotificationController implements NotificationsApi {
       final String notificationType,
       final Date dateFrom,
       final Date dateTo,
+      final List<String> sort,
       final Integer maxRecords,
       final Pageable pageable) {
     try {
 
       //Build a Notification domain bject to hold the search criteria
-
+      log.info("GET / notifications");
       Notification notification = new Notification()
           .caseReferenceNumber(caseReferenceNumber)
           .providerCaseReferenceNumber(providerCaseReference)
           .clientName(clientSurname)
           .feeEarner(Optional.ofNullable(feeEarnerId).map(String::valueOf).orElse(""))
+          .notificationType(notificationType)
           .user(
               new UserDetail()
                   .userLoginId(soaGatewayUserLoginId)
                   .userType(soaGatewayUserRole)
                   .userName(assignedToUserId)
-          )
-          .notificationDetail(
-              new NotificationDetail()
-                  .notificationType(notificationType)
           );
+
       Notifications notifications = notificationService.getNotifications(
           notification,
           includeClosed,

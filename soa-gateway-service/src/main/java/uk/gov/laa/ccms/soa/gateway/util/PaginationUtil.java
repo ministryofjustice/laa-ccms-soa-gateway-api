@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +20,11 @@ import uk.gov.laa.ccms.soa.gateway.SoaGatewaySortingException;
  * when working with lists and {@link Page} objects.</p>
  */
 public final class PaginationUtil {
+
+  private static final Predicate<Field> isDomain = field -> field.getType().getPackage() != null;
+  private static final Predicate<Field> isPackage = field -> field.getType()
+      .getPackage().getName().equals("uk.gov.laa.ccms.soa.gateway.model");
+  private static final Predicate<Field> isInDomainPackage = isDomain.and(isPackage);
 
   private PaginationUtil() {
   }
@@ -46,7 +53,7 @@ public final class PaginationUtil {
       return new PageImpl<>(list, pageable, list.size());
     }
     Class<?> clazz = list.get(0).getClass();
-    List<Field> allFields = Arrays.asList(clazz.getDeclaredFields());
+    List<Field> allFields = getAllFields(clazz);
 
     Comparator<T> comparator = Comparator.comparing(list::indexOf); // Default comparator
     for (Sort.Order order : pageable.getSort()) {
@@ -60,7 +67,7 @@ public final class PaginationUtil {
       if (order.getProperty().equals(toBeSorted.getName())) {
         if (order.isAscending()) {
           list.sort(comparator);
-        } else  {
+        } else {
           list.sort(comparator.reversed());
         }
       }
@@ -68,6 +75,32 @@ public final class PaginationUtil {
     List<T> sublist = new ArrayList<>(list.subList(start, end));
     return new PageImpl<>(sublist, pageable, list.size());
   }
+
+  /**
+   * Get the fields from the outer and nested objects in case they can be sorted on.
+   *
+   * @param clazz the class type from the domain.
+   * @return the list of fields and nested fields within the class.
+   */
+  private static List<Field> getAllFields(Class<?> clazz) {
+    List<Field> allFields = new ArrayList<>(Arrays.asList(clazz.getDeclaredFields()));
+
+    List<Field> nestedDomainObjectFields = allFields
+        .stream()
+        .filter(isInDomainPackage)
+        .toList();
+
+    if (!nestedDomainObjectFields.isEmpty()) {
+      allFields.removeAll(nestedDomainObjectFields);
+      nestedDomainObjectFields.stream()
+          .flatMap(field -> Stream.of(field.getType().getDeclaredFields()))
+          .filter(field -> !isInDomainPackage.test(field))
+          .forEachOrdered(allFields::add);
+    }
+    return allFields;
+  }
+
+
 
 
 }
