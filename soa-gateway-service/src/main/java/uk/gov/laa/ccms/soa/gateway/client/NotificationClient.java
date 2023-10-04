@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.soap.client.core.SoapActionCallback;
 import uk.gov.laa.ccms.soa.gateway.model.Notification;
-import uk.gov.laa.ccms.soa.gateway.model.NotificationDetail;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationCntInqRQ;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationCntInqRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationInqRQ;
@@ -140,8 +139,7 @@ public class NotificationClient extends AbstractSoaClient {
         Optional.ofNullable(notification.getFeeEarner()).map(String::valueOf).orElse(""));
     criteria.setProviderCaseReferenceNumber(notification.getProviderCaseReferenceNumber());
     criteria.setNotitificationType(
-        Optional.ofNullable(notification.getNotificationDetail()).map(
-            NotificationDetail::getNotificationType).map(String::valueOf).orElse(null)
+        Optional.ofNullable(notification.getNotificationType()).map(String::valueOf).orElse(null)
     );
     criteria.setIncludeClosedNotification(includeClosed);
     return criteria;

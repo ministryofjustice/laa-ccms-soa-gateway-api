@@ -72,8 +72,7 @@ public class NotificationMapperTest {
     ZoneId zone = ZoneId.of("Europe/London");
     ZonedDateTime zdt = ZonedDateTime.now(zone);
     GregorianCalendar grep = GregorianCalendar.from(zdt);
-    XMLGregorianCalendar xmlGreg = DatatypeFactory.newInstance().newXMLGregorianCalendar(grep);
-    return xmlGreg;
+    return DatatypeFactory.newInstance().newXMLGregorianCalendar(grep);
   }
 
   private static DocumentElementType getDocumentElementType() {
@@ -236,11 +235,6 @@ public class NotificationMapperTest {
   }
 
   @Test
-  public void testNullNotificationReturnsNull() {
-    assertNull(notificationMapper.toNotificationDetail(null));
-  }
-
-  @Test
   public void testNotesElementTypeListToNoteListWithEmptyListReturnsNull() {
     assertNull(notificationMapper.notesElementTypeListToNoteList(null));
   }
@@ -285,8 +279,7 @@ public class NotificationMapperTest {
     assertNull(document.getBinData());
   }
 
-  private NotificationListElementType getNotificationListElementType()
-      throws DatatypeConfigurationException {
+  private NotificationListElementType getNotificationListElementType() {
     NotificationListElementType listElementType = new NotificationListElementType();
     listElementType.setClientName("jeff");
     listElementType.setCategoryOfLaw("law");
@@ -324,24 +317,7 @@ public class NotificationMapperTest {
     notification.setNotes(setNotes(notes));
     return notification;
   }
-
-  private NotificationElementType getNotificationElementTypeWithEmptyNotesArray()
-      throws DatatypeConfigurationException {
-    NotificationElementType notification = new NotificationElementType();
-    notification.setNotificationID("1234");
-    XMLGregorianCalendar xmlGreg = getXmlGregorianCalendar();
-    notification.setAssignDate(xmlGreg);
-    notification.setNotificationOpenInd(true);
-    notification.setProviderFirmID(new BigDecimal(123));
-    notification.setSubject("Please Review");
-    notification.setNotitificationType("N");
-    notification.setAvailableResponses(getAvailableResponses());
-    notification.setAttachedDocuments(getAttachedDocuments());
-    notification.setUploadedDocuments(getUploadedDocuments());
-    Notes notesObj = new Notes();
-    notification.setNotes(notesObj);
-    return notification;
-  }
+  
 
   private AttachedDocuments getAttachedDocuments() {
     AttachedDocuments attachedDocuments = new AttachedDocuments();
