@@ -95,3 +95,4 @@ test-results/
 /build/
 /kubectl_deploy/deploy.yaml
 /.java-version
+/gen/

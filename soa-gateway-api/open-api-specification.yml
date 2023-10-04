@@ -91,6 +91,12 @@ paths:
             type: 'string'
             example: "2017-01-01"
             format: date
+        - name: 'sort'
+          in: 'query'
+          schema:
+            type: 'array'
+            items:
+              type: 'string'
         - $ref: '#/components/parameters/soaGatewayUserLoginId'
         - $ref: '#/components/parameters/soaGatewayUserRole'
         - $ref: '#/components/parameters/maxRecords'
@@ -1476,11 +1482,6 @@ components:
           type: 'string'
         fee_earner:
           type: 'string'
-        notification_detail:
-          $ref: '#/components/schemas/notificationDetail'
-    notificationDetail:
-      type: 'object'
-      properties:
         notification_id:
           type: 'string'
         provider_firm_id:

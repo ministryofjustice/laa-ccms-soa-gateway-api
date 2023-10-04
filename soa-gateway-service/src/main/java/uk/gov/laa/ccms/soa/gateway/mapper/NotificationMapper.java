@@ -10,7 +10,6 @@ import org.springframework.data.domain.Page;
 import uk.gov.laa.ccms.soa.gateway.model.Document;
 import uk.gov.laa.ccms.soa.gateway.model.Note;
 import uk.gov.laa.ccms.soa.gateway.model.Notification;
-import uk.gov.laa.ccms.soa.gateway.model.NotificationDetail;
 import uk.gov.laa.ccms.soa.gateway.model.NotificationSummary;
 import uk.gov.laa.ccms.soa.gateway.model.Notifications;
 import uk.gov.laa.ccms.soa.gateway.model.UserDetail;
@@ -18,7 +17,6 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationC
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationInqRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.NotesElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.NotificationCntList;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.NotificationElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.NotificationListElementType;
 import uk.gov.legalservices.enterprise.common._1_0.common.DocumentElementType;
 import uk.gov.legalservices.enterprise.common._1_0.common.User;
@@ -122,6 +120,7 @@ public interface NotificationMapper {
    *     list if no notification data is available.
    */
   default List<Notification> toNotificationsList(NotificationInqRS notificationInqRs) {
+
     if (notificationInqRs.getNotificationList() != null) {
       NotificationInqRS.NotificationList notificationListObject
           = notificationInqRs.getNotificationList();
@@ -137,27 +136,22 @@ public interface NotificationMapper {
     return Collections.emptyList();
   }
 
-  Notifications toNotifications(Page<Notification> page);
-
   @Mapping(source = ".", target = "notifications")
-  List<uk.gov.laa.ccms.soa.gateway.model.Notification> toNotificationList(
+  List<Notification> toNotificationList(
       List<NotificationListElementType> notificationList);
 
+  Notifications toNotifications(Page<Notification> page);
 
-  @Mapping(target = "notificationDetail", source = "notification")
-  @Mapping(target = ".", source = "notificationElement")
-  Notification toNotification(NotificationListElementType notificationElement);
-
-  @Mapping(target = "notes", source = "notes.note")
-  @Mapping(target = "availableResponses", source = "availableResponses.response")
-  @Mapping(target = "attachedDocuments", source = "uploadedDocuments.document")
-  @Mapping(target = "uploadedDocuments", source = "attachedDocuments.document")
-  @Mapping(target = "notificationType", source = "notitificationType")
-  @Mapping(target = "notificationOpenIndicator", source = "notificationOpenInd")
-  @Mapping(target = "notificationId", source = "notificationID")
-  @Mapping(target = "providerFirmId", source = "providerFirmID")
-  @Mapping(target = ".", source = "notificationElement")
-  NotificationDetail toNotificationDetail(NotificationElementType notificationElement);
+  @Mapping(target = ".", source = "notification")
+  @Mapping(target = "notes", source = "notification.notes.note")
+  @Mapping(target = "availableResponses", source = "notification.availableResponses.response")
+  @Mapping(target = "attachedDocuments", source = "notification.uploadedDocuments.document")
+  @Mapping(target = "uploadedDocuments", source = "notification.attachedDocuments.document")
+  @Mapping(target = "notificationType", source = "notification.notitificationType")
+  @Mapping(target = "notificationOpenIndicator", source = "notification.notificationOpenInd")
+  @Mapping(target = "notificationId", source = "notification.notificationID")
+  @Mapping(target = "providerFirmId", source = "notification.providerFirmID")
+  Notification toNotification(NotificationListElementType notificationListElementType);
 
   @Mapping(target = "documentId", source = "documentID")
   Document toDocument(DocumentElementType documentElementType);
@@ -167,5 +161,6 @@ public interface NotificationMapper {
 
   @Mapping(target = "userLoginId", source = "userLoginID")
   UserDetail toUserDetail(User user);
+
 
 }
