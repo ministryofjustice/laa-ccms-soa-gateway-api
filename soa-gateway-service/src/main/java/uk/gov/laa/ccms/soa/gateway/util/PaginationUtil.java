@@ -1,12 +1,12 @@
 package uk.gov.laa.ccms.soa.gateway.util;
 
-import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -22,20 +22,23 @@ import uk.gov.laa.ccms.soa.gateway.SoaGatewaySortingException;
 public final class PaginationUtil {
 
   /**
-   * Predicate field to determine if field is a domain field.
+   * Predicate field to determine if method is a getter.
    */
-  private static final Predicate<Field> isDomain = field -> field.getType().getPackage() != null;
+  private static final Predicate<Method> isGetter = method -> method.getName().startsWith("get");
 
   /**
-   * Predictate to determine if field is a gateway domain object.
+   * Predictate to determine if method name contains property name.
    */
-  private static final Predicate<Field> isPackage = field -> field.getType()
-      .getPackage().getName().equals("uk.gov.laa.ccms.soa.gateway.model");
+  private static Predicate<Method> containsPropertyName(String propertyName) {
+    return method -> method.getName().toLowerCase().contains(propertyName.toLowerCase());
+  }
 
   /**
    * Predicate that joins the above predicates into a single condition.
    */
-  private static final Predicate<Field> isInDomainPackage = isDomain.and(isPackage);
+  private static Predicate<Method> isMethodMatch(String propertyName) {
+    return isGetter.and(containsPropertyName(propertyName));
+  }
 
   private PaginationUtil() {
   }
@@ -55,68 +58,91 @@ public final class PaginationUtil {
     int start = (int) pageable.getOffset();
     int end = Math.min((start + pageable.getPageSize()), list.size());
 
+    /*
+     if there's no sort in the request, just return the default page
+    */
+    if (!pageable.getSort().isSorted() || list.isEmpty()) {
+      return new PageImpl<>(list.subList(start, end), pageable, list.size());
+    }
 
     /*
      Sort the list based on the Pageable Sort.
-     Compare the fields of the class with the sort field and sort if that field exists.
-    */
-    if (!pageable.getSort().isSorted() || list.isEmpty()) {
-      return new PageImpl<>(list, pageable, list.size());
-    }
+     Compare the methods of the class with the sort field and sort if that method exists.
+     */
     Class<?> clazz = list.get(0).getClass();
-    List<Field> allFields = getAllFields(clazz);
+    List<Method> methods = Arrays.asList(clazz.getDeclaredMethods());
 
-    Comparator<T> comparator = Comparator.comparing(list::indexOf); // Default comparator
+    //
+    Method sortMethod = null;
+    Sort.Order toOrder = null;
     for (Sort.Order order : pageable.getSort()) {
-      Field toBeSorted = allFields
-          .stream()
-          .filter(field -> field.getName().equals(order.getProperty()))
+      sortMethod = methods.stream()
+          .filter(isMethodMatch(order.getProperty()))
           .findFirst()
           .orElseThrow(() -> new SoaGatewaySortingException(
               String.format("Invalid sort.  Sort field %s not found in class.",
                   order.getProperty())));
-      if (order.getProperty().equals(toBeSorted.getName())) {
-        if (order.isAscending()) {
-          list.sort(comparator);
-        } else {
-          list.sort(comparator.reversed());
-        }
+      toOrder = order;
+      break;
+    }
+    if (sortMethod.getName().toLowerCase()
+        .contains(Objects.requireNonNull(toOrder).getProperty().toLowerCase())) {
+      Comparator<T> comparator;
+      try {
+        comparator = (Comparator<T>) newMethodComparator(clazz, sortMethod.getName());
+      } catch (Exception e) {
+        throw new SoaGatewaySortingException(
+            String.format("Invalid sort.  Sort field %s not found in class.",
+                toOrder.getProperty()));
+      }
+
+      if (toOrder.isAscending()) {
+        list.sort(comparator);
+      } else {
+        list.sort(comparator.reversed());
       }
     }
+
     List<T> sublist = new ArrayList<>(list.subList(start, end));
     return new PageImpl<>(sublist, pageable, list.size());
   }
 
-  /**
-   * Get the fields from the outer and nested objects in case they can be sorted on.
-   *
-   * @param clazz the class type from the domain.
-   * @return the list of fields and nested fields within the class.
-   */
-  private static List<Field> getAllFields(Class<?> clazz) {
-    List<Field> allFields = new ArrayList<>(Arrays.asList(clazz.getDeclaredFields()));
-
-    List<Field> nestedDomainObjectFields = allFields
-        .stream()
-        .filter(isInDomainPackage)
-        .toList();
-
-    if (!nestedDomainObjectFields.isEmpty()) {
-      allFields.removeAll(nestedDomainObjectFields);
-      nestedDomainObjectFields.stream()
-          .flatMap(field -> Stream.of(field.getType().getDeclaredFields()))
-          .filter(field -> !isInDomainPackage.test(field))
-          .forEachOrdered(allFields::add);
+  @SuppressWarnings({"unchecked", "rawtypes"})
+  private static <T> Comparator<T> newMethodComparator(Class<T> cls, String methodName)
+      throws Exception {
+    Method method = cls.getMethod(methodName);
+    if (method.getParameterTypes().length != 0) {
+      throw new Exception("Method " + method + " takes parameters");
     }
-    return allFields;
+
+    Class<?> returnType = method.getReturnType();
+    if (!Comparable.class.isAssignableFrom(returnType)) {
+      throw new Exception("The return type " + returnType + " is not Comparable");
+    }
+
+    return newMethodComparator(method, (Class<? extends Comparable>) returnType);
   }
 
+  private static <T, R extends Comparable<R>> Comparator<T> newMethodComparator(
+      final Method method, final Class<R> returnType) {
+    return new Comparator<T>() {
+      @Override
+      public int compare(T o1, T o2) {
+        try {
+          R a = invoke(method, o1);
+          R b = invoke(method, o2);
+          if (a == null) {
+            return -1;
+          }
+          return a.compareTo(b);
+        } catch (Exception e) {
+          throw new SoaGatewaySortingException("Error sorting comparator on sortfield");
+        }
+      }
 
-
-
+      private R invoke(Method method, T o) throws Exception {
+        return returnType.cast(method.invoke(o));
+      }
+    };
+  }
 }
-
-
-
-
-
