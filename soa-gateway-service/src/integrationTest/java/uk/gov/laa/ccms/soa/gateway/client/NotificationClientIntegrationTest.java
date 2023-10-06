@@ -13,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.Resource;
 import org.springframework.test.context.ContextConfiguration;
@@ -25,7 +26,6 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationI
  * Integration tests for {@link NotificationClient}.
  */
 @SpringBootTest
-@ContextConfiguration
 public class NotificationClientIntegrationTest {
 
   private static final String HEADER_NS

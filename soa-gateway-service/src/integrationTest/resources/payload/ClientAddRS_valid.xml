@@ -1,0 +1,18 @@
+<msg:ClientAddRS
+        xmlns:msg="http://legalservices.gov.uk/CCMS/ClientManagement/Client/1.0/ClientBIM">
+    <header:HeaderRS xmlns:header="http://legalservices.gov.uk/Enterprise/Common/1.0/Header">
+        <header:TransactionID>202309260908406430348479724</header:TransactionID>
+        <header:RequestDetails>
+            <header:TransactionRequestID>202309260908406430348479724</header:TransactionRequestID>
+            <header:Language>ENG</header:Language>
+            <header:Source>PUI</header:Source>
+            <header:Target>Oracle EBusiness</header:Target>
+            <header:UserLoginID>PENNY.WALL@SWITALSKIS.COM</header:UserLoginID>
+            <header:UserRole>EXTERNAL</header:UserRole>
+        </header:RequestDetails>
+        <header:Status>
+            <header:Status>Success</header:Status>
+        </header:Status>
+    </header:HeaderRS>
+    <msg:TransactionID>202309260908406430348479724</msg:TransactionID>
+</msg:ClientAddRS>

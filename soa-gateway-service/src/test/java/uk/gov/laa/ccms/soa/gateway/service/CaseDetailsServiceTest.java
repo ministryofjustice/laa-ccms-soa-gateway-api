@@ -23,6 +23,7 @@ import uk.gov.laa.ccms.soa.gateway.mapper.CaseDetailsMapper;
 import uk.gov.laa.ccms.soa.gateway.model.CaseDetails;
 import uk.gov.laa.ccms.soa.gateway.model.CaseSummary;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseInqRS;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.Case;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseInfo;
 
 
@@ -119,6 +120,31 @@ public class CaseDetailsServiceTest {
 
         // Assert the result
         assertEquals(caseDetails, result);
+    }
+
+    @Test
+    void getCaseDetail_returnsMappedCaseDetail() {
+        // Arrange
+        String soaGatewayUserLoginId = "testUser";
+        String soaGatewayUserRole = "testRole";
+        String caseReferenceNumber = "ref123";
+
+        CaseInqRS mockResponse = new CaseInqRS();
+        Case mockCase = new Case();
+        mockResponse.setCase(mockCase);
+
+        uk.gov.laa.ccms.soa.gateway.model.CaseDetail expectedDetail = new uk.gov.laa.ccms.soa.gateway.model.CaseDetail();
+
+        when(caseServicesClient.getCaseDetail(soaGatewayUserLoginId, soaGatewayUserRole, caseReferenceNumber))
+            .thenReturn(mockResponse);
+        when(caseDetailsMapper.toCaseDetail(mockCase)).thenReturn(expectedDetail);
+
+        // Act
+        uk.gov.laa.ccms.soa.gateway.model.CaseDetail
+            result = caseDetailsService.getCaseDetail(soaGatewayUserLoginId, soaGatewayUserRole, caseReferenceNumber);
+
+        // Assert
+        assertEquals(expectedDetail, result);
     }
 
     private CaseSummary buildCaseSummary(){
