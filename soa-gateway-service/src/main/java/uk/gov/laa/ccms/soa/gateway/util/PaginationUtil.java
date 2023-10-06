@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Predicate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -26,6 +25,9 @@ public final class PaginationUtil {
    */
   private static final Predicate<Method> isGetter = method -> method.getName().startsWith("get");
 
+  private PaginationUtil() {
+  }
+
   /**
    * Predictate to determine if method name contains property name.
    */
@@ -40,9 +42,6 @@ public final class PaginationUtil {
     return isGetter.and(containsPropertyName(propertyName));
   }
 
-  private PaginationUtil() {
-  }
-
   /**
    * Paginates a given list based on the provided {@link Pageable} object.
    *
@@ -54,6 +53,7 @@ public final class PaginationUtil {
    * @param list     The list of items to be paginated.
    * @return A {@link Page} object containing a paginated and possibly sorted subset of the list.
    */
+  @SuppressWarnings({"unchecked"})
   public static <T> Page<T> paginateList(final Pageable pageable, List<T> list) {
     int start = (int) pageable.getOffset();
     int end = Math.min((start + pageable.getPageSize()), list.size());
@@ -85,22 +85,20 @@ public final class PaginationUtil {
       toOrder = order;
       break;
     }
-    if (sortMethod.getName().toLowerCase()
-        .contains(Objects.requireNonNull(toOrder).getProperty().toLowerCase())) {
-      Comparator<T> comparator;
-      try {
-        comparator = (Comparator<T>) newMethodComparator(clazz, sortMethod.getName());
-      } catch (Exception e) {
-        throw new SoaGatewaySortingException(
-            String.format("Invalid sort.  Sort field %s not found in class.",
-                toOrder.getProperty()));
-      }
+    Comparator<T> comparator;
+    try {
+      assert sortMethod != null;
+      comparator = (Comparator<T>) getComparator(clazz, sortMethod.getName());
+    } catch (Exception e) {
+      throw new SoaGatewaySortingException(
+          String.format("Invalid sort.  Sort field %s not found in class.",
+              toOrder.getProperty()));
+    }
 
-      if (toOrder.isAscending()) {
-        list.sort(comparator);
-      } else {
-        list.sort(comparator.reversed());
-      }
+    if (toOrder.isAscending()) {
+      list.sort(comparator);
+    } else {
+      list.sort(comparator.reversed());
     }
 
     List<T> sublist = new ArrayList<>(list.subList(start, end));
@@ -108,9 +106,9 @@ public final class PaginationUtil {
   }
 
   @SuppressWarnings({"unchecked", "rawtypes"})
-  private static <T> Comparator<T> newMethodComparator(Class<T> cls, String methodName)
+  private static <T> Comparator<T> getComparator(Class<T> clazz, String methodName)
       throws Exception {
-    Method method = cls.getMethod(methodName);
+    Method method = clazz.getMethod(methodName);
     if (method.getParameterTypes().length != 0) {
       throw new Exception("Method " + method + " takes parameters");
     }
@@ -120,12 +118,12 @@ public final class PaginationUtil {
       throw new Exception("The return type " + returnType + " is not Comparable");
     }
 
-    return newMethodComparator(method, (Class<? extends Comparable>) returnType);
+    return getComparator(method, (Class<? extends Comparable>) returnType);
   }
 
-  private static <T, R extends Comparable<R>> Comparator<T> newMethodComparator(
+  private static <T, R extends Comparable<R>> Comparator<T> getComparator(
       final Method method, final Class<R> returnType) {
-    return new Comparator<T>() {
+    return new Comparator<>() {
       @Override
       public int compare(T o1, T o2) {
         try {
