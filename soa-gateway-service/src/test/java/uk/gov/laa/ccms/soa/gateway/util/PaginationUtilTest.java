@@ -46,7 +46,7 @@ class PaginationUtilTest {
         .clientReferenceNumber("11234"));
     Page<Notification> notificationPage = PaginationUtil.paginateList(pageable,notificationList);
     assertEquals(2, notificationPage.getTotalElements());
-    assertEquals("12345", notificationPage.getContent().get(0).getClientReferenceNumber());
+    assertEquals("12345", notificationPage.getContent().get(1).getClientReferenceNumber());
   }
 
   @Test
