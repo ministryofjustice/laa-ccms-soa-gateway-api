@@ -163,7 +163,7 @@ jobs:
         env:
           APP_VERSION: ${{ needs.build-test-publish.outputs.app_version }}
         run: |
-          sed -i "s/uk.gov.laa.ccms.soa.gateway:soa.gateway.api:[^']*/uk.gov.laa.ccms.soa.gateway:soa.gateway.api:${APP_VERSION}/g" build.gradle
+          sed -i "s/uk.gov.laa.ccms.soa.gateway:soa.gateway.api:[^']*/uk.gov.laa.ccms.soa.gateway:soa-gateway-api:${APP_VERSION}/g" build.gradle
 
       - name: Commit and push changes
         env:
