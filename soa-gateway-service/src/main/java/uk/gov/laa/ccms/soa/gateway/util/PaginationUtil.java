@@ -2,10 +2,8 @@ package uk.gov.laa.ccms.soa.gateway.util;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.function.Predicate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -20,27 +18,9 @@ import uk.gov.laa.ccms.soa.gateway.SoaGatewaySortingException;
  */
 public final class PaginationUtil {
 
-  /**
-   * Predicate field to determine if method is a getter.
-   */
-  private static final Predicate<Method> isGetter = method -> method.getName().startsWith("get");
-
   private PaginationUtil() {
   }
 
-  /**
-   * Predictate to determine if method name contains property name.
-   */
-  private static Predicate<Method> containsPropertyName(String propertyName) {
-    return method -> method.getName().toLowerCase().contains(propertyName.toLowerCase());
-  }
-
-  /**
-   * Predicate that joins the above predicates into a single condition.
-   */
-  private static Predicate<Method> isMethodMatch(String propertyName) {
-    return isGetter.and(containsPropertyName(propertyName));
-  }
 
   /**
    * Paginates a given list based on the provided {@link Pageable} object.
@@ -53,7 +33,6 @@ public final class PaginationUtil {
    * @param list     The list of items to be paginated.
    * @return A {@link Page} object containing a paginated and possibly sorted subset of the list.
    */
-  @SuppressWarnings({"unchecked"})
   public static <T> Page<T> paginateList(final Pageable pageable, List<T> list) {
     int start = (int) pageable.getOffset();
     int end = Math.min((start + pageable.getPageSize()), list.size());
@@ -65,82 +44,103 @@ public final class PaginationUtil {
       return new PageImpl<>(list.subList(start, end), pageable, list.size());
     }
 
-    /*
-     Sort the list based on the Pageable Sort.
-     Compare the methods of the class with the sort field and sort if that method exists.
-     */
-    Class<?> clazz = list.get(0).getClass();
-    List<Method> methods = Arrays.asList(clazz.getDeclaredMethods());
+    List<Sort.Order> nestedOrders = new ArrayList<>();
+    List<Sort.Order> topLevelOrders = new ArrayList<>();
 
-    //
-    Method sortMethod = null;
-    Sort.Order toOrder = null;
     for (Sort.Order order : pageable.getSort()) {
-      sortMethod = methods.stream()
-          .filter(isMethodMatch(order.getProperty()))
-          .findFirst()
-          .orElseThrow(() -> new SoaGatewaySortingException(
-              String.format("Invalid sort.  Sort field %s not found in class.",
-                  order.getProperty())));
-      toOrder = order;
-      break;
-    }
-    Comparator<T> comparator;
-    try {
-      assert sortMethod != null;
-      comparator = (Comparator<T>) getComparator(clazz, sortMethod.getName());
-    } catch (Exception e) {
-      throw new SoaGatewaySortingException(
-          String.format("Invalid sort.  Sort field %s not found in class.",
-              toOrder.getProperty()));
+      String property = order.getProperty();
+      boolean isNested = property.contains(".");
+
+      if (isNested) {
+        nestedOrders.add(order);
+      } else {
+        topLevelOrders.add(order);
+      }
     }
 
-    if (toOrder.isAscending()) {
-      list.sort(comparator);
-    } else {
-      list.sort(comparator.reversed());
+    if (!topLevelOrders.isEmpty()) {
+      // Sort the list based on top-level properties
+      list.sort(comparatorForTopLevelSort(list.get(0).getClass(), topLevelOrders));
+    }
+
+    if (!nestedOrders.isEmpty()) {
+      // Sort the list based on nested properties
+      list.sort(comparatorForNestedSort(nestedOrders));
     }
 
     List<T> sublist = new ArrayList<>(list.subList(start, end));
     return new PageImpl<>(sublist, pageable, list.size());
   }
 
-  @SuppressWarnings({"unchecked", "rawtypes"})
-  private static <T> Comparator<T> getComparator(Class<T> clazz, String methodName)
-      throws Exception {
-    Method method = clazz.getMethod(methodName);
-    if (method.getParameterTypes().length != 0) {
-      throw new Exception("Method " + method + " takes parameters");
-    }
+  private static <T> Comparator<T> comparatorForTopLevelSort(Class<?> clazz,
+      List<Sort.Order> topLevelOrders) {
+    return (o1, o2) -> {
+      for (Sort.Order order : topLevelOrders) {
+        String property = order.getProperty();
+        String methodName = "get" + property.substring(0, 1).toUpperCase() + property.substring(1);
 
-    Class<?> returnType = method.getReturnType();
-    if (!Comparable.class.isAssignableFrom(returnType)) {
-      throw new Exception("The return type " + returnType + " is not Comparable");
-    }
-
-    return getComparator(method, (Class<? extends Comparable>) returnType);
-  }
-
-  private static <T, R extends Comparable<R>> Comparator<T> getComparator(
-      final Method method, final Class<R> returnType) {
-    return new Comparator<>() {
-      @Override
-      public int compare(T o1, T o2) {
         try {
-          R a = invoke(method, o1);
-          R b = invoke(method, o2);
-          if (a == null) {
-            return -1;
+          Method method = clazz.getDeclaredMethod(methodName);
+          Object val1 = method.invoke(o1);
+          Object val2 = method.invoke(o2);
+
+          if (val1 == null && val2 == null) {
+            continue;
+          } else if (val1 == null) {
+            return order.isAscending() ? -1 : 1;
+          } else if (val2 == null) {
+            return order.isAscending() ? 1 : -1;
           }
-          return a.compareTo(b);
+
+          if (val1 instanceof Comparable && val2 instanceof Comparable) {
+            @SuppressWarnings("unchecked")
+            Comparable<Object> comparableVal1 = (Comparable<Object>) val1;
+            return order.isAscending() ? comparableVal1.compareTo(val2)
+                : comparableVal1.compareTo(val2) * -1;
+          }
         } catch (Exception e) {
-          throw new SoaGatewaySortingException("Error sorting comparator on sortfield");
+          throw new SoaGatewaySortingException("Error sorting comparator for top-level properties");
         }
       }
+      return 0;
+    };
+  }
 
-      private R invoke(Method method, T o) throws Exception {
-        return returnType.cast(method.invoke(o));
+
+  private static <T> Comparator<T> comparatorForNestedSort(List<Sort.Order> nestedOrders) {
+    return (o1, o2) -> {
+      for (Sort.Order order : nestedOrders) {
+        String nestedProperty = order.getProperty();
+        String[] nestedPropertyParts = nestedProperty.split("\\.");
+        Object val1 = o1;
+        Object val2 = o2;
+
+        for (String propertyPart : nestedPropertyParts) {
+          try {
+            String methodName =
+                "get" + propertyPart.substring(0, 1).toUpperCase() + propertyPart.substring(1);
+            Method method = val1.getClass().getDeclaredMethod(methodName);
+            val1 = method.invoke(val1);
+            val2 = method.invoke(val2);
+
+            if (val1 == null) {
+              return order.isAscending() ? -1 : 1;
+            } else if (val2 == null) {
+              return order.isAscending() ? 1 : -1;
+            }
+          } catch (Exception e) {
+            throw new SoaGatewaySortingException("Error sorting comparator for nested properties");
+          }
+        }
+
+        if (val1 instanceof Comparable && val2 instanceof Comparable) {
+          @SuppressWarnings("unchecked")
+          Comparable<Object> comparableVal1 = (Comparable<Object>) val1;
+          return order.isAscending() ? comparableVal1.compareTo(val2)
+              : comparableVal1.compareTo(val2) * -1;
+        }
       }
+      return 0;
     };
   }
 }

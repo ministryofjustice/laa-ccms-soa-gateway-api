@@ -23,15 +23,15 @@ class PaginationUtilTest {
   @Test
   void testSortDescendingCorrectInPaginationUtil() {
     Pageable pageable = PageRequest.of(0, 10,
-        Sort.by("assignDate").descending());
+        Sort.by("caseReferenceNumber").descending());
     List<Notification> notificationList = new ArrayList<>();
     notificationList.add(new Notification()
-        .clientReferenceNumber("12345"));
+        .caseReferenceNumber("12345"));
     notificationList.add(new Notification()
-        .clientReferenceNumber("11234"));
+        .caseReferenceNumber("11234"));
     Page<Notification> notificationPage = PaginationUtil.paginateList(pageable,notificationList);
     assertEquals(2, notificationPage.getTotalElements());
-    assertEquals("11234", notificationPage.getContent().get(0).getClientReferenceNumber());
+    assertEquals("12345", notificationPage.getContent().get(0).getCaseReferenceNumber());
 
   }
 
@@ -71,7 +71,7 @@ class PaginationUtilTest {
    SoaGatewaySortingException soage = assertThrows(SoaGatewaySortingException.class,
         () -> PaginationUtil.paginateList(pageable,notificationList),
     "Expected PaginationUtils to throw exception, but didn't");
-   assertTrue(soage.getLocalizedMessage().contains("Invalid sort."));
+   assertTrue(soage.getLocalizedMessage().contains("Error sorting comparator"));
   }
 
   @Test
