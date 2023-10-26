@@ -48,7 +48,7 @@ public class NotificationController implements NotificationsApi {
       final Pageable pageable) {
     try {
 
-      //Build a Notification domain bject to hold the search criteria
+      //Build a Notification domain object to hold the search criteria
       log.info("GET / notifications");
       Notification notification = new Notification()
           .caseReferenceNumber(caseReferenceNumber)
