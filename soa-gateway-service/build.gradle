@@ -40,7 +40,7 @@ dependencies {
     implementation 'org.springframework.data:spring-data-commons:3.1.5'
 
     implementation 'org.springframework.ws:spring-ws-security'
-    implementation 'org.modelmapper:modelmapper:3.1.1'
+    implementation 'org.modelmapper:modelmapper:3.2.0'
     implementation 'org.apache.commons:commons-lang3:3.13.0'
     implementation "org.mapstruct:mapstruct:1.5.5.Final"
     compileOnly 'org.projectlombok:lombok'
