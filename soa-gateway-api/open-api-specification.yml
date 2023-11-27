@@ -221,7 +221,7 @@ paths:
       tags:
         - clients
       summary: 'Create Client'
-      operationId: 'postClient'
+      operationId: 'createClient'
       requestBody:
         description: Create a client
         content:
@@ -237,7 +237,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/clientCreated"
+                $ref: "#/components/schemas/clientTransactionResponse"
         '400':
           description: 'Bad request'
         '401':
@@ -277,6 +277,7 @@ paths:
           description: 'Not found'
         '500':
           description: 'Internal server error'
+
   /clients/{client-reference-number}:
     get:
       tags:
@@ -308,6 +309,42 @@ paths:
           description: 'Not found'
         '500':
           description: 'Internal server error'
+    put:
+      tags:
+        - clients
+      summary: 'Update Client'
+      operationId: 'updateClient'
+      requestBody:
+        description: update a client
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/clientDetailDetails"
+      parameters:
+        - name: 'client-reference-number'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
+            example: 'abc123'
+        - $ref: '#/components/parameters/soaGatewayUserLoginId'
+        - $ref: '#/components/parameters/soaGatewayUserRole'
+      responses:
+        '200':
+          description: 'Successful operation'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/clientTransactionResponse"
+        '400':
+          description: 'Bad request'
+        '401':
+          description: 'Unauthorized'
+        '404':
+          description: 'Not found'
+        '500':
+          description: 'Internal server error'
+
   /case-reference:
     get:
       tags:
@@ -458,7 +495,7 @@ components:
         client_reference_number:
           type: 'string'
           example: 'success'
-    clientCreated:
+    clientTransactionResponse:
       type: 'object'
       properties:
         transaction_id:
@@ -677,18 +714,7 @@ components:
         details:
           $ref: '#/components/schemas/clientDetailDetails'
         record_history:
-          type: 'object'
-          properties:
-            created_by:
-              $ref: '#/components/schemas/userDetail'
-            date_created:
-              type: 'string'
-              format: date-time
-            last_updated_by:
-              $ref: '#/components/schemas/userDetail'
-            date_last_updated:
-              type: 'string'
-              format: date-time
+          $ref: '#/components/schemas/recordHistory'
 
     caseDetails:
       allOf:
