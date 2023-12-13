@@ -4,9 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -23,13 +24,14 @@ import org.springframework.data.domain.Pageable;
 import uk.gov.laa.ccms.soa.gateway.model.AddressDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails;
-import uk.gov.laa.ccms.soa.gateway.model.ClientDetailRecordHistory;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetails;
 import uk.gov.laa.ccms.soa.gateway.model.ClientPersonalDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ClientSummary;
+import uk.gov.laa.ccms.soa.gateway.model.ContactDetail;
 import uk.gov.laa.ccms.soa.gateway.model.NameDetail;
 import uk.gov.laa.ccms.soa.gateway.model.UserDetail;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientInqRS;
+import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientUpdateRQ;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.Client;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientInfo;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientList;
@@ -46,6 +48,25 @@ public class ClientDetailsMapperTest {
 
     @InjectMocks
     ClientDetailsMapperImpl clientDetailsMapper;
+
+    private final boolean clientStatuses = true;
+
+    private final String telephoneHome = "1111111111";
+    private final String telephoneWork = "2222222222";
+    private final String telephoneMobile = "3333333333";
+    private final String emailAddress = "test@test.com";
+    private final String password = "password";
+    private final String passwordReminder = "reminder";
+    private final String correspondenceMethod = "LETTER";
+    private final String correspondenceLanguage = "GBR";
+    private final String countryOfOrigin = "UK";
+    private final String gender = "MALE";
+    private final String maritalStatus = "SINGLE";
+    private final String nationalInsuranceNumber = "NI123456NI";
+    private final String homeOfficeNumber = "HO123456HO";
+    private final String day = "10";
+    private final String month = "6";
+    private final String year = "2000";
 
     @Test
     public void testToClientDetails() {
@@ -184,7 +205,7 @@ public class ClientDetailsMapperTest {
         updatedUser.setUserLoginID("updatedUser");
         recordHistory.setLastUpdatedBy(updatedUser);
 
-        ClientDetailRecordHistory result = clientDetailsMapper.toClientDetailRecordHistory(recordHistory);
+        uk.gov.laa.ccms.soa.gateway.model.RecordHistory result = clientDetailsMapper.toClientDetailRecordHistory(recordHistory);
 
         assertNotNull(result);
         assertEquals("createdUser", result.getCreatedBy().getUserLoginId());
@@ -242,12 +263,12 @@ public class ClientDetailsMapperTest {
     }
 
     @Test
-    public void testUserToClientUserDetail() {
+    public void testUserToUserDetail() {
         User user = new User();
         user.setUserLoginID("userID");
         user.setUserName("username");
 
-        UserDetail result = clientDetailsMapper.userToUserDetail(user);
+        UserDetail result = clientDetailsMapper.toUserDetail(user);
 
         assertNotNull(result);
         assertEquals("userID", result.getUserLoginId());
@@ -488,5 +509,90 @@ public class ClientDetailsMapperTest {
         clientList.setNINumber("AB123456C");
         clientList.setClientReferenceNumber("CR123");
         return clientList;
+    }
+
+
+    private ClientPersonalDetail buildClientPersonalDetail() {
+        ClientPersonalDetail personalInformation = new ClientPersonalDetail();
+
+        LocalDate localDate = LocalDate.of(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day));
+        Date dateOfBirth = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        Date dateOfDeath = Date.from(localDate.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+        personalInformation.setDateOfBirth(dateOfBirth);
+        personalInformation.setDateOfDeath(dateOfDeath);
+        personalInformation.setCountryOfOrigin(countryOfOrigin);
+        personalInformation.setGender(gender);
+        personalInformation.setNationalInsuranceNumber(nationalInsuranceNumber);
+        personalInformation.setHomeOfficeNumber(homeOfficeNumber);
+        personalInformation.setMaritalStatus(maritalStatus);
+        personalInformation.setVulnerableClient(clientStatuses);
+        personalInformation.setHighProfileClient(clientStatuses);
+        personalInformation.setVexatiousLitigant(clientStatuses);
+        personalInformation.setMentalCapacityInd(clientStatuses);
+        return personalInformation;
+    }
+
+    private ContactDetail buildContactDetail() {
+        ContactDetail contactDetail = new ContactDetail();
+        contactDetail.setTelephoneHome(telephoneHome);
+        contactDetail.setTelephoneWork(telephoneWork);
+        contactDetail.setMobileNumber(telephoneMobile);
+        contactDetail.setEmailAddress(emailAddress);
+        contactDetail.setPassword(password);
+        contactDetail.setPasswordReminder(passwordReminder);
+        contactDetail.setCorrespondenceLanguage(correspondenceLanguage);
+        contactDetail.setCorrespondenceMethod(correspondenceMethod);
+        return contactDetail;
+    }
+
+    @Test
+    void addClientPersonalDetailToClientUpdateRq() {
+
+        ClientUpdateRQ clientUpdateRq = new ClientUpdateRQ();
+        ClientPersonalDetail personalInformation = buildClientPersonalDetail();
+
+        clientDetailsMapper.addClientPersonalDetailToClientUpdateRq(clientUpdateRq, personalInformation);
+
+        assertEquals(personalInformation.getCountryOfOrigin(), clientUpdateRq.getCountryOfOrigin());
+        assertEquals(personalInformation.getGender(), clientUpdateRq.getGender());
+        assertEquals(personalInformation.getNationalInsuranceNumber(), clientUpdateRq.getNINumber());
+        assertEquals(personalInformation.getHomeOfficeNumber(), clientUpdateRq.getHomeOfficeReference());
+        assertEquals(personalInformation.getMaritalStatus(), clientUpdateRq.getMaritalStatus());
+        assertEquals(personalInformation.isVulnerableClient(), clientUpdateRq.isVulnerableClient());
+        assertEquals(personalInformation.isHighProfileClient(), clientUpdateRq.isHighProfileClient());
+        assertEquals(personalInformation.isVexatiousLitigant(), clientUpdateRq.isVexatiousLitigant());
+        assertEquals(personalInformation.isMentalCapacityInd(), clientUpdateRq.isMentalCapacityInd());
+    }
+
+    @Test
+    void toClientUpdateRq_referenceOnly(){
+        ClientUpdateRQ clientUpdateRQ = clientDetailsMapper.toClientUpdateRq("123456", new ClientDetailDetails());
+        assertEquals("123456", clientUpdateRQ.getClientReferenceNumber());
+    }
+
+    @Test
+    void toClientUpdateRq_null(){
+        ClientUpdateRQ clientUpdateRQ = clientDetailsMapper.toClientUpdateRq(null, null);
+        assertNull(clientUpdateRQ);
+    }
+
+    @Test
+    void toClientUpdateRq_nullDetails(){
+        ContactDetail contactDetail = buildContactDetail();
+
+        ClientDetailDetails details = new ClientDetailDetails();
+        details.setContacts(contactDetail);
+
+        ClientUpdateRQ clientUpdateRQ = clientDetailsMapper.toClientUpdateRq("123456", details);
+
+        assertEquals(telephoneHome, clientUpdateRQ.getTelephoneHome());
+        assertEquals(telephoneWork, clientUpdateRQ.getTelephoneWork());
+        assertEquals(telephoneMobile, clientUpdateRQ.getMobileNumber());
+        assertEquals(emailAddress, clientUpdateRQ.getEmailAddress());
+        assertEquals(password, clientUpdateRQ.getPassword());
+        assertEquals(passwordReminder, clientUpdateRQ.getPasswordReminder());
+        assertEquals(correspondenceMethod, clientUpdateRQ.getCorrespondenceMethod());
+        assertEquals(correspondenceLanguage, clientUpdateRQ.getCorrespondenceLanguage());
     }
 }

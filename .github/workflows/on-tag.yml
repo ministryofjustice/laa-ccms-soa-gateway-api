@@ -120,13 +120,20 @@ jobs:
     runs-on: ubuntu-latest
     environment: development
     steps:
+      - name: Obtain service account token
+        run: |
+          npm install -g obtain-github-app-installation-access-token
+          TOKEN="$(npx obtain-github-app-installation-access-token ci ${{ secrets.GH_APP_CREDENTIALS_TOKEN }})"
+          echo "::add-mask::$TOKEN"
+          echo "CAAB_SERVICE_TOKEN=$TOKEN" >> $GITHUB_ENV
+
       - name: Checkout charts repo
         uses: actions/checkout@v3
         with:
           repository: ministryofjustice/laa-ccms-caab-helm-charts
           ref: development
           path: laa-ccms-caab-helm-charts
-          token: ${{ secrets.REPO_TOKEN }}
+          token: ${{ env.CAAB_SERVICE_TOKEN }}
       - name: update helm chart
         env:
           REPO_NAME: ${{ needs.define-image-tag.outputs.repo_name }}
@@ -146,12 +153,19 @@ jobs:
     runs-on: ubuntu-latest
     environment: development
     steps:
+      - name: Obtain service account token
+        run: |
+          npm install -g obtain-github-app-installation-access-token
+          TOKEN="$(npx obtain-github-app-installation-access-token ci ${{ secrets.GH_APP_CREDENTIALS_TOKEN }})"
+          echo "::add-mask::$TOKEN"
+          echo "CAAB_SERVICE_TOKEN=$TOKEN" >> $GITHUB_ENV
+
       - name: Checkout caab-ui repo
         uses: actions/checkout@v3
         with:
           repository: ministryofjustice/laa-ccms-caab
           ref: main
-          token: ${{ secrets.REPO_TOKEN }}
+          token: ${{ env.CAAB_SERVICE_TOKEN }}
 
       - name: Create a new branch
         env:
@@ -175,5 +189,5 @@ jobs:
           git commit -m "Update soa-api version to ${APP_VERSION}"
           git push origin dependency/update-soa-api-version-${APP_VERSION}
           
-          gh auth login --with-token <<< "${{ secrets.REPO_TOKEN }}"
+          gh auth login --with-token <<< "${{ env.CAAB_SERVICE_TOKEN }}"
           gh pr create --base main --head dependency/update-soa-api-version-${APP_VERSION} --title "Update soa-api version to ${APP_VERSION}" --body "Automatic PR raised by GitHub Actions to update soa-api version to ${APP_VERSION}"
