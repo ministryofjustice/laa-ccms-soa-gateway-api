@@ -24,6 +24,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
@@ -187,7 +188,7 @@ public class ClientDetailsControllerTest {
         uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails clientDetailDetails = new uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails();  // You may need to set some data for this object.
         String expectedTransactionId = "trans123";
 
-        when(clientDetailsService.postClient(soaGatewayUserLoginId, soaGatewayUserRole, clientDetailDetails))
+        when(clientDetailsService.createClient(soaGatewayUserLoginId, soaGatewayUserRole, clientDetailDetails))
             .thenReturn(expectedTransactionId);
 
         mockMvc.perform(
@@ -198,14 +199,14 @@ public class ClientDetailsControllerTest {
                     .header("SoaGateway-User-Role", soaGatewayUserRole))
             .andExpect(status().isOk());
 
-        verify(clientDetailsService).postClient(soaGatewayUserLoginId, soaGatewayUserRole, clientDetailDetails);
+        verify(clientDetailsService).createClient(soaGatewayUserLoginId, soaGatewayUserRole, clientDetailDetails);
     }
 
     @Test
     public void testPostClient_Exception() throws Exception {
         uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails clientDetailDetails = new uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails();
 
-        when(clientDetailsService.postClient(any(), any(), any()))
+        when(clientDetailsService.createClient(any(), any(), any()))
             .thenThrow(new RuntimeException("Test exception"));
 
         mockMvc.perform(
@@ -216,7 +217,44 @@ public class ClientDetailsControllerTest {
                     .header("SoaGateway-User-Role", soaGatewayUserRole))
             .andExpect(status().isInternalServerError());
 
-        verify(clientDetailsService).postClient(any(), any(), any());
+        verify(clientDetailsService).createClient(any(), any(), any());
+    }
+
+    @Test
+    public void testUpdateClient_Success() throws Exception {
+        uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails clientDetailDetails = new uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails();  // You may need to set some data for this object.
+        String expectedTransactionId = "trans123";
+
+        when(clientDetailsService.updateClient("123456", soaGatewayUserLoginId, soaGatewayUserRole, clientDetailDetails))
+            .thenReturn(expectedTransactionId);
+
+        mockMvc.perform(
+                put("/clients/123456")
+                    .content(new ObjectMapper().writeValueAsString(clientDetailDetails))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
+                    .header("SoaGateway-User-Role", soaGatewayUserRole))
+            .andExpect(status().isOk());
+
+        verify(clientDetailsService).updateClient("123456", soaGatewayUserLoginId, soaGatewayUserRole, clientDetailDetails);
+    }
+
+    @Test
+    public void testUpdateClient_Exception() throws Exception {
+        uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails clientDetailDetails = new uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails();
+
+        when(clientDetailsService.updateClient(any(), any(), any(), any()))
+            .thenThrow(new RuntimeException("Test exception"));
+
+        mockMvc.perform(
+                put("/clients/123456")
+                    .content(new ObjectMapper().writeValueAsString(clientDetailDetails))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
+                    .header("SoaGateway-User-Role", soaGatewayUserRole))
+            .andExpect(status().isInternalServerError());
+
+        verify(clientDetailsService).updateClient(any(),any(), any(), any());
     }
 
     @Test

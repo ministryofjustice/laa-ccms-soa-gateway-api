@@ -17,6 +17,8 @@ import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientAd
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientAddUpdtStatusRS;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientInqRQ;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientInqRS;
+import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientUpdateRQ;
+import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientUpdateRS;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ObjectFactory;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientDetails;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientInfo;
@@ -193,6 +195,35 @@ class ClientServicesClientTest {
 
         JAXBElement<?> payload = clientAddRequestCaptor.getValue();
         assertEquals(mockClientDetails, ((ClientAddRQ) payload.getValue()).getClient());
+        assertNotNull(response);
+    }
+
+    @Test
+    public void testUpdateClientDetailsBuildsCorrectRequest() throws Exception {
+        // Mocking expected values
+        ClientUpdateRQ mockClientUpdateRq = new ClientUpdateRQ();
+
+        ObjectFactory objectFactory = new ObjectFactory();
+        ClientUpdateRS mockResponse = objectFactory.createClientUpdateRS();
+
+        when(webServiceTemplate.marshalSendAndReceive(
+            eq(SERVICE_URL),
+            any(JAXBElement.class),
+            any(SoapActionCallback.class)))
+            .thenReturn(objectFactory.createClientUpdateRS(mockResponse));
+
+        ClientUpdateRS response = client.updateClientDetails(
+            soaGatewayUserLoginId, soaGatewayUserRole, mockClientUpdateRq
+        );
+
+        // Verify interactions
+        verify(webServiceTemplate, times(1)).marshalSendAndReceive(
+            eq(SERVICE_URL),
+            clientAddRequestCaptor.capture(),
+            any(SoapActionCallback.class));
+
+        JAXBElement<?> payload = clientAddRequestCaptor.getValue();
+        assertEquals(mockClientUpdateRq, ((ClientUpdateRQ) payload.getValue()));
         assertNotNull(response);
     }
 

@@ -19,6 +19,8 @@ import uk.gov.laa.ccms.soa.gateway.model.ClientDetail;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientAddRS;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientAddUpdtStatusRS;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientInqRS;
+import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientUpdateRQ;
+import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientUpdateRS;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientInfo;
 
 import java.util.Collections;
@@ -186,7 +188,7 @@ public class ClientDetailsServiceTest {
             soaGatewayUserRole,
             mockClientDetails)).thenReturn(mockClientAddRS);
 
-        String result = clientDetailsService.postClient(
+        String result = clientDetailsService.createClient(
             soaGatewayUserLoginId,
             soaGatewayUserRole,
             clientDetailDetails);
@@ -195,6 +197,37 @@ public class ClientDetailsServiceTest {
 
         verify(clientDetailsMapper).toSoaClientDetails(clientDetailDetails);
         verify(clientServicesClient).postClientDetails(soaGatewayUserLoginId,soaGatewayUserRole, mockClientDetails);
+    }
+
+    @Test
+    public void testUpdateClient() {
+        // Create test data
+        ClientDetailDetails clientDetailDetails = new ClientDetailDetails();
+
+        ClientUpdateRQ mockClientUpdateRq = new ClientUpdateRQ();
+
+        String expectedTransactionId = "1234567890";
+        ClientUpdateRS mockClientUpdateRS = new ClientUpdateRS();
+        mockClientUpdateRS.setTransactionID(expectedTransactionId);
+
+        when(clientDetailsMapper.toClientUpdateRq("123456", clientDetailDetails))
+            .thenReturn(mockClientUpdateRq);
+
+        when(clientServicesClient.updateClientDetails(
+            soaGatewayUserLoginId,
+            soaGatewayUserRole,
+            mockClientUpdateRq)).thenReturn(mockClientUpdateRS);
+
+        String result = clientDetailsService.updateClient(
+            "123456",
+            soaGatewayUserLoginId,
+            soaGatewayUserRole,
+            clientDetailDetails);
+
+        assertEquals(result,expectedTransactionId);
+
+        verify(clientDetailsMapper).toClientUpdateRq("123456",clientDetailDetails);
+        verify(clientServicesClient).updateClientDetails(soaGatewayUserLoginId,soaGatewayUserRole, mockClientUpdateRq);
     }
 
     @Test

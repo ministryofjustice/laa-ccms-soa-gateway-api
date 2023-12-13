@@ -1,6 +1,5 @@
 package uk.gov.laa.ccms.soa.gateway.controller;
 
-import jakarta.validation.constraints.NotNull;
 import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,12 +7,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.laa.ccms.soa.gateway.api.ClientsApi;
-import uk.gov.laa.ccms.soa.gateway.model.ClientCreated;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetails;
 import uk.gov.laa.ccms.soa.gateway.model.ClientStatus;
 import uk.gov.laa.ccms.soa.gateway.model.ClientSummary;
+import uk.gov.laa.ccms.soa.gateway.model.ClientTransactionResponse;
 import uk.gov.laa.ccms.soa.gateway.service.ClientDetailsService;
 
 /**
@@ -112,23 +111,43 @@ public class ClientDetailsController implements ClientsApi {
   }
 
   @Override
-  public ResponseEntity<ClientCreated> postClient(
-      String soaGatewayUserLoginId,
-      String soaGatewayUserRole,
-      ClientDetailDetails clientDetailDetails) {
-    log.info("POST /clients");
+  public ResponseEntity<ClientTransactionResponse> updateClient(
+      final String clientReferenceNumber,
+      final String soaGatewayUserLoginId,
+      final String soaGatewayUserRole,
+      final ClientDetailDetails clientDetailDetails) {
+    log.info("PUT /clients");
     try {
-      String transactionId = clientDetailsService.postClient(
+      String transactionId = clientDetailsService.updateClient(
+          clientReferenceNumber,
           soaGatewayUserLoginId,
           soaGatewayUserRole,
           clientDetailDetails);
 
-      return ResponseEntity.ok(new ClientCreated().transactionId(transactionId));
+      return ResponseEntity.ok(new ClientTransactionResponse().transactionId(transactionId));
     } catch (Exception e) {
       log.error("ClientDetailsController caught exception", e);
       return ResponseEntity.internalServerError().build();
     }
   }
 
+  @Override
+  public ResponseEntity<ClientTransactionResponse> createClient(
+      String soaGatewayUserLoginId,
+      String soaGatewayUserRole,
+      ClientDetailDetails clientDetailDetails) {
+    log.info("POST /clients");
+    try {
+      String transactionId = clientDetailsService.createClient(
+          soaGatewayUserLoginId,
+          soaGatewayUserRole,
+          clientDetailDetails);
+
+      return ResponseEntity.ok(new ClientTransactionResponse().transactionId(transactionId));
+    } catch (Exception e) {
+      log.error("ClientDetailsController caught exception", e);
+      return ResponseEntity.internalServerError().build();
+    }
+  }
 
 }
