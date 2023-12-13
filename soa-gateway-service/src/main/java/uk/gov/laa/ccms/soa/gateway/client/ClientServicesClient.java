@@ -17,6 +17,8 @@ import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientAd
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientAddUpdtStatusRS;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientInqRQ;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientInqRS;
+import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientUpdateRQ;
+import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientUpdateRS;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ObjectFactory;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientDetails;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientInfo;
@@ -77,6 +79,35 @@ public class ClientServicesClient extends AbstractSoaClient {
             .marshalSendAndReceive(
                 serviceUrl,
                 CASE_FACTORY.createClientAddRQ(clientAddRq),
+                new SoapActionCallback(soapAction));
+
+    // Check and throw exception if the SOA call was not successful
+    checkSoaCallSuccess(serviceName, response.getValue().getHeaderRS());
+
+    return response.getValue();
+  }
+
+  /**
+   * Update client details based on the provided {@link ClientDetails}.
+   *
+   * @param loggedInUserId      The logged-in user ID.
+   * @param loggedInUserType    The type of the logged-in user.
+   * @param clientUpdateRq       The client update information to be saved.
+   * @return ClientAddRS        Response containing client details.
+   */
+  public ClientUpdateRS updateClientDetails(
+      final String loggedInUserId,
+      final String loggedInUserType,
+      ClientUpdateRQ clientUpdateRq
+  ) {
+    final String soapAction = String.format("%s/UpdateClient", serviceName);
+    clientUpdateRq.setHeaderRQ(createHeaderRq(loggedInUserId, loggedInUserType));
+
+    JAXBElement<ClientUpdateRS> response =
+        (JAXBElement<ClientUpdateRS>) getWebServiceTemplate()
+            .marshalSendAndReceive(
+                serviceUrl,
+                CASE_FACTORY.createClientUpdateRQ(clientUpdateRq),
                 new SoapActionCallback(soapAction));
 
     // Check and throw exception if the SOA call was not successful

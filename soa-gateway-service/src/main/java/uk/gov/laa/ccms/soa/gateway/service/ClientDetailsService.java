@@ -11,12 +11,13 @@ import uk.gov.laa.ccms.soa.gateway.mapper.ClientDetailsMapper;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetails;
-import uk.gov.laa.ccms.soa.gateway.model.ClientStatus;
 import uk.gov.laa.ccms.soa.gateway.model.ClientSummary;
 import uk.gov.laa.ccms.soa.gateway.util.PaginationUtil;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientAddRS;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientAddUpdtStatusRS;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientInqRS;
+import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientUpdateRQ;
+import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientUpdateRS;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientInfo;
 
 /**
@@ -119,12 +120,12 @@ public class ClientDetailsService {
    * @param clientDetailDetails        The details of the client to be submitted.
    * @return                           The transaction ID for the submitted client details.
    */
-  public String postClient(
+  public String createClient(
       final String soaGatewayUserLoginId,
       final String soaGatewayUserRole,
       final ClientDetailDetails clientDetailDetails
   ) {
-    log.info("ClientDetailsService - getClientDetail");
+    log.info("ClientDetailsService - createClient");
     uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientDetails clientDetails
         =  clientDetailsMapper.toSoaClientDetails(clientDetailDetails);
 
@@ -132,6 +133,35 @@ public class ClientDetailsService {
         soaGatewayUserLoginId,
         soaGatewayUserRole,
         clientDetails);
+
+    return response.getTransactionID();
+  }
+
+  /**
+   * Submits an update to client details to the external Client Services system. The client details
+   * are mapped and transformed before they're sent for submission. The method returns the
+   * transaction ID of the submission.
+   *
+   * @param clientReferenceNumber      The client unique identifier.
+   * @param soaGatewayUserLoginId      User login ID for the SOA Gateway.
+   * @param soaGatewayUserRole         User role in the SOA Gateway.
+   * @param clientDetailDetails        The details of the client to be submitted.
+   * @return                           The transaction ID for the submitted client details.
+   */
+  public String updateClient(
+      final String clientReferenceNumber,
+      final String soaGatewayUserLoginId,
+      final String soaGatewayUserRole,
+      final ClientDetailDetails clientDetailDetails
+  ) {
+    log.info("ClientDetailsService - updateClient");
+    ClientUpdateRQ clientUpdateRq = clientDetailsMapper.toClientUpdateRq(
+        clientReferenceNumber, clientDetailDetails);
+
+    ClientUpdateRS response = clientServicesClient.updateClientDetails(
+        soaGatewayUserLoginId,
+        soaGatewayUserRole,
+        clientUpdateRq);
 
     return response.getTransactionID();
   }
@@ -157,10 +187,7 @@ public class ClientDetailsService {
         soaGatewayUserRole,
         transactionId);
 
-    uk.gov.laa.ccms.soa.gateway.model.ClientStatus clientStatus =
-        clientDetailsMapper.toClientStatus(response);
-
-    return clientStatus;
+    return clientDetailsMapper.toClientStatus(response);
   }
 
 }
