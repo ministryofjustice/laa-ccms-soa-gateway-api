@@ -1,0 +1,19 @@
+<msg:CaseAddUpdtStatusRS
+        xmlns:msg="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIM" >
+    <header:HeaderRS xmlns:header="http://legalservices.gov.uk/Enterprise/Common/1.0/Header">
+        <header:TransactionID>202309221121586000634848422</header:TransactionID>
+        <header:RequestDetails>
+            <header:TransactionRequestID>202309261346465080601893409</header:TransactionRequestID>
+            <header:Language>ENG</header:Language>
+            <header:Source>PUI</header:Source>
+            <header:Target>Oracle EBusiness</header:Target>
+            <header:UserLoginID>PENNY.WALL@SWITALSKIS.COM</header:UserLoginID>
+            <header:UserRole>EXTERNAL</header:UserRole>
+        </header:RequestDetails>
+        <header:Status>
+            <header:Status>Success</header:Status>
+            <header:StatusFreeText>Case Successfully Created.</header:StatusFreeText>
+        </header:Status>
+    </header:HeaderRS>
+    <msg:CaseReferenceNumber>62586560</msg:CaseReferenceNumber>
+</msg:CaseAddUpdtStatusRS>

@@ -10,9 +10,9 @@ import uk.gov.laa.ccms.soa.gateway.api.ClientsApi;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetails;
-import uk.gov.laa.ccms.soa.gateway.model.ClientStatus;
 import uk.gov.laa.ccms.soa.gateway.model.ClientSummary;
 import uk.gov.laa.ccms.soa.gateway.model.ClientTransactionResponse;
+import uk.gov.laa.ccms.soa.gateway.model.TransactionStatus;
 import uk.gov.laa.ccms.soa.gateway.service.ClientDetailsService;
 
 /**
@@ -50,13 +50,13 @@ public class ClientDetailsController implements ClientsApi {
   }
 
   @Override
-  public ResponseEntity<ClientStatus> getClientStatus(
+  public ResponseEntity<TransactionStatus> getClientTransactionStatus(
       String transactionRequestId,
       String soaGatewayUserLoginId,
       String soaGatewayUserRole) {
     log.info("GET /clients/status/{}", transactionRequestId);
     try {
-      ClientStatus status = clientDetailsService.getClientStatus(
+      TransactionStatus status = clientDetailsService.getClientStatus(
           soaGatewayUserLoginId,
           soaGatewayUserRole,
           transactionRequestId);

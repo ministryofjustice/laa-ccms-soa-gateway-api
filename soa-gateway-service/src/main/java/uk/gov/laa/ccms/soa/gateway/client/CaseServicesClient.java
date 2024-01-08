@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.soap.client.core.SoapActionCallback;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddUpdtStatusRQ;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddUpdtStatusRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseInqRQ;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseInqRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.ObjectFactory;
@@ -96,6 +98,43 @@ public class CaseServicesClient extends AbstractSoaClient {
     caseInqRq.setRecordCount(createRecordCount(1));
 
     return retrieveCaseDetails(soapAction, caseInqRq).getValue();
+  }
+
+  /**
+   * Retrieves the status of a case addition or update based on the provided transaction ID.
+   *
+   * <p>This method communicates with the service endpoint to fetch the status related to a
+   * specific transaction pertaining to case addition or update. If the SOA call is not
+   * successful, an exception will be thrown.</p>
+   *
+   * @param loggedInUserId   The ID of the user who is currently logged in.
+   * @param loggedInUserType The type of the user who is currently logged in.
+   * @param transactionId    The unique ID of the transaction for which the status is to be
+   *                         fetched.
+   * @return CaseAddUpdtStatusRS The response object containing the status of the case addition
+   *         or update.
+   */
+  public CaseAddUpdtStatusRS getCaseTransactionStatus(
+      final String loggedInUserId,
+      final String loggedInUserType,
+      final String transactionId
+  ) {
+    final String soapAction = String.format("%s/GetCaseTxnStatus", serviceName);
+    CaseAddUpdtStatusRQ caseAddUpdtStatusRq = CASE_FACTORY.createCaseAddUpdtStatusRQ();
+    caseAddUpdtStatusRq.setHeaderRQ(createHeaderRq(loggedInUserId, loggedInUserType));
+    caseAddUpdtStatusRq.setTransactionID(transactionId);
+
+    JAXBElement<CaseAddUpdtStatusRS> response =
+        (JAXBElement<CaseAddUpdtStatusRS>) getWebServiceTemplate()
+            .marshalSendAndReceive(
+                serviceUrl,
+                CASE_FACTORY.createCaseAddUpdtStatusRQ(caseAddUpdtStatusRq),
+                new SoapActionCallback(soapAction));
+
+    // Check and throw exception if the SOA call was not successful
+    checkSoaCallSuccess(serviceName, response.getValue().getHeaderRS());
+
+    return response.getValue();
   }
 
   private JAXBElement<CaseInqRS> retrieveCaseDetails(String soapAction, CaseInqRQ caseInqRq) {

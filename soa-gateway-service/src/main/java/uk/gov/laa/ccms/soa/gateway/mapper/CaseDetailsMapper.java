@@ -35,6 +35,7 @@ import uk.gov.laa.ccms.soa.gateway.model.RecoveryAmount;
 import uk.gov.laa.ccms.soa.gateway.model.ScopeLimitation;
 import uk.gov.laa.ccms.soa.gateway.model.TimeRelatedAward;
 import uk.gov.laa.ccms.soa.gateway.model.UserDetail;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddUpdtStatusRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseInqRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.AwardElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.Case;
@@ -223,4 +224,10 @@ public interface CaseDetailsMapper {
 
   @Mapping(target = "userLoginId", source = "userLoginID")
   UserDetail toUserDetail(User user);
+
+  @Mapping(target = "submissionStatus", source = "headerRS.status.status")
+  @Mapping(target = "referenceNumber", source = "caseReferenceNumber")
+  uk.gov.laa.ccms.soa.gateway.model.TransactionStatus toTransactionStatus(
+      CaseAddUpdtStatusRS response);
+
 }
