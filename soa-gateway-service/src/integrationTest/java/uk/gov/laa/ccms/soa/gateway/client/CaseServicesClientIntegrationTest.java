@@ -7,19 +7,18 @@ import static org.springframework.ws.test.client.RequestMatchers.xpath;
 import static org.springframework.ws.test.client.ResponseCreators.withError;
 import static org.springframework.ws.test.client.ResponseCreators.withPayload;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.security.saml2.Saml2RelyingPartyAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.Resource;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.test.client.MockWebServiceServer;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddUpdtStatusRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseInqRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseInfo;
 
@@ -39,10 +38,15 @@ public class CaseServicesClientIntegrationTest {
   @Value("classpath:/payload/CaseInqRS_valid_one.xml")
   Resource caseInqRS_valid_one;
 
+  @Value("classpath:/payload/CaseAddUpdtStatusRS_Valid.xml")
+  Resource caseAddUpdtStatusRS_valid;
+
   private static final String HEADER_NS = "http://legalservices.gov.uk/Enterprise/Common/1.0/Header";
   private static final String MSG_NS = "http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIM";
   private static final String CLIENT_NS = "http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO";
   private static final String COMMON_NS = "http://legalservices.gov.uk/Enterprise/Common/1.0/Common";
+
+  private String testTransactionId = "202309260908406430348479724";
 
   private String testLoginId;
   private String testUserType;
@@ -147,6 +151,28 @@ public class CaseServicesClientIntegrationTest {
 
     mockServer.verify();
   }
+
+  @Test
+  public void testGetCaseTransactionStatus_ReturnsData() throws IOException {
+
+    mockServer.expect(xpath("/msg:CaseAddUpdtStatusRQ/header:HeaderRQ/header:TransactionRequestID", namespaces).exists())
+        .andExpect(xpath("/msg:CaseAddUpdtStatusRQ/header:HeaderRQ/header:UserLoginID", namespaces).evaluatesTo(testLoginId))
+        .andExpect(xpath("/msg:CaseAddUpdtStatusRQ/header:HeaderRQ/header:UserRole", namespaces).evaluatesTo(testUserType))
+        .andExpect(xpath("/msg:CaseAddUpdtStatusRQ/msg:TransactionID", namespaces).evaluatesTo(testTransactionId))
+        .andRespond(withPayload(caseAddUpdtStatusRS_valid));
+
+    CaseAddUpdtStatusRS response =
+        client.getCaseTransactionStatus(testLoginId, testUserType, testTransactionId);
+
+    assertNotNull(response);
+    assertNotNull(response.getHeaderRS());
+
+    assertNotNull(response.getCaseReferenceNumber());
+    assertEquals("62586560", response.getCaseReferenceNumber());
+
+    mockServer.verify();
+  }
+
 
   private CaseInfo buildCaseInfo() {
     CaseInfo caseInfo = new CaseInfo();

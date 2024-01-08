@@ -41,21 +41,23 @@ import uk.gov.laa.ccms.soa.gateway.model.OpaAttribute;
 import uk.gov.laa.ccms.soa.gateway.model.OpaEntity;
 import uk.gov.laa.ccms.soa.gateway.model.OpaGoal;
 import uk.gov.laa.ccms.soa.gateway.model.OpaInstance;
+import uk.gov.laa.ccms.soa.gateway.model.OtherAsset;
 import uk.gov.laa.ccms.soa.gateway.model.OtherParty;
 import uk.gov.laa.ccms.soa.gateway.model.OtherPartyOrganisation;
 import uk.gov.laa.ccms.soa.gateway.model.OtherPartyPerson;
 import uk.gov.laa.ccms.soa.gateway.model.OutcomeDetail;
-import uk.gov.laa.ccms.soa.gateway.model.ProviderDetail;
 import uk.gov.laa.ccms.soa.gateway.model.PriorAuthority;
 import uk.gov.laa.ccms.soa.gateway.model.ProceedingDetail;
+import uk.gov.laa.ccms.soa.gateway.model.ProviderDetail;
 import uk.gov.laa.ccms.soa.gateway.model.RecordHistory;
 import uk.gov.laa.ccms.soa.gateway.model.Recovery;
 import uk.gov.laa.ccms.soa.gateway.model.RecoveryAmount;
 import uk.gov.laa.ccms.soa.gateway.model.ScopeLimitation;
 import uk.gov.laa.ccms.soa.gateway.model.ServiceAddress;
 import uk.gov.laa.ccms.soa.gateway.model.TimeRelatedAward;
+import uk.gov.laa.ccms.soa.gateway.model.TransactionStatus;
 import uk.gov.laa.ccms.soa.gateway.model.UserDetail;
-import uk.gov.laa.ccms.soa.gateway.model.OtherAsset;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddUpdtStatusRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseInqRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ActionListElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.AwardDetailElementType;
@@ -122,6 +124,9 @@ import uk.gov.legalservices.enterprise.common._1_0.common.OPAInstanceType;
 import uk.gov.legalservices.enterprise.common._1_0.common.OPAInstanceType.Attributes;
 import uk.gov.legalservices.enterprise.common._1_0.common.OPAResultType;
 import uk.gov.legalservices.enterprise.common._1_0.common.User;
+import uk.gov.legalservices.enterprise.common._1_0.header.HeaderRSType;
+import uk.gov.legalservices.enterprise.common._1_0.header.Status;
+import uk.gov.legalservices.enterprise.common._1_0.header.StatusTextType;
 
 @ExtendWith(MockitoExtension.class)
 public class CaseDetailsMapperTest {
@@ -757,6 +762,22 @@ public class CaseDetailsMapperTest {
     AddressDetail result = caseDetailsMapper.toAddressDetail(address);
 
     compareAddress(address, result);
+  }
+
+  @Test
+  void toTransactionStatus() {
+    CaseAddUpdtStatusRS caseAddUpdtStatusRS = new CaseAddUpdtStatusRS();
+    caseAddUpdtStatusRS.setCaseReferenceNumber("ref1");
+    caseAddUpdtStatusRS.setHeaderRS(new HeaderRSType());
+    caseAddUpdtStatusRS.getHeaderRS().setStatus(new Status());
+    caseAddUpdtStatusRS.getHeaderRS().getStatus().setStatus(StatusTextType.ERROR);
+
+    TransactionStatus result = caseDetailsMapper.toTransactionStatus(caseAddUpdtStatusRS);
+
+    assertNotNull(result);
+    assertEquals(caseAddUpdtStatusRS.getCaseReferenceNumber(), result.getReferenceNumber());
+    assertEquals(caseAddUpdtStatusRS.getHeaderRS().getStatus().getStatus().name(),
+        result.getSubmissionStatus());
   }
 
 
