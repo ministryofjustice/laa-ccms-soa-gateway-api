@@ -18,6 +18,7 @@ import uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetails;
 import uk.gov.laa.ccms.soa.gateway.model.ClientPersonalDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ClientSummary;
+import uk.gov.laa.ccms.soa.gateway.model.TransactionStatus;
 import uk.gov.laa.ccms.soa.gateway.model.UserDetail;
 import uk.gov.laa.ccms.soa.gateway.util.DateUtil;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientAddUpdtStatusRS;
@@ -112,9 +113,9 @@ public interface ClientDetailsMapper {
       qualifiedByName = "dateToXmlGregorianCalendarWithoutTimeZone")
   PersonalDetails toPersonalDetail(ClientPersonalDetail personalInformation);
 
-  @Mapping(target = "clientSubmissionStatus",
-      source = "headerRS.status.status")
-  uk.gov.laa.ccms.soa.gateway.model.ClientStatus toClientStatus(ClientAddUpdtStatusRS response);
+  @Mapping(target = "referenceNumber", source = "clientReferenceNumber")
+  @Mapping(target = "submissionStatus", source = "headerRS.status.status")
+  TransactionStatus toTransactionStatus(ClientAddUpdtStatusRS response);
 
   @Named("dateToXmlGregorianCalendarWithoutTimeZone")
   default XMLGregorianCalendar dateToXmlGregorianCalendarWithoutTimeZone(Date date)

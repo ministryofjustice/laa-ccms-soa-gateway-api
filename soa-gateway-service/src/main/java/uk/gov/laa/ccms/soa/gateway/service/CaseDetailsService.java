@@ -13,6 +13,7 @@ import uk.gov.laa.ccms.soa.gateway.model.CaseDetail;
 import uk.gov.laa.ccms.soa.gateway.model.CaseDetails;
 import uk.gov.laa.ccms.soa.gateway.model.CaseSummary;
 import uk.gov.laa.ccms.soa.gateway.util.PaginationUtil;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddUpdtStatusRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseInqRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseInfo;
 
@@ -110,6 +111,30 @@ public class CaseDetailsService {
         caseReferenceNumber);
 
     return caseDetailsMapper.toCaseDetail(response.getCase());
+  }
+
+  /**
+   * Fetches the status of a case transaction using its transaction ID. The method communicates
+   * with the external Case Services system and retrieves the current status of the specified
+   * transaction.
+   *
+   * @param soaGatewayUserLoginId      User login ID for the SOA Gateway.
+   * @param soaGatewayUserRole         User role in the SOA Gateway.
+   * @param transactionId              The transaction ID for which the status is to be fetched.
+   * @return                           The status of the specified case transaction.
+   */
+  public uk.gov.laa.ccms.soa.gateway.model.TransactionStatus getCaseTransactionStatus(
+      final String soaGatewayUserLoginId,
+      final String soaGatewayUserRole,
+      final String transactionId
+  ) {
+    log.info("CaseDetailsService - getCaseTransactionStatus");
+    CaseAddUpdtStatusRS response = caseServicesClient.getCaseTransactionStatus(
+        soaGatewayUserLoginId,
+        soaGatewayUserRole,
+        transactionId);
+
+    return caseDetailsMapper.toTransactionStatus(response);
   }
 
   private CaseInfo buildCaseInfo(

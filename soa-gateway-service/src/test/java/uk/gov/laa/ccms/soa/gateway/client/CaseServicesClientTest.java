@@ -20,6 +20,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.soap.client.core.SoapActionCallback;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddUpdtStatusRQ;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddUpdtStatusRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseInqRQ;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseInqRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.ObjectFactory;
@@ -116,6 +118,36 @@ class CaseServicesClientTest {
         assertEquals(SOA_GATEWAY_USER_ROLE, payload.getValue().getHeaderRQ().getUserRole());
         assertNull(payload.getValue().getSearchCriteria().getCaseInfo());
         assertEquals("123", payload.getValue().getSearchCriteria().getCaseReferenceNumber());
+        assertNotNull(response);
+    }
+
+    @Test
+    public void testGetCaseStatusBuildsCorrectRequest() throws Exception {
+        // Mocking expected values
+        String transactionId = "txn12345";
+
+        uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.ObjectFactory objectFactory =
+            new uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.ObjectFactory();
+        CaseAddUpdtStatusRS mockResponse = objectFactory.createCaseAddUpdtStatusRS();
+
+        when(webServiceTemplate.marshalSendAndReceive(
+            eq(SERVICE_URL),
+            any(JAXBElement.class),
+            any(SoapActionCallback.class)))
+            .thenReturn(objectFactory.createCaseAddUpdtStatusRS(mockResponse));
+
+        CaseAddUpdtStatusRS response = client.getCaseTransactionStatus(
+            SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE, transactionId
+        );
+
+        // Verify interactions
+        verify(webServiceTemplate, times(1)).marshalSendAndReceive(
+            eq(SERVICE_URL),
+            requestCaptor.capture(),
+            any(SoapActionCallback.class));
+
+        JAXBElement<?> payload = requestCaptor.getValue();
+        assertEquals(transactionId, ((CaseAddUpdtStatusRQ) payload.getValue()).getTransactionID());
         assertNotNull(response);
     }
 

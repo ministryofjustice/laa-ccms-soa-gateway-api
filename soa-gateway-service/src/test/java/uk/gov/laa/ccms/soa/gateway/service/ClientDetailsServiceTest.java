@@ -1,5 +1,11 @@
 package uk.gov.laa.ccms.soa.gateway.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.Collections;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,27 +17,20 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import uk.gov.laa.ccms.soa.gateway.client.ClientServicesClient;
 import uk.gov.laa.ccms.soa.gateway.mapper.ClientDetailsMapper;
-import uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails;
-import uk.gov.laa.ccms.soa.gateway.model.ClientStatus;
-import uk.gov.laa.ccms.soa.gateway.model.ClientSummary;
-import uk.gov.laa.ccms.soa.gateway.model.ClientDetails;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetail;
+import uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails;
+import uk.gov.laa.ccms.soa.gateway.model.ClientDetails;
+import uk.gov.laa.ccms.soa.gateway.model.ClientSummary;
+import uk.gov.laa.ccms.soa.gateway.model.TransactionStatus;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientAddRS;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientAddUpdtStatusRS;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientInqRS;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientUpdateRQ;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientUpdateRS;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientInfo;
-
-import java.util.Collections;
-import java.util.List;
 import uk.gov.legalservices.enterprise.common._1_0.header.HeaderRSType;
 import uk.gov.legalservices.enterprise.common._1_0.header.Status;
 import uk.gov.legalservices.enterprise.common._1_0.header.StatusTextType;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class ClientDetailsServiceTest {
@@ -234,8 +233,8 @@ public class ClientDetailsServiceTest {
     public void testGetClientStatus() {
         String transactionId = "sampleTransactionId";
 
-        uk.gov.laa.ccms.soa.gateway.model.ClientStatus mockClientStatus
-            = new ClientStatus().clientSubmissionStatus(StatusTextType.SUCCESS.value());
+        TransactionStatus mockClientStatus
+            = new TransactionStatus().submissionStatus(StatusTextType.SUCCESS.name());
 
         Status mockStatus =  new Status();
         mockStatus.setStatus(StatusTextType.SUCCESS);
@@ -251,13 +250,13 @@ public class ClientDetailsServiceTest {
             soaGatewayUserRole,
             transactionId)).thenReturn(mockClientAddUpdtStatusRS);
 
-        when(clientDetailsMapper.toClientStatus(mockClientAddUpdtStatusRS))
+        when(clientDetailsMapper.toTransactionStatus(mockClientAddUpdtStatusRS))
             .thenReturn(mockClientStatus);
 
-        uk.gov.laa.ccms.soa.gateway.model.ClientStatus clientStatus
+        TransactionStatus clientStatus
             = clientDetailsService.getClientStatus(soaGatewayUserLoginId, soaGatewayUserRole, transactionId);
 
-        assertEquals(clientStatus.getClientSubmissionStatus(), "Success");
+        assertEquals(mockClientStatus, clientStatus);
 
         verify(clientServicesClient).getClientStatus(soaGatewayUserLoginId,soaGatewayUserRole, transactionId);
     }
