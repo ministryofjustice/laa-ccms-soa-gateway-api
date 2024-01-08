@@ -15,13 +15,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.Resource;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.test.client.MockWebServiceServer;
-import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientAddRQ;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientAddRS;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientAddUpdtStatusRS;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientInqRS;
@@ -53,7 +50,7 @@ public class ClientServicesClientIntegrationTest {
     Resource clientAddRS_valid;
 
     @Value("classpath:/payload/ClientAddUpdtStatusRS_Valid.xml")
-    Resource ClientAddUpdtStatusRS_valid;
+    Resource clientAddUpdtStatusRS_valid;
     private static final String HEADER_NS = "http://legalservices.gov.uk/Enterprise/Common/1.0/Header";
     private static final String MSG_NS = "http://legalservices.gov.uk/CCMS/ClientManagement/Client/1.0/ClientBIM";
     private static final String CLIENT_NS = "http://legalservices.gov.uk/CCMS/ClientManagement/Client/1.0/ClientBIO";
@@ -196,7 +193,7 @@ public class ClientServicesClientIntegrationTest {
             .andExpect(xpath("/msg:ClientAddUpdtStatusRQ/header:HeaderRQ/header:UserLoginID", namespaces).evaluatesTo(testLoginId))
             .andExpect(xpath("/msg:ClientAddUpdtStatusRQ/header:HeaderRQ/header:UserRole", namespaces).evaluatesTo(testUserType))
             .andExpect(xpath("/msg:ClientAddUpdtStatusRQ/msg:TransactionID", namespaces).evaluatesTo(testTransactionId))
-            .andRespond(withPayload(ClientAddUpdtStatusRS_valid));
+            .andRespond(withPayload(clientAddUpdtStatusRS_valid));
 
         ClientAddUpdtStatusRS response = client.getClientStatus(testLoginId, testUserType, testTransactionId);
 

@@ -1,5 +1,13 @@
 package uk.gov.laa.ccms.soa.gateway.controller;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,19 +21,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ws.client.WebServiceIOException;
-import uk.gov.laa.ccms.soa.gateway.model.ClientDetails;
-import uk.gov.laa.ccms.soa.gateway.model.ClientStatus;
-import uk.gov.laa.ccms.soa.gateway.model.ClientSummary;
-import uk.gov.laa.ccms.soa.gateway.service.ClientDetailsService;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetail;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import uk.gov.laa.ccms.soa.gateway.model.ClientDetails;
+import uk.gov.laa.ccms.soa.gateway.model.ClientSummary;
+import uk.gov.laa.ccms.soa.gateway.model.TransactionStatus;
+import uk.gov.laa.ccms.soa.gateway.service.ClientDetailsService;
 
 @ExtendWith(MockitoExtension.class)
 public class ClientDetailsControllerTest {
@@ -262,7 +262,7 @@ public class ClientDetailsControllerTest {
         String transactionRequestId = "trans123";
         String expectedStatus = "COMPLETED";
 
-        uk.gov.laa.ccms.soa.gateway.model.ClientStatus clientStatus = new ClientStatus().clientSubmissionStatus(expectedStatus);
+        TransactionStatus clientStatus = new TransactionStatus().submissionStatus(expectedStatus);
 
         when(clientDetailsService.getClientStatus(soaGatewayUserLoginId, soaGatewayUserRole, transactionRequestId))
             .thenReturn(clientStatus);

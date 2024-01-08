@@ -29,7 +29,9 @@ import uk.gov.laa.ccms.soa.gateway.model.ClientPersonalDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ClientSummary;
 import uk.gov.laa.ccms.soa.gateway.model.ContactDetail;
 import uk.gov.laa.ccms.soa.gateway.model.NameDetail;
+import uk.gov.laa.ccms.soa.gateway.model.TransactionStatus;
 import uk.gov.laa.ccms.soa.gateway.model.UserDetail;
+import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientAddUpdtStatusRS;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientInqRS;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientUpdateRQ;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.Client;
@@ -42,6 +44,9 @@ import uk.gov.legalservices.enterprise.common._1_0.common.Address;
 import uk.gov.legalservices.enterprise.common._1_0.common.Name;
 import uk.gov.legalservices.enterprise.common._1_0.common.RecordHistory;
 import uk.gov.legalservices.enterprise.common._1_0.common.User;
+import uk.gov.legalservices.enterprise.common._1_0.header.HeaderRSType;
+import uk.gov.legalservices.enterprise.common._1_0.header.Status;
+import uk.gov.legalservices.enterprise.common._1_0.header.StatusTextType;
 
 @ExtendWith(MockitoExtension.class)
 public class ClientDetailsMapperTest {
@@ -594,5 +599,21 @@ public class ClientDetailsMapperTest {
         assertEquals(passwordReminder, clientUpdateRQ.getPasswordReminder());
         assertEquals(correspondenceMethod, clientUpdateRQ.getCorrespondenceMethod());
         assertEquals(correspondenceLanguage, clientUpdateRQ.getCorrespondenceLanguage());
+    }
+
+    @Test
+    void toTransactionStatus() {
+        ClientAddUpdtStatusRS clientAddUpdtStatusRS = new ClientAddUpdtStatusRS();
+        clientAddUpdtStatusRS.setClientReferenceNumber("ref1");
+        clientAddUpdtStatusRS.setHeaderRS(new HeaderRSType());
+        clientAddUpdtStatusRS.getHeaderRS().setStatus(new Status());
+        clientAddUpdtStatusRS.getHeaderRS().getStatus().setStatus(StatusTextType.ERROR);
+
+        TransactionStatus result = clientDetailsMapper.toTransactionStatus(clientAddUpdtStatusRS);
+
+        assertNotNull(result);
+        assertEquals(clientAddUpdtStatusRS.getClientReferenceNumber(), result.getReferenceNumber());
+        assertEquals(clientAddUpdtStatusRS.getHeaderRS().getStatus().getStatus().name(),
+            result.getSubmissionStatus());
     }
 }

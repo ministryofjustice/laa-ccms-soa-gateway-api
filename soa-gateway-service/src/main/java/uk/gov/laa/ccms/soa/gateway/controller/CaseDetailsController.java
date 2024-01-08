@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import uk.gov.laa.ccms.soa.gateway.api.CasesApi;
 import uk.gov.laa.ccms.soa.gateway.model.CaseDetail;
 import uk.gov.laa.ccms.soa.gateway.model.CaseDetails;
+import uk.gov.laa.ccms.soa.gateway.model.TransactionStatus;
 import uk.gov.laa.ccms.soa.gateway.service.CaseDetailsService;
 
 /**
@@ -70,6 +71,25 @@ public class CaseDetailsController implements CasesApi {
           caseReferenceNumber);
 
       return ResponseEntity.ok(caseDetail);
+    } catch (Exception e) {
+      log.error("CaseDetailsController caught exception", e);
+      return ResponseEntity.internalServerError().build();
+    }
+  }
+
+  @Override
+  public ResponseEntity<TransactionStatus> getCaseTransactionStatus(
+      String transactionRequestId,
+      String soaGatewayUserLoginId,
+      String soaGatewayUserRole) {
+    log.info("GET /cases/status/{}", transactionRequestId);
+    try {
+      TransactionStatus status = caseDetailsService.getCaseTransactionStatus(
+          soaGatewayUserLoginId,
+          soaGatewayUserRole,
+          transactionRequestId);
+
+      return ResponseEntity.ok(status);
     } catch (Exception e) {
       log.error("CaseDetailsController caught exception", e);
       return ResponseEntity.internalServerError().build();

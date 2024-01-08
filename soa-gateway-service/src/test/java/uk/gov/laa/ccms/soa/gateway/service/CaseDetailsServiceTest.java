@@ -22,9 +22,14 @@ import uk.gov.laa.ccms.soa.gateway.client.CaseServicesClient;
 import uk.gov.laa.ccms.soa.gateway.mapper.CaseDetailsMapper;
 import uk.gov.laa.ccms.soa.gateway.model.CaseDetails;
 import uk.gov.laa.ccms.soa.gateway.model.CaseSummary;
+import uk.gov.laa.ccms.soa.gateway.model.TransactionStatus;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddUpdtStatusRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseInqRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.Case;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseInfo;
+import uk.gov.legalservices.enterprise.common._1_0.header.HeaderRSType;
+import uk.gov.legalservices.enterprise.common._1_0.header.Status;
+import uk.gov.legalservices.enterprise.common._1_0.header.StatusTextType;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -125,8 +130,6 @@ public class CaseDetailsServiceTest {
     @Test
     void getCaseDetail_returnsMappedCaseDetail() {
         // Arrange
-        String soaGatewayUserLoginId = "testUser";
-        String soaGatewayUserRole = "testRole";
         String caseReferenceNumber = "ref123";
 
         CaseInqRS mockResponse = new CaseInqRS();
@@ -135,16 +138,52 @@ public class CaseDetailsServiceTest {
 
         uk.gov.laa.ccms.soa.gateway.model.CaseDetail expectedDetail = new uk.gov.laa.ccms.soa.gateway.model.CaseDetail();
 
-        when(caseServicesClient.getCaseDetail(soaGatewayUserLoginId, soaGatewayUserRole, caseReferenceNumber))
+        when(caseServicesClient.getCaseDetail(SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE, caseReferenceNumber))
             .thenReturn(mockResponse);
         when(caseDetailsMapper.toCaseDetail(mockCase)).thenReturn(expectedDetail);
 
         // Act
         uk.gov.laa.ccms.soa.gateway.model.CaseDetail
-            result = caseDetailsService.getCaseDetail(soaGatewayUserLoginId, soaGatewayUserRole, caseReferenceNumber);
+            result = caseDetailsService.getCaseDetail(SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE, caseReferenceNumber);
 
         // Assert
         assertEquals(expectedDetail, result);
+    }
+
+    @Test
+    public void testGetCaseStatus() {
+        String transactionId = "sampleTransactionId";
+        String soaGatewayUserLoginId = "user";
+        String soaGatewayUserRole = "EXTERNAL";
+
+        TransactionStatus mockTransactionStatus
+            = new TransactionStatus().submissionStatus(StatusTextType.SUCCESS.name());
+
+        Status mockStatus =  new Status();
+        mockStatus.setStatus(StatusTextType.SUCCESS);
+
+        HeaderRSType mockHeader = new HeaderRSType();
+        mockHeader.setStatus(mockStatus);
+
+        CaseAddUpdtStatusRS mockCaseAddUpdtStatusRS = new CaseAddUpdtStatusRS();
+        mockCaseAddUpdtStatusRS.setHeaderRS(mockHeader);
+
+        when(caseServicesClient.getCaseTransactionStatus(
+            soaGatewayUserLoginId,
+            soaGatewayUserRole,
+            transactionId)).thenReturn(mockCaseAddUpdtStatusRS);
+
+        when(caseDetailsMapper.toTransactionStatus(mockCaseAddUpdtStatusRS))
+            .thenReturn(mockTransactionStatus);
+
+        TransactionStatus result
+            = caseDetailsService.getCaseTransactionStatus(
+                soaGatewayUserLoginId, soaGatewayUserRole, transactionId);
+
+        assertEquals(mockTransactionStatus, result);
+
+        verify(caseServicesClient).getCaseTransactionStatus(
+            soaGatewayUserLoginId,soaGatewayUserRole, transactionId);
     }
 
     private CaseSummary buildCaseSummary(){
