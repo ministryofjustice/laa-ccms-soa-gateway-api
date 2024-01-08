@@ -79,9 +79,9 @@ public class CaseDetailsController implements CasesApi {
 
   @Override
   public ResponseEntity<TransactionStatus> getCaseTransactionStatus(
-      String transactionRequestId,
-      String soaGatewayUserLoginId,
-      String soaGatewayUserRole) {
+      final String transactionRequestId,
+      final String soaGatewayUserLoginId,
+      final String soaGatewayUserRole) {
     log.info("GET /cases/status/{}", transactionRequestId);
     try {
       TransactionStatus status = caseDetailsService.getCaseTransactionStatus(
