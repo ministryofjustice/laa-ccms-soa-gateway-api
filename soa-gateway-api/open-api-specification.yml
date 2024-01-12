@@ -687,6 +687,7 @@ components:
       properties:
         content:
           type: 'array'
+          default: []
           items:
             $ref: "#/components/schemas/clientSummary"
     clientSummary:
@@ -753,6 +754,7 @@ components:
       properties:
         content:
           type: 'array'
+          default: []
           items:
             $ref: "#/components/schemas/caseSummary"
     caseSummary:
@@ -1519,6 +1521,7 @@ components:
       properties:
         content:
           type: array
+          default: []
           items:
             $ref: '#/components/schemas/notification'
     notification:
