@@ -10,7 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.laa.ccms.soa.gateway.client.ContractDetailsClient;
+import uk.gov.laa.ccms.soa.gateway.client.ContractDetailsClientImpl;
 import uk.gov.laa.ccms.soa.gateway.mapper.ContractDetailsMapper;
 import uk.gov.laa.ccms.soa.gateway.model.ContractDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ContractDetails;
@@ -21,7 +21,7 @@ import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabio.Cont
 public class ContractDetailsServiceTest {
 
     @Mock
-    private ContractDetailsClient contractDetailsClient;
+    private ContractDetailsClientImpl contractDetailsClientImpl;
 
     @Mock
     private ContractDetailsMapper contractDetailsMapper;
@@ -68,7 +68,7 @@ public class ContractDetailsServiceTest {
         Integer maxRecords = 50;
 
         // Stub the Client to return the mocked response
-        when(contractDetailsClient.getContractDetails(searchFirmId.toString(), searchOfficeId.toString(),
+        when(contractDetailsClientImpl.getContractDetails(searchFirmId.toString(), searchOfficeId.toString(),
             soaGatewayUserLoginId, soaGatewayUserRole, maxRecords))
                 .thenReturn(response);
 
@@ -85,7 +85,7 @@ public class ContractDetailsServiceTest {
         );
 
         // Verify that the NotificationClient method was called with the expected arguments
-        verify(contractDetailsClient).getContractDetails(
+        verify(contractDetailsClientImpl).getContractDetails(
             searchFirmId.toString(),
             searchOfficeId.toString(),
             soaGatewayUserLoginId,
