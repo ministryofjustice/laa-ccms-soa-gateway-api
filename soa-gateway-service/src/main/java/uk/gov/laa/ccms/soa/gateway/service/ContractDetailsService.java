@@ -3,6 +3,7 @@ package uk.gov.laa.ccms.soa.gateway.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uk.gov.laa.ccms.soa.gateway.client.ContractDetailsClient;
+import uk.gov.laa.ccms.soa.gateway.client.ContractDetailsClientImpl;
 import uk.gov.laa.ccms.soa.gateway.mapper.ContractDetailsMapper;
 import uk.gov.laa.ccms.soa.gateway.model.ContractDetails;
 import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabim.ContractDetailsInqRS;
@@ -11,7 +12,7 @@ import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabim.Cont
  * Service class responsible for fetching contract details from the external system.
  *
  * <p>This service class interfaces with the external Contract Details system through
- * {@link ContractDetailsClient} and maps the results into a more manageable form using
+ * {@link ContractDetailsClientImpl} and maps the results into a more manageable form using
  * {@link ContractDetailsMapper}. It provides methods to fetch specific contract details based
  * on various search criteria and user authentication details.</p>
  */
