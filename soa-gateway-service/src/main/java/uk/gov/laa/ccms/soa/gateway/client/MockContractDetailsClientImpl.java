@@ -1,9 +1,10 @@
 package uk.gov.laa.ccms.soa.gateway.client;
 
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
+import static java.lang.Thread.currentThread;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
-import java.io.IOException;
+import com.github.tomakehurst.wiremock.common.ClasspathFileSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -35,7 +36,12 @@ public class MockContractDetailsClientImpl extends ContractDetailsClientImpl {
 
     this.wireMockServer = new WireMockServer(options()
         .port(servicePort)
-        .usingFilesUnderClasspath("wiremock"));
+        .fileSource(new ClasspathFileSource(
+            currentThread().getContextClassLoader().getResource("wiremock").toString()
+                .contains("BOOT-INF/classes") ? "BOOT-INF/classes/wiremock" : "wiremock")));
+
     wireMockServer.start();
   }
 }
+
+
