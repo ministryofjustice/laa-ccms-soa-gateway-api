@@ -23,7 +23,7 @@ import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabim.Cont
 import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabim.ObjectFactory;
 
 @ExtendWith(MockitoExtension.class)
-public class ContractDetailsClientTest {
+public class ContractDetailsClientImplTest {
 
   public static final String SERVICE_NAME = "myService";
   public static final String SERVICE_URL = "myUrl";
@@ -36,11 +36,11 @@ public class ContractDetailsClientTest {
   @Captor
   ArgumentCaptor<JAXBElement<ContractDetailsInqRQ>> requestCaptor;
 
-  private ContractDetailsClient client;
+  private ContractDetailsClientImpl client;
 
   @BeforeEach
   void setup() {
-    this.client = new ContractDetailsClient(webServiceTemplate, SERVICE_NAME, SERVICE_URL);
+    this.client = new ContractDetailsClientImpl(webServiceTemplate, SERVICE_NAME, SERVICE_URL);
   }
 
   @Test

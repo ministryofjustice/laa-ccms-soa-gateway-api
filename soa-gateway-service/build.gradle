@@ -39,6 +39,9 @@ dependencies {
     //Required for pagination
     implementation 'org.springframework.data:spring-data-commons:3.1.4'
 
+    // For mock Contract Details only
+    implementation 'org.wiremock:wiremock:3.3.1'
+
     implementation 'org.springframework.ws:spring-ws-security'
     implementation 'org.modelmapper:modelmapper:3.1.1'
     implementation 'org.apache.commons:commons-lang3:3.13.0'
