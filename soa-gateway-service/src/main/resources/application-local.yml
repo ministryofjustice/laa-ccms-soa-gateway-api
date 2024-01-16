@@ -14,7 +14,8 @@ laa:
         service-url: http://localhost:8051/soa-infra/services/default/NotificationServices/NotificationServices_ep
       contract-details:
         service-name: http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/GetReferenceData
-        service-url: http://localhost:8051/soa-infra/services/default/GetContractDetails/getcontractdetails_ep
+        service-port: 8052
+        service-url: http://localhost:${laa.ccms.soa-gateway.contract-details.service-port}/soa-infra/services/default/GetContractDetails/getcontractdetails_ep
       client:
         service-name: http://legalservices.gov.uk/CCMS/ClientManagement/Client/1.0/ClientServices
         service-url: http://localhost:8051/soa-infra/services/default/ClientServices/ClientServices_ep

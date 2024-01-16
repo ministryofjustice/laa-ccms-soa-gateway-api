@@ -1,0 +1,14 @@
+{
+  "priority": 2,
+  "request": {
+    "method": "ANY",
+    "urlPath": "/soa-infra/services/default/GetContractDetails/getcontractdetails_ep"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "ContractDetailsInqRS_DEFAULT.xml",
+    "headers": {
+      "Content-Type": "text/xml"
+    }
+  }
+}
