@@ -27,7 +27,7 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseInfo;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class CaseDetailsService {
+public class CaseDetailsService extends AbstractSoaService {
 
   private final CaseServicesClient caseServicesClient;
 
@@ -65,7 +65,7 @@ public class CaseDetailsService {
       final Pageable pageable
   ) {
     log.info("CaseDetailsService - getCaseDetails");
-    CaseInfo caseInfo = buildCaseInfo(
+    final CaseInfo caseInfo = buildCaseInfo(
         caseReferenceNumber,
         providerCaseRefNumber,
         caseStatus,
@@ -73,15 +73,19 @@ public class CaseDetailsService {
         feeEarnerId,
         officeId);
 
-    CaseInqRS response = caseServicesClient.getCaseDetails(
+    final CaseInqRS response = caseServicesClient.getCaseDetails(
         soaGatewayUserLoginId,
         soaGatewayUserRole,
         maxRecords,
         caseInfo);
 
-    List<CaseSummary> caseSummaryList = caseDetailsMapper.toCaseSummaryList(response);
+    final List<CaseSummary> caseSummaryList = caseDetailsMapper.toCaseSummaryList(response);
 
-    Page<CaseSummary> page = PaginationUtil.paginateList(pageable, caseSummaryList);
+    final int listSize =
+        getTotalElementsFromRecordCount(response.getRecordCount(), caseSummaryList.size());
+
+    final Page<CaseSummary> page = PaginationUtil.paginateList(pageable, caseSummaryList, listSize);
+
 
     return caseDetailsMapper.toCaseDetails(page);
   }
