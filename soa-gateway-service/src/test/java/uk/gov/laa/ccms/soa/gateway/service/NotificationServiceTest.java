@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -43,6 +44,7 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.NotificationE
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.NotificationElementType.UploadedDocuments;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.NotificationListElementType;
 import uk.gov.legalservices.enterprise.common._1_0.common.DocumentElementType;
+import uk.gov.legalservices.enterprise.common._1_0.common.RecordCount;
 import uk.gov.legalservices.enterprise.common._1_0.common.User;
 
 /**
@@ -153,6 +155,9 @@ class NotificationServiceTest {
     listElementType.setNotification(notification);
     notificationList.getNotifications().add(listElementType);
     response.setNotificationList(notificationList);
+    response.setRecordCount(new RecordCount());
+    response.getRecordCount().setRecordsFetched(
+        BigInteger.valueOf(notificationList.getNotifications().size()));
     ObjectFactory objectFactory = new ObjectFactory();
 
     String soaGatewayUserLoginId = "soaGatewayUserLoginId";

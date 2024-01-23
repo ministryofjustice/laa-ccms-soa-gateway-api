@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import uk.gov.laa.ccms.soa.gateway.client.NotificationClient;
 import uk.gov.laa.ccms.soa.gateway.mapper.NotificationMapper;
+import uk.gov.laa.ccms.soa.gateway.model.CaseSummary;
 import uk.gov.laa.ccms.soa.gateway.model.Notification;
 import uk.gov.laa.ccms.soa.gateway.model.NotificationSummary;
 import uk.gov.laa.ccms.soa.gateway.model.Notifications;
@@ -25,7 +26,7 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationI
  */
 @Service
 @RequiredArgsConstructor
-public class NotificationService {
+public class NotificationService extends AbstractSoaService {
   private final NotificationClient notificationClient;
   private final NotificationMapper notificationMapper;
 
@@ -46,7 +47,7 @@ public class NotificationService {
       final String soaGatewayUserLoginId,
       final String soaGatewayUserRole,
       final Integer maxRecords) {
-    NotificationCntInqRS response = notificationClient.getNotificationCount(
+    final NotificationCntInqRS response = notificationClient.getNotificationCount(
         searchLoginId,
         soaGatewayUserLoginId,
         soaGatewayUserRole,
@@ -68,23 +69,30 @@ public class NotificationService {
    * @return {@link Notification} object holding the list of {@link Notification}
    */
   public Notifications getNotifications(
-      Notification notification,
-      Boolean includeClosed,
-      XMLGregorianCalendar dateFrom,
-      XMLGregorianCalendar dateTo,
-      Integer maxRecords, Pageable pageable) {
-    //pass params through to client
+      final Notification notification,
+      final Boolean includeClosed,
+      final XMLGregorianCalendar dateFrom,
+      final XMLGregorianCalendar dateTo,
+      final Integer maxRecords,
+      final Pageable pageable) {
 
-    NotificationInqRS notificationResponse = notificationClient.getNotifications(
+    final NotificationInqRS notificationResponse = notificationClient.getNotifications(
         notification,
         includeClosed,
         dateFrom,
         dateTo,
         maxRecords);
 
-    List<Notification> notificationList = notificationMapper.toNotificationsList(
+    final List<Notification> notificationList = notificationMapper.toNotificationsList(
         notificationResponse);
-    Page<Notification> page = PaginationUtil.paginateList(pageable, notificationList);
+
+    final int listSize =
+        getTotalElementsFromRecordCount(
+            notificationResponse.getRecordCount(),
+            notificationList.size());
+
+    final Page<Notification> page = PaginationUtil.paginateList(
+        pageable, notificationList, listSize);
 
     return notificationMapper.toNotifications(page);
   }

@@ -29,7 +29,7 @@ class PaginationUtilTest {
         .caseReferenceNumber("12345"));
     notificationList.add(new Notification()
         .caseReferenceNumber("11234"));
-    Page<Notification> notificationPage = PaginationUtil.paginateList(pageable,notificationList);
+    Page<Notification> notificationPage = PaginationUtil.paginateList(pageable, notificationList, notificationList.size());
     assertEquals(2, notificationPage.getTotalElements());
     assertEquals("12345", notificationPage.getContent().get(0).getCaseReferenceNumber());
 
@@ -44,7 +44,7 @@ class PaginationUtilTest {
         .clientReferenceNumber("12345"));
     notificationList.add(new Notification()
         .clientReferenceNumber("11234"));
-    Page<Notification> notificationPage = PaginationUtil.paginateList(pageable,notificationList);
+    Page<Notification> notificationPage = PaginationUtil.paginateList(pageable,notificationList, notificationList.size());
     assertEquals(2, notificationPage.getTotalElements());
     assertEquals("12345", notificationPage.getContent().get(1).getClientReferenceNumber());
   }
@@ -55,7 +55,8 @@ class PaginationUtilTest {
         Sort.by("clientReferenceNumber").ascending());
     List<Notification> notificationList = new ArrayList<>();
 
-    Page<Notification> notificationPage = PaginationUtil.paginateList(pageable,notificationList);
+    Page<Notification> notificationPage = PaginationUtil.paginateList(pageable,notificationList,
+        notificationList.size());
     assertEquals(0, notificationPage.getTotalElements());
   }
 
@@ -69,7 +70,7 @@ class PaginationUtilTest {
     notificationList.add(new Notification()
         .clientReferenceNumber("11234"));
    SoaGatewaySortingException soage = assertThrows(SoaGatewaySortingException.class,
-        () -> PaginationUtil.paginateList(pageable,notificationList),
+        () -> PaginationUtil.paginateList(pageable, notificationList, notificationList.size()),
     "Expected PaginationUtils to throw exception, but didn't");
    assertTrue(soage.getLocalizedMessage().contains("Error sorting comparator"));
   }
@@ -85,9 +86,24 @@ class PaginationUtilTest {
 
     Pageable pageable = PageRequest.of(0, 10,
         Sort.by("feeEarnerName").ascending());
-    Page<CaseSummary> caseSummariesPage = PaginationUtil.paginateList(pageable,summery);
+    Page<CaseSummary> caseSummariesPage = PaginationUtil.paginateList(pageable, summery, summery.size());
     assertEquals("feeearner", caseSummariesPage.getContent().get(0).getFeeEarnerName());
 
+  }
+
+  @Test
+  void testTotalElementsTooManyResultsFromSoa(){
+    final Pageable pageable = PageRequest.of(0, 10,
+        Sort.by("clientReferenceNumber").ascending());
+    final List<Notification> notificationList = new ArrayList<>();
+    final int totalElements = 100;
+
+    final Page<Notification> notificationPage = PaginationUtil.paginateList(
+        pageable,
+        notificationList,
+        totalElements);
+
+    assertEquals(totalElements, notificationPage.getTotalElements());
   }
 
   private uk.gov.laa.ccms.soa.gateway.model.CaseSummary buildCaseSummary(){
