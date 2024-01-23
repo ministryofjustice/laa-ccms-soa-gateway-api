@@ -33,7 +33,7 @@ public final class PaginationUtil {
    * @param list     The list of items to be paginated.
    * @return A {@link Page} object containing a paginated and possibly sorted subset of the list.
    */
-  public static <T> Page<T> paginateList(final Pageable pageable, List<T> list) {
+  public static <T> Page<T> paginateList(final Pageable pageable, List<T> list, int totalElements) {
     int start = (int) pageable.getOffset();
     int end = Math.min((start + pageable.getPageSize()), list.size());
 
@@ -41,7 +41,9 @@ public final class PaginationUtil {
      if there's no sort in the request, just return the default page
     */
     if (!pageable.getSort().isSorted() || list.isEmpty()) {
-      return new PageImpl<>(list.subList(start, end), pageable, list.size());
+      //we use total elements here instead of list.size as when soa return too many result the list
+      // is empty, but we still specify the total elements in the response
+      return new PageImpl<>(list.subList(start, end), pageable, totalElements);
     }
 
     List<Sort.Order> nestedOrders = new ArrayList<>();

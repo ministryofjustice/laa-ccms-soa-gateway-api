@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import uk.gov.laa.ccms.soa.gateway.client.ClientServicesClient;
 import uk.gov.laa.ccms.soa.gateway.mapper.ClientDetailsMapper;
+import uk.gov.laa.ccms.soa.gateway.model.CaseSummary;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetails;
@@ -31,7 +32,7 @@ import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientIn
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class ClientDetailsService {
+public class ClientDetailsService extends AbstractSoaService {
 
   private final ClientServicesClient clientServicesClient;
 
@@ -62,17 +63,23 @@ public class ClientDetailsService {
           final Pageable pageable
   ) {
     log.info("ClientDetailsService - getClientDetails");
-    ClientInfo clientInfo =  clientDetailsMapper.toClientInfo(clientSummary);
+    final ClientInfo clientInfo =  clientDetailsMapper.toClientInfo(clientSummary);
 
-    ClientInqRS response = clientServicesClient.getClientDetails(
+    final ClientInqRS response = clientServicesClient.getClientDetails(
             soaGatewayUserLoginId,
             soaGatewayUserRole,
             maxRecords,
             clientInfo);
 
-    List<ClientSummary> clientDetailList = clientDetailsMapper.toClientSummaryList(response);
+    final List<ClientSummary> clientDetailList = clientDetailsMapper.toClientSummaryList(response);
 
-    Page<ClientSummary> page = PaginationUtil.paginateList(pageable, clientDetailList);
+    final int listSize =
+        getTotalElementsFromRecordCount(response.getRecordCount(), clientDetailList.size());
+
+    final Page<ClientSummary> page = PaginationUtil.paginateList(
+        pageable,
+        clientDetailList,
+        listSize);
 
     return clientDetailsMapper.toClientDetails(page);
   }

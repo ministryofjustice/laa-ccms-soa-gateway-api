@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.math.BigInteger;
 import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -27,6 +28,7 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddUpdtSt
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseInqRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.Case;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseInfo;
+import uk.gov.legalservices.enterprise.common._1_0.common.RecordCount;
 import uk.gov.legalservices.enterprise.common._1_0.header.HeaderRSType;
 import uk.gov.legalservices.enterprise.common._1_0.header.Status;
 import uk.gov.legalservices.enterprise.common._1_0.header.StatusTextType;
@@ -64,17 +66,20 @@ public class CaseDetailsServiceTest {
 
     @Test
     public void testGetCaseDetails() {
-        // Create a mocked instance of the response object
-        CaseInqRS response = new CaseInqRS();
-
         // Create a mocked instance of the mapped client details
-        CaseDetails caseDetails = new CaseDetails();
+        final CaseDetails caseDetails = new CaseDetails();
 
-        CaseInfo caseInfo = buildCaseInfo();
-        CaseSummary caseSummary = buildCaseSummary();
+        final CaseInfo caseInfo = buildCaseInfo();
+        final CaseSummary caseSummary = buildCaseSummary();
 
-        List<CaseSummary> caseSummaryList = Collections.singletonList(caseSummary);
-        Page<CaseSummary> caseSummaryPage = new PageImpl<>(caseSummaryList, PAGEABLE, caseSummaryList.size());
+        final List<CaseSummary> caseSummaryList = Collections.singletonList(caseSummary);
+        final Page<CaseSummary> caseSummaryPage = new PageImpl<>(caseSummaryList, PAGEABLE, caseSummaryList.size());
+
+        // Create a mocked instance of the response object
+        final CaseInqRS response = new CaseInqRS();
+        response.setRecordCount(new RecordCount());
+        response.getRecordCount().setRecordsFetched(
+            BigInteger.valueOf(caseSummaryList.size()));
 
         // Stub the client to return the mocked response
         when(caseServicesClient.getCaseDetails(
@@ -90,7 +95,7 @@ public class CaseDetailsServiceTest {
         when(caseDetailsMapper.toCaseDetails(caseSummaryPage)).thenReturn(caseDetails);
 
         // Call the service method
-        CaseDetails result = caseDetailsService.getCaseDetails(
+        final CaseDetails result = caseDetailsService.getCaseDetails(
             SOA_GATEWAY_USER_LOGIN_ID,
             SOA_GATEWAY_USER_ROLE,
             CASE_REFERENCE_NUMBER,
