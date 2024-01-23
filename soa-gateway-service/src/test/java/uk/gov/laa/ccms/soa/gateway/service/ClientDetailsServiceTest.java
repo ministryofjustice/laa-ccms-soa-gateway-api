@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.math.BigInteger;
 import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,6 +29,7 @@ import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientIn
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientUpdateRQ;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientUpdateRS;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientInfo;
+import uk.gov.legalservices.enterprise.common._1_0.common.RecordCount;
 import uk.gov.legalservices.enterprise.common._1_0.header.HeaderRSType;
 import uk.gov.legalservices.enterprise.common._1_0.header.Status;
 import uk.gov.legalservices.enterprise.common._1_0.header.StatusTextType;
@@ -73,8 +75,7 @@ public class ClientDetailsServiceTest {
     }
     @Test
     public void testGetClientDetails() {
-        // Create a mocked instance of the response object
-        ClientInqRS response = new ClientInqRS();
+
 
         // Create a mocked instance of the mapped client details
         ClientDetails clientDetails = new ClientDetails();
@@ -84,6 +85,12 @@ public class ClientDetailsServiceTest {
 
         List<ClientSummary> clientSummaryList = Collections.singletonList(clientSummary);
         Page<ClientSummary> clientSummaryPage = new PageImpl<>(clientSummaryList, pageable, clientSummaryList.size());
+
+        // Create a mocked instance of the response object
+        ClientInqRS response = new ClientInqRS();
+        response.setRecordCount(new RecordCount());
+        response.getRecordCount().setRecordsFetched(
+            BigInteger.valueOf(clientSummaryList.size()));
 
         when(clientDetailsMapper.toClientInfo(clientSummary)).thenReturn(clientInfo);
 
