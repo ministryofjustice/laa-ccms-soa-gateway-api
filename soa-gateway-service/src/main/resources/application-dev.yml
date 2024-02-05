@@ -4,22 +4,7 @@ springdoc:
 laa:
   ccms:
     soa-gateway:
-      username: ${SOA_GATEWAY_USERNAME}
-      password: ${SOA_GATEWAY_PASSWORD}
-      notification:
-        service-name: http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/NotificationService
-        service-url: ${SOA_SERVICE_URL}/soa-infra/services/default/NotificationServices/NotificationServices_ep
       contract-details:
-        service-name: http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/GetReferenceData
         service-port: 8052
         service-url: http://localhost:${laa.ccms.soa-gateway.contract-details.service-port}/soa-infra/services/default/GetContractDetails/getcontractdetails_ep
-      client:
-        service-name: http://legalservices.gov.uk/CCMS/ClientManagement/Client/1.0/ClientServices
-        service-url: ${SOA_SERVICE_URL}/soa-infra/services/default/ClientServices/ClientServices_ep
-      reference-data:
-        service-name: http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/GetReferenceData
-        service-url: ${SOA_SERVICE_URL}/soa-infra/services/default/GetReferenceData/getreferencedata_ep
-      case:
-        service-name: http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseServices
-        service-url: ${SOA_SERVICE_URL}/soa-infra/services/default/CaseServices/CaseServices_ep
 
