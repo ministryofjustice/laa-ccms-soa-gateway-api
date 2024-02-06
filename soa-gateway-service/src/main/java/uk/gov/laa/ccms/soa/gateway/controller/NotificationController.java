@@ -30,6 +30,25 @@ public class NotificationController implements NotificationsApi {
 
   private final NotificationService notificationService;
 
+  /**
+   * Get a list of notifications based on the supplied search criteria.
+   *
+   * @param soaGatewayUserLoginId  (required) - the user requesting the data.
+   * @param soaGatewayUserRole  (required) - the user role requesting the data.
+   * @param caseReferenceNumber  (optional) - the case reference number.
+   * @param providerCaseReference  (optional) - the provider case reference.
+   * @param assignedToUserId  (optional) - the assigned to user id.
+   * @param clientSurname  (optional) - the client surname.
+   * @param feeEarnerId  (optional) - the fee earner id.
+   * @param includeClosed  (optional) - whether the query should include closed notifications.
+   * @param notificationType  (optional) - the notification type.
+   * @param dateFrom  (optional) - the date from which notifications should be searched.
+   * @param dateTo  (optional) - the date up to which notifications should be searched.
+   * @param sort  (optional) - the sort field.
+   * @param maxRecords  (optional, default to 100) - the maximum records to query.
+   * @param pageable - the page settings.
+   * @return ResponseEntity wrapping the notification list results.
+   */
   @Override
   public ResponseEntity<Notifications> getNotifications(
       final String soaGatewayUserLoginId,
@@ -78,6 +97,15 @@ public class NotificationController implements NotificationsApi {
 
   }
 
+  /**
+   * Get a summary of the notifications for the supplied user.
+   *
+   * @param userId  (required) - the related user.
+   * @param soaGatewayUserLoginId  (required) - the user requesting the data.
+   * @param soaGatewayUserRole  (required) - the user role requesting the data.
+   * @param maxRecords  (optional, default to 100) - the maximum records to query.
+   * @return ResponseEntity wrapping a notification summary.
+   */
   @Override
   public ResponseEntity<NotificationSummary> getUserNotificationSummary(
       final String userId,

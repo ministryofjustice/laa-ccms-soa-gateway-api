@@ -25,6 +25,21 @@ public class CaseDetailsController implements CasesApi {
 
   private final CaseDetailsService caseDetailsService;
 
+  /**
+   * Get a paged list of cases for the provided search criteria.
+   *
+   * @param soaGatewayUserLoginId  (required) - the user requesting the data.
+   * @param soaGatewayUserRole  (required) - the user role requesting the data.
+   * @param caseReferenceNumber  (optional) - the case reference number search criteria.
+   * @param providerCaseReference  (optional) - the provider case reference search criteria.
+   * @param caseStatus  (optional) - the case status search criteria.
+   * @param clientSurname  (optional) - the client surname search criteria.
+   * @param feeEarnerId  (optional) - the fee earner id search criteria
+   * @param officeId  (optional) - the office id search criteria.
+   * @param maxRecords  (optional, default to 100) - the maximum records to query.
+   * @param pageable - the page settings.
+   * @return ResponseEntity containing CaseDetails.
+   */
   @Override
   public ResponseEntity<CaseDetails> getCases(
       final String soaGatewayUserLoginId,
@@ -58,6 +73,14 @@ public class CaseDetailsController implements CasesApi {
     }
   }
 
+  /**
+   * Get a single case by reference number.
+   *
+   * @param caseReferenceNumber  (required) - the reference of the case to return.
+   * @param soaGatewayUserLoginId  (required) - the user requesting the data.
+   * @param soaGatewayUserRole  (required) - the user role requesting the data.
+   * @return a ResponseEntity containing the case detail.
+   */
   @Override
   public ResponseEntity<CaseDetail> getCase(
       final String caseReferenceNumber,
@@ -77,6 +100,14 @@ public class CaseDetailsController implements CasesApi {
     }
   }
 
+  /**
+   * Get the status of a case transaction.
+   *
+   * @param transactionRequestId  (required) - the id of the transaction.
+   * @param soaGatewayUserLoginId  (required) - the user requesting the data.
+   * @param soaGatewayUserRole  (required) - the user role requesting the data.
+   * @return a ResponseEntity containing the transaction status details.
+   */
   @Override
   public ResponseEntity<TransactionStatus> getCaseTransactionStatus(
       final String transactionRequestId,
