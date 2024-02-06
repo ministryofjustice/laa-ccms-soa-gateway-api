@@ -24,6 +24,19 @@ public class OrganisationController implements OrganisationsApi {
 
   private final OrganisationService organisationService;
 
+  /**
+   * Get a list of organisations based on the supplied search criteria.
+   *
+   * @param soaGatewayUserLoginId  (required) - the user requesting the data.
+   * @param soaGatewayUserRole  (required) - the user role requesting the data.
+   * @param name  (optional) - the name of the organisation.
+   * @param type  (optional) - the type of the organisation.
+   * @param city  (optional) - the organisation's city.
+   * @param postcode  (optional) - the organisation's postcode.
+   * @param maxRecords  (optional, default to 100) - the maximum records to query.
+   * @param pageable - the page settings.
+   * @return ResponseEntity wrapping the resulting organisation details.
+   */
   @Override
   public ResponseEntity<OrganisationDetails> getOrganisations(
       final String soaGatewayUserLoginId,

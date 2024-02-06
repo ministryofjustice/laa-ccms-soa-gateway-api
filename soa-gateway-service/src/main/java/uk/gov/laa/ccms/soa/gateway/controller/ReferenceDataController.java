@@ -22,6 +22,13 @@ public class ReferenceDataController implements CaseReferenceApi {
 
   private final ReferenceDataService referenceDataService;
 
+  /**
+   * Get a new case reference.
+   *
+   * @param soaGatewayUserLoginId  (required) - the user requesting the data.
+   * @param soaGatewayUserRole  (required) - the user role requesting the data.
+   * @return ResponseEntity wrapping the case reference summary.
+   */
   @Override
   public ResponseEntity<CaseReferenceSummary> getCaseReference(final String soaGatewayUserLoginId,
                                                                final String soaGatewayUserRole) {

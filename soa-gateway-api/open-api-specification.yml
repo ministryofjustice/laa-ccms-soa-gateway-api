@@ -224,6 +224,7 @@ paths:
       operationId: 'createClient'
       requestBody:
         description: Create a client
+        required: true
         content:
           application/json:
             schema:
@@ -316,6 +317,7 @@ paths:
       operationId: 'updateClient'
       requestBody:
         description: update a client
+        required: true
         content:
           application/json:
             schema:
