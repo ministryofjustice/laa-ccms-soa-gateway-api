@@ -28,6 +28,15 @@ public class ClientDetailsController implements ClientsApi {
 
   private final ClientDetailsService clientDetailsService;
 
+  /**
+   * Get client details for the supplied reference number.
+   *
+   * @param clientReferenceNumber  (required) - the client reference number.
+   * @param soaGatewayUserLoginId  (required) - the user requesting the data.
+   * @param soaGatewayUserRole  (required) - the user role requesting the data.
+   * @param maxRecords  (optional, default to 100) - the maximum records to query.
+   * @return ResponseEntity containing the client detail.
+   */
   @Override
   public ResponseEntity<ClientDetail> getClient(
           final String clientReferenceNumber,
@@ -49,6 +58,14 @@ public class ClientDetailsController implements ClientsApi {
     }
   }
 
+  /**
+   * Get the status of a client transaction.
+   *
+   * @param transactionRequestId  (required) - the id of the transaction.
+   * @param soaGatewayUserLoginId  (required) - the user requesting the data.
+   * @param soaGatewayUserRole  (required) - the user role requesting the data.
+   * @return ResponseEntity containing the transaction status details.
+   */
   @Override
   public ResponseEntity<TransactionStatus> getClientTransactionStatus(
       String transactionRequestId,
@@ -68,6 +85,22 @@ public class ClientDetailsController implements ClientsApi {
     }
   }
 
+  /**
+   * Get a list of clients based on the supplied search criteria.
+   *
+   * @param soaGatewayUserLoginId  (required) - the user requesting the data.
+   * @param soaGatewayUserRole  (required) - the user role requesting the data.
+   * @param firstName  (optional) - the first name.
+   * @param surname  (optional) - the surname.
+   * @param dateOfBirth  (optional) - the date of birth.
+   * @param gender  (optional) - the gender.
+   * @param caseReferenceNumber  (optional) - the case reference number.
+   * @param homeOfficeReference  (optional) - the home office reference.
+   * @param nationalInsuranceNumber  (optional) - the national insurance number.
+   * @param maxRecords  (optional, default to 100) - the maximum records to query.
+   * @param pageable - the page settings.
+   * @return ResponseEntity containing a list of client details.
+   */
   @Override
   public ResponseEntity<ClientDetails> getClients(
           final String soaGatewayUserLoginId,
@@ -110,6 +143,15 @@ public class ClientDetailsController implements ClientsApi {
     }
   }
 
+  /**
+   * Update the details of a client.
+   *
+   * @param clientReferenceNumber  (required) - the client reference number to update.
+   * @param soaGatewayUserLoginId  (required) - the user requesting the data.
+   * @param soaGatewayUserRole  (required) - the user role requesting the data.
+   * @param clientDetailDetails update a client (required) - the new details for the client.
+   * @return a ResponseEntity wrapping a ClientTransactionResponse.
+   */
   @Override
   public ResponseEntity<ClientTransactionResponse> updateClient(
       final String clientReferenceNumber,
@@ -131,6 +173,14 @@ public class ClientDetailsController implements ClientsApi {
     }
   }
 
+  /**
+   * Create a new client record.
+   *
+   * @param soaGatewayUserLoginId  (required) - the user requesting the data.
+   * @param soaGatewayUserRole  (required) - the user role requesting the data.
+   * @param clientDetailDetails Create a client (required) - the new client details.
+   * @return a ResponseEntity wrapping a ClientTransactionResponse.
+   */
   @Override
   public ResponseEntity<ClientTransactionResponse> createClient(
       String soaGatewayUserLoginId,
