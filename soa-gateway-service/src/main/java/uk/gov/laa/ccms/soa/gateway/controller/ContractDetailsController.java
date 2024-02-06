@@ -24,6 +24,16 @@ public class ContractDetailsController implements ContractDetailsApi {
 
   private final ContractDetailsService contractDetailsService;
 
+  /**
+   * Get contract details for the provided search criteria.
+   *
+   * @param providerFirmId  (required) - the provider firm id search criteria.
+   * @param officeId  (required) - the office id search criteria.
+   * @param soaGatewayUserLoginId  (required) - the user requesting the data.
+   * @param soaGatewayUserRole  (required) - the user role requesting the data.
+   * @param maxRecords  (optional, default to 100) - the maximum records to query.
+   * @return ResponseEntity wrapping the contract details results.
+   */
   @Override
   public ResponseEntity<ContractDetails> getContractDetails(
           final Integer providerFirmId,

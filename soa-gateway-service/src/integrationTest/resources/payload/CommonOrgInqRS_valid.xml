@@ -1,0 +1,48 @@
+<CommonOrgInqRS xmlns:msg="http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/ReferenceDataBIM" xmlns="http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/ReferenceDataBIM">
+  <header:HeaderRS xmlns:header="http://legalservices.gov.uk/Enterprise/Common/1.0/Header">
+    <header:RequestDetails>
+      <header:Language>ENG</header:Language>
+      <header:TransactionRequestID>202401311211425340306421825</header:TransactionRequestID>
+      <header:UserLoginID>FAMILYDEP@BINDMANS.COM</header:UserLoginID>
+      <header:UserRole>EXTERNAL</header:UserRole>
+    </header:RequestDetails>
+    <header:Status>
+      <header:Status>Success</header:Status>
+      <header:StatusFreeText>GetCommonOrg completed successfully.</header:StatusFreeText>
+    </header:Status>
+    <header:TransactionID>202401311211425340306421825</header:TransactionID>
+  </header:HeaderRS>
+  <msg:OrganizationList>
+    <msg:City>Hoddesdon</msg:City>
+    <msg:OrganizationName>Broxbourne Housing Association</msg:OrganizationName>
+    <msg:OrganizationPartyID>380735</msg:OrganizationPartyID>
+    <msg:OrganizationType>HOA</msg:OrganizationType>
+    <msg:PostCode>EN11 8TS</msg:PostCode>
+  </msg:OrganizationList>
+  <msg:OrganizationList>
+    <msg:City>London</msg:City>
+    <msg:OrganizationName>Family Mosaic Housing Association</msg:OrganizationName>
+    <msg:OrganizationPartyID>380736</msg:OrganizationPartyID>
+    <msg:OrganizationType>HOA</msg:OrganizationType>
+    <msg:PostCode>E8 2DJ</msg:PostCode>
+  </msg:OrganizationList>
+  <msg:OrganizationList>
+    <msg:City>London</msg:City>
+    <msg:OrganizationName>London and Quadrant Housing Association</msg:OrganizationName>
+    <msg:OrganizationPartyID>380740</msg:OrganizationPartyID>
+    <msg:OrganizationType>HOA</msg:OrganizationType>
+    <msg:PostCode>SE3 9DR</msg:PostCode>
+  </msg:OrganizationList>
+  <msg:RecordCount>
+    <common:MaxRecordsToFetch xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">
+      500
+    </common:MaxRecordsToFetch>
+    <common:RecordsFetched xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">
+      3
+    </common:RecordsFetched>
+    <common:RetriveDataOnMaxCount
+      xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">
+      false
+    </common:RetriveDataOnMaxCount>
+  </msg:RecordCount>
+</CommonOrgInqRS>
