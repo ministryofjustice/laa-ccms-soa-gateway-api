@@ -8,8 +8,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import uk.gov.laa.ccms.soa.gateway.client.CommonOrgClient;
 import uk.gov.laa.ccms.soa.gateway.mapper.OrganisationMapper;
-import uk.gov.laa.ccms.soa.gateway.model.Organisation;
+import uk.gov.laa.ccms.soa.gateway.model.OrganisationDetail;
 import uk.gov.laa.ccms.soa.gateway.model.OrganisationDetails;
+import uk.gov.laa.ccms.soa.gateway.model.OrganisationSummary;
 import uk.gov.laa.ccms.soa.gateway.util.PaginationUtil;
 import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabim.CommonOrgInqRQ.SearchCriteria.Organization;
 import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabim.CommonOrgInqRS;
@@ -48,7 +49,7 @@ public class OrganisationService extends AbstractSoaService {
       final String soaGatewayUserLoginId,
       final String soaGatewayUserRole,
       final Integer maxRecords,
-      final Organisation searchOrganisation,
+      final OrganisationSummary searchOrganisation,
       final Pageable pageable
   ) {
     log.info("OrganisationService - getOrganisations");
@@ -60,15 +61,45 @@ public class OrganisationService extends AbstractSoaService {
         maxRecords,
         organization);
 
-    final List<Organisation> organisationList = organisationMapper.toOrganisationList(response);
+    final List<OrganisationSummary> organisationList =
+        organisationMapper.toOrganisationSummaryList(response);
 
     final int listSize =
         getTotalElementsFromRecordCount(response.getRecordCount(), organisationList.size());
 
-    final Page<Organisation> page =
+    final Page<OrganisationSummary> page =
         PaginationUtil.paginateList(pageable, organisationList, listSize);
 
-
     return organisationMapper.toOrganisationDetails(page);
+  }
+
+  /**
+   * Retrieves the full details for an organisation based on its party id.
+   *
+   * <p>This method communicates with the external CommonOrg system using the provided
+   * search criteria, fetches the relevant organisation, and then maps these details
+   * to the desired format.</p>
+   *
+   * @param soaGatewayUserLoginId The user login ID for the SOA Gateway.
+   * @param soaGatewayUserRole    The user role in the SOA Gateway.
+   * @param maxRecords            The maximum number of records to retrieve.
+   * @param partyId               The organisation party id.
+   * @return An {@link OrganisationDetail} object containing the retrieved organisation detail.
+   */
+  public OrganisationDetail getOrganisation(
+      final String soaGatewayUserLoginId,
+      final String soaGatewayUserRole,
+      final Integer maxRecords,
+      final String partyId
+  ) {
+    log.info("OrganisationService - getOrganisation");
+
+    final CommonOrgInqRS response = commonOrgClient.getOrganisation(
+        soaGatewayUserLoginId,
+        soaGatewayUserRole,
+        maxRecords,
+        partyId);
+
+    return organisationMapper.toOrganisationDetail(response.getOrganization());
   }
 }

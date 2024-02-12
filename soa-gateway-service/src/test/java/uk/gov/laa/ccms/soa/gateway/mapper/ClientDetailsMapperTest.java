@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -17,6 +18,7 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -30,7 +32,6 @@ import uk.gov.laa.ccms.soa.gateway.model.ClientSummary;
 import uk.gov.laa.ccms.soa.gateway.model.ContactDetail;
 import uk.gov.laa.ccms.soa.gateway.model.NameDetail;
 import uk.gov.laa.ccms.soa.gateway.model.TransactionStatus;
-import uk.gov.laa.ccms.soa.gateway.model.UserDetail;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientAddUpdtStatusRS;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientInqRS;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientUpdateRQ;
@@ -43,13 +44,15 @@ import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.Personal
 import uk.gov.legalservices.enterprise.common._1_0.common.Address;
 import uk.gov.legalservices.enterprise.common._1_0.common.Name;
 import uk.gov.legalservices.enterprise.common._1_0.common.RecordHistory;
-import uk.gov.legalservices.enterprise.common._1_0.common.User;
 import uk.gov.legalservices.enterprise.common._1_0.header.HeaderRSType;
 import uk.gov.legalservices.enterprise.common._1_0.header.Status;
 import uk.gov.legalservices.enterprise.common._1_0.header.StatusTextType;
 
 @ExtendWith(MockitoExtension.class)
 public class ClientDetailsMapperTest {
+
+    @Mock
+    CommonMapper commonMapper;
 
     @InjectMocks
     ClientDetailsMapperImpl clientDetailsMapper;
@@ -171,50 +174,14 @@ public class ClientDetailsMapperTest {
         personalDetails.setNINumber("AB123456C");
         clientDetails.setPersonalInformation(personalDetails);
 
+        when(commonMapper.toAddressDetail(address)).thenReturn(new AddressDetail());
+
         ClientDetailDetails result = clientDetailsMapper.toClientDetailDetails(clientDetails);
 
         assertNotNull(result);
         assertNotNull(result.getAddress());
-        assertEquals("12345", result.getAddress().getAddressId());
         assertNotNull(result.getPersonalInformation());
         assertEquals("AB123456C", result.getPersonalInformation().getNationalInsuranceNumber());
-    }
-
-    @Test
-    public void testToClientDetailDetailsAddress() {
-        Address address = new Address();
-        address.setAddressID("12345");
-        address.setHouse("123 Main St");
-        address.setCity("London");
-        address.setCountry("UK");
-        address.setPostalCode("N1 1AA");
-
-        AddressDetail result = clientDetailsMapper.toAddressDetail(address);
-
-        assertNotNull(result);
-        assertEquals("12345", result.getAddressId());
-        assertEquals("123 Main St", result.getHouse());
-        assertEquals("London", result.getCity());
-        assertEquals("UK", result.getCountry());
-        assertEquals("N1 1AA", result.getPostalCode());
-    }
-
-    @Test
-    public void testToClientDetailRecordHistory() {
-        RecordHistory recordHistory = new RecordHistory();
-        User createdUser = new User();
-        createdUser.setUserLoginID("createdUser");
-        recordHistory.setCreatedBy(createdUser);
-
-        User updatedUser = new User();
-        updatedUser.setUserLoginID("updatedUser");
-        recordHistory.setLastUpdatedBy(updatedUser);
-
-        uk.gov.laa.ccms.soa.gateway.model.RecordHistory result = clientDetailsMapper.toClientDetailRecordHistory(recordHistory);
-
-        assertNotNull(result);
-        assertEquals("createdUser", result.getCreatedBy().getUserLoginId());
-        assertEquals("updatedUser", result.getLastUpdatedBy().getUserLoginId());
     }
 
     @Test
@@ -230,6 +197,9 @@ public class ClientDetailsMapperTest {
         RecordHistory recordHistory = new RecordHistory();
         client.setRecordHistory(recordHistory);
         clientInqRS.setClient(client);
+
+        when(commonMapper.toRecordHistory(recordHistory))
+            .thenReturn(new uk.gov.laa.ccms.soa.gateway.model.RecordHistory());
 
         ClientDetail result = clientDetailsMapper.toClientDetail(clientInqRS);
 
@@ -265,19 +235,6 @@ public class ClientDetailsMapperTest {
         assertNotNull(result);
         assertEquals("123456", result.getTelephoneHome());
         assertEquals("john@doe.com", result.getEmailAddress());
-    }
-
-    @Test
-    public void testUserToUserDetail() {
-        User user = new User();
-        user.setUserLoginID("userID");
-        user.setUserName("username");
-
-        UserDetail result = clientDetailsMapper.toUserDetail(user);
-
-        assertNotNull(result);
-        assertEquals("userID", result.getUserLoginId());
-        assertEquals("username", result.getUserName());
     }
 
     @Test
@@ -348,39 +305,7 @@ public class ClientDetailsMapperTest {
         assertTrue(personalDetails.isMentalCapacityInd());
     }
 
-    @Test
-    public void whenAddressDetailIsNotNull_ReturnAddress() {
-        AddressDetail addressDetail = new AddressDetail();
-        addressDetail.setAddressId("Id");
-        addressDetail.setCareOfName("John Doe");
-        addressDetail.setHouse("100");
-        addressDetail.setAddressLine1("Street 1");
-        addressDetail.setAddressLine2("Street 2");
-        addressDetail.setAddressLine3("Street 3");
-        addressDetail.setAddressLine4("Street 4");
-        addressDetail.setCity("City");
-        addressDetail.setCountry("Country");
-        addressDetail.setCounty("County");
-        addressDetail.setState("State");
-        addressDetail.setProvince("Province");
-        addressDetail.setPostalCode("12345");
 
-        Address address = clientDetailsMapper.toAddress(addressDetail);
-        assertNotNull(address);
-        assertEquals("Id", address.getAddressID());
-        assertEquals("John Doe", address.getCoffName());
-        assertEquals("100", address.getHouse());
-        assertEquals("Street 1", address.getAddressLine1());
-        assertEquals("Street 2", address.getAddressLine2());
-        assertEquals("Street 3", address.getAddressLine3());
-        assertEquals("Street 4", address.getAddressLine4());
-        assertEquals("City", address.getCity());
-        assertEquals("Country", address.getCountry());
-        assertEquals("County", address.getCounty());
-        assertEquals("State", address.getState());
-        assertEquals("Province", address.getProvince());
-        assertEquals("12345", address.getPostalCode());
-    }
 
     @Test
     public void whenNameDetailIsNull_ReturnsNull() {
@@ -406,11 +331,6 @@ public class ClientDetailsMapperTest {
         assertEquals("Middle", name.getMiddleName());
         assertEquals("Smith", name.getSurnameAtBirth());
         assertEquals("Mr. John Middle Doe", name.getFullName());
-    }
-
-    @Test
-    public void whenAddressDetailIsNull_ReturnNull() {
-        assertNull(clientDetailsMapper.toAddress(null));
     }
 
     @Test
@@ -488,7 +408,11 @@ public class ClientDetailsMapperTest {
         clientDetailDetails.setEthnicMonitoring("SomeValue");
         clientDetailDetails.setSpecialConsiderations("Some considerations");
 
-        uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientDetails result = clientDetailsMapper.toSoaClientDetails(clientDetailDetails);
+        when(commonMapper.toAddress(clientDetailDetails.getAddress()))
+            .thenReturn(new Address());
+
+        uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientDetails result =
+            clientDetailsMapper.toSoaClientDetails(clientDetailDetails);
 
         assertNotNull(result);
         // Validate each field (based on mock data):

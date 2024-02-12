@@ -87,6 +87,39 @@ class CommonOrgClientTest {
         assertNotNull(response);
     }
 
+    @Test
+    public void testGetOrganisationBuildsCorrectRequest() {
+        ObjectFactory objectFactory = new ObjectFactory();
+
+        // Mock the response of the WebServiceTemplate
+        when(webServiceTemplate.marshalSendAndReceive(
+            eq(SERVICE_URL),
+            any(JAXBElement.class),
+            any(SoapActionCallback.class)))
+            .thenReturn(objectFactory.createCommonOrgInqRS(new CommonOrgInqRS()));
+
+        final String partyId = "123";
+
+        CommonOrgInqRS response = client.getOrganisation(
+            SOA_GATEWAY_USER_LOGIN_ID,
+            SOA_GATEWAY_USER_ROLE,
+            MAX_RECORDS,
+            partyId);
+
+        // Verify interactions
+        verify(webServiceTemplate, times(1)).marshalSendAndReceive(
+            eq(SERVICE_URL),
+            requestCaptor.capture(),
+            any(SoapActionCallback.class));
+
+        JAXBElement<CommonOrgInqRQ> payload = requestCaptor.getValue();
+        assertNotNull(payload.getValue().getHeaderRQ().getTimeStamp());
+        assertEquals(SOA_GATEWAY_USER_LOGIN_ID, payload.getValue().getHeaderRQ().getUserLoginID());
+        assertEquals(SOA_GATEWAY_USER_ROLE, payload.getValue().getHeaderRQ().getUserRole());
+        assertEquals(partyId, payload.getValue().getSearchCriteria().getOrganizationPartyID());
+        assertNotNull(response);
+    }
+
     private Organization buildOrganisation(){
         Organization organization = new Organization();
         organization.setOrganizationName("name");

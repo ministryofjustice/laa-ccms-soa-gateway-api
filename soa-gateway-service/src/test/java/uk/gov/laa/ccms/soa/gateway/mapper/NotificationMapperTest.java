@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.time.ZoneId;
@@ -18,6 +19,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -42,6 +44,9 @@ import uk.gov.legalservices.enterprise.common._1_0.common.User;
 
 @ExtendWith(MockitoExtension.class)
 public class NotificationMapperTest {
+
+  @Mock
+  CommonMapper commonMapper;
 
   @InjectMocks
   NotificationMapperImpl notificationMapper;
@@ -239,14 +244,7 @@ public class NotificationMapperTest {
     assertNull(notificationMapper.notesElementTypeListToNoteList(null));
   }
 
-  @Test
-  public void testToDocument() {
-    DocumentElementType documentElementType = getDocumentElementType();
-    Document document = notificationMapper.toDocument(documentElementType);
-    assertEquals("1234", document.getDocumentId());
-    assertEquals("sausage", document.getDocumentType());
-    assertEquals("doc", document.getFileExtension());
-  }
+
 
   @Test
   public void testToNoteReturnsNullWithNullNotes() {
@@ -256,28 +254,18 @@ public class NotificationMapperTest {
   @Test
   public void testDocumentElementTypeListToDocumentListSuccess() {
     List<DocumentElementType> docs = new ArrayList<>();
-    docs.add(getDocumentElementType());
+    DocumentElementType documentElementType = getDocumentElementType();
+    docs.add(documentElementType);
+
+    when(commonMapper.toDocument(documentElementType))
+        .thenReturn(new Document());
+
     List<Document> transformedDocs = notificationMapper.documentElementTypeListToDocumentList(docs);
     assertEquals(1, transformedDocs.size());
+    assertNotNull(transformedDocs.get(0));
   }
 
-  @Test
-  public void testNullDocType() {
-    assertNull(notificationMapper.toDocument(null));
-  }
 
-  @Test
-  public void testDocWithNullBinData() {
-    DocumentElementType documentElementType = new DocumentElementType();
-    documentElementType.setDocumentID("1234");
-    documentElementType.setDocumentType("sausage");
-    documentElementType.setFileExtension("doc");
-    Document document = notificationMapper.toDocument(documentElementType);
-    assertEquals("1234", document.getDocumentId());
-    assertEquals("sausage", document.getDocumentType());
-    assertEquals("doc", document.getFileExtension());
-    assertNull(document.getBinData());
-  }
 
   private NotificationListElementType getNotificationListElementType() {
     NotificationListElementType listElementType = new NotificationListElementType();

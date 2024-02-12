@@ -16,8 +16,9 @@ import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ws.client.WebServiceIOException;
-import uk.gov.laa.ccms.soa.gateway.model.Organisation;
+import uk.gov.laa.ccms.soa.gateway.model.OrganisationDetail;
 import uk.gov.laa.ccms.soa.gateway.model.OrganisationDetails;
+import uk.gov.laa.ccms.soa.gateway.model.OrganisationSummary;
 import uk.gov.laa.ccms.soa.gateway.service.OrganisationService;
 
 @ExtendWith(MockitoExtension.class)
@@ -60,13 +61,13 @@ public class OrganisationControllerTest {
     }
 
     @Test
-    public void testGetClients_Success() throws Exception {
+    public void testGetOrganisations_Success() throws Exception {
         // Create a mock organisation details response
         OrganisationDetails organisationDetails = new OrganisationDetails();
 
-        Organisation organisation = buildOrganisation();
+        OrganisationSummary organisation = buildOrganisation();
 
-        // Stub the clientDetailsService to return the mock response
+        // Stub the organisationService to return the mock response
         when(organisationService.getOrganisations(
             soaGatewayUserLoginId,
             soaGatewayUserRole,
@@ -94,10 +95,10 @@ public class OrganisationControllerTest {
     }
 
     @Test
-    public void testGetClients_Exception() throws Exception {
-        Organisation organisation = buildOrganisation();
+    public void testGetOrganisations_Exception() throws Exception {
+        OrganisationSummary organisation = buildOrganisation();
 
-        // Stub the clientDetailsService to throw an exception
+        // Stub the organisationService to throw an exception
         when(organisationService.getOrganisations(
             soaGatewayUserLoginId,
             soaGatewayUserRole,
@@ -124,8 +125,59 @@ public class OrganisationControllerTest {
             soaGatewayUserRole, maxRecords, organisation, pageable);
     }
 
-    private Organisation buildOrganisation(){
-        Organisation organisation = new Organisation();
+    @Test
+    public void testGetOrganisation_Success() throws Exception {
+        // Create a mock organisation detail response
+        OrganisationDetail organisationDetail = new OrganisationDetail();
+
+        String partyId = "123";
+
+        // Stub the clientDetailsService to return the mock response
+        when(organisationService.getOrganisation(
+            soaGatewayUserLoginId,
+            soaGatewayUserRole,
+            maxRecords,
+            partyId))
+            .thenReturn(organisationDetail);
+
+        mockMvc.perform(
+                get("/organisation/{org-party-id}?max-records={maxRecords}",
+                    partyId,
+                    maxRecords)
+                    .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
+                    .header("SoaGateway-User-Role", soaGatewayUserRole))
+            .andExpect(status().isOk());
+
+        verify(organisationService).getOrganisation(soaGatewayUserLoginId,
+            soaGatewayUserRole, maxRecords, partyId);
+    }
+
+    @Test
+    public void testGetOrganisation_Exception() throws Exception {
+        String partyId = "123";
+
+        // Stub the organisationService to throw an exception
+        when(organisationService.getOrganisation(
+            soaGatewayUserLoginId,
+            soaGatewayUserRole,
+            maxRecords,
+            partyId))
+            .thenThrow(new WebServiceIOException("Test exception"));
+
+        mockMvc.perform(
+                get("/organisation/{org-party-id}?max-records={maxRecords}",
+                    partyId,
+                    maxRecords)
+                    .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
+                    .header("SoaGateway-User-Role", soaGatewayUserRole))
+            .andExpect(status().isInternalServerError());
+
+        verify(organisationService).getOrganisation(soaGatewayUserLoginId,
+            soaGatewayUserRole, maxRecords, partyId);
+    }
+
+    private OrganisationSummary buildOrganisation(){
+        OrganisationSummary organisation = new OrganisationSummary();
         organisation.setName(name);
         organisation.setType(type);
         organisation.setCity(city);

@@ -16,10 +16,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import uk.gov.laa.ccms.soa.gateway.client.CommonOrgClient;
 import uk.gov.laa.ccms.soa.gateway.mapper.OrganisationMapper;
-import uk.gov.laa.ccms.soa.gateway.model.Organisation;
+import uk.gov.laa.ccms.soa.gateway.model.OrganisationDetail;
 import uk.gov.laa.ccms.soa.gateway.model.OrganisationDetails;
+import uk.gov.laa.ccms.soa.gateway.model.OrganisationSummary;
 import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabim.CommonOrgInqRQ.SearchCriteria.Organization;
 import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabim.CommonOrgInqRS;
+import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabio.OrganizationPartyType;
 
 @ExtendWith(MockitoExtension.class)
 public class OrganisationServiceTest {
@@ -50,7 +52,7 @@ public class OrganisationServiceTest {
 
     @Test
     public void testGetOrganisations() {
-        Organisation searchOrganisation = new Organisation();
+        OrganisationSummary searchOrganisation = new OrganisationSummary();
         Organization organization = buildOrganization();
         OrganisationDetails expectedResponse = new OrganisationDetails();
 
@@ -60,7 +62,7 @@ public class OrganisationServiceTest {
             soaGatewayUserLoginId, soaGatewayUserRole, maxRecords, organization))
             .thenReturn(new CommonOrgInqRS());
 
-        when(organisationMapper.toOrganisationList(any(CommonOrgInqRS.class)))
+        when(organisationMapper.toOrganisationSummaryList(any(CommonOrgInqRS.class)))
             .thenReturn(List.of(searchOrganisation));
 
         when(organisationMapper.toOrganisationDetails(any(Page.class))).thenReturn(
@@ -72,6 +74,32 @@ public class OrganisationServiceTest {
             maxRecords,
             searchOrganisation,
             pageable);
+
+
+        assertNotNull(result);
+        assertEquals(expectedResponse, result);
+    }
+
+    @Test
+    public void testGetOrganisation() {
+        String partyId = "123";
+        OrganisationDetail expectedResponse = new OrganisationDetail();
+
+        CommonOrgInqRS commonOrgInqRS = new CommonOrgInqRS();
+        commonOrgInqRS.setOrganization(new OrganizationPartyType());
+
+        when(commonOrgClient.getOrganisation(
+            soaGatewayUserLoginId, soaGatewayUserRole, maxRecords, partyId))
+            .thenReturn(commonOrgInqRS);
+
+        when(organisationMapper.toOrganisationDetail(commonOrgInqRS.getOrganization()))
+            .thenReturn(expectedResponse);
+
+        OrganisationDetail result = organisationService.getOrganisation(
+            soaGatewayUserLoginId,
+            soaGatewayUserRole,
+            maxRecords,
+            partyId);
 
 
         assertNotNull(result);

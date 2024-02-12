@@ -71,6 +71,34 @@ public class CommonOrgClient extends AbstractSoaClient {
     return getCommonOrgInqRs(maxRecords, soapAction, commonOrgInqRq, searchCriteria);
   }
 
+  /**
+   * Retrieve the full details of an organisation based on its partyId.
+   *
+   * @param loggedInUserId      The logged-in user ID.
+   * @param loggedInUserType    The type of the logged-in user.
+   * @param maxRecords          Maximum number of records to fetch.
+   * @param partyId             The organisation party id.
+   * @return CommonOrgInqRS     Response containing organisation details.
+   */
+  public CommonOrgInqRS getOrganisation(
+      final String loggedInUserId,
+      final String loggedInUserType,
+      final Integer maxRecords,
+      final String partyId
+  ) {
+
+    final String soapAction = String.format("%s/GetCommonOrg", serviceName);
+    CommonOrgInqRQ commonOrgInqRq = COMMONORG_FACTORY.createCommonOrgInqRQ();
+    commonOrgInqRq.setHeaderRQ(createHeaderRq(loggedInUserId, loggedInUserType));
+
+    CommonOrgInqRQ.SearchCriteria searchCriteria = COMMONORG_FACTORY
+        .createCommonOrgInqRQSearchCriteria();
+
+    searchCriteria.setOrganizationPartyID(partyId);
+
+    return getCommonOrgInqRs(maxRecords, soapAction, commonOrgInqRq, searchCriteria);
+  }
+
   private CommonOrgInqRS getCommonOrgInqRs(
           Integer maxRecords,
           String soapAction,
