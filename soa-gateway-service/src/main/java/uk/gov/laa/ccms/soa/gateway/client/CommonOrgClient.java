@@ -77,15 +77,14 @@ public class CommonOrgClient extends AbstractSoaClient {
    * @param loggedInUserId      The logged-in user ID.
    * @param loggedInUserType    The type of the logged-in user.
    * @param maxRecords          Maximum number of records to fetch.
-   * @param partyId             The organisation party id.
+   * @param organisationId      The organisation party id.
    * @return CommonOrgInqRS     Response containing organisation details.
    */
   public CommonOrgInqRS getOrganisation(
       final String loggedInUserId,
       final String loggedInUserType,
       final Integer maxRecords,
-      final String partyId
-  ) {
+      final String organisationId) {
 
     final String soapAction = String.format("%s/GetCommonOrg", serviceName);
     CommonOrgInqRQ commonOrgInqRq = COMMONORG_FACTORY.createCommonOrgInqRQ();
@@ -94,7 +93,7 @@ public class CommonOrgClient extends AbstractSoaClient {
     CommonOrgInqRQ.SearchCriteria searchCriteria = COMMONORG_FACTORY
         .createCommonOrgInqRQSearchCriteria();
 
-    searchCriteria.setOrganizationPartyID(partyId);
+    searchCriteria.setOrganizationPartyID(organisationId);
 
     return getCommonOrgInqRs(maxRecords, soapAction, commonOrgInqRq, searchCriteria);
   }
@@ -113,7 +112,6 @@ public class CommonOrgClient extends AbstractSoaClient {
                             serviceUrl,
                             COMMONORG_FACTORY.createCommonOrgInqRQ(commonOrgInqRq),
                             new SoapActionCallback(soapAction));
-
 
     // Check and throw exception if the SOA call was not successful
     checkSoaCallSuccess(serviceName, response.getValue().getHeaderRS());

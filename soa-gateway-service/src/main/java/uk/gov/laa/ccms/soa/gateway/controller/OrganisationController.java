@@ -71,9 +71,9 @@ public class OrganisationController implements OrganisationsApi {
   }
 
   /**
-   * GET the full details for an organisation based on its party id.
+   * GET the full details for an organisation based on its id.
    *
-   * @param orgPartyId  (required) - the party id for the organisation.
+   * @param organisationId  (required) - the id for the organisation.
    * @param soaGatewayUserLoginId  (required) - the user requesting the data.
    * @param soaGatewayUserRole  (required) - the user role requesting the data.
    * @param maxRecords  (optional, default to 100) - the maximum records to query.
@@ -81,7 +81,7 @@ public class OrganisationController implements OrganisationsApi {
    */
   @Override
   public ResponseEntity<OrganisationDetail> getOrganisation(
-      final String orgPartyId,
+      final String organisationId,
       final String soaGatewayUserLoginId,
       final String soaGatewayUserRole,
       final Integer maxRecords) {
@@ -90,7 +90,7 @@ public class OrganisationController implements OrganisationsApi {
           soaGatewayUserLoginId,
           soaGatewayUserRole,
           maxRecords,
-          orgPartyId);
+          organisationId);
 
       return ResponseEntity.ok(organisationDetail);
     } catch (Exception e) {

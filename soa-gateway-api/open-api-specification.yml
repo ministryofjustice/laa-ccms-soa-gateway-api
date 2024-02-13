@@ -534,7 +534,7 @@ paths:
           description: 'Not found'
         '500':
           description: 'Internal server error'
-  /organisation/{org-party-id}:
+  /organisation/{organisation-id}:
     get:
       tags:
         - organisations
@@ -542,7 +542,7 @@ paths:
       operationId: 'getOrganisation'
       x-spring-paginated: false
       parameters:
-        - name: 'org-party-id'
+        - name: 'organisation-id'
           in: 'path'
           required: true
           schema:

@@ -83,14 +83,14 @@ public class OrganisationService extends AbstractSoaService {
    * @param soaGatewayUserLoginId The user login ID for the SOA Gateway.
    * @param soaGatewayUserRole    The user role in the SOA Gateway.
    * @param maxRecords            The maximum number of records to retrieve.
-   * @param partyId               The organisation party id.
+   * @param organisationId        The organisation id.
    * @return An {@link OrganisationDetail} object containing the retrieved organisation detail.
    */
   public OrganisationDetail getOrganisation(
       final String soaGatewayUserLoginId,
       final String soaGatewayUserRole,
       final Integer maxRecords,
-      final String partyId
+      final String organisationId
   ) {
     log.info("OrganisationService - getOrganisation");
 
@@ -98,7 +98,7 @@ public class OrganisationService extends AbstractSoaService {
         soaGatewayUserLoginId,
         soaGatewayUserRole,
         maxRecords,
-        partyId);
+        organisationId);
 
     return organisationMapper.toOrganisationDetail(response.getOrganization());
   }
