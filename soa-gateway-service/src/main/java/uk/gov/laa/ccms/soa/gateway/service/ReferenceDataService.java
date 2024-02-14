@@ -3,7 +3,7 @@ package uk.gov.laa.ccms.soa.gateway.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uk.gov.laa.ccms.soa.gateway.client.ReferenceDataClient;
-import uk.gov.laa.ccms.soa.gateway.mapper.ReferenceDataMapper;
+import uk.gov.laa.ccms.soa.gateway.mapper.CommonMapper;
 import uk.gov.laa.ccms.soa.gateway.model.CaseReferenceSummary;
 import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabim.ReferenceDataInqRS;
 
@@ -12,7 +12,7 @@ import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabim.Refe
  *
  * <p>This service interfaces with the external Reference Data system through
  * {@link ReferenceDataClient} and converts the results into a structured form using
- * {@link ReferenceDataMapper}. Its primary responsibility is to fetch
+ * {@link CommonMapper}. Its primary responsibility is to fetch
  * case reference summaries based on SOA Gateway user credentials.</p>
  */
 @Service
@@ -21,7 +21,7 @@ public class ReferenceDataService {
 
   private final ReferenceDataClient referenceDataClient;
 
-  private final ReferenceDataMapper referenceDataMapper;
+  private final CommonMapper commonMapper;
 
   /**
    * Retrieves a summary of case references based on SOA Gateway user credentials.
@@ -41,7 +41,7 @@ public class ReferenceDataService {
             soaGatewayUserLoginId,
             soaGatewayUserRole);
 
-    return referenceDataMapper.toCaseReferenceSummary(response);
+    return commonMapper.toCaseReferenceSummary(response);
   }
 
 
