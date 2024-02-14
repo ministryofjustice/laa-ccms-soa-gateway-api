@@ -7,19 +7,15 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.springframework.data.domain.Page;
-import uk.gov.laa.ccms.soa.gateway.model.Document;
 import uk.gov.laa.ccms.soa.gateway.model.Note;
 import uk.gov.laa.ccms.soa.gateway.model.Notification;
 import uk.gov.laa.ccms.soa.gateway.model.NotificationSummary;
 import uk.gov.laa.ccms.soa.gateway.model.Notifications;
-import uk.gov.laa.ccms.soa.gateway.model.UserDetail;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationCntInqRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationInqRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.NotesElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.NotificationCntList;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.NotificationListElementType;
-import uk.gov.legalservices.enterprise.common._1_0.common.DocumentElementType;
-import uk.gov.legalservices.enterprise.common._1_0.common.User;
 
 /**
  * Mapper for transforming data related to notifications.
@@ -28,7 +24,7 @@ import uk.gov.legalservices.enterprise.common._1_0.common.User;
  * data model and the internal SoA gateway's {@link NotificationSummary} and {@link Notification}
  * models.</p>
  */
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = CommonMapper.class)
 public interface NotificationMapper {
 
   /**
@@ -153,14 +149,10 @@ public interface NotificationMapper {
   @Mapping(target = "providerFirmId", source = "notification.providerFirmID")
   Notification toNotification(NotificationListElementType notificationListElementType);
 
-  @Mapping(target = "documentId", source = "documentID")
-  Document toDocument(DocumentElementType documentElementType);
 
   @Mapping(target = "notesId", source = "notesID")
   Note toNote(NotesElementType notesElementType);
 
-  @Mapping(target = "userLoginId", source = "userLoginID")
-  UserDetail toUserDetail(User user);
 
 
 }

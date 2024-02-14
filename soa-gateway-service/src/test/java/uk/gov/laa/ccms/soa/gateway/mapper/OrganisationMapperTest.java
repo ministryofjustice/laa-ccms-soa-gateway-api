@@ -2,23 +2,28 @@ package uk.gov.laa.ccms.soa.gateway.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.when;
 
 import java.util.List;
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import uk.gov.laa.ccms.soa.gateway.model.Organisation;
+import uk.gov.laa.ccms.soa.gateway.model.AddressDetail;
+import uk.gov.laa.ccms.soa.gateway.model.BaseContact;
+import uk.gov.laa.ccms.soa.gateway.model.OrganisationDetail;
 import uk.gov.laa.ccms.soa.gateway.model.OrganisationDetails;
+import uk.gov.laa.ccms.soa.gateway.model.OrganisationSummary;
 import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabim.CommonOrgInqRQ.SearchCriteria.Organization;
 import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabim.CommonOrgInqRS;
 import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabim.CommonOrgInqRS.OrganizationList;
+import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabio.OrganizationPartyType;
+import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabio.OrganizationPartyType.ContactDetails;
+import uk.gov.legalservices.enterprise.common._1_0.common.Address;
 
 @ExtendWith(MockitoExtension.class)
 public class OrganisationMapperTest {
@@ -28,20 +33,18 @@ public class OrganisationMapperTest {
   public static final String ORGPARTYID = "orgpartyid";
   public static final String ORGCITY = "orgcity";
   public static final String ORGPOSTCODE = "orgpostcode";
-  private static DatatypeFactory datatypeFactory;
+
+  @Mock
+  CommonMapper commonMapper;
+
   @InjectMocks
   OrganisationMapperImpl organisationMapper;
-
-  @BeforeAll
-  public static void setUp() throws DatatypeConfigurationException {
-    datatypeFactory = DatatypeFactory.newInstance();
-  }
 
   @Test
   public void testToOrganisation() {
     OrganizationList soaOrganization = buildOrganizationList();
 
-    Organisation result = organisationMapper.toOrganisation(soaOrganization);
+    OrganisationSummary result = organisationMapper.toOrganisationSummary(soaOrganization);
 
     assertNotNull(result);
     assertEquals(soaOrganization.getOrganizationName(), result.getName());
@@ -53,7 +56,7 @@ public class OrganisationMapperTest {
 
   @Test
   public void testToOrganization() {
-    Organisation organisation = buildOrganisation();
+    OrganisationSummary organisation = buildOrganisation();
 
     Organization result = organisationMapper.toOrganization(organisation);
 
@@ -71,7 +74,7 @@ public class OrganisationMapperTest {
     CommonOrgInqRS commonOrgInqRs = new CommonOrgInqRS();
     commonOrgInqRs.getOrganizationList().add(organizationList);
 
-    List<Organisation> result = organisationMapper.toOrganisationList(commonOrgInqRs);
+    List<OrganisationSummary> result = organisationMapper.toOrganisationSummaryList(commonOrgInqRs);
 
     assertNotNull(result);
     assertEquals(1, result.size());
@@ -84,7 +87,7 @@ public class OrganisationMapperTest {
 
   @Test
   public void testToOrganisationDetails() {
-    Page<Organisation> organisationPage = new PageImpl<>(List.of(buildOrganisation()),
+    Page<OrganisationSummary> organisationPage = new PageImpl<>(List.of(buildOrganisation()),
         Pageable.unpaged(), 1);
 
     OrganisationDetails result =
@@ -96,18 +99,52 @@ public class OrganisationMapperTest {
     assertEquals(organisationPage.getContent().get(0), result.getContent().get(0));
   }
 
+  @Test
+  public void testToOrganisationDetail() {
+    OrganizationPartyType organizationPartyType = buildOrganisationPartyType();
+
+    when(commonMapper.toAddressDetail(organizationPartyType.getAddress()))
+        .thenReturn(new AddressDetail());
+
+    OrganisationDetail result =
+        organisationMapper.toOrganisationDetail(organizationPartyType);
+
+    assertNotNull(result);
+    assertEquals(organizationPartyType.getOrganizationName(), result.getName());
+    assertEquals(organizationPartyType.getOrganizationType(), result.getType());
+    assertEquals(organizationPartyType.getOrganizationPartyID(), result.getPartyId());
+    assertEquals(organizationPartyType.getContactName(), result.getContactName());
+    assertNotNull(result.getContactDetails());
+    assertNotNull(result.getAddress());
+    assertEquals(organizationPartyType.getOtherInformation(), result.getOtherInformation());
+  }
+
+  @Test
+  public void testToBaseContact() {
+    ContactDetails contactDetails = buildContactDetails();
+
+    BaseContact result = organisationMapper.toBaseContact(contactDetails);
+
+    assertNotNull(result);
+    assertEquals(contactDetails.getTelephoneHome(), result.getTelephoneHome());
+    assertEquals(contactDetails.getTelephoneWork(), result.getTelephoneWork());
+    assertEquals(contactDetails.getMobileNumber(), result.getMobileNumber());
+    assertEquals(contactDetails.getEmailAddress(), result.getEmailAddress());
+    assertEquals(contactDetails.getFax(), result.getFax());
+  }
+
   private OrganizationList buildOrganizationList() {
     OrganizationList soaOrganization = new OrganizationList();
+    soaOrganization.setOrganizationPartyID(ORGPARTYID);
     soaOrganization.setOrganizationName(ORGNAME);
     soaOrganization.setOrganizationType(ORGTYPE);
-    soaOrganization.setOrganizationPartyID(ORGPARTYID);
     soaOrganization.setCity(ORGCITY);
     soaOrganization.setPostCode(ORGPOSTCODE);
     return soaOrganization;
   }
 
-  private Organisation buildOrganisation(){
-    Organisation organisation = new Organisation();
+  private OrganisationSummary buildOrganisation(){
+    OrganisationSummary organisation = new OrganisationSummary();
     organisation.setPartyId(ORGPARTYID);
     organisation.setName(ORGNAME);
     organisation.setType(ORGTYPE);
@@ -116,4 +153,43 @@ public class OrganisationMapperTest {
     return organisation;
   }
 
+  private OrganizationPartyType buildOrganisationPartyType(){
+    OrganizationPartyType organizationPartyType = new OrganizationPartyType();
+    organizationPartyType.setOrganizationPartyID(ORGPARTYID);
+    organizationPartyType.setOrganizationName(ORGNAME);
+    organizationPartyType.setOrganizationType(ORGTYPE);
+    organizationPartyType.setAddress(buildAddress());
+    organizationPartyType.setContactDetails(buildContactDetails());
+    return organizationPartyType;
+  }
+
+  private Address buildAddress() {
+    Address address = new Address();
+    address.setAddressID("addid");
+    address.setAddressLine1("addline1");
+    address.setAddressLine2("addline2");
+    address.setAddressLine3("addline3");
+    address.setAddressLine4("addline4");
+    address.setCity("city");
+    address.setCoffName("careof");
+    address.setCountry("country");
+    address.setCounty("county");
+    address.setHouse("house");
+    address.setPostalCode("postcode");
+    address.setProvince("province");
+    address.setState("state");
+
+    return address;
+  }
+
+  private ContactDetails buildContactDetails() {
+    ContactDetails contactDetails = new ContactDetails();
+    contactDetails.setFax("faxnum");
+    contactDetails.setEmailAddress("email");
+    contactDetails.setMobileNumber("mobile");
+    contactDetails.setTelephoneHome("telhome");
+    contactDetails.setTelephoneWork("telwork");
+
+    return contactDetails;
+  }
 }

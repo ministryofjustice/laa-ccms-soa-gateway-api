@@ -6,20 +6,17 @@ import java.util.List;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.XMLGregorianCalendar;
 import org.mapstruct.BeforeMapping;
-import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 import org.springframework.data.domain.Page;
-import uk.gov.laa.ccms.soa.gateway.model.AddressDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetails;
 import uk.gov.laa.ccms.soa.gateway.model.ClientPersonalDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ClientSummary;
 import uk.gov.laa.ccms.soa.gateway.model.TransactionStatus;
-import uk.gov.laa.ccms.soa.gateway.model.UserDetail;
 import uk.gov.laa.ccms.soa.gateway.util.DateUtil;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientAddUpdtStatusRS;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientInqRS;
@@ -27,14 +24,11 @@ import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientUp
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientInfo;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientList;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.PersonalDetails;
-import uk.gov.legalservices.enterprise.common._1_0.common.Address;
-import uk.gov.legalservices.enterprise.common._1_0.common.RecordHistory;
-import uk.gov.legalservices.enterprise.common._1_0.common.User;
 
 /**
  * Mapper interface responsible for transforming client data between different representations.
  */
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = CommonMapper.class)
 public interface ClientDetailsMapper {
 
   @Mapping(target = ".", source = "client")
@@ -83,22 +77,12 @@ public interface ClientDetailsMapper {
       uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientDetails
           clientDetails);
 
-  @Mapping(target = "addressId", source = "addressID")
-  @Mapping(target = "careOfName", source = "coffName")
-  AddressDetail toAddressDetail(Address address);
-
-  uk.gov.laa.ccms.soa.gateway.model.RecordHistory toClientDetailRecordHistory(
-      RecordHistory recordHistory);
-
   // Now, the modified toClientDetail method will use the above method to map the
   // 'personalInformation' fields
   @Mapping(target = ".", source = "client")
   @Mapping(target = "details", source = "client.details")
   @Mapping(target = "recordHistory", source = "client.recordHistory")
   ClientDetail toClientDetail(ClientInqRS clientInqRs);
-
-  @InheritInverseConfiguration
-  Address toAddress(AddressDetail address);
 
   uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientDetails
       toSoaClientDetails(ClientDetailDetails clientDetailDetails);
@@ -187,11 +171,5 @@ public interface ClientDetailsMapper {
   @Mapping(target = "recordHistory", ignore = true)
   void addClientPersonalDetailToClientUpdateRq(
       @MappingTarget ClientUpdateRQ clientUpdateRq, ClientPersonalDetail personalInformation);
-
-  @Mapping(target = "userLoginId", source = "userLoginID")
-  UserDetail toUserDetail(User user);
-
-
-
 
 }

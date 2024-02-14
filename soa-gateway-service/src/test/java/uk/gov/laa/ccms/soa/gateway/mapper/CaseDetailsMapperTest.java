@@ -2,9 +2,13 @@ package uk.gov.laa.ccms.soa.gateway.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.when;
+import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildAddress;
+import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildAssesmentResultType;
+import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildRecordHistory;
+import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildUser;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.Collections;
 import java.util.List;
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -13,14 +17,13 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import uk.gov.laa.ccms.soa.gateway.model.AddressDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ApplicationDetails;
-import uk.gov.laa.ccms.soa.gateway.model.AssessmentResult;
-import uk.gov.laa.ccms.soa.gateway.model.AssessmentScreen;
 import uk.gov.laa.ccms.soa.gateway.model.Award;
 import uk.gov.laa.ccms.soa.gateway.model.BaseClient;
 import uk.gov.laa.ccms.soa.gateway.model.CaseDetail;
@@ -37,10 +40,6 @@ import uk.gov.laa.ccms.soa.gateway.model.LandAward;
 import uk.gov.laa.ccms.soa.gateway.model.LarDetails;
 import uk.gov.laa.ccms.soa.gateway.model.LinkedCase;
 import uk.gov.laa.ccms.soa.gateway.model.NameDetail;
-import uk.gov.laa.ccms.soa.gateway.model.OpaAttribute;
-import uk.gov.laa.ccms.soa.gateway.model.OpaEntity;
-import uk.gov.laa.ccms.soa.gateway.model.OpaGoal;
-import uk.gov.laa.ccms.soa.gateway.model.OpaInstance;
 import uk.gov.laa.ccms.soa.gateway.model.OtherAsset;
 import uk.gov.laa.ccms.soa.gateway.model.OtherParty;
 import uk.gov.laa.ccms.soa.gateway.model.OtherPartyOrganisation;
@@ -49,7 +48,6 @@ import uk.gov.laa.ccms.soa.gateway.model.OutcomeDetail;
 import uk.gov.laa.ccms.soa.gateway.model.PriorAuthority;
 import uk.gov.laa.ccms.soa.gateway.model.ProceedingDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ProviderDetail;
-import uk.gov.laa.ccms.soa.gateway.model.RecordHistory;
 import uk.gov.laa.ccms.soa.gateway.model.Recovery;
 import uk.gov.laa.ccms.soa.gateway.model.RecoveryAmount;
 import uk.gov.laa.ccms.soa.gateway.model.ScopeLimitation;
@@ -113,17 +111,7 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ScopeLimitati
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ServiceAddrElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.TimeRelatedElementType;
 import uk.gov.legalservices.enterprise.common._1_0.common.Address;
-import uk.gov.legalservices.enterprise.common._1_0.common.AssesmentResultType;
-import uk.gov.legalservices.enterprise.common._1_0.common.AssessmentDetailType;
-import uk.gov.legalservices.enterprise.common._1_0.common.AssessmentScreenType;
 import uk.gov.legalservices.enterprise.common._1_0.common.Name;
-import uk.gov.legalservices.enterprise.common._1_0.common.OPAAttributesType;
-import uk.gov.legalservices.enterprise.common._1_0.common.OPAEntityType;
-import uk.gov.legalservices.enterprise.common._1_0.common.OPAGoalType;
-import uk.gov.legalservices.enterprise.common._1_0.common.OPAInstanceType;
-import uk.gov.legalservices.enterprise.common._1_0.common.OPAInstanceType.Attributes;
-import uk.gov.legalservices.enterprise.common._1_0.common.OPAResultType;
-import uk.gov.legalservices.enterprise.common._1_0.common.User;
 import uk.gov.legalservices.enterprise.common._1_0.header.HeaderRSType;
 import uk.gov.legalservices.enterprise.common._1_0.header.Status;
 import uk.gov.legalservices.enterprise.common._1_0.header.StatusTextType;
@@ -132,6 +120,10 @@ import uk.gov.legalservices.enterprise.common._1_0.header.StatusTextType;
 public class CaseDetailsMapperTest {
 
   private static DatatypeFactory datatypeFactory;
+
+  @Mock
+  CommonMapper commonMapper;
+
   @InjectMocks
   CaseDetailsMapperImpl caseDetailsMapper;
 
@@ -172,18 +164,6 @@ public class CaseDetailsMapperTest {
   }
 
   @Test
-  public void testToUserDetail() {
-    User user = buildUser();
-
-    UserDetail result = caseDetailsMapper.toUserDetail(user);
-
-    assertNotNull(result);
-    assertEquals(user.getUserLoginID(), result.getUserLoginId());
-    assertEquals(user.getUserName(), result.getUserName());
-    assertEquals(user.getUserType(), result.getUserType());
-  }
-
-  @Test
   public void testToContactDetail() {
     ContactDetails contactDetails = buildContactDetails();
 
@@ -201,12 +181,15 @@ public class CaseDetailsMapperTest {
   public void testToOtherPartyPerson() {
     OtherPartyPersonType otherPartyPersonType = buildOtherPartyPersonType();
 
+    when(commonMapper.toAddressDetail(otherPartyPersonType.getAddress())).thenReturn(
+        new AddressDetail());
+
     OtherPartyPerson result = caseDetailsMapper.toOtherPartyPerson(otherPartyPersonType);
     assertNotNull(result);
     assertEquals(otherPartyPersonType.getAssessedIncomeFrequency(),
         result.getAssessedIncomeFrequency());
 
-    compareAddress(otherPartyPersonType.getAddress(), result.getAddress());
+    assertNotNull(result.getAddress());
 
     compareContactDetails(otherPartyPersonType.getContactDetails(), result.getContactDetails());
 
@@ -229,24 +212,6 @@ public class CaseDetailsMapperTest {
     assertEquals(otherPartyPersonType.getOrganizationAddress(), result.getOrganizationAddress());
     assertEquals(otherPartyPersonType.getRelationToCase(), result.getRelationToCase());
     assertEquals(otherPartyPersonType.getRelationToClient(), result.getRelationToClient());
-  }
-
-  @Test
-  public void testToOpaInstance() {
-    OPAInstanceType opaInstanceType = buildOpaInstanceType();
-
-    OpaInstance result = caseDetailsMapper.toOpaInstance(opaInstanceType);
-    assertNotNull(result);
-    assertEquals(opaInstanceType.getInstanceLabel(), result.getInstanceLabel());
-    assertEquals(opaInstanceType.getCaption(), result.getCaption());
-
-    OPAAttributesType opaAttributesType = opaInstanceType.getAttributes().getAttribute().get(0);
-    OpaAttribute opaAttribute = result.getAttributes().get(0);
-    assertEquals(opaAttributesType.getAttribute(), opaAttribute.getAttribute());
-    assertEquals(opaAttributesType.getCaption(), opaAttribute.getCaption());
-    assertEquals(opaAttributesType.getResponseType(), opaAttribute.getResponseType());
-    assertEquals(opaAttributesType.getResponseText(), opaAttribute.getResponseText());
-    assertEquals(opaAttributesType.getResponseValue(), opaAttribute.getResponseValue());
   }
 
   @Test
@@ -331,6 +296,9 @@ public class CaseDetailsMapperTest {
   public void testToProviderDetail() {
     ProviderDetails providerDetails = buildProviderDetails();
 
+    when(commonMapper.toUserDetail(providerDetails.getContactUserID()))
+        .thenReturn(new UserDetail());
+
     ProviderDetail result = caseDetailsMapper.toProviderDetail(providerDetails);
     assertNotNull(result);
 
@@ -341,45 +309,22 @@ public class CaseDetailsMapperTest {
     assertEquals(providerDetails.getProviderCaseReferenceNumber(),
         result.getProviderCaseReferenceNumber());
 
-    compareUser(providerDetails.getContactUserID(), result.getContactUserId());
+    assertNotNull(result.getContactUserId());
 
     assertEquals(providerDetails.getFeeEarnerContactID(), result.getFeeEarnerContactId());
     assertEquals(providerDetails.getSupervisorContactID(), result.getSupervisorContactId());
   }
 
   @Test
-  public void testToAssessmentResult() {
-    AssesmentResultType assesmentResultType = buildAssesmentResultType();
-
-    AssessmentResult result = caseDetailsMapper.toAssessmentResult(assesmentResultType);
-
-    assertNotNull(result);
-    assertEquals(assesmentResultType.getAssesmentID(), result.getAssessmentId());
-    assertEquals(assesmentResultType.getDate().toGregorianCalendar().getTime(), result.getDate());
-
-    OPAGoalType opaGoalType = assesmentResultType.getResults().getGoal().get(0);
-    OpaGoal opaGoal = result.getResults().get(0);
-    assertEquals(opaGoalType.getAttribute(), opaGoal.getAttribute());
-    assertEquals(opaGoalType.getAttributeValue(), opaGoal.getAttributeValue());
-
-    AssessmentScreenType assessmentScreenType = assesmentResultType.getAssesmentDetails()
-        .getAssessmentScreens().get(0);
-    AssessmentScreen assessmentScreen = result.getAssessmentDetails().get(0);
-
-    assertEquals(assessmentScreenType.getCaption(), assessmentScreen.getCaption());
-
-    OPAEntityType opaEntityType = assessmentScreenType.getEntity().get(0);
-    OpaEntity opaEntity = assessmentScreen.getEntity().get(0);
-    assertEquals(opaEntityType.getCaption(), opaEntity.getCaption());
-    assertEquals(opaEntityType.getEntityName(), opaEntity.getEntityName());
-    assertEquals(opaEntityType.getSequenceNumber().intValue(), opaEntity.getSequenceNumber());
-
-    // OPAInstanceType compared in separate test.
-  }
-
-  @Test
   public void testToOtherParty() {
     OtherPartyElementType otherPartyElementType = buildOtherPartyElementType();
+
+    when(commonMapper.toAddressDetail(
+        otherPartyElementType.getOtherPartyDetail().getPerson().getAddress()))
+        .thenReturn(new AddressDetail());
+    when(commonMapper.toAddressDetail(
+        otherPartyElementType.getOtherPartyDetail().getOrganization().getAddress()))
+        .thenReturn(new AddressDetail());
 
     OtherParty result = caseDetailsMapper.toOtherParty(otherPartyElementType);
 
@@ -414,7 +359,7 @@ public class CaseDetailsMapperTest {
     assertEquals(otherPartyPersonType.getCertificateNumber(),
         otherPartyPerson.getCertificateNumber());
     compareName(otherPartyPersonType.getName(), otherPartyPerson.getName());
-    compareAddress(otherPartyPersonType.getAddress(), otherPartyPerson.getAddress());
+    assertNotNull(otherPartyPerson.getAddress());
     compareContactDetails(otherPartyPersonType.getContactDetails(),
         otherPartyPerson.getContactDetails());
 
@@ -434,8 +379,7 @@ public class CaseDetailsMapperTest {
         otherPartyOrganisation.getCurrentlyTrading());
     assertEquals(otherPartyOrgType.getRelationToClient(),
         otherPartyOrganisation.getRelationToClient());
-    compareAddress(otherPartyOrgType.getAddress(),
-        otherPartyOrganisation.getAddress());
+    assertNotNull(otherPartyOrganisation.getAddress());
     assertEquals(otherPartyOrgType.getOrganizationName(),
         otherPartyOrganisation.getOrganizationName());
   }
@@ -574,21 +518,6 @@ public class CaseDetailsMapperTest {
     compareServiceAddress(costAwardElementType.getServiceAddress(), result.getServiceAddress());
     assertEquals(costAwardElementType.getLiableParties().getOtherParyID().get(0),
         result.getLiableParties().get(0));
-  }
-
-  @Test
-  public void toRecordHistory() {
-    uk.gov.legalservices.enterprise.common._1_0.common.RecordHistory recordHistory = buildRecordHistory();
-
-    RecordHistory result = caseDetailsMapper.toRecordHistory(recordHistory);
-
-    assertNotNull(result);
-    compareUser(recordHistory.getCreatedBy(), result.getCreatedBy());
-    assertEquals(recordHistory.getDateCreated().toGregorianCalendar().getTime(),
-        result.getDateCreated());
-    compareUser(recordHistory.getLastUpdatedBy(), result.getLastUpdatedBy());
-    assertEquals(recordHistory.getDateLastUpdated().toGregorianCalendar().getTime(),
-        result.getDateLastUpdated());
   }
 
   @Test
@@ -755,14 +684,7 @@ public class CaseDetailsMapperTest {
     compareClients(applicationDetails.getClient(), result.getClient());
   }
 
-  @Test
-  public void testToAddressDetail() {
-    Address address = buildAddress();
 
-    AddressDetail result = caseDetailsMapper.toAddressDetail(address);
-
-    compareAddress(address, result);
-  }
 
   @Test
   void toTransactionStatus() {
@@ -798,13 +720,6 @@ public class CaseDetailsMapperTest {
     compareRecoveryAmount(
         recoveryElementType.getRecoveredAmount().getSolicitor(),
         recovery.getRecoveredAmount().getSolicitor());
-  }
-
-  private void compareUser(User user, UserDetail result) {
-    assertNotNull(result);
-    assertEquals(user.getUserType(), result.getUserType());
-    assertEquals(user.getUserName(), result.getUserName());
-    assertEquals(user.getUserLoginID(), result.getUserLoginId());
   }
 
   private void compareRecoveryAmount(RecoveryAmountElementType recoveryAmountElementType,
@@ -864,23 +779,6 @@ public class CaseDetailsMapperTest {
     assertEquals(client.getSurname(), baseClient.getSurname());
   }
 
-  private void compareAddress(Address address, AddressDetail addressDetail) {
-    assertNotNull(address);
-    assertEquals(address.getAddressID(), addressDetail.getAddressId());
-    assertEquals(address.getHouse(), addressDetail.getHouse());
-    assertEquals(address.getAddressLine1(), addressDetail.getAddressLine1());
-    assertEquals(address.getAddressLine2(), addressDetail.getAddressLine2());
-    assertEquals(address.getAddressLine3(), addressDetail.getAddressLine3());
-    assertEquals(address.getAddressLine4(), addressDetail.getAddressLine4());
-    assertEquals(address.getCity(), addressDetail.getCity());
-    assertEquals(address.getCounty(), addressDetail.getCounty());
-    assertEquals(address.getCoffName(), addressDetail.getCareOfName());
-    assertEquals(address.getPostalCode(), addressDetail.getPostalCode());
-    assertEquals(address.getProvince(), addressDetail.getProvince());
-    assertEquals(address.getState(), addressDetail.getState());
-    assertEquals(address.getCountry(), addressDetail.getCountry());
-  }
-
   private CaseList buildCaseList() {
     CaseList caseList = new CaseList();
     caseList.setCaseReferenceNumber("caseref");
@@ -926,26 +824,6 @@ public class CaseDetailsMapperTest {
     caseDetails.setRecordHistory(buildRecordHistory());
 
     return caseDetails;
-  }
-
-  private uk.gov.legalservices.enterprise.common._1_0.common.RecordHistory buildRecordHistory() {
-    uk.gov.legalservices.enterprise.common._1_0.common.RecordHistory recordHistory =
-        new uk.gov.legalservices.enterprise.common._1_0.common.RecordHistory();
-    recordHistory.setCreatedBy(buildUser());
-    recordHistory.setDateCreated(datatypeFactory.newXMLGregorianCalendar());
-    recordHistory.setDateLastUpdated(datatypeFactory.newXMLGregorianCalendar());
-    recordHistory.setLastUpdatedBy(buildUser());
-
-    return recordHistory;
-  }
-
-  private User buildUser() {
-    User user = new User();
-    user.setUserLoginID("loginId");
-    user.setUserName("username");
-    user.setUserType("usertype");
-
-    return user;
   }
 
   private PriorAuthorityElementType buildPriorAuthorityElementType() {
@@ -1351,59 +1229,6 @@ public class CaseDetailsMapperTest {
     return contactDetails;
   }
 
-  private AssesmentResultType buildAssesmentResultType() {
-    OPAGoalType opaGoalType = new OPAGoalType();
-    opaGoalType.setAttribute("att");
-    opaGoalType.setAttributeValue("val");
-
-    OPAResultType opaResultType = new OPAResultType();
-    opaResultType.getGoal().add(opaGoalType);
-
-    OPAInstanceType opaInstanceType = buildOpaInstanceType();
-
-    OPAEntityType opaEntityType = new OPAEntityType();
-    opaEntityType.setEntityName("name");
-    opaEntityType.setCaption("caption");
-    opaEntityType.setSequenceNumber(BigInteger.TEN);
-    opaEntityType.getInstances().add(opaInstanceType);
-
-    AssessmentScreenType assessmentScreenType = new AssessmentScreenType();
-    assessmentScreenType.setCaption("cap");
-    assessmentScreenType.setScreenName("name");
-    assessmentScreenType.getEntity().add(opaEntityType);
-
-    AssessmentDetailType assessmentDetailType = new AssessmentDetailType();
-    assessmentDetailType.getAssessmentScreens().add(assessmentScreenType);
-
-    AssesmentResultType assessmentResultType = new AssesmentResultType();
-    assessmentResultType.setResults(opaResultType);
-    assessmentResultType.setAssesmentID("assessid");
-    assessmentResultType.setDate(datatypeFactory.newXMLGregorianCalendar());
-    assessmentResultType.setDefault(Boolean.TRUE);
-    assessmentResultType.setAssesmentDetails(assessmentDetailType);
-
-    return assessmentResultType;
-  }
-
-  private OPAInstanceType buildOpaInstanceType() {
-    OPAAttributesType opaAttributesType = new OPAAttributesType();
-    opaAttributesType.setAttribute("attr");
-    opaAttributesType.setCaption("caption");
-    opaAttributesType.setResponseType("respType");
-    opaAttributesType.setResponseText("responseText");
-    opaAttributesType.setResponseValue("respVal");
-    opaAttributesType.setUserDefinedInd(Boolean.TRUE);
-
-    Attributes attributes = new Attributes();
-    attributes.getAttribute().add(opaAttributesType);
-
-    OPAInstanceType opaInstanceType = new OPAInstanceType();
-    opaInstanceType.setInstanceLabel("label");
-    opaInstanceType.setAttributes(attributes);
-
-    return opaInstanceType;
-  }
-
   private ExtResourceElementType buildExtResourceElementType() {
     ExtResourceElementType extResourceElementType = new ExtResourceElementType();
     extResourceElementType.setExternalResourceType("exttype");
@@ -1428,25 +1253,6 @@ public class CaseDetailsMapperTest {
     costLimitationElementType.setBillingProviderName("provname");
 
     return costLimitationElementType;
-  }
-
-  private Address buildAddress() {
-    Address address = new Address();
-    address.setAddressID("addid");
-    address.setAddressLine1("addline1");
-    address.setAddressLine2("addline2");
-    address.setAddressLine3("addline3");
-    address.setAddressLine4("addline4");
-    address.setCity("city");
-    address.setCoffName("careof");
-    address.setCountry("country");
-    address.setCounty("county");
-    address.setHouse("house");
-    address.setPostalCode("postcode");
-    address.setProvince("province");
-    address.setState("state");
-
-    return address;
   }
 
   private CategoryOfLawElementType buildCategoryOfLawElementType() {
