@@ -31,10 +31,16 @@ public class CommonOrgClientIntegrationTest {
   private static final String MSG_NS = "http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/ReferenceDataBIM";
   private static final String COMMON_NS = "http://legalservices.gov.uk/Enterprise/Common/1.0/Common";
   private static MockWebServiceServer mockServer;
+
   @Value("classpath:/payload/CommonOrgInqRS_valid.xml")
-  Resource commonOrgInqRS_valid;
+  Resource commonOrgInqRs_valid;
+
+  @Value("classpath:/payload/CommonOrgInqRS_partyId_valid.xml")
+  Resource commonOrgInqRs_partyId_valid;
+
   @Autowired
   private WebServiceTemplate webServiceTemplate;
+
   @Autowired
   private CommonOrgClient client;
   private final String testTransactionId = "202309260908406430348479724";
@@ -78,7 +84,7 @@ public class CommonOrgClientIntegrationTest {
             namespaces).evaluatesTo(name)).andExpect(
         xpath("/msg:CommonOrgInqRQ/msg:SearchCriteria/msg:Organization/msg:OrganizationType",
             namespaces).evaluatesTo(type))
-        .andRespond(withPayload(commonOrgInqRS_valid));
+        .andRespond(withPayload(commonOrgInqRs_valid));
 
     CommonOrgInqRS response = client.getOrganisations(testLoginId, testUserType, maxRecords,
         organization);
@@ -99,6 +105,29 @@ public class CommonOrgClientIntegrationTest {
 
     assertThrows(RuntimeException.class,
         () -> client.getOrganisations(testLoginId, testUserType, maxRecords, organization));
+
+    mockServer.verify();
+  }
+
+  @Test
+  public void testGetOrganisation_ReturnsData() throws Exception {
+    String partyId = "123";
+
+    mockServer.expect(
+            xpath("/msg:CommonOrgInqRQ/header:HeaderRQ/header:TransactionRequestID",
+                namespaces).exists()).andExpect(
+            xpath("/msg:CommonOrgInqRQ/header:HeaderRQ/header:UserLoginID", namespaces).evaluatesTo(
+                testLoginId)).andExpect(
+            xpath("/msg:CommonOrgInqRQ/header:HeaderRQ/header:UserRole", namespaces).evaluatesTo(
+                testUserType)).andExpect(
+            xpath("/msg:CommonOrgInqRQ/msg:SearchCriteria/msg:OrganizationPartyID",
+                namespaces).evaluatesTo(partyId))
+        .andRespond(withPayload(commonOrgInqRs_partyId_valid));
+
+    CommonOrgInqRS response = client.getOrganisation(testLoginId, testUserType, maxRecords,
+        partyId);
+
+    assertNotNull(response.getOrganization());
 
     mockServer.verify();
   }

@@ -5,9 +5,7 @@ import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.data.domain.Page;
-import uk.gov.laa.ccms.soa.gateway.model.AddressDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ApplicationDetails;
-import uk.gov.laa.ccms.soa.gateway.model.AssessmentResult;
 import uk.gov.laa.ccms.soa.gateway.model.Award;
 import uk.gov.laa.ccms.soa.gateway.model.CaseDetail;
 import uk.gov.laa.ccms.soa.gateway.model.CaseDetails;
@@ -22,7 +20,6 @@ import uk.gov.laa.ccms.soa.gateway.model.FinancialAward;
 import uk.gov.laa.ccms.soa.gateway.model.LandAward;
 import uk.gov.laa.ccms.soa.gateway.model.LarDetails;
 import uk.gov.laa.ccms.soa.gateway.model.LinkedCase;
-import uk.gov.laa.ccms.soa.gateway.model.OpaInstance;
 import uk.gov.laa.ccms.soa.gateway.model.OtherAsset;
 import uk.gov.laa.ccms.soa.gateway.model.OtherParty;
 import uk.gov.laa.ccms.soa.gateway.model.OtherPartyPerson;
@@ -30,11 +27,9 @@ import uk.gov.laa.ccms.soa.gateway.model.OutcomeDetail;
 import uk.gov.laa.ccms.soa.gateway.model.PriorAuthority;
 import uk.gov.laa.ccms.soa.gateway.model.ProceedingDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ProviderDetail;
-import uk.gov.laa.ccms.soa.gateway.model.RecordHistory;
 import uk.gov.laa.ccms.soa.gateway.model.RecoveryAmount;
 import uk.gov.laa.ccms.soa.gateway.model.ScopeLimitation;
 import uk.gov.laa.ccms.soa.gateway.model.TimeRelatedAward;
-import uk.gov.laa.ccms.soa.gateway.model.UserDetail;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddUpdtStatusRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseInqRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.AwardElementType;
@@ -60,16 +55,12 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ProviderDetai
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.RecoveryAmountElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ScopeLimitationElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.TimeRelatedElementType;
-import uk.gov.legalservices.enterprise.common._1_0.common.Address;
-import uk.gov.legalservices.enterprise.common._1_0.common.AssesmentResultType;
-import uk.gov.legalservices.enterprise.common._1_0.common.OPAInstanceType;
-import uk.gov.legalservices.enterprise.common._1_0.common.User;
 
 
 /**
  * Mapper interface for converting case data between different representations.
  */
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = CommonMapper.class)
 public interface CaseDetailsMapper {
 
   List<CaseSummary> toCaseSummaryList(List<CaseList> caseList);
@@ -107,10 +98,6 @@ public interface CaseDetailsMapper {
 
   @Mapping(target = "caseStatusDisplay", source = "displayStatus")
   CaseSummary toCaseSummary(CaseList clientList);
-
-  @Mapping(target = "addressId", source = "addressID")
-  @Mapping(target = "careOfName", source = "coffName")
-  AddressDetail toAddressDetail(Address address);
 
   @Mapping(target = "otherParties", source = "otherParties.otherParty")
   @Mapping(target = "externalResources", source = "externalResources.externalResource")
@@ -156,11 +143,6 @@ public interface CaseDetailsMapper {
   @Mapping(target = "ccmsDocumentId", source = "CCMSDocumentID")
   CaseDoc toCaseDoc(CaseDocsElementType caseDocsElementType);
 
-  @Mapping(target = "lastUpdatedBy.userLoginId", source = "lastUpdatedBy.userLoginID")
-  @Mapping(target = "createdBy.userLoginId", source = "createdBy.userLoginID")
-  RecordHistory toRecordHistory(
-      uk.gov.legalservices.enterprise.common._1_0.common.RecordHistory soaRecordHistory);
-
   @Mapping(target = "liableParties", source = "liableParties.otherParyID")
   @Mapping(target = "preCertificateAwardLsc", source = "preCertificateAwardLSC")
   @Mapping(target = "certificateCostRateLsc", source = "certificateCostRateLSC")
@@ -179,12 +161,6 @@ public interface CaseDetailsMapper {
   @Mapping(target = "person", source = "otherPartyDetail.person")
   @Mapping(target = "organisation", source = "otherPartyDetail.organization")
   OtherParty toOtherParty(OtherPartyElementType otherPartyElementType);
-
-  @Mapping(target = "assessmentId", source = "assesmentID")
-  @Mapping(target = "defaultInd", source = "default")
-  @Mapping(target = "results", source = "results.goal")
-  @Mapping(target = "assessmentDetails", source = "assesmentDetails.assessmentScreens")
-  AssessmentResult toAssessmentResult(AssesmentResultType assesmentResultType);
 
   @Mapping(target = "contactUserId", source = "contactUserID")
   @Mapping(target = "providerFirmId", source = "providerFirmID")
@@ -209,9 +185,6 @@ public interface CaseDetailsMapper {
   @Mapping(target = "awardTriggeringEvent", source = "awardTrigeringEvent")
   TimeRelatedAward toTimeRelatedAward(TimeRelatedElementType timeRelatedElementType);
 
-  @Mapping(target = "attributes", source = "attributes.attribute")
-  OpaInstance toOpaInstance(OPAInstanceType opaInstanceType);
-
   @Mapping(target = "niNumber", source = "NINumber")
   @Mapping(target = "assessedAssets", source = "assessedAsstes")
   OtherPartyPerson toOtherPartyPerson(OtherPartyPersonType otherPartyPersonType);
@@ -221,9 +194,6 @@ public interface CaseDetailsMapper {
   @Mapping(target = "correspondenceMethod", ignore = true)
   @Mapping(target = "correspondenceLanguage", ignore = true)
   ContactDetail toContactDetail(ContactDetails contactDetails);
-
-  @Mapping(target = "userLoginId", source = "userLoginID")
-  UserDetail toUserDetail(User user);
 
   @Mapping(target = "submissionStatus", source = "headerRS.status.status")
   @Mapping(target = "referenceNumber", source = "caseReferenceNumber")

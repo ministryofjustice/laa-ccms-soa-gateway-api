@@ -1,0 +1,38 @@
+<CommonOrgInqRS
+  xmlns:msg="http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/ReferenceDataBIM"
+  xmlns="http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/ReferenceDataBIM">
+  <header:HeaderRS xmlns:header="http://legalservices.gov.uk/Enterprise/Common/1.0/Header">
+    <header:RequestDetails>
+      <header:Language>ENG</header:Language>
+      <header:TransactionRequestID>202402121714079620637505217</header:TransactionRequestID>
+      <header:UserLoginID>auser@provider.CO.UK</header:UserLoginID>
+      <header:UserRole>EXTERNAL</header:UserRole>
+    </header:RequestDetails>
+    <header:Status>
+      <header:Status>Success</header:Status>
+      <header:StatusFreeText>GetCommonOrg completed successfully.</header:StatusFreeText>
+    </header:Status>
+    <header:TransactionID>202402121714079620637505217</header:TransactionID>
+  </header:HeaderRS>
+  <msg:Organization>
+    <refdata:Address
+      xmlns:refdata="http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/ReferenceDataBIO">
+      <common:AddressID xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">52356</common:AddressID>
+      <common:AddressLine1 xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">Town Hall</common:AddressLine1>
+      <common:AddressLine2 xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">Brixton Hill</common:AddressLine2>
+      <common:City xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">London</common:City>
+      <common:Country xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">GBR</common:Country>
+      <common:PostalCode xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">SW2 1RW</common:PostalCode>
+    </refdata:Address>
+    <refdata:ContactName xmlns:refdata="http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/ReferenceDataBIO">Not Available</refdata:ContactName>
+    <refdata:CurrentlyTrading xmlns:refdata="http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/ReferenceDataBIO">Y</refdata:CurrentlyTrading>
+    <refdata:OrganizationName xmlns:refdata="http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/ReferenceDataBIO">London Borough of Lambeth Council</refdata:OrganizationName>
+    <refdata:OrganizationPartyID xmlns:refdata="http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/ReferenceDataBIO">281445</refdata:OrganizationPartyID>
+    <refdata:OrganizationType xmlns:refdata="http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/ReferenceDataBIO">LA</refdata:OrganizationType>
+  </msg:Organization>
+  <msg:RecordCount>
+    <common:MaxRecordsToFetch xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">500</common:MaxRecordsToFetch>
+    <common:RecordsFetched xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">1</common:RecordsFetched>
+    <common:RetriveDataOnMaxCount xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">false</common:RetriveDataOnMaxCount>
+  </msg:RecordCount>
+</CommonOrgInqRS>

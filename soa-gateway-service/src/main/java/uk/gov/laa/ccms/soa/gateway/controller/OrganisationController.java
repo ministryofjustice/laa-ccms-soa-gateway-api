@@ -6,8 +6,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.laa.ccms.soa.gateway.api.OrganisationsApi;
-import uk.gov.laa.ccms.soa.gateway.model.Organisation;
+import uk.gov.laa.ccms.soa.gateway.model.OrganisationDetail;
 import uk.gov.laa.ccms.soa.gateway.model.OrganisationDetails;
+import uk.gov.laa.ccms.soa.gateway.model.OrganisationSummary;
 import uk.gov.laa.ccms.soa.gateway.service.OrganisationService;
 
 /**
@@ -49,7 +50,7 @@ public class OrganisationController implements OrganisationsApi {
       final Pageable pageable) {
     log.info("GET /organisations");
     try {
-      Organisation searchOrganisation = new Organisation()
+      OrganisationSummary searchOrganisation = new OrganisationSummary()
           .name(name)
           .type(type)
           .city(city)
@@ -63,6 +64,35 @@ public class OrganisationController implements OrganisationsApi {
           pageable);
 
       return ResponseEntity.ok(organisationDetails);
+    } catch (Exception e) {
+      log.error("OrganisationController caught exception", e);
+      return ResponseEntity.internalServerError().build();
+    }
+  }
+
+  /**
+   * GET the full details for an organisation based on its id.
+   *
+   * @param organisationId  (required) - the id for the organisation.
+   * @param soaGatewayUserLoginId  (required) - the user requesting the data.
+   * @param soaGatewayUserRole  (required) - the user role requesting the data.
+   * @param maxRecords  (optional, default to 100) - the maximum records to query.
+   * @return ResponseEntity wrapping the resulting organisation detail.
+   */
+  @Override
+  public ResponseEntity<OrganisationDetail> getOrganisation(
+      final String organisationId,
+      final String soaGatewayUserLoginId,
+      final String soaGatewayUserRole,
+      final Integer maxRecords) {
+    try {
+      OrganisationDetail organisationDetail = organisationService.getOrganisation(
+          soaGatewayUserLoginId,
+          soaGatewayUserRole,
+          maxRecords,
+          organisationId);
+
+      return ResponseEntity.ok(organisationDetail);
     } catch (Exception e) {
       log.error("OrganisationController caught exception", e);
       return ResponseEntity.internalServerError().build();

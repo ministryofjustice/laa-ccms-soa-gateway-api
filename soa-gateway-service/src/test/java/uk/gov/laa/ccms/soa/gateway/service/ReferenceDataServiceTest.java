@@ -1,5 +1,9 @@
 package uk.gov.laa.ccms.soa.gateway.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -7,13 +11,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.laa.ccms.soa.gateway.client.ReferenceDataClient;
-import uk.gov.laa.ccms.soa.gateway.mapper.ReferenceDataMapper;
-import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabim.ReferenceDataInqRS;
+import uk.gov.laa.ccms.soa.gateway.mapper.CommonMapper;
 import uk.gov.laa.ccms.soa.gateway.model.CaseReferenceSummary;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabim.ReferenceDataInqRS;
 
 @ExtendWith(MockitoExtension.class)
 public class ReferenceDataServiceTest {
@@ -22,7 +22,7 @@ public class ReferenceDataServiceTest {
     private ReferenceDataClient referenceDataClient;
 
     @Mock
-    private ReferenceDataMapper referenceDataMapper;
+    private CommonMapper commonMapper;
 
     @InjectMocks
     private ReferenceDataService referenceDataService;
@@ -47,7 +47,7 @@ public class ReferenceDataServiceTest {
         when(referenceDataClient.getCaseReference(soaGatewayUserLoginId, soaGatewayUserRole))
                 .thenReturn(response);
 
-        when(referenceDataMapper.toCaseReferenceSummary(response))
+        when(commonMapper.toCaseReferenceSummary(response))
                 .thenReturn(caseReferenceSummary);
 
         // Call the service method
@@ -57,7 +57,7 @@ public class ReferenceDataServiceTest {
         verify(referenceDataClient).getCaseReference(soaGatewayUserLoginId, soaGatewayUserRole);
 
         // Verify that the mapper method was called
-        verify(referenceDataMapper).toCaseReferenceSummary(response);
+        verify(commonMapper).toCaseReferenceSummary(response);
 
         // Assert the result
         assertEquals(caseReferenceSummary, result);
