@@ -69,6 +69,13 @@ public interface CommonMapper {
         .orElse(null);
   }
 
+  default Boolean toBoolean(String ynString) {
+    return ynString != null ? ynString.equalsIgnoreCase("Y") : null;
+  }
+
+  default String toYnString(Boolean flag) {
+    return flag != null ? (flag ? "Y" : "N") : null;
+  }
 
 
 }

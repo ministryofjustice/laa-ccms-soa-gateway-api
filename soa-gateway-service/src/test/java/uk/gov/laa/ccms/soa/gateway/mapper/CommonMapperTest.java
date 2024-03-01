@@ -10,8 +10,13 @@ import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildOpaInstanceTyp
 import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildRecordHistory;
 import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildUser;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.laa.ccms.soa.gateway.model.AddressDetail;
@@ -26,10 +31,6 @@ import uk.gov.laa.ccms.soa.gateway.model.OpaInstance;
 import uk.gov.laa.ccms.soa.gateway.model.RecordHistory;
 import uk.gov.laa.ccms.soa.gateway.model.UserDetail;
 import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabim.ReferenceDataInqRS;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import uk.gov.legalservices.enterprise.common._1_0.common.Address;
 import uk.gov.legalservices.enterprise.common._1_0.common.AssesmentResultType;
 import uk.gov.legalservices.enterprise.common._1_0.common.AssessmentScreenType;
@@ -233,6 +234,30 @@ public class CommonMapperTest {
         assertEquals(opaAttributesType.getResponseType(), opaAttribute.getResponseType());
         assertEquals(opaAttributesType.getResponseText(), opaAttribute.getResponseText());
         assertEquals(opaAttributesType.getResponseValue(), opaAttribute.getResponseValue());
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+        "Y, true",
+        "y, true",
+        "yes, false",
+        "N, false",
+        "n, false",
+        "no, false",
+        "null, null"
+    }, nullValues={"null"})
+    public void testToBoolean(final String flagStr, final Boolean expected) {
+        assertEquals(expected, commonMapper.toBoolean(flagStr));
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+        "true, Y",
+        "false, N",
+        "null, null"
+    }, nullValues={"null"})
+    public void testToYnString(final Boolean flag, final String expected) {
+        assertEquals(expected, commonMapper.toYnString(flag));
     }
 
     private void compareAddress(Address address, AddressDetail addressDetail) {
