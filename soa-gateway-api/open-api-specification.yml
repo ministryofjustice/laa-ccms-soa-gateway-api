@@ -534,7 +534,7 @@ paths:
           description: 'Not found'
         '500':
           description: 'Internal server error'
-  /organisation/{organisation-id}:
+  /organisations/{organisation-id}:
     get:
       tags:
         - organisations
