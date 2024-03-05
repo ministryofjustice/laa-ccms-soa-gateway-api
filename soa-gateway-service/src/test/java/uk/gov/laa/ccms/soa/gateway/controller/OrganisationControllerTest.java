@@ -141,7 +141,7 @@ public class OrganisationControllerTest {
             .thenReturn(organisationDetail);
 
         mockMvc.perform(
-                get("/organisation/{org-party-id}?max-records={maxRecords}",
+                get("/organisations/{org-party-id}?max-records={maxRecords}",
                     partyId,
                     maxRecords)
                     .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
@@ -165,7 +165,7 @@ public class OrganisationControllerTest {
             .thenThrow(new WebServiceIOException("Test exception"));
 
         mockMvc.perform(
-                get("/organisation/{org-party-id}?max-records={maxRecords}",
+                get("/organisations/{org-party-id}?max-records={maxRecords}",
                     partyId,
                     maxRecords)
                     .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
