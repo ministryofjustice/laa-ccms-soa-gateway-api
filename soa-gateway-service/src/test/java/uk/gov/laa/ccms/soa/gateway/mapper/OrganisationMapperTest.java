@@ -2,6 +2,7 @@ package uk.gov.laa.ccms.soa.gateway.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -106,6 +107,9 @@ public class OrganisationMapperTest {
     when(commonMapper.toAddressDetail(organizationPartyType.getAddress()))
         .thenReturn(new AddressDetail());
 
+    when(commonMapper.toBoolean(organizationPartyType.getCurrentlyTrading()))
+        .thenReturn("Y".equalsIgnoreCase(organizationPartyType.getCurrentlyTrading()));
+
     OrganisationDetail result =
         organisationMapper.toOrganisationDetail(organizationPartyType);
 
@@ -117,6 +121,7 @@ public class OrganisationMapperTest {
     assertNotNull(result.getContactDetails());
     assertNotNull(result.getAddress());
     assertEquals(organizationPartyType.getOtherInformation(), result.getOtherInformation());
+    assertTrue(result.isCurrentlyTrading());
   }
 
   @Test
@@ -160,6 +165,7 @@ public class OrganisationMapperTest {
     organizationPartyType.setOrganizationType(ORGTYPE);
     organizationPartyType.setAddress(buildAddress());
     organizationPartyType.setContactDetails(buildContactDetails());
+    organizationPartyType.setCurrentlyTrading("Y");
     return organizationPartyType;
   }
 
