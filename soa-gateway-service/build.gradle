@@ -37,7 +37,7 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 
     //Required for pagination
-    implementation 'org.springframework.data:spring-data-commons:3.1.4'
+    implementation 'org.springframework.data:spring-data-commons:3.2.4'
 
     // For mock Contract Details only
     implementation 'org.wiremock:wiremock:3.3.1'
