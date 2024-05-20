@@ -1,13 +1,8 @@
 plugins {
-    id 'org.springframework.boot'
     id 'uk.co.boothen.gradle.wsimport' version '0.21'
-    id 'jacoco'
-    id 'checkstyle'
 }
 
-ext {
-    checkstyleVersion = '10.12.2'
-}
+apply plugin: 'uk.gov.laa.ccms.springboot.laa-ccms-spring-boot-gradle-plugin'
 
 sourceSets {
     integrationTest {
@@ -103,7 +98,6 @@ task integrationTest(type: Test) {
 }
 
 jacocoTestReport {
-
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.collect {
             fileTree(dir: it, exclude: ['**/SoaGatewayApplication.class',
@@ -112,12 +106,9 @@ jacocoTestReport {
             ])
         }))
     }
-
-    dependsOn tasks['test']
 }
 
 jacocoTestCoverageVerification {
-
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.collect {
             fileTree(dir: it, exclude: ['**/SoaGatewayApplication.class',
@@ -126,17 +117,6 @@ jacocoTestCoverageVerification {
             ])
         }))
     }
-
-
-    violationRules {
-        rule {
-            limit {
-                minimum = 0.80  // You can define your required coverage ratio here.
-            }
-        }
-    }
-
-    dependsOn tasks['test']
 }
 
 checkstyleMain {
@@ -144,11 +124,3 @@ checkstyleMain {
     exclude '**/uk/gov/legalservices/**'
     exclude '**/org/oasis_open/**'
 }
-
-checkstyle {
-    maxWarnings = 0
-    toolVersion = "${checkstyleVersion}"
-    sourceSets = [sourceSets.main]
-    showViolations = true
-}
-
