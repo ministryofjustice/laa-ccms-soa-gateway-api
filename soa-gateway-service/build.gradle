@@ -1,30 +1,8 @@
 plugins {
-    id 'org.springframework.boot'
     id 'uk.co.boothen.gradle.wsimport' version '0.21'
-    id 'jacoco'
-    id 'checkstyle'
 }
 
-ext {
-    checkstyleVersion = '10.12.2'
-}
-
-sourceSets {
-    integrationTest {
-        java {
-            compileClasspath += main.output + test.output
-            runtimeClasspath += main.output + test.output
-        }
-    }
-}
-
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-    integrationTestImplementation.extendsFrom(testImplementation)
-    integrationTestRuntimeOnly.extendsFrom(testRuntimeOnly)
-}
+apply plugin: 'uk.gov.laa.ccms.springboot.laa-ccms-spring-boot-gradle-plugin'
 
 dependencies {
     implementation project(':soa-gateway-api')
@@ -94,16 +72,7 @@ test {
     useJUnitPlatform()
 }
 
-task integrationTest(type: Test) {
-    useJUnitPlatform()
-    description = "Run integration tests"
-    group = "verification"
-    testClassesDirs = sourceSets.integrationTest.output.classesDirs
-    classpath = sourceSets.integrationTest.runtimeClasspath
-}
-
 jacocoTestReport {
-
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.collect {
             fileTree(dir: it, exclude: ['**/SoaGatewayApplication.class',
@@ -112,12 +81,9 @@ jacocoTestReport {
             ])
         }))
     }
-
-    dependsOn tasks['test']
 }
 
 jacocoTestCoverageVerification {
-
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.collect {
             fileTree(dir: it, exclude: ['**/SoaGatewayApplication.class',
@@ -126,17 +92,6 @@ jacocoTestCoverageVerification {
             ])
         }))
     }
-
-
-    violationRules {
-        rule {
-            limit {
-                minimum = 0.80  // You can define your required coverage ratio here.
-            }
-        }
-    }
-
-    dependsOn tasks['test']
 }
 
 checkstyleMain {
@@ -144,11 +99,3 @@ checkstyleMain {
     exclude '**/uk/gov/legalservices/**'
     exclude '**/org/oasis_open/**'
 }
-
-checkstyle {
-    maxWarnings = 0
-    toolVersion = "${checkstyleVersion}"
-    sourceSets = [sourceSets.main]
-    showViolations = true
-}
-
