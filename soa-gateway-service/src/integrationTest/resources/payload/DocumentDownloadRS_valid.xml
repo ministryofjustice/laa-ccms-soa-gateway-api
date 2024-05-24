@@ -1,0 +1,21 @@
+<DocumentDownloadRS xmlns="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIM">
+  <HeaderRS xmlns="http://legalservices.gov.uk/Enterprise/Common/1.0/Header">
+    <RequestDetails/>
+    <Status>
+      <Status>Success</Status>
+      <StatusFreeText/>
+    </Status>
+    <TransactionID/>
+  </HeaderRS>
+  <Document xmlns:common="http://legalservices.gov.uk/Enterprise/Common/1.0/Common">
+    <common:DocumentID>123</common:DocumentID>
+    <common:DocumentType>HMRCForm</common:DocumentType>
+    <common:FileExtension>pdf</common:FileExtension>
+    <common:Channel>E</common:Channel>
+    <common:Text>An evidence document</common:Text>
+    <common:DocumentLink>alink</common:DocumentLink>
+    <common:BinData>dGhlIGZpbGUgZGF0YQ==</common:BinData>
+    <common:Status></common:Status>
+    <common:StatusDescription></common:StatusDescription>
+  </Document>
+</DocumentDownloadRS>

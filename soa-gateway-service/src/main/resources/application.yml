@@ -21,6 +21,9 @@ laa:
       case:
         service-name: http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseServices
         service-url: ${SOA_SERVICE_URL}/soa-infra/services/default/CaseServices/CaseServices_ep
+      document:
+        service-name: http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/DocumentServices
+        service-url: ${SOA_SERVICE_URL}/soa-infra/services/default/DocumentServices/DocumentServices_ep
       commonorg:
         service-name: http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/ReferenceDataBIM
         service-url: ${SOA_SERVICE_URL}/soa-infra/services/default/GetCommonOrg/getcommonorg_ep
