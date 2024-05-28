@@ -1,0 +1,13 @@
+<DocumentUploadRS xmlns="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIM">
+  <HeaderRS xmlns="http://legalservices.gov.uk/Enterprise/Common/1.0/Header">
+    <RequestDetails/>
+    <Status>
+      <Status>Success</Status>
+      <StatusFreeText/>
+    </Status>
+    <TransactionID/>
+  </HeaderRS>
+  <DocumentID>
+    33264041
+  </DocumentID>
+</DocumentUploadRS>

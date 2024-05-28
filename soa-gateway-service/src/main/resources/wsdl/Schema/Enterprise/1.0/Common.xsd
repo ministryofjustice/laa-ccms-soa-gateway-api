@@ -1,0 +1,2148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+** CapGemini
+** SOA Object library 
+** Base Version : 7.4
+
+	XML Schema
+	Name : lsc\Schema\BusinessObjects\Enterprise\Common\1.0\Common.xsd
+
+Date			    Authour				    Details
+2011-05-29		Ramesh Madhavan		Base Version
+2013-04-04		Bikash Agrawal		Added NameValuePair Common Type
+2013-04-09		Bikash Agrawal	 	Extended DocumentElementType to include Status & StatusDescription
+2013-05-21      Sander Rensen       artf2584102: Made title optional. 
+2013-09-10      Bikash Agrawal      CR186  Changes - Changes in Field Length of Response Value to 8000
+
+-->
+<xsd:schema
+  xmlns:Crncy="http://legalservices.gov.uk/Schema/Enterprise/External/ISO/Currency/4217/2001/Currency"
+  xmlns:Cntry="http://legalservices.gov.uk/Schema/Enterprise/External/ISO/Country/3166-1/2006/Country"
+  xmlns:Lang="http://legalservices.gov.uk/Schema/Enterprise/External/ISO/Language/639-3/2007/Language"
+  xmlns="http://legalservices.gov.uk/Enterprise/Common/1.0/Common"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="http://legalservices.gov.uk/Enterprise/Common/1.0/Common"
+  elementFormDefault="qualified">
+  <xsd:import
+    namespace="http://legalservices.gov.uk/Schema/Enterprise/External/ISO/Country/3166-1/2006/Country"
+    schemaLocation="../../External/ISO/Country/3166-1/2006/Country.xsd"/>
+  <xsd:import
+    namespace="http://legalservices.gov.uk/Schema/Enterprise/External/ISO/Currency/4217/2001/Currency"
+    schemaLocation="../../External/ISO/Currency/4217/2001/Currency.xsd"/>
+  <xsd:import
+    namespace="http://legalservices.gov.uk/Schema/Enterprise/External/ISO/Language/639-3/2007/Language"
+    schemaLocation="../../External/ISO/Language/639-3/2007/Language.xsd"/>
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      <Version>1.1</Version>
+      <Definition>Enterprise Common Objects</Definition>
+      <Description>This schema holds the enterprise wide low-level types, groups
+        and elements for schemas
+      </Description>
+      <Author>Ramesh Madhavan</Author>
+      <ModifiedBy>Ramesh Madhavan</ModifiedBy>
+      <VersionDate>19-05-2010</VersionDate>
+      <VersionDescription>Added new elements</VersionDescription>
+      <ModificationHistory>07-05-2010 Version 1.0 - Initial Development Version
+        19-05-2010 Version 1.1 - Changed County to Optional
+        Added Number 09-23-2010 Version 1.3 - Incorporated
+        comments from Dwayne ( Final Review ClientManagement
+        xsds. doc) 09-25-2010 Version 1.4 - Reverted back
+        Dt,DtTm,Tm to normal xs defintions
+      </ModificationHistory>
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:simpleType name="C">
+    <xsd:annotation>
+      <xsd:documentation>Standard String</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="C1">
+    <xsd:annotation>
+      <xsd:documentation>Standard 1 Character string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="1"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="C2">
+    <xsd:annotation>
+      <xsd:documentation>Standard 2 Character string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="2"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="C3">
+    <xsd:annotation>
+      <xsd:documentation>Standard 3 Character string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="3"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="C4">
+    <xsd:annotation>
+      <xsd:documentation>Standard 4 Character string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="4"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="C5">
+    <xsd:annotation>
+      <xsd:documentation>Standard 5 Character string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="5"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="C6">
+    <xsd:annotation>
+      <xsd:documentation>Standard 6 Character string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="6"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="C7">
+    <xsd:annotation>
+      <xsd:documentation>Standard 7 Character string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="7"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="C8">
+    <xsd:annotation>
+      <xsd:documentation>Standard 8 Character string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="8"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="C9">
+    <xsd:annotation>
+      <xsd:documentation>Standard 9 Character string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="9"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="C10">
+    <xsd:annotation>
+      <xsd:documentation>Standard 10 Character string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="10"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="C11">
+    <xsd:annotation>
+      <xsd:documentation>Standard 11 Character string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="11"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="C12">
+    <xsd:annotation>
+      <xsd:documentation>Standard 12 Character string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="12"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="C13">
+    <xsd:annotation>
+      <xsd:documentation>Standard 13 Character string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="13"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="C14">
+    <xsd:annotation>
+      <xsd:documentation>Standard 14 Character string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="14"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="C15">
+    <xsd:annotation>
+      <xsd:documentation>Standard 15 Character string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="15"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="C20">
+    <xsd:annotation>
+      <xsd:documentation>Standard 20 Character string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="20"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="C24">
+    <xsd:annotation>
+      <xsd:documentation>Standard 24 Character string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="24"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="C25">
+    <xsd:annotation>
+      <xsd:documentation>Standard 25 Character string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="25"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="C30">
+    <xsd:annotation>
+      <xsd:documentation>Standard 30 Character string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="30"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="C35">
+    <xsd:annotation>
+      <xsd:documentation>Standard 30 Character string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="35"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="C40">
+    <xsd:annotation>
+      <xsd:documentation>Standard 40 Character string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="40"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="C50">
+    <xsd:annotation>
+      <xsd:documentation>Standard 50 Character string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="50"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="LOV">
+    <xsd:annotation>
+      <xsd:documentation>Standard List of Values</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="50"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="C58">
+    <xsd:annotation>
+      <xsd:documentation>Standard 58 Character string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="58"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="C60">
+    <xsd:annotation>
+      <xsd:documentation>Standard 60 Character string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="60"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="C80">
+    <xsd:annotation>
+      <xsd:documentation>Standard 80 Character string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="80"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="C81">
+    <xsd:annotation>
+      <xsd:documentation>Standard 81 Character string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="81"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="C90">
+    <xsd:annotation>
+      <xsd:documentation>Standard 90 Character string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="90"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="C100">
+    <xsd:annotation>
+      <xsd:documentation>Standard 100 Character string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="100"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="C150">
+    <xsd:annotation>
+      <xsd:documentation>Stanard 150 Character string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="150"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="C120">
+    <xsd:annotation>
+      <xsd:documentation>Standard 120 Character string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="120"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="C240">
+    <xsd:annotation>
+      <xsd:documentation>Standard 240 Character string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="240"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="C250">
+    <xsd:annotation>
+      <xsd:documentation>Standard 250 Character string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="250"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="C255">
+    <xsd:annotation>
+      <xsd:documentation>Standard 255 Character string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="255"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="C300">
+    <xsd:annotation>
+      <xsd:documentation>Standard 320 Character string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="300"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="C320">
+    <xsd:annotation>
+      <xsd:documentation>Standard 320 Character string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="320"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="C360">
+    <xsd:annotation>
+      <xsd:documentation>Standard 360 Character string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="360"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="C500">
+    <xsd:annotation>
+      <xsd:documentation>Standard 500 Character string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="500"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="C542">
+    <xsd:annotation>
+      <xsd:documentation>Standard 240 Character string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="542"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="C560">
+    <xsd:annotation>
+      <xsd:documentation>Standard 560 Character string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="560"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="C640">
+    <xsd:annotation>
+      <xsd:documentation>Standard 640 Character string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="640"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="C800">
+    <xsd:annotation>
+      <xsd:documentation>Standard 800 Character string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="800"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="C1000">
+    <xsd:annotation>
+      <xsd:documentation>Standard 1000 Character string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="1000"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="C2000">
+    <xsd:annotation>
+      <xsd:documentation>Standard 2000 Character string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="2000"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="C4000">
+    <xsd:annotation>
+      <xsd:documentation>Standard 4000 Character string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="4000"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="C8000">
+    <xsd:annotation>
+      <xsd:documentation>Standard 8000 Character string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="8000"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="NotImplemented">
+    <xsd:annotation>
+      <xsd:documentation>NotImplemented</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="2000"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="NC">
+    <xsd:annotation>
+      <xsd:documentation>Narrow Character (latin letterset often compatible with
+        older machines)
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:maxLength value="4000"/>
+      <xsd:pattern value="[ -]*"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="ID">
+    <xsd:annotation>
+      <xsd:documentation>The base type for Identifiers</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="ID10">
+    <xsd:annotation>
+      <xsd:documentation>Standard 10 Character Identifier</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="ID">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="10"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="ID12">
+    <xsd:annotation>
+      <xsd:documentation>Standard 12 Character Identifier</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="ID">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="12"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="ID15">
+    <xsd:annotation>
+      <xsd:documentation>Standard 15 Character Identifier</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="ID">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="15"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="ID20">
+    <xsd:annotation>
+      <xsd:documentation>Standard 20 Character Identifier</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="ID">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="20"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="ID25">
+    <xsd:annotation>
+      <xsd:documentation>Standard 25 Character Identifier</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="ID">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="25"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="ID30">
+    <xsd:annotation>
+      <xsd:documentation>Standard 30 Character Identifier</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="ID">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="30"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="ID40">
+    <xsd:annotation>
+      <xsd:documentation>Standard 40 Character Identifier</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="ID">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="40"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="ID100">
+    <xsd:annotation>
+      <xsd:documentation>Standard 100 Character Identifier</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="ID">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="100"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="TransactionID">
+    <xsd:annotation>
+      <xsd:documentation>Standard 30 Character Identifier</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="ID">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="30"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="IDREF">
+    <xsd:annotation>
+      <xsd:documentation>The base type for Identifier References (Foreign Keys)</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="ID"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="IDREF10">
+    <xsd:annotation>
+      <xsd:documentation>Standard 10 Character Identifier Reference (Foreign Key)
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="IDREF">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="10"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="IDREF12">
+    <xsd:annotation>
+      <xsd:documentation>Standard 12 Character Identifier Reference (Foreign Key)
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="IDREF">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="12"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="IDREF15">
+    <xsd:annotation>
+      <xsd:documentation>Standard 15 Character Identifier Reference (Foreign Key)
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="IDREF">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="15"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="IDREF20">
+    <xsd:annotation>
+      <xsd:documentation>Standard 20 Character Identifier Reference (Foreign Key)
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="IDREF">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="20"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="IDREF25">
+    <xsd:annotation>
+      <xsd:documentation>Standard 25 Character Identifier Reference (Foreign Key)
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="IDREF">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="25"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="IDREF30">
+    <xsd:annotation>
+      <xsd:documentation>Standard 30 Character Identifier Reference (Foreign Key)
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="IDREF">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="30"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="IDREF35">
+    <xsd:annotation>
+      <xsd:documentation>Standard 30 Character Identifier Reference (Foreign Key)
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="IDREF">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="35"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="IDREF100">
+    <xsd:annotation>
+      <xsd:documentation>Standard 100 Character Identifier Reference (Foreign Key)
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="IDREF">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="100"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="Boolean">
+    <xsd:annotation>
+      <xsd:documentation>The base type for LSC's boolean adaptations</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:boolean"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="BooleanNumeric">
+    <xsd:annotation>
+      <xsd:documentation>1 and 0 implementation of boolean</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="Boolean">
+      <xsd:pattern value="0"/>
+      <xsd:pattern value="1"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="BooleanString">
+    <xsd:annotation>
+      <xsd:documentation>string implementation of boolean</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="Boolean">
+      <xsd:pattern value="true"/>
+      <xsd:pattern value="false"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="Dt">
+    <xsd:annotation>
+      <xsd:documentation>A simpleType for a particular day-date</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:date"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="Tm">
+    <xsd:annotation>
+      <xsd:documentation>A simpleType for a particular time</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:time"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="DtTm">
+    <xsd:annotation>
+      <xsd:documentation>A simpleType for a date and time useful for timestamps</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:dateTime"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="Year">
+    <xsd:annotation>
+      <xsd:documentation>A simpleType for a year</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:gYear"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="PhoneNum">
+    <xsd:annotation>
+      <xsd:documentation>A simple type for use with phone numbers</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:maxLength value="15"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="EmailAddress">
+    <xsd:annotation>
+      <xsd:documentation>A simple type for use with email address</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:maxLength value="50"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="Decimal">
+    <xsd:annotation>
+      <xsd:documentation>A rename of the Decimal data type</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:decimal"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="Long">
+    <xsd:annotation>
+      <xsd:documentation>Long is a 64-bit integer value, which may be positive,
+        negative, or zero.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:long"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="Integer">
+    <xsd:annotation>
+      <xsd:documentation>The rename of the integer type, which may be positive,
+        negative, or zero.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:integer"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="AccountNumber">
+    <xsd:annotation>
+      <xsd:documentation>The rename of the integer type, which may be positive,
+        negative, or zero.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:positiveInteger"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="MonetaryAmt">
+    <xsd:annotation>
+      <xsd:documentation>A 2 decimal place means of expressing monetary amounts</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="Decimal">
+      <xsd:fractionDigits value="2"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="Amount">
+    <xsd:annotation>
+      <xsd:documentation>A 2 decimal place means of expressing amounts</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="Decimal">
+      <xsd:fractionDigits value="2"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="ClosedEnum">
+    <xsd:annotation>
+      <xsd:documentation>The base type for a closed string xsd:enumeration i.e. one
+        not expected to change
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="OpenEnum">
+    <xsd:annotation>
+      <xsd:documentation>The base type for an open string xsd:enumeration i.e. one
+        which is likely to have values added
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C"/>
+  </xsd:simpleType>
+  <xsd:complexType name="Bin">
+    <xsd:annotation>
+      <xsd:documentation>The base type for Binaries</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="BinContentType" type="BinContentType">
+        <xsd:annotation>
+          <xsd:documentation>Enumeration based on MIME types.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="BinLength" type="BinLength">
+        <xsd:annotation>
+          <xsd:documentation>The length of the binary data.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="BinData" type="BinData">
+        <xsd:annotation>
+          <xsd:documentation>The representation of the binary data</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:simpleType name="BinContentType">
+    <xsd:annotation>
+      <xsd:documentation>The base type for Binary Content Types</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="OpenEnum"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="BinLength">
+    <xsd:annotation>
+      <xsd:documentation>The base type for holding Binary length</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:long"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="BinData">
+    <xsd:annotation>
+      <xsd:documentation>The base type for holding the Binary info</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:base64Binary"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="WindowsUserName">
+    <xsd:annotation>
+      <xsd:documentation>Standard 8 Character User Identifier for ITV network logon?
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="NC">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="8"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="VATExempt">
+    <xsd:annotation>
+      <xsd:documentation>VAT Exempt Flag.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:length value="0"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="VATCode">
+    <xsd:annotation>
+      <xsd:documentation>The base type for VAT Codes</xsd:documentation>
+    </xsd:annotation>
+    <xsd:choice>
+      <xsd:element name="Exempt" type="VATExempt"/>
+      <xsd:element name="Percentage" type="VATPercentage"/>
+    </xsd:choice>
+  </xsd:complexType>
+  <xsd:simpleType name="VATPercentage">
+    <xsd:annotation>
+      <xsd:documentation>Percentage applicable for VAT</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="Decimal">
+      <xsd:enumeration value="0"/>
+      <xsd:enumeration value="17.5"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="CountryCode">
+    <xsd:annotation>
+      <xsd:documentation>Reuse of the ISO country codes defined in External</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="Cntry:CountryCode"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="CurrencyCode">
+    <xsd:annotation>
+      <xsd:documentation>Reuse of the ISO currency codes defined in External</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="Crncy:CurrencyCode"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="ExchangeRate">
+    <xsd:annotation>
+      <xsd:documentation>Data type for use as an exchange rate (a decimal)</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="Decimal"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="LanguageCode">
+    <xsd:annotation>
+      <xsd:documentation>Reuse of the ISO language codes defined in External</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="Lang:LanguageCode"/>
+  </xsd:simpleType>
+  <xsd:attributeGroup name="Default">
+    <xsd:annotation>
+      <xsd:documentation>Used to indicate that an element is the default within a
+        sequence attributeGroups
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute name="Default" type="Boolean" use="optional"/>
+  </xsd:attributeGroup>
+  <xsd:attributeGroup name="MainOfType">
+    <xsd:annotation>
+      <xsd:documentation>Used to indicate which element in a sequence is the main
+        one
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute name="MainOfType" type="Boolean" use="optional"/>
+  </xsd:attributeGroup>
+  <xsd:attributeGroup name="Deleted">
+    <xsd:annotation>
+      <xsd:documentation>Used to indicate that an element has been logically deleted
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute name="Deleted" type="Boolean" use="optional"/>
+  </xsd:attributeGroup>
+  <xsd:attributeGroup name="ReplacedBy">
+    <xsd:annotation>
+      <xsd:documentation>Used to indicate that an element has been replaced or
+        superseded by another
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute name="ReplacedBy" type="C" use="optional"/>
+  </xsd:attributeGroup>
+  <xsd:attributeGroup name="Replaces">
+    <xsd:annotation>
+      <xsd:documentation>Used to indicate that an element replaces or supersedes
+        another
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute name="Replaces" type="C" use="optional"/>
+  </xsd:attributeGroup>
+  <xsd:simpleType name="SystemsList">
+    <xsd:annotation>
+      <xsd:documentation>List of Systems</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="ClosedEnum">
+      <xsd:enumeration value="Oracle EBusiness"/>
+      <xsd:enumeration value="PUI"/>
+      <xsd:enumeration value="SMS"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="MessageSourceType">
+    <xsd:annotation>
+      <xsd:documentation>Message Source type</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="ClosedEnum">
+      <xsd:enumeration value="PLSQL"/>
+      <xsd:enumeration value="BPEL"/>
+      <xsd:enumeration value="Mediator"/>
+      <xsd:enumeration value="OSB"/>
+      <xsd:enumeration value="PUI"/>
+      <xsd:enumeration value="Legacy"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="LogStage">
+    <xsd:annotation>
+      <xsd:documentation>Log Stage</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="ClosedEnum">
+      <xsd:enumeration value="Start"/>
+      <xsd:enumeration value="Intermediate"/>
+      <xsd:enumeration value="End"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="LogType">
+    <xsd:annotation>
+      <xsd:documentation>Log Type</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="ClosedEnum">
+      <xsd:enumeration value="Information"/>
+      <xsd:enumeration value="Debug"/>
+      <xsd:enumeration value="Warning"/>
+      <xsd:enumeration value="Error"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="MaritalStatus">
+    <xsd:annotation>
+      <xsd:documentation>Marital Status</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="LOV"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="Gender">
+    <xsd:annotation>
+      <xsd:documentation>Gender</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="LOV"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="NationalInsuranceNumber">
+    <xsd:annotation>
+      <xsd:documentation>National Insurance (NI) Number</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="ID25">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="25"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="HomeOfficeReference">
+    <xsd:annotation>
+      <xsd:documentation>Home Office Reference Number</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="IDREF25">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="25"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="HomeOfficeNumber">
+    <xsd:annotation>
+      <xsd:documentation>Home Office Number</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="IDREF25">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="25"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="NamePrefix">
+    <xsd:annotation>
+      <xsd:documentation>Name Prefix</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="LOV"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="FullName">
+    <xsd:annotation>
+      <xsd:documentation>Home Office Reference Number</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C60"/>
+  </xsd:simpleType>
+  <xsd:complexType name="Name">
+    <xsd:annotation>
+      <xsd:documentation>The base type for Name</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="Title" type="NamePrefix" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Title</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Surname" type="C35">
+        <xsd:annotation>
+          <xsd:documentation>Surname or Last Name</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="FirstName" type="C35">
+        <xsd:annotation>
+          <xsd:documentation>First Name</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="MiddleName" type="C35" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Middle Name</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="SurnameAtBirth" type="C35" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Previous Last Name</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="FullName" type="C35" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Full Name</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="PhoneticName">
+    <xsd:annotation>
+      <xsd:documentation>The base type for Phonetic Name</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="Name" type="C320" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Name Prefix</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="FirstName" type="C60" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>First Name</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="MiddleName" type="C60" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Middle Name</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="LastName" type="C60" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Last Name</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Attributes15">
+    <xsd:annotation>
+      <xsd:documentation>DFF Attributes 1 to 15 in e-Business Suite</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="AttributeCategory" type="C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute Category</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute1" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute1</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute2" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute2</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute3" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute3</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute4" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute4</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute5" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute5</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute6" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute6</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute7" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute7</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute8" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute8</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute9" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute9</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute10" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute10</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute11" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute11</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute12" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute12</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute13" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute13</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute14" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute14</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute15" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute15</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Attributes20">
+    <xsd:annotation>
+      <xsd:documentation>DFF Attributes 1 to 20 in e-Business Suite</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="AttributeCategory" type="C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute Category</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute1" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute1</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute2" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute2</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute3" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute3</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute4" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute4</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute5" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute5</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute6" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute6</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute7" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute7</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute8" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute8</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute9" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute9</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute10" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute10</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute11" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute11</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute12" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute12</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute13" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute13</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute14" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute14</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute15" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute15</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute16" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute16</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute17" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute17</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute18" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute18</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute19" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute19</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute20" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute20</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Attributes24">
+    <xsd:annotation>
+      <xsd:documentation>DFF Fields to populate extra information into the
+        e-Business Suite
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="AttributeCategory" type="C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute Category</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute1" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute1</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute2" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute2</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute3" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute3</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute4" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute4</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute5" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute5</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute6" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute6</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute7" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute7</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute8" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute8</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute9" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute9</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute10" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute10</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute11" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute11</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute12" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute12</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute13" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute13</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute14" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute14</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute15" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute15</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute16" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute16</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute17" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute17</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute18" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute18</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute19" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute19</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute20" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute20</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute21" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute21</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute22" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute22</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute23" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute23</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute24" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute24</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Attributes25">
+    <xsd:annotation>
+      <xsd:documentation>DFF Attributes 1 to 25 in e-Business Suite</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="AttributeCategory" type="C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute Category</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute1" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute1</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute2" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute2</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute3" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute3</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute4" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute4</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute5" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute5</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute6" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute6</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute7" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute7</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute8" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute8</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute9" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute9</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute10" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute10</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute11" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute11</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute12" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute12</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute13" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute13</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute14" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute14</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute15" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute15</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute16" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute16</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute17" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute17</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute18" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute18</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute19" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute19</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute20" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute20</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute21" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute21</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute22" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute22</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute23" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute23</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute24" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute24</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute25" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute25</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Attributes30">
+    <xsd:annotation>
+      <xsd:documentation>DFF Attributes 1 to 30 in e-Business Suite</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="AttributeCategory" type="C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute Category</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute1" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute1</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute2" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute2</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute3" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute3</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute4" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute4</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute5" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute5</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute6" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute6</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute7" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute7</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute8" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute8</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute9" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute9</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute10" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute10</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute11" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute11</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute12" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute12</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute13" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute13</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute14" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute14</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute15" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute15</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute16" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute16</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute17" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute17</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute18" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute18</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute19" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute19</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute20" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute20</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute21" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute21</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute22" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute22</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute23" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute23</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute24" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute24</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute25" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute25</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute26" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute26</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute27" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute27</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute28" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute28</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute29" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute29</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Attribute30" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Attribute30</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="GlobalAttributes">
+    <xsd:annotation>
+      <xsd:documentation>GlobalAttribute structure</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="GlobalAttributeCategory" type="C30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Global Attribute Category</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="GlobalAttribute1" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>GlobalAttribute1</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="GlobalAttribute2" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>GlobalAttribute2</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="GlobalAttribute3" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>GlobalAttribute3</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="GlobalAttribute4" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>GlobalAttribute4</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="GlobalAttribute5" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>GlobalAttribute5</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="GlobalAttribute6" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>GlobalAttribute6</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="GlobalAttribute7" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>GlobalAttribute7</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="GlobalAttribute8" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>GlobalAttribute8</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="GlobalAttribute9" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>GlobalAttribute9</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="GlobalAttribute10" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>GlobalAttribute10</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="GlobalAttribute11" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>GlobalAttribute11</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="GlobalAttribute12" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>GlobalAttribute12</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="GlobalAttribute13" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>GlobalAttribute13</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="GlobalAttribute14" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>GlobalAttribute14</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="GlobalAttribute15" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>GlobalAttribute15</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="GlobalAttribute16" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>GlobalAttribute16</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="GlobalAttribute17" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>GlobalAttribute17</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="GlobalAttribute18" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>GlobalAttribute18</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="GlobalAttribute19" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>GlobalAttribute19</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="GlobalAttribute20" type="C150" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>GlobalAttribute20</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Segments20">
+    <xsd:annotation>
+      <xsd:documentation>Key Segment Structure with 20 segments</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="Segment1" type="C40" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Segment1</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Segment2" type="C40" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Segment2</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Segment3" type="C40" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Segment3</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Segment4" type="C40" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Segment4</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Segment5" type="C40" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Segment5</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Segment6" type="C40" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Segment6</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Segment7" type="C40" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Segment7</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Segment8" type="C40" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Segment8</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Segment9" type="C40" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Segment9</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Segment10" type="C40" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Segment10</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Segment11" type="C40" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Segment11</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Segment12" type="C40" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Segment12</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Segment13" type="C40" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Segment13</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Segment14" type="C40" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Segment14</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Segment15" type="C40" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Segment15</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Segment16" type="C40" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Segment16</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Segment17" type="C40" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Segment17</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Segment18" type="C40" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Segment18</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Segment19" type="C40" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Segment19</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Segment20" type="C40" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Segment20</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Address">
+    <xsd:annotation>
+      <xsd:documentation>The base type for Address</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="AddressID" type="IDREF30" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Address Identifier</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="House" type="C50" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>House Name and Number</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="CoffName" type="C50" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Care off</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="AddressLine1" type="C240">
+        <xsd:annotation>
+          <xsd:documentation>Address Line 1</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="AddressLine2" type="C240" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Address Line 2</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="AddressLine3" type="C240" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Address Line 3</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="AddressLine4" type="C240" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Address Line 4</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="City" type="C60" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>City/Town Name</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Country" type="CountryCode">
+        <xsd:annotation>
+          <xsd:documentation>County</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="County" type="C60" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>County</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="State" type="C60" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>State Code/Name</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Province" type="C60" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Province</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="PostalCode" type="C60" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Postal Code</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="RecordHistory">
+    <xsd:annotation>
+      <xsd:documentation>Record History</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="CreatedBy" type="User" minOccurs="0"/>
+      <xsd:element name="DateCreated" type="DtTm"/>
+      <xsd:element name="LastUpdatedBy" type="User" minOccurs="0"/>
+      <xsd:element name="DateLastUpdated" type="DtTm"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="RecordCount">
+    <xsd:annotation>
+      <xsd:documentation>Record Count</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="MaxRecordsToFetch" type="Integer" default="10"/>
+      <xsd:element name="RecordsFetched" type="Integer" minOccurs="0"/>
+      <xsd:element name="RetriveDataOnMaxCount" type="BooleanString"
+        default="false"/>
+      <xsd:element name="SortCriteria" type="LOV" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Will expect values like 1.2.3 which means sort by field
+            1 then by 2 followed by 3. The complexity involved will
+            depend upon the service and more details will be made
+            available in the technical specs of the service
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="User">
+    <xsd:sequence>
+      <xsd:element name="UserLoginID" type="ID100" minOccurs="0"/>
+      <xsd:element name="UserName" type="C100" minOccurs="0"/>
+      <xsd:element name="UserType" type="C25" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The type of user, e.g. supervisor</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="DocumentLinksElementType">
+    <xsd:sequence>
+      <xsd:element name="DocumentID" type="ID15"/>
+      <xsd:element name="Name" type="C150"/>
+      <xsd:element name="DocumentLink" type="C240" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="DocumentElementType">
+    <xsd:sequence>
+      <xsd:element name="DocumentID" type="ID15"/>
+      <xsd:element name="DocumentType" type="C240"/>
+      <xsd:element name="FileExtension" type="C50" minOccurs="0"/>
+      <xsd:element name="Channel" type="C20" minOccurs="0"/>
+      <xsd:element name="Text" type="C240" minOccurs="0"/>
+      <xsd:element name="DocumentLink" type="C240" minOccurs="0"/>
+      <xsd:element name="BinData" type="BinData" minOccurs="0"/>
+      <xsd:element name="Status" type="C50" minOccurs="0"/>
+      <xsd:element name="StatusDescription" type="C50" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="AssesmentResultType">
+    <xsd:sequence>
+      <xsd:element name="AssesmentID" type="IDREF30" minOccurs="0"/>
+      <xsd:element name="Default" type="BooleanString" minOccurs="0"/>
+      <xsd:element name="Date" type="Dt" minOccurs="0"/>
+      <xsd:element name="Results" type="OPAResultType" minOccurs="0"/>
+      <xsd:element name="AssesmentDetails" type="AssessmentDetailType"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="AssessmentDetailType">
+    <xsd:sequence>
+      <xsd:element name="AssessmentScreens" type="AssessmentScreenType"
+        maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="AssessmentScreenType">
+    <xsd:sequence>
+      <xsd:element name="ScreenName" type="C255"/>
+      <xsd:element name="Caption" type="C1000" minOccurs="0"/>
+      <xsd:element name="Entity" type="OPAEntityType" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="OPAEntityType">
+    <xsd:sequence>
+      <xsd:element name="SequenceNumber" type="Integer"/>
+      <xsd:element name="EntityName" type="C50"/>
+      <xsd:element name="Caption" type="C1000" minOccurs="0"/>
+      <xsd:element name="Instances" type="OPAInstanceType" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="OPAInstanceType">
+    <xsd:sequence>
+      <xsd:element name="InstanceLabel" type="C255"/>
+      <xsd:element name="Caption" type="C1000" minOccurs="0"/>
+      <xsd:element name="Attributes">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Attribute" type="OPAAttributesType"
+              maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="OPAAttributesType">
+    <xsd:sequence>
+      <xsd:element name="Attribute" type="C50"/>
+      <xsd:element name="Caption" type="C1000" minOccurs="0"/>
+      <xsd:element name="ResponseType" type="LOV"/>
+      <xsd:element name="ResponseValue" type="C8000" minOccurs="0"/>
+      <xsd:element name="ResponseText" type="C2000" minOccurs="0"/>
+      <xsd:element name="UserDefinedInd" type="BooleanString" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="OPAResultType">
+    <xsd:sequence>
+      <xsd:element name="Goal" type="OPAGoalType" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="OPAGoalType">
+    <xsd:sequence>
+      <xsd:element name="Attribute" type="C50"/>
+      <xsd:element name="AttributeValue" type="C8000"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="NameValuePair">
+    <xsd:sequence>
+      <xsd:element name="Name" type="C300"/>
+      <xsd:element name="Value" type="C300"/>
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>
