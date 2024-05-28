@@ -77,6 +77,7 @@ public class SoaConfiguration {
     security.setSecurementPasswordType(WSConstants.PW_TEXT);
     security.setSecurementUsername(this.username);
     security.setSecurementPassword(this.password);
+    security.setSecurementMustUnderstand(false);
     return security;
   }
 }

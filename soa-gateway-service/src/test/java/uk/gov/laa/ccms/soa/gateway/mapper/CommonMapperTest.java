@@ -71,7 +71,7 @@ public class CommonMapperTest {
         assertEquals("1234", document.getDocumentId());
         assertEquals("sausage", document.getDocumentType());
         assertEquals("doc", document.getFileExtension());
-        assertNull(document.getBinData());
+        assertNull(document.getFileData());
     }
 
     @Test
