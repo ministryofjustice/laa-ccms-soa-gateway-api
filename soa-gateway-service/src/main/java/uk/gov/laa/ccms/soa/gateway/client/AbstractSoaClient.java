@@ -17,6 +17,7 @@ import uk.gov.legalservices.enterprise.common._1_0.common.SystemsList;
 import uk.gov.legalservices.enterprise.common._1_0.header.HeaderRQType;
 import uk.gov.legalservices.enterprise.common._1_0.header.HeaderRSType;
 import uk.gov.legalservices.enterprise.common._1_0.header.ObjectFactory;
+import uk.gov.legalservices.enterprise.common._1_0.header.StatusTextType;
 
 /**
  * Provides an abstract base for SOA (Service-Oriented Architecture) client implementations.
@@ -113,13 +114,16 @@ public abstract class AbstractSoaClient {
 
   protected void checkSoaCallSuccess(String serviceName, HeaderRSType headerRsType) {
     Optional.ofNullable(headerRsType)
-        .filter(h -> h.getStatus().getStatus() != SUCCESS)
-        .map(headerRSType1 -> {
+        .map(HeaderRSType::getStatus)
+        .filter(status -> Optional.ofNullable(status.getStatus())
+            .orElse(StatusTextType.ERROR) != SUCCESS)
+        .ifPresent(status -> {
           final String errorMsg = String.format(
                   "Failure in SOA call %s. Status Code: %s. Status Text: %s",
               serviceName,
-              headerRSType1.getStatus().getStatus().value(),
-              headerRSType1.getStatus().getStatusFreeText());
+              Optional.ofNullable(status.getStatus())
+                  .orElse(StatusTextType.ERROR).value(),
+              status.getStatusFreeText());
           log.error(errorMsg);
           throw new RuntimeException(errorMsg);
         });
