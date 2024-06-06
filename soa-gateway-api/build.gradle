@@ -39,14 +39,15 @@ openApiGenerate {
     configOptions = [
             delegatePattern       : "false",
             interfaceOnly         : "true", // This will only generate interfaces, not implementations
-            dateLibrary           : "java17",
-            java17                : "true",
+            dateLibrary           : "legacy",
             useTags               : "true",
             skipDefaultInterface  : "true",
             useJakartaEe          : "true",
             documentationProvider : "none",
             booleanGetterPrefix   : "is",
-            serializableModel     : "true"
+            serializableModel     : "true",
+            annotationLibrary     : "swagger2",
+            useSpringBoot3        : "true"
     ]
 }
 
