@@ -27,3 +27,10 @@ laa:
       commonorg:
         service-name: http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/ReferenceDataBIM
         service-url: ${SOA_SERVICE_URL}/soa-infra/services/default/GetCommonOrg/getcommonorg_ep
+    springboot:
+      starter:
+        auth:
+          authentication-header: "Authorization"
+          authorized-clients: ${AUTHORIZED_CLIENTS}
+          authorized-roles: ${AUTHORIZED_ROLES}
+          unprotected-uris: ${UNPROTECTED_URIS}

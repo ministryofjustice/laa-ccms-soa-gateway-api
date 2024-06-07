@@ -7,4 +7,25 @@ laa:
       contract-details:
         service-port: 8052
         service-url: http://localhost:${laa.ccms.soa-gateway.contract-details.service-port}/soa-infra/services/default/GetContractDetails/getcontractdetails_ep
-
+    springboot:
+      starter:
+        auth:
+          authentication-header: "Authorization"
+          authorized-clients: '[
+              {
+                  "name": "caab-ui",
+                  "roles": [
+                      "ALL"
+                  ],
+                  "token": "94549740-5aaa-4cd9-b9d9-666159d268a9"
+              }
+          ]'
+          authorized-roles: '[
+              {
+                  "name": "ALL",
+                  "URIs": [
+                      "/**"
+                  ]
+              }
+          ]'
+          unprotected-uris: [ "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/favicon.ico", "/open-api-specification.yml" ]
