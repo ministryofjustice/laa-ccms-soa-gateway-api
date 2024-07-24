@@ -3,11 +3,13 @@ package uk.gov.laa.ccms.soa.gateway.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import uk.gov.laa.ccms.soa.gateway.client.CoverSheetClient;
 import uk.gov.laa.ccms.soa.gateway.client.DocumentClient;
 import uk.gov.laa.ccms.soa.gateway.mapper.CommonMapper;
 import uk.gov.laa.ccms.soa.gateway.mapper.DocumentMapper;
 import uk.gov.laa.ccms.soa.gateway.model.BaseDocument;
 import uk.gov.laa.ccms.soa.gateway.model.ClientTransactionResponse;
+import uk.gov.laa.ccms.soa.gateway.model.CoverSheet;
 import uk.gov.laa.ccms.soa.gateway.model.Document;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.DocumentUploadRS;
 import uk.gov.legalservices.enterprise.common._1_0.common.DocumentElementType;
@@ -21,6 +23,8 @@ import uk.gov.legalservices.enterprise.common._1_0.common.DocumentElementType;
 public class DocumentService extends AbstractSoaService {
 
   private final DocumentClient documentClient;
+
+  private final CoverSheetClient coverSheetClient;
 
   private final DocumentMapper documentMapper;
 
@@ -93,5 +97,30 @@ public class DocumentService extends AbstractSoaService {
     return commonMapper.toDocument(response);
   }
 
+  /**
+   * Download a document cover sheet.
+   *
+   * @param soaGatewayUserLoginId  The user login ID for the SOA Gateway.
+   * @param soaGatewayUserRole     The user role in the SOA Gateway.
+   * @param documentId             The registered id of the document to download the
+   *                               cover sheet for.
+   * @return                       A {@link CoverSheet} object containing the cover sheet data.
+   */
+  public CoverSheet downloadDocumentCoverSheet(
+      final String soaGatewayUserLoginId,
+      final String soaGatewayUserRole,
+      final String documentId) {
+
+    final byte[] documentContent = coverSheetClient.downloadDocumentCoverSheet(
+        soaGatewayUserLoginId,
+        soaGatewayUserRole,
+        documentId);
+
+    String encodedContent = commonMapper.toBase64EncodedStringFromByteArray(documentContent);
+
+    return new CoverSheet()
+        .documentId(documentId)
+        .fileData(encodedContent);
+  }
 
 }
