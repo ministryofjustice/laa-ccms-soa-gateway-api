@@ -27,6 +27,9 @@ laa:
       commonorg:
         service-name: http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/ReferenceDataBIM
         service-url: ${SOA_SERVICE_URL}/soa-infra/services/default/GetCommonOrg/getcommonorg_ep
+      cover-sheet:
+        service-name: http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/GetCoverSheet
+        service-url: ${SOA_SERVICE_URL}/soa-infra/services/default/GetCoverSheet/getcoversheet_ep
     springboot:
       starter:
         auth:
