@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import uk.gov.laa.ccms.soa.gateway.model.BaseDocument;
 import uk.gov.laa.ccms.soa.gateway.model.ClientTransactionResponse;
+import uk.gov.laa.ccms.soa.gateway.model.CoverSheet;
 import uk.gov.laa.ccms.soa.gateway.model.Document;
 import uk.gov.laa.ccms.soa.gateway.service.DocumentService;
 
@@ -108,5 +109,26 @@ class DocumentControllerTest {
             .andExpect(status().isOk());
 
         verify(documentService).downloadDocument(soaGatewayUserLoginId, soaGatewayUserRole, documentId);
+    }
+
+    @Test
+    public void testDownloadDocumentCoverSheet_Success() throws Exception {
+        final String soaGatewayUserLoginId = "user";
+        final String soaGatewayUserRole = "EXTERNAL";
+        final String documentId = "doc123";
+
+        CoverSheet coverSheet = new CoverSheet()
+            .documentId(documentId);
+
+        when(documentService.downloadDocumentCoverSheet(soaGatewayUserLoginId, soaGatewayUserRole, documentId))
+            .thenReturn(coverSheet);
+
+        mockMvc.perform(
+                get("/documents/{document-id}/cover-sheet", documentId)
+                    .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
+                    .header("SoaGateway-User-Role", soaGatewayUserRole))
+            .andExpect(status().isOk());
+
+        verify(documentService).downloadDocumentCoverSheet(soaGatewayUserLoginId, soaGatewayUserRole, documentId);
     }
 }
