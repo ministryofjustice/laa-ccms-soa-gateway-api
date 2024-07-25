@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="GetCoverSheet"
+  targetNamespace="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/GetCoverSheet"
+  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+  xmlns:client="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/GetCoverSheet"
+  xmlns:ns1="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIM"
+  xmlns:plnk="http://schemas.xmlsoap.org/ws/2003/05/partner-link/"
+  xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:documentation>
+    <abstractWSDL>
+      http://bbplscapp02.lab.gov:8059/soa-infra/services/default/GetCoverSheet!1.0/GetCoverSheet.wsdl
+    </abstractWSDL>
+  </wsdl:documentation>
+  <wsdl:types>
+    <schema xmlns="http://www.w3.org/2001/XMLSchema">
+      <import namespace="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIM"
+        schemaLocation="../../../../Schema/BusinessObjects/CCMS/CaseManagement/Case/1.0/CaseBIM.xsd"/>
+      <import
+        namespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+        schemaLocation="../../../../Schema/BusinessObjects/Enterprise/External/oasis/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"/>
+    </schema>
+  </wsdl:types>
+  <wsdl:message name="GetCoverSheetRequestMessage">
+    <wsdl:part name="payload" element="ns1:DocumentCoverRQ"/>
+  </wsdl:message>
+  <wsdl:message name="GetCoverSheetResponseMessage">
+    <wsdl:part name="payload" element="ns1:DocumentCoverRS"/>
+  </wsdl:message>
+  <wsdl:message name="UsernameToken">
+    <wsdl:part name="Security" element="wsse:Security"/>
+  </wsdl:message>
+  <wsdl:portType name="GetCoverSheet">
+    <wsdl:operation name="process">
+      <wsdl:input message="client:GetCoverSheetRequestMessage"/>
+      <wsdl:output message="client:GetCoverSheetResponseMessage"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <plnk:partnerLinkType name="GetCoverSheet">
+    <plnk:role name="GetCoverSheetProvider">
+      <plnk:portType name="client:GetCoverSheet"/>
+    </plnk:role>
+  </plnk:partnerLinkType>
+  <wsdl:binding name="GetCoverSheetSOAPBinding" type="client:GetCoverSheet">
+    <soap:binding style="document"
+      transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="process">
+      <soap:operation style="document"
+        soapAction="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/GetCoverSheet/process"/>
+      <wsdl:input>
+        <soap:body use="literal" parts="payload"/>
+        <soap:header message="client:UsernameToken" part="Security"
+          use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="payload"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="getcoversheet_ep">
+    <wsdl:port name="GetCoverSheet_pt" binding="client:GetCoverSheetSOAPBinding">
+      <soap:address
+        location="http://bbplscapp02.lab.gov:8059/soa-infra/services/default/GetCoverSheet/getcoversheet_ep"/>
+    </wsdl:port>
+  </wsdl:service>
+  <plnk:partnerLinkType name="GetCoverSheet">
+    <plnk:role name="GetCoverSheetProvider">
+      <plnk:portType name="client:GetCoverSheet"/>
+    </plnk:role>
+  </plnk:partnerLinkType>
+</wsdl:definitions>

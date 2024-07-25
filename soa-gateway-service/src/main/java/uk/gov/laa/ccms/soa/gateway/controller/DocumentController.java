@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import uk.gov.laa.ccms.soa.gateway.api.DocumentsApi;
 import uk.gov.laa.ccms.soa.gateway.model.BaseDocument;
 import uk.gov.laa.ccms.soa.gateway.model.ClientTransactionResponse;
+import uk.gov.laa.ccms.soa.gateway.model.CoverSheet;
 import uk.gov.laa.ccms.soa.gateway.model.Document;
 import uk.gov.laa.ccms.soa.gateway.service.DocumentService;
 
@@ -93,6 +94,31 @@ public class DocumentController implements DocumentsApi {
 
     try {
       Document response = documentService.downloadDocument(
+          soaGatewayUserLoginId,
+          soaGatewayUserRole,
+          documentId);
+      return ResponseEntity.ok(response);
+    } catch (Exception e) {
+      log.error("DocumentController caught exception", e);
+      return ResponseEntity.internalServerError().build();
+    }
+  }
+
+  /**
+   * Download a document cover sheet from Ebs.
+   *
+   * @param documentId  (required) - the registered id of the document to download the
+   *                    cover sheet for.
+   * @param soaGatewayUserLoginId  (required) - the user requesting the data.
+   * @param soaGatewayUserRole  (required) - the user role requesting the data.
+   * @return ResponseEntity wrapping the {@link CoverSheet} data.
+   */
+  @Override
+  public ResponseEntity<CoverSheet> downloadDocumentCoverSheet(String documentId,
+      String soaGatewayUserLoginId, String soaGatewayUserRole) {
+
+    try {
+      CoverSheet response = documentService.downloadDocumentCoverSheet(
           soaGatewayUserLoginId,
           soaGatewayUserRole,
           documentId);

@@ -10,11 +10,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.laa.ccms.soa.gateway.client.CoverSheetClient;
 import uk.gov.laa.ccms.soa.gateway.client.DocumentClient;
 import uk.gov.laa.ccms.soa.gateway.mapper.CommonMapper;
 import uk.gov.laa.ccms.soa.gateway.mapper.DocumentMapper;
 import uk.gov.laa.ccms.soa.gateway.model.BaseDocument;
 import uk.gov.laa.ccms.soa.gateway.model.ClientTransactionResponse;
+import uk.gov.laa.ccms.soa.gateway.model.CoverSheet;
 import uk.gov.laa.ccms.soa.gateway.model.Document;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.DocumentUploadRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.DocumentUploadElementType;
@@ -25,6 +27,9 @@ public class DocumentServiceTest {
 
     @Mock
     private DocumentClient documentClient;
+
+    @Mock
+    private CoverSheetClient coverSheetClient;
 
     @Mock
     private DocumentMapper documentMapper;
@@ -152,6 +157,46 @@ public class DocumentServiceTest {
 
         // Assert the result
         assertEquals(document, result);
+    }
+
+    @Test
+    public void testDownloadDocumentCoverSheet() {
+        String soaGatewayUserLoginId = "soaGatewayUserLoginId";
+        String soaGatewayUserRole = "soaGatewayUserRole";
+        String documentId = "123";
+        String documentContent = "document-content";
+        byte[] documentContentBytes = documentContent.getBytes();
+
+        CoverSheet coverSheet = new CoverSheet()
+            .documentId(documentId)
+            .fileData(documentContent);
+
+        // Stub the Client to return the mocked response
+        when(coverSheetClient.downloadDocumentCoverSheet(
+            soaGatewayUserLoginId, soaGatewayUserRole, documentId))
+            .thenReturn(documentContentBytes);
+
+        // Stub the Mapper to return the mocked gateway response
+        when(commonMapper.toBase64EncodedStringFromByteArray(eq(documentContentBytes)))
+            .thenReturn(documentContent);
+
+        // Call the service method
+        CoverSheet result = documentService.downloadDocumentCoverSheet(
+            soaGatewayUserLoginId,
+            soaGatewayUserRole,
+            documentId);
+
+        // Verify that the NotificationClient method was called with the expected arguments
+        verify(coverSheetClient).downloadDocumentCoverSheet(
+            soaGatewayUserLoginId,
+            soaGatewayUserRole,
+            documentId);
+
+        // Verify that the map function was called with the mocked response
+        verify(commonMapper).toBase64EncodedStringFromByteArray(documentContentBytes);
+
+        // Assert the result
+        assertEquals(coverSheet, result);
     }
 }
 
