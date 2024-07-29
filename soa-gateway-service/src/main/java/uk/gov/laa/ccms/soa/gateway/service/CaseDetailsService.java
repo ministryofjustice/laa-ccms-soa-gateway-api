@@ -12,9 +12,12 @@ import uk.gov.laa.ccms.soa.gateway.mapper.CaseDetailsMapper;
 import uk.gov.laa.ccms.soa.gateway.model.CaseDetail;
 import uk.gov.laa.ccms.soa.gateway.model.CaseDetails;
 import uk.gov.laa.ccms.soa.gateway.model.CaseSummary;
+import uk.gov.laa.ccms.soa.gateway.model.TransactionStatus;
 import uk.gov.laa.ccms.soa.gateway.util.PaginationUtil;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddUpdtStatusRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseInqRS;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseAdd;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseInfo;
 
 /**
@@ -118,6 +121,34 @@ public class CaseDetailsService extends AbstractSoaService {
   }
 
   /**
+   * Registers a new case based on the provided case details.
+   *
+   * <p>This method communicates with the external Case Services system using the provided
+   * case details, creates a new case in CCMS, and then extracts the returned transaction id
+   * for return.</p>
+   *
+   * @param soaGatewayUserLoginId The user login ID for the SOA Gateway.
+   * @param soaGatewayUserRole    The user role in the SOA Gateway.
+   * @param caseDetail            The case details to register.
+   * @return A {@link String} representing the SOA transaction id for the case registration.
+   */
+  public String registerCase(
+      final String soaGatewayUserLoginId,
+      final String soaGatewayUserRole,
+      final CaseDetail caseDetail
+  ) {
+    log.info("CaseDetailsService - registerCase");
+    final CaseAdd caseAdd = caseDetailsMapper.toCaseAdd(caseDetail);
+
+    final CaseAddRS response = caseServicesClient.createCaseApplication(
+        soaGatewayUserLoginId,
+        soaGatewayUserRole,
+        caseAdd);
+
+    return response.getTransactionID();
+  }
+
+  /**
    * Fetches the status of a case transaction using its transaction ID. The method communicates
    * with the external Case Services system and retrieves the current status of the specified
    * transaction.
@@ -127,7 +158,7 @@ public class CaseDetailsService extends AbstractSoaService {
    * @param transactionId              The transaction ID for which the status is to be fetched.
    * @return                           The status of the specified case transaction.
    */
-  public uk.gov.laa.ccms.soa.gateway.model.TransactionStatus getCaseTransactionStatus(
+  public TransactionStatus getCaseTransactionStatus(
       final String soaGatewayUserLoginId,
       final String soaGatewayUserRole,
       final String transactionId
