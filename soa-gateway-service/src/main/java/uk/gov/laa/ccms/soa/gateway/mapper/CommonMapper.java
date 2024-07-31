@@ -51,6 +51,9 @@ public interface CommonMapper {
   @Mapping(target = "userLoginId", source = "userLoginID")
   UserDetail toUserDetail(User user);
 
+  @InheritInverseConfiguration
+  User toUser(UserDetail userDetail);
+
   @Mapping(target = "documentId", source = "documentID")
   @Mapping(target = "fileData", source = "binData")
   Document toDocument(DocumentElementType documentElementType);

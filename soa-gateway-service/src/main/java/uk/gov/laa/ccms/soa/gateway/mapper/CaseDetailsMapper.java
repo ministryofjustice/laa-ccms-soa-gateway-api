@@ -35,7 +35,6 @@ import uk.gov.laa.ccms.soa.gateway.model.ProviderDetail;
 import uk.gov.laa.ccms.soa.gateway.model.RecoveryAmount;
 import uk.gov.laa.ccms.soa.gateway.model.ScopeLimitation;
 import uk.gov.laa.ccms.soa.gateway.model.TimeRelatedAward;
-import uk.gov.laa.ccms.soa.gateway.model.UserDetail;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddUpdtStatusRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseInqRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.AwardElementType;
@@ -62,6 +61,7 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.OtherPartyPer
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.OutcomeDetailElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.PriorAuthorities;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.PriorAuthorityElementType;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ProceedingDetElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ProceedingElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ProviderDetails;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.RecoveryAmountElementType;
@@ -74,7 +74,6 @@ import uk.gov.legalservices.enterprise.common._1_0.common.OPAAttributesType;
 import uk.gov.legalservices.enterprise.common._1_0.common.OPAGoalType;
 import uk.gov.legalservices.enterprise.common._1_0.common.OPAInstanceType.Attributes;
 import uk.gov.legalservices.enterprise.common._1_0.common.OPAResultType;
-import uk.gov.legalservices.enterprise.common._1_0.common.User;
 
 
 /**
@@ -123,6 +122,12 @@ public interface CaseDetailsMapper {
   @Mapping(target = "caseDetails", source = ".")
   CaseAdd toCaseAdd(final CaseDetail caseDetail);
 
+  /**
+   * Transform a list of LinkedCase to a LinkedCasesUpdate.
+   *
+   * @param linkedCases - the linked cases to transform.
+   * @return LinkedCasesUpdate.
+   */
   default LinkedCasesUpdate toLinkedCasesUpdate(final List<LinkedCase> linkedCases) {
     LinkedCasesUpdate linkedCasesUpdate = new LinkedCasesUpdate();
 
@@ -134,6 +139,12 @@ public interface CaseDetailsMapper {
     return linkedCasesUpdate;
   }
 
+  /**
+   * Transform a list of Award to an AwardsElementType.
+   *
+   * @param awards - the awards to transform.
+   * @return AwardsElementType.
+   */
   default AwardsElementType toAwardsElementType(final List<Award> awards) {
     AwardsElementType awardsElementType = new AwardsElementType();
 
@@ -145,6 +156,12 @@ public interface CaseDetailsMapper {
     return awardsElementType;
   }
 
+  /**
+   * Transform a list of PriorAuthority to a PriorAuthorities.
+   *
+   * @param priorAuthorities - the prior authorities to transform.
+   * @return PriorAuthorities.
+   */
   default PriorAuthorities toPriorAuthorities(final List<PriorAuthority> priorAuthorities) {
     PriorAuthorities soaPriorAuthorities = new PriorAuthorities();
 
@@ -156,6 +173,12 @@ public interface CaseDetailsMapper {
     return soaPriorAuthorities;
   }
 
+  /**
+   * Transform a list of CaseDoc to a CaseDocs.
+   *
+   * @param caseDocs - the case documents to transform.
+   * @return CaseDocs.
+   */
   default CaseDocs toCaseDocs(final List<CaseDoc> caseDocs) {
     CaseDocs soaCaseDocs = new CaseDocs();
 
@@ -167,6 +190,12 @@ public interface CaseDetailsMapper {
     return soaCaseDocs;
   }
 
+  /**
+   * Transform a list of OpaGoal to a OPAResultType.
+   *
+   * @param opaGoals - the opa goals to transform.
+   * @return OPAResultType.
+   */
   default OPAResultType toOpaResultType(final List<OpaGoal> opaGoals) {
     OPAResultType opaResultType = new OPAResultType();
 
@@ -178,7 +207,12 @@ public interface CaseDetailsMapper {
     return opaResultType;
   }
 
-
+  /**
+   * Transform a list of AssessmentScreen to a AssessmentDetailType.
+   *
+   * @param assessmentScreens - the assessment screens to transform.
+   * @return AssessmentDetailType.
+   */
   default AssessmentDetailType toAssessmentDetailType(
       final List<AssessmentScreen> assessmentScreens) {
     AssessmentDetailType assessmentDetailType = new AssessmentDetailType();
@@ -191,6 +225,12 @@ public interface CaseDetailsMapper {
     return assessmentDetailType;
   }
 
+  /**
+   * Transform a list of OpaAttribute to an Attributes.
+   *
+   * @param opaAttributes - the opa attributes to transform.
+   * @return Attributes.
+   */
   default Attributes toAttributes(List<OpaAttribute> opaAttributes) {
     Attributes attributes = new Attributes();
 
@@ -200,6 +240,25 @@ public interface CaseDetailsMapper {
     }
 
     return attributes;
+  }
+
+  /**
+   * Transform a list of ScopeLimitation to a ProceedingDetElementType.ScopeLimitations.
+   *
+   * @param scopeLimitations - the scope limitations to transform.
+   * @return ProceedingDetElementType.ScopeLimitations.
+   */
+  default ProceedingDetElementType.ScopeLimitations toScopeLimitations(
+      List<ScopeLimitation> scopeLimitations) {
+    ProceedingDetElementType.ScopeLimitations soaScopeLimitations =
+        new ProceedingDetElementType.ScopeLimitations();
+
+    if (scopeLimitations != null) {
+      soaScopeLimitations.getScopeLimitation().addAll(
+          scopeLimitations.stream().map(this::toScopeLimitationElementType).toList());
+    }
+
+    return soaScopeLimitations;
   }
 
   @Mapping(target = "otherParties", source = "otherParties.otherParty")
@@ -243,7 +302,8 @@ public interface CaseDetailsMapper {
   ProceedingDetail toProceedingDetail(final ProceedingElementType proceedingElementType);
 
   @InheritInverseConfiguration
-  ProceedingElementType toProceedingDetail(final ProceedingDetail proceedingDetail);
+  @Mapping(target = "proceedingDetails", source = ".")
+  ProceedingElementType toProceedingElementType(final ProceedingDetail proceedingDetail);
 
   @Mapping(target = "details", source = "details.attribute")
   PriorAuthority toPriorAuthority(final PriorAuthorityElementType priorAuthorityElementType);
@@ -367,9 +427,6 @@ public interface CaseDetailsMapper {
   OPAGoalType toOpaGoalType(final OpaGoal opaGoal);
 
   AssessmentScreenType toAssessmentScreenType(final AssessmentScreen assessmentScreen);
-
-  @Mapping(target = "userLoginID", source = "userLoginId")
-  User toUser(final UserDetail userDetail);
 
   @Mapping(target = "assesmentID", source = "assessmentId")
   @Mapping(target = "default", source = "defaultInd")
