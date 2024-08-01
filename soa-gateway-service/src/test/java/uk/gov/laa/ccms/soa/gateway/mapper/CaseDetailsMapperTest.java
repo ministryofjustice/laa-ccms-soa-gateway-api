@@ -23,7 +23,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import uk.gov.laa.ccms.soa.gateway.model.AddressDetail;
-import uk.gov.laa.ccms.soa.gateway.model.ApplicationDetails;
+import uk.gov.laa.ccms.soa.gateway.model.SubmittedApplicationDetails;
 import uk.gov.laa.ccms.soa.gateway.model.Award;
 import uk.gov.laa.ccms.soa.gateway.model.BaseClient;
 import uk.gov.laa.ccms.soa.gateway.model.CaseDetail;
@@ -58,6 +58,7 @@ import uk.gov.laa.ccms.soa.gateway.model.UserDetail;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddUpdtStatusRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseInqRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ActionListElementType;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ApplicationDetails;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.AwardDetailElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.AwardDetailElementType.AwardDetails;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.AwardElementType;
@@ -666,7 +667,7 @@ public class CaseDetailsMapperTest {
   public void testToApplicationDetails() {
     uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ApplicationDetails applicationDetails = buildApplicationDetails();
 
-    ApplicationDetails result = caseDetailsMapper.toApplicationDetails(applicationDetails);
+    SubmittedApplicationDetails result = caseDetailsMapper.toApplicationDetails(applicationDetails);
 
     assertNotNull(result);
     assertEquals(applicationDetails.getApplicationAmendmentType(),

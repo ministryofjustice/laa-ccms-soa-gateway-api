@@ -1028,7 +1028,7 @@ components:
         case_reference_number:
           type: 'string'
         application_details:
-          $ref: '#/components/schemas/applicationDetails'
+          $ref: '#/components/schemas/submittedApplicationDetails'
         certificate_type:
           type: 'string'
         certificate_date:
@@ -1066,7 +1066,7 @@ components:
           type: 'array'
           items:
             $ref: '#/components/schemas/caseDoc'
-    applicationDetails:
+    submittedApplicationDetails:
       type: 'object'
       properties:
         client:

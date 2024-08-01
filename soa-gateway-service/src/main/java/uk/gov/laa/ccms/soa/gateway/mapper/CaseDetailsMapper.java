@@ -5,7 +5,6 @@ import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.data.domain.Page;
-import uk.gov.laa.ccms.soa.gateway.model.ApplicationDetails;
 import uk.gov.laa.ccms.soa.gateway.model.Award;
 import uk.gov.laa.ccms.soa.gateway.model.CaseDetail;
 import uk.gov.laa.ccms.soa.gateway.model.CaseDetails;
@@ -29,6 +28,7 @@ import uk.gov.laa.ccms.soa.gateway.model.ProceedingDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ProviderDetail;
 import uk.gov.laa.ccms.soa.gateway.model.RecoveryAmount;
 import uk.gov.laa.ccms.soa.gateway.model.ScopeLimitation;
+import uk.gov.laa.ccms.soa.gateway.model.SubmittedApplicationDetails;
 import uk.gov.laa.ccms.soa.gateway.model.TimeRelatedAward;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddUpdtStatusRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseInqRS;
@@ -55,7 +55,6 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ProviderDetai
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.RecoveryAmountElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ScopeLimitationElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.TimeRelatedElementType;
-
 
 /**
  * Mapper interface for converting case data between different representations.
@@ -105,7 +104,7 @@ public interface CaseDetailsMapper {
   @Mapping(target = "meansAssesments", source = "meansAssesments.assesmentResults")
   @Mapping(target = "meritsAssesments", source = "meritsAssesments.assesmentResults")
   @Mapping(target = "larDetails", source = "LARDetails")
-  ApplicationDetails toApplicationDetails(
+  SubmittedApplicationDetails toApplicationDetails(
       uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ApplicationDetails
           soaApplicationDetails);
 
