@@ -30,19 +30,23 @@ public class DocumentController implements DocumentsApi {
    * @param soaGatewayUserLoginId  (required) - the user requesting the data.
    * @param soaGatewayUserRole  (required) - the user role requesting the data.
    * @param baseDocument  (required) - the base document details to register.
+   * @param notificationReference  The ID of the notification to which this document
+   *                               is related.
    * @return ResponseEntity wrapping the transaction id and registered document id.
    */
   @Override
   public ResponseEntity<ClientTransactionResponse> registerDocument(
           final String soaGatewayUserLoginId,
           final String soaGatewayUserRole,
-          final BaseDocument baseDocument) {
+          final BaseDocument baseDocument,
+          final String notificationReference) {
 
     try {
       ClientTransactionResponse response = documentService.registerDocument(
               soaGatewayUserLoginId,
               soaGatewayUserRole,
-              baseDocument);
+              baseDocument,
+              notificationReference);
       return ResponseEntity.ok(response);
     } catch (Exception e) {
       log.error("DocumentController caught exception", e);
@@ -56,6 +60,8 @@ public class DocumentController implements DocumentsApi {
    * @param soaGatewayUserLoginId  (required) - the user requesting the data.
    * @param soaGatewayUserRole  (required) - the user role requesting the data.
    * @param document  (required) - the document data to upload.
+   * @param notificationReference  The ID of the notification to which this document
+   *                               is related.
    * @return ResponseEntity wrapping the transaction id and registered document id.
    */
   @Override
@@ -63,14 +69,16 @@ public class DocumentController implements DocumentsApi {
       final String documentId,
       final String soaGatewayUserLoginId,
       final String soaGatewayUserRole,
-      final Document document) {
+      final Document document,
+      final String notificationReference) {
 
     try {
       ClientTransactionResponse response = documentService.uploadDocument(
           soaGatewayUserLoginId,
           soaGatewayUserRole,
           documentId,
-          document);
+          document,
+          notificationReference);
       return ResponseEntity.ok(response);
     } catch (Exception e) {
       log.error("DocumentController caught exception", e);

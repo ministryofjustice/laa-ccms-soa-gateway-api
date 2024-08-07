@@ -51,7 +51,7 @@ class DocumentControllerTest {
             .transactionId("trans123")
             .referenceNumber("doc123");
 
-        when(documentService.registerDocument(soaGatewayUserLoginId, soaGatewayUserRole, baseDocument))
+        when(documentService.registerDocument(soaGatewayUserLoginId, soaGatewayUserRole, baseDocument, null))
             .thenReturn(clientTransactionResponse);
 
         mockMvc.perform(
@@ -62,7 +62,7 @@ class DocumentControllerTest {
                     .header("SoaGateway-User-Role", soaGatewayUserRole))
             .andExpect(status().isOk());
 
-        verify(documentService).registerDocument(soaGatewayUserLoginId, soaGatewayUserRole, baseDocument);
+        verify(documentService).registerDocument(soaGatewayUserLoginId, soaGatewayUserRole, baseDocument, null);
     }
 
     @Test
@@ -76,7 +76,7 @@ class DocumentControllerTest {
             .transactionId("trans123")
             .referenceNumber(documentId);
 
-        when(documentService.uploadDocument(soaGatewayUserLoginId, soaGatewayUserRole, documentId, document))
+        when(documentService.uploadDocument(soaGatewayUserLoginId, soaGatewayUserRole, documentId, document, null))
             .thenReturn(clientTransactionResponse);
 
         mockMvc.perform(
@@ -87,7 +87,7 @@ class DocumentControllerTest {
                     .header("SoaGateway-User-Role", soaGatewayUserRole))
             .andExpect(status().isOk());
 
-        verify(documentService).uploadDocument(soaGatewayUserLoginId, soaGatewayUserRole, documentId, document);
+        verify(documentService).uploadDocument(soaGatewayUserLoginId, soaGatewayUserRole, documentId, document, null);
     }
 
     @Test
