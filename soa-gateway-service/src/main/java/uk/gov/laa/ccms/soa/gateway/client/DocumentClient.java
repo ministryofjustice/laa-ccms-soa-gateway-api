@@ -1,6 +1,7 @@
 package uk.gov.laa.ccms.soa.gateway.client;
 
 import jakarta.xml.bind.JAXBElement;
+import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -62,17 +63,19 @@ public class DocumentClient extends AbstractSoaClient {
    * @param loggedInUserId      - the logged in UserId
    * @param loggedInUserType    - the logged in UserType
    * @param documentUploadElementType - the document upload details
+   * @param notificationReference - the ID of the notification to which this document is related
    * @return The response from the register request.
    */
   public DocumentUploadRS registerDocument(
       final String loggedInUserId,
       final String loggedInUserType,
-      final DocumentUploadElementType documentUploadElementType) {
+      final DocumentUploadElementType documentUploadElementType,
+      final String notificationReference) {
 
     return this.uploadDocument(
         loggedInUserId,
         loggedInUserType,
-        NO_RELATED_NOTIFICATION,
+        Objects.requireNonNullElse(notificationReference, NO_RELATED_NOTIFICATION),
         documentUploadElementType);
   }
 

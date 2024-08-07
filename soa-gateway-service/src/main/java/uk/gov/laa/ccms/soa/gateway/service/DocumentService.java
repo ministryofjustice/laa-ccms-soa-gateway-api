@@ -36,18 +36,22 @@ public class DocumentService extends AbstractSoaService {
    * @param soaGatewayUserLoginId  The user login ID for the SOA Gateway.
    * @param soaGatewayUserRole     The user role in the SOA Gateway.
    * @param document               The document details to register
+   * @param notificationReference  The ID of the notification to which this document
+   *                               is related.
    * @return                       A {@link ClientTransactionResponse} object containing the
    *                               transaction id and ebs registered document id.
    */
   public ClientTransactionResponse registerDocument(
           final String soaGatewayUserLoginId,
           final String soaGatewayUserRole,
-          final BaseDocument document) {
+          final BaseDocument document,
+          final String notificationReference) {
 
     final DocumentUploadRS response = documentClient.registerDocument(
         soaGatewayUserLoginId,
         soaGatewayUserRole,
-        documentMapper.toDocumentUploadElementType(document));
+        documentMapper.toDocumentUploadElementType(document),
+        notificationReference);
 
     return documentMapper.toClientTransactionResponse(response);
   }
@@ -59,6 +63,8 @@ public class DocumentService extends AbstractSoaService {
    * @param soaGatewayUserRole     The user role in the SOA Gateway.
    * @param documentId             The registered id of the document to download.
    * @param document               The document details to register
+   * @param notificationReference  The ID of the notification to which this document
+   *                               is related.
    * @return                       A {@link ClientTransactionResponse} object containing the
    *                               transaction id
    */
@@ -66,12 +72,14 @@ public class DocumentService extends AbstractSoaService {
       final String soaGatewayUserLoginId,
       final String soaGatewayUserRole,
       final String documentId,
-      final Document document) {
+      final Document document,
+      final String notificationReference) {
 
     final DocumentUploadRS response = documentClient.registerDocument(
         soaGatewayUserLoginId,
         soaGatewayUserRole,
-        documentMapper.toDocumentUploadElementType(documentId, document));
+        documentMapper.toDocumentUploadElementType(documentId, document),
+        notificationReference);
 
     return documentMapper.toClientTransactionResponse(response);
   }
