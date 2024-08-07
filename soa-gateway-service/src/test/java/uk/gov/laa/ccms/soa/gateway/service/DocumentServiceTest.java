@@ -54,7 +54,7 @@ public class DocumentServiceTest {
 
         // Stub the Client to return the mocked response
         when(documentClient.registerDocument(
-            soaGatewayUserLoginId, soaGatewayUserRole, documentUploadElementType))
+            soaGatewayUserLoginId, soaGatewayUserRole, documentUploadElementType, null))
                 .thenReturn(documentUploadRS);
 
         // Stub the Mapper to return the mocked gateway response
@@ -65,13 +65,15 @@ public class DocumentServiceTest {
         ClientTransactionResponse result = documentService.registerDocument(
             soaGatewayUserLoginId,
             soaGatewayUserRole,
-            baseDocument);
+            baseDocument,
+            null);
 
         // Verify that the NotificationClient method was called with the expected arguments
         verify(documentClient).registerDocument(
             soaGatewayUserLoginId,
             soaGatewayUserRole,
-            documentUploadElementType);
+            documentUploadElementType,
+            null);
 
         // Verify that the map function was called with the mocked response
         verify(documentMapper).toClientTransactionResponse(documentUploadRS);
@@ -96,7 +98,7 @@ public class DocumentServiceTest {
 
         // Stub the Client to return the mocked response
         when(documentClient.registerDocument(
-            soaGatewayUserLoginId, soaGatewayUserRole, documentUploadElementType))
+            soaGatewayUserLoginId, soaGatewayUserRole, documentUploadElementType, null))
             .thenReturn(documentUploadRS);
 
         // Stub the Mapper to return the mocked gateway response
@@ -108,13 +110,15 @@ public class DocumentServiceTest {
             soaGatewayUserLoginId,
             soaGatewayUserRole,
             documentId,
-            document);
+            document,
+            null);
 
         // Verify that the NotificationClient method was called with the expected arguments
         verify(documentClient).registerDocument(
             soaGatewayUserLoginId,
             soaGatewayUserRole,
-            documentUploadElementType);
+            documentUploadElementType,
+            null);
 
         // Verify that the map function was called with the mocked response
         verify(documentMapper).toClientTransactionResponse(documentUploadRS);

@@ -68,9 +68,8 @@ class DocumentClientTest {
 
         DocumentUploadElementType documentUploadElementType = new DocumentUploadElementType();
 
-
         DocumentUploadRS response = client.registerDocument(
-                soaGatewayUserLoginId, soaGatewayUserRole, documentUploadElementType);
+                soaGatewayUserLoginId, soaGatewayUserRole, documentUploadElementType, null);
 
         // Verify interactions
         verify(webServiceTemplate, times(1)).marshalSendAndReceive(
@@ -84,6 +83,37 @@ class DocumentClientTest {
         assertEquals(soaGatewayUserRole, payload.getValue().getHeaderRQ().getUserRole());
         assertEquals(documentUploadElementType, payload.getValue().getDocument());
         assertEquals(NO_RELATED_NOTIFICATION, payload.getValue().getNotificationID());
+        assertNotNull(response);
+    }
+
+    @Test
+    public void testRegisterDocumentForNotificationAttachmentBuildsRegisterDocumentRequest() throws Exception {
+        ObjectFactory objectFactory = new ObjectFactory();
+
+        // Mock the response of the WebServiceTemplate
+        when(webServiceTemplate.marshalSendAndReceive(
+            eq(SERVICE_URL),
+            any(JAXBElement.class),
+            any(SoapActionCallback.class)))
+            .thenReturn(objectFactory.createDocumentUploadRS(new DocumentUploadRS()));
+
+        DocumentUploadElementType documentUploadElementType = new DocumentUploadElementType();
+
+        DocumentUploadRS response = client.registerDocument(
+            soaGatewayUserLoginId, soaGatewayUserRole, documentUploadElementType, "12345");
+
+        // Verify interactions
+        verify(webServiceTemplate, times(1)).marshalSendAndReceive(
+            eq(SERVICE_URL),
+            requestCaptorUpload.capture(),
+            any(SoapActionCallback.class));
+
+        JAXBElement<DocumentUploadRQ> payload = requestCaptorUpload.getValue();
+        assertNotNull(payload.getValue().getHeaderRQ().getTimeStamp());
+        assertEquals(soaGatewayUserLoginId, payload.getValue().getHeaderRQ().getUserLoginID());
+        assertEquals(soaGatewayUserRole, payload.getValue().getHeaderRQ().getUserRole());
+        assertEquals(documentUploadElementType, payload.getValue().getDocument());
+        assertEquals("12345", payload.getValue().getNotificationID());
         assertNotNull(response);
     }
 
