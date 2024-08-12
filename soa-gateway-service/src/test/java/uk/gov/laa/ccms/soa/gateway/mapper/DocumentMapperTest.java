@@ -2,6 +2,7 @@ package uk.gov.laa.ccms.soa.gateway.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.Base64;
 import org.junit.jupiter.api.Test;
@@ -53,6 +54,7 @@ public class DocumentMapperTest {
         document.setDocumentType("docType");
         document.setFileExtension("fileExt");
         document.setText("thetext");
+        document.setChannel("E");
 
         DocumentUploadElementType result =
             documentMapper.toDocumentUploadElementType(documentId, document);
@@ -60,6 +62,30 @@ public class DocumentMapperTest {
         assertNotNull(result);
         assertEquals(document.getFileData(), Base64.getEncoder().encodeToString(result.getBinData()));
         assertEquals(documentId, result.getCCMSDocumentID());
+        assertEquals("E", result.getChannel());
+        assertEquals(document.getDocumentLink(), result.getDocumentLink());
+        assertEquals(document.getDocumentType(), result.getDocumentType());
+        assertEquals(document.getFileExtension(), result.getFileExtension());
+        assertEquals(document.getText(), result.getText());
+    }
+
+    @Test
+    public void testToDocumentUploadElementType_noId() {
+        // Create a mocked instance of soa response object
+        Document document = new Document();
+        document.setFileData("dGhlIGZpbGUgZGF0YQ==");
+        document.setDocumentId("docId");
+        document.setDocumentType("docType");
+        document.setFileExtension("fileExt");
+        document.setText("thetext");
+        document.setChannel("E");
+
+        DocumentUploadElementType result =
+            documentMapper.toDocumentUploadElementType(document);
+
+        assertNotNull(result);
+        assertNull(result.getCCMSDocumentID());
+        assertEquals(document.getFileData(), Base64.getEncoder().encodeToString(result.getBinData()));
         assertEquals("E", result.getChannel());
         assertEquals(document.getDocumentLink(), result.getDocumentLink());
         assertEquals(document.getDocumentType(), result.getDocumentType());

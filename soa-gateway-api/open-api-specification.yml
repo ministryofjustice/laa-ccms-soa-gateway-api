@@ -606,7 +606,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/baseDocument"
+              $ref: "#/components/schemas/document"
       parameters:
         - $ref: '#/components/parameters/soaGatewayUserLoginId'
         - $ref: '#/components/parameters/soaGatewayUserRole'

@@ -7,7 +7,6 @@ import uk.gov.laa.ccms.soa.gateway.client.CoverSheetClient;
 import uk.gov.laa.ccms.soa.gateway.client.DocumentClient;
 import uk.gov.laa.ccms.soa.gateway.mapper.CommonMapper;
 import uk.gov.laa.ccms.soa.gateway.mapper.DocumentMapper;
-import uk.gov.laa.ccms.soa.gateway.model.BaseDocument;
 import uk.gov.laa.ccms.soa.gateway.model.ClientTransactionResponse;
 import uk.gov.laa.ccms.soa.gateway.model.CoverSheet;
 import uk.gov.laa.ccms.soa.gateway.model.Document;
@@ -44,7 +43,7 @@ public class DocumentService extends AbstractSoaService {
   public ClientTransactionResponse registerDocument(
           final String soaGatewayUserLoginId,
           final String soaGatewayUserRole,
-          final BaseDocument document,
+          final Document document,
           final String notificationReference) {
 
     final DocumentUploadRS response = documentClient.registerDocument(

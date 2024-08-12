@@ -51,6 +51,7 @@ public class OrganisationServiceTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void testGetOrganisations() {
         OrganisationSummary searchOrganisation = new OrganisationSummary();
         Organization organization = buildOrganization();
