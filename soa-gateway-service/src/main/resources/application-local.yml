@@ -36,3 +36,19 @@ laa:
               }
           ]'
           unprotected-uris: [ "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/favicon.ico", "/open-api-specification.yml" ]
+
+# Log SOAP requests
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        web: DEBUG
+#        ws:
+#          client:
+#            MessageTracing:
+#              sent: DEBUG
+#              received: TRACE
+#          server:
+#            MessageTracing:
+#              sent: DEBUG
+#              received: TRACE
