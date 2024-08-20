@@ -23,6 +23,7 @@ import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabim.Comm
 import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabim.CommonOrgInqRS;
 import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabio.OrganizationPartyType;
 
+@SuppressWarnings("unchecked")
 @ExtendWith(MockitoExtension.class)
 public class OrganisationServiceTest {
 
