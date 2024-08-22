@@ -2,7 +2,9 @@ package uk.gov.laa.ccms.soa.gateway.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildApplicationDetails;
 import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildAwardElementType;
@@ -33,6 +35,7 @@ import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -50,11 +53,13 @@ import uk.gov.laa.ccms.soa.gateway.model.BaseClient;
 import uk.gov.laa.ccms.soa.gateway.model.CaseDetail;
 import uk.gov.laa.ccms.soa.gateway.model.CaseDetails;
 import uk.gov.laa.ccms.soa.gateway.model.CaseDoc;
+import uk.gov.laa.ccms.soa.gateway.model.CaseStatus;
 import uk.gov.laa.ccms.soa.gateway.model.CaseSummary;
 import uk.gov.laa.ccms.soa.gateway.model.CategoryOfLaw;
 import uk.gov.laa.ccms.soa.gateway.model.ContactDetail;
 import uk.gov.laa.ccms.soa.gateway.model.CostAward;
 import uk.gov.laa.ccms.soa.gateway.model.CostLimitation;
+import uk.gov.laa.ccms.soa.gateway.model.Discharge;
 import uk.gov.laa.ccms.soa.gateway.model.ExternalResource;
 import uk.gov.laa.ccms.soa.gateway.model.FinancialAward;
 import uk.gov.laa.ccms.soa.gateway.model.LandAward;
@@ -74,6 +79,7 @@ import uk.gov.laa.ccms.soa.gateway.model.OutcomeDetail;
 import uk.gov.laa.ccms.soa.gateway.model.PriorAuthority;
 import uk.gov.laa.ccms.soa.gateway.model.ProceedingDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ProviderDetail;
+import uk.gov.laa.ccms.soa.gateway.model.RecordHistory;
 import uk.gov.laa.ccms.soa.gateway.model.RecoveredAmount;
 import uk.gov.laa.ccms.soa.gateway.model.Recovery;
 import uk.gov.laa.ccms.soa.gateway.model.RecoveryAmount;
@@ -87,6 +93,8 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddUpdtSt
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseInqRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.AwardElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.Case;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseAdd;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseDetailsAdd;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseDocsElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseList;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CategoryOfLawElementType;
@@ -1263,4 +1271,258 @@ public class CaseDetailsMapperTest {
     assertEquals(nameDetail.getTitle(), result.getTitle());
     assertEquals(nameDetail.getSurnameAtBirth(), result.getSurnameAtBirth());
   }
+
+  @Test
+  @DisplayName("Test mapping CaseDetail to CaseAdd")
+  void testToCaseAdd() {
+    final CaseDetail caseDetail = new CaseDetail();
+    caseDetail.setCaseReferenceNumber("ref1");
+
+    final CaseAdd result = caseDetailsMapper.toCaseAdd(caseDetail);
+
+    assertNotNull(result);
+    assertEquals(caseDetail.getCaseReferenceNumber(), result.getCaseReferenceNumber());
+    assertNotNull(result.getCaseDetails());
+  }
+
+  @Test
+  @DisplayName("Test mapping CaseDetail to CaseAdd with null CaseDetail")
+  void testToCaseAddWithNullCaseDetail() {
+    final CaseAdd result = caseDetailsMapper.toCaseAdd(null);
+    assertNull(result);
+  }
+
+  @Test
+  @DisplayName("Test mapping CaseDetail to CaseAdd and CaseDetailsAdd")
+  void testToCaseAddAndCaseDetailsAdd() {
+    final CaseDetail caseDetail = new CaseDetail();
+    caseDetail.setCaseReferenceNumber("ref1");
+    caseDetail.setCertificateType("CERT_TYPE");
+    caseDetail.setCertificateDate(new Date());
+    caseDetail.setPreCertificateCosts(BigDecimal.valueOf(1000));
+    caseDetail.setLegalHelpCosts(BigDecimal.valueOf(2000));
+    caseDetail.setUndertakingAmount(BigDecimal.valueOf(3000));
+    caseDetail.setApplicationDetails(new ApplicationDetails());
+    caseDetail.setLinkedCases(Collections.singletonList(new LinkedCase()));
+    caseDetail.setAwards(Collections.singletonList(new Award()));
+    caseDetail.setPriorAuthorities(Collections.singletonList(new PriorAuthority()));
+    caseDetail.setDischargeStatus(new Discharge());
+    caseDetail.setCaseStatus(new CaseStatus());
+    caseDetail.setRecordHistory(new RecordHistory());
+    caseDetail.setCaseDocs(Collections.singletonList(new CaseDoc()));
+
+    final CaseAdd result = caseDetailsMapper.toCaseAdd(caseDetail);
+
+    assertNotNull(result);
+    assertEquals(caseDetail.getCaseReferenceNumber(), result.getCaseReferenceNumber());
+
+    final CaseDetailsAdd caseDetailsAdd = result.getCaseDetails();
+    assertNotNull(caseDetailsAdd);
+    assertEquals(caseDetail.getCertificateType(), caseDetailsAdd.getCertificateType());
+    assertEquals(caseDetail.getPreCertificateCosts(), caseDetailsAdd.getPreCertificateCosts());
+    assertEquals(caseDetail.getLegalHelpCosts(), caseDetailsAdd.getLegalHelpCosts());
+    assertEquals(caseDetail.getUndertakingAmount(), caseDetailsAdd.getUndertakingAmount());
+
+    assertNotNull(caseDetailsAdd.getApplicationDetails());
+    assertNotNull(caseDetailsAdd.getCertificateDate());
+    assertNotNull(caseDetailsAdd.getLinkedCases());
+    assertNotNull(caseDetailsAdd.getAwards());
+    assertNotNull(caseDetailsAdd.getPriorAuthorities());
+    assertNotNull(caseDetailsAdd.getDischargeStatus());
+    assertNotNull(caseDetailsAdd.getCaseStatus());
+    assertNotNull(caseDetailsAdd.getRecordHistory());
+    assertNotNull(caseDetailsAdd.getCaseDocs());
+  }
+
+  @Test
+  @DisplayName("Test mapping CaseDetail to CaseAdd and CaseDetailsAdd with null CaseDetail")
+  void testToCaseAddAndCaseDetailsAddWithNullCaseDetail() {
+    final CaseDetailsAdd result = caseDetailsMapper.caseDetailToCaseDetailsAdd(null);
+    assertNull(result);
+  }
+
+  @Test
+  @DisplayName("Test mapping ApplicationDetails to soa.ApplicationDetails")
+  void testToSoaApplicationDetails() {
+    final ApplicationDetails applicationDetails = new ApplicationDetails();
+    applicationDetails.setLarDetails(new LarDetails());
+    applicationDetails.setClient(new BaseClient());
+    applicationDetails.setPreferredAddress("Preferred Address");
+    applicationDetails.setCorrespondenceAddress(new AddressDetail());
+    applicationDetails.setProviderDetails(new ProviderDetail());
+    applicationDetails.setCategoryOfLaw(new CategoryOfLaw());
+    applicationDetails.setDateOfFirstAttendance(new Date());
+    applicationDetails.setPurposeOfApplication("Purpose of Application");
+    applicationDetails.setFixedHearingDateInd(true);
+    applicationDetails.setDateOfHearing(new Date());
+    applicationDetails.setPurposeOfHearing("Purpose of Hearing");
+    applicationDetails.setHighProfileCaseInd(true);
+    applicationDetails.setDevolvedPowersDate(new Date());
+    applicationDetails.setApplicationAmendmentType("Amendment Type");
+    applicationDetails.setCertificateType("Certificate Type");
+
+    when(commonMapper.toAddress(eq(applicationDetails.getCorrespondenceAddress()))).thenReturn(
+        new Address());
+
+    final uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ApplicationDetails result =
+        caseDetailsMapper.toSoaApplicationDetails(applicationDetails);
+
+    assertNotNull(result);
+    assertNotNull(result.getOtherParties());
+    assertNotNull(result.getExternalResources());
+    assertNotNull(result.getProceedings());
+    assertNotNull(result.getMeansAssesments());
+    assertNotNull(result.getMeritsAssesments());
+    assertNotNull(result.getLARDetails());
+    assertNotNull(result.getClient());
+    assertEquals(applicationDetails.getPreferredAddress(), result.getPreferredAddress());
+    assertNotNull(result.getCorrespondenceAddress());
+    assertNotNull(result.getProviderDetails());
+    assertNotNull(result.getCategoryOfLaw());
+    assertNotNull(result.getDateOfFirstAttendance());
+    assertEquals(applicationDetails.getPurposeOfApplication(), result.getPurposeOfApplication());
+    assertEquals(applicationDetails.isFixedHearingDateInd(), result.isFixedHearingDateInd());
+    assertNotNull(result.getDateOfHearing());
+    assertEquals(applicationDetails.getPurposeOfHearing(), result.getPurposeOfHearing());
+    assertEquals(applicationDetails.isHighProfileCaseInd(), result.isHighProfileCaseInd());
+    assertNotNull(result.getDevolvedPowersDate());
+    assertEquals(applicationDetails.getApplicationAmendmentType(), result.getApplicationAmendmentType());
+    assertEquals(applicationDetails.getCertificateType(), result.getCertificateType());
+  }
+
+  @Test
+  @DisplayName("Test mapping CostLimitation to CostLimitationElementType")
+  void testToCostLimitationElementType() {
+    final CostLimitation costLimitation = new CostLimitation();
+    costLimitation.setCostLimitId("CL123");
+    costLimitation.setBillingProviderId("BPID456");
+    costLimitation.setBillingProviderName("Provider Name");
+    costLimitation.setCostCategory("Category A");
+    costLimitation.setPaidToDate(BigDecimal.valueOf(1000));
+    costLimitation.setAmount(BigDecimal.valueOf(5000));
+
+    final CostLimitationElementType result = caseDetailsMapper.toCostLimitationElementType(costLimitation);
+
+    assertNotNull(result);
+    assertEquals(costLimitation.getCostLimitId(), result.getCostLimitID());
+    assertEquals(costLimitation.getBillingProviderId(), result.getBillingProviderID());
+    assertEquals(costLimitation.getBillingProviderName(), result.getBillingProviderName());
+    assertEquals(costLimitation.getCostCategory(), result.getCostCategory());
+    assertEquals(costLimitation.getPaidToDate(), result.getPaidToDate());
+    assertEquals(costLimitation.getAmount(), result.getAmount());
+  }
+
+  @Test
+  @DisplayName("Test mapping CostLimitation to CostLimitationElementType with null CostLimitation")
+  void testToCostLimitationElementTypeWithNullCostLimitation() {
+    final CostLimitationElementType result = caseDetailsMapper.toCostLimitationElementType(null);
+    assertNull(result);
+  }
+
+  @Test
+  @DisplayName("Test mapping ExternalResource to ExtResourceElementType")
+  void testToExtResourceElementType() {
+    final ExternalResource externalResource = new ExternalResource();
+    externalResource.setExternalResourceRef("ExtResRef123");
+    externalResource.setExternalResourceType("ResourceTypeA");
+    externalResource.setDateInstructed(new Date());
+    externalResource.setLocation("LocationXYZ");
+    externalResource.setChambers("ChambersABC");
+
+    final ExtResourceElementType result = caseDetailsMapper.toExtResourceElementType(externalResource);
+
+    assertNotNull(result);
+    assertEquals(externalResource.getExternalResourceRef(), result.getExternalResourceRef());
+    assertEquals(externalResource.getExternalResourceType(), result.getExternalResourceType());
+    assertNotNull(result.getDateInstructed());
+    assertEquals(externalResource.getLocation(), result.getLocation());
+    assertEquals(externalResource.getChambers(), result.getChambers());
+  }
+
+  @Test
+  @DisplayName("Test mapping ExternalResource to ExtResourceElementType with null ExternalResource")
+  void testToExtResourceElementTypeWithNullExternalResource() {
+    final ExtResourceElementType result = caseDetailsMapper.toExtResourceElementType(null);
+    assertNull(result);
+  }
+
+  @Test
+  @DisplayName("Test mapping ProceedingDetail to ProceedingElementType")
+  void testToProceedingElementType() {
+    final ProceedingDetail proceedingDetail = new ProceedingDetail();
+    proceedingDetail.setProceedingCaseId("CaseID123");
+    proceedingDetail.setDateApplied(new Date());
+    proceedingDetail.setStatus("StatusABC");
+    proceedingDetail.setLeadProceedingIndicator(true);
+    proceedingDetail.setOutcomeCourtCaseNumber("Outcome123");
+
+    final ProceedingElementType result = caseDetailsMapper.toProceedingElementType(proceedingDetail);
+
+    assertNotNull(result);
+    assertNotNull(result.getAvailableFunctions());
+    assertNotNull(result.getProceedingDetails());
+    assertEquals(proceedingDetail.getProceedingCaseId(), result.getProceedingCaseID());
+    assertNotNull(result.getDateApplied());
+    assertEquals(proceedingDetail.getStatus(), result.getStatus());
+    assertEquals(proceedingDetail.isLeadProceedingIndicator(), result.isLeadProceedingIndicator());
+    assertEquals(proceedingDetail.getOutcomeCourtCaseNumber(), result.getOutcomeCourtCaseNumber());
+  }
+
+  @Test
+  @DisplayName("Test mapping ProceedingDetail to ProceedingElementType with null ProceedingDetail")
+  void testToProceedingElementTypeWithNullProceedingDetail() {
+    final ProceedingElementType result = caseDetailsMapper.toProceedingElementType(null);
+    assertNull(result);
+  }
+
+  @Test
+  @DisplayName("Test mapping CostAward to CostAwardElementType")
+  void testToCostAwardElementType() {
+    final CostAward costAward = new CostAward();
+    costAward.setPreCertificateAwardLsc(BigDecimal.valueOf(1000));
+    costAward.setCertificateCostRateLsc(BigDecimal.valueOf(1.5));
+    costAward.setOrderDate(new Date());
+    costAward.setCourtAssessmentStatus("Court Status");
+    costAward.setPreCertificateAwardOth(BigDecimal.valueOf(2000));
+    costAward.setCertificateCostRateMarket(BigDecimal.valueOf(2.5));
+    costAward.setAwardedBy("Awarded By Name");
+    costAward.setInterestAwardedRate(BigDecimal.valueOf(0.05));
+    costAward.setInterestAwardedStartDate(new Date());
+    costAward.setOtherDetails("Other details");
+    costAward.setOrderDateServed(new Date());
+    costAward.setServiceAddress(new ServiceAddress());
+    costAward.setRecovery(new Recovery());
+
+    final CostAwardElementType result = caseDetailsMapper.toCostAwardElementType(costAward);
+
+    assertNotNull(result);
+    assertNotNull(result.getLiableParties());
+    assertEquals(costAward.getPreCertificateAwardLsc(), result.getPreCertificateAwardLSC());
+    assertEquals(costAward.getCertificateCostRateLsc(), result.getCertificateCostRateLSC());
+    assertNotNull(result.getOrderDate());
+    assertEquals(costAward.getCourtAssessmentStatus(), result.getCourtAssessmentStatus());
+    assertEquals(costAward.getPreCertificateAwardOth(), result.getPreCertificateAwardOth());
+    assertEquals(costAward.getCertificateCostRateMarket(), result.getCertificateCostRateMarket());
+    assertEquals(costAward.getAwardedBy(), result.getAwardedBy());
+    assertEquals(costAward.getInterestAwardedRate(), result.getInterestAwardedRate());
+    assertNotNull(result.getInterestAwardedStartDate());
+    assertEquals(costAward.getOtherDetails(), result.getOtherDetails());
+    assertNotNull(result.getOrderDateServed());
+    assertNotNull(result.getServiceAddress());
+    assertNotNull(result.getRecovery());
+  }
+
+  @Test
+  @DisplayName("Test mapping CostAward to CostAwardElementType with null CostAward")
+  void testToCostAwardElementTypeWithNullCostAward() {
+    final CostAwardElementType result = caseDetailsMapper.toCostAwardElementType(null);
+    assertNull(result);
+  }
+
+
+
+
+
+
+
 }
