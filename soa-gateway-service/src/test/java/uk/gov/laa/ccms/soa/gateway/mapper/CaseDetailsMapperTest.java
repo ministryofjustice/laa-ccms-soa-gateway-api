@@ -45,7 +45,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import uk.gov.laa.ccms.soa.gateway.model.AddressDetail;
-import uk.gov.laa.ccms.soa.gateway.model.ApplicationDetails;
 import uk.gov.laa.ccms.soa.gateway.model.AssessmentResult;
 import uk.gov.laa.ccms.soa.gateway.model.AssessmentScreen;
 import uk.gov.laa.ccms.soa.gateway.model.Award;
@@ -85,6 +84,7 @@ import uk.gov.laa.ccms.soa.gateway.model.Recovery;
 import uk.gov.laa.ccms.soa.gateway.model.RecoveryAmount;
 import uk.gov.laa.ccms.soa.gateway.model.ScopeLimitation;
 import uk.gov.laa.ccms.soa.gateway.model.ServiceAddress;
+import uk.gov.laa.ccms.soa.gateway.model.SubmittedApplicationDetails;
 import uk.gov.laa.ccms.soa.gateway.model.TimeRelatedAward;
 import uk.gov.laa.ccms.soa.gateway.model.TransactionStatus;
 import uk.gov.laa.ccms.soa.gateway.model.UserDetail;
@@ -672,7 +672,7 @@ public class CaseDetailsMapperTest {
   public void testToApplicationDetails() {
     uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ApplicationDetails applicationDetails = buildApplicationDetails();
 
-    ApplicationDetails result = caseDetailsMapper.toApplicationDetails(applicationDetails);
+    SubmittedApplicationDetails result = caseDetailsMapper.toApplicationDetails(applicationDetails);
 
     assertNotNull(result);
     assertEquals(applicationDetails.getApplicationAmendmentType(),
@@ -1302,7 +1302,7 @@ public class CaseDetailsMapperTest {
     caseDetail.setPreCertificateCosts(BigDecimal.valueOf(1000));
     caseDetail.setLegalHelpCosts(BigDecimal.valueOf(2000));
     caseDetail.setUndertakingAmount(BigDecimal.valueOf(3000));
-    caseDetail.setApplicationDetails(new ApplicationDetails());
+    caseDetail.setApplicationDetails(new SubmittedApplicationDetails());
     caseDetail.setLinkedCases(Collections.singletonList(new LinkedCase()));
     caseDetail.setAwards(Collections.singletonList(new Award()));
     caseDetail.setPriorAuthorities(Collections.singletonList(new PriorAuthority()));
@@ -1344,7 +1344,7 @@ public class CaseDetailsMapperTest {
   @Test
   @DisplayName("Test mapping ApplicationDetails to soa.ApplicationDetails")
   void testToSoaApplicationDetails() {
-    final ApplicationDetails applicationDetails = new ApplicationDetails();
+    final SubmittedApplicationDetails applicationDetails = new SubmittedApplicationDetails();
     applicationDetails.setLarDetails(new LarDetails());
     applicationDetails.setClient(new BaseClient());
     applicationDetails.setPreferredAddress("Preferred Address");

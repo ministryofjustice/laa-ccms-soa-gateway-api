@@ -642,6 +642,11 @@ paths:
       parameters:
         - $ref: '#/components/parameters/soaGatewayUserLoginId'
         - $ref: '#/components/parameters/soaGatewayUserRole'
+        - name: 'notification-reference'
+          in: 'query'
+          schema:
+            type: 'string'
+            example: '1234567890'
       responses:
         '200':
           description: 'Successful operation'
@@ -709,6 +714,11 @@ paths:
             example: '1234567890'
         - $ref: '#/components/parameters/soaGatewayUserLoginId'
         - $ref: '#/components/parameters/soaGatewayUserRole'
+        - name: 'notification-reference'
+          in: 'query'
+          schema:
+            type: 'string'
+            example: '1234567890'
       responses:
         '200':
           description: 'Successful operation'
@@ -1066,7 +1076,7 @@ components:
         case_reference_number:
           type: 'string'
         application_details:
-          $ref: '#/components/schemas/applicationDetails'
+          $ref: '#/components/schemas/submittedApplicationDetails'
         certificate_type:
           type: 'string'
         certificate_date:
@@ -1104,7 +1114,7 @@ components:
           type: 'array'
           items:
             $ref: '#/components/schemas/caseDoc'
-    applicationDetails:
+    submittedApplicationDetails:
       type: 'object'
       properties:
         client:

@@ -6,7 +6,6 @@ import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.data.domain.Page;
-import uk.gov.laa.ccms.soa.gateway.model.ApplicationDetails;
 import uk.gov.laa.ccms.soa.gateway.model.AssessmentResult;
 import uk.gov.laa.ccms.soa.gateway.model.AssessmentScreen;
 import uk.gov.laa.ccms.soa.gateway.model.Award;
@@ -34,6 +33,7 @@ import uk.gov.laa.ccms.soa.gateway.model.ProceedingDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ProviderDetail;
 import uk.gov.laa.ccms.soa.gateway.model.RecoveryAmount;
 import uk.gov.laa.ccms.soa.gateway.model.ScopeLimitation;
+import uk.gov.laa.ccms.soa.gateway.model.SubmittedApplicationDetails;
 import uk.gov.laa.ccms.soa.gateway.model.TimeRelatedAward;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddUpdtStatusRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseInqRS;
@@ -74,7 +74,6 @@ import uk.gov.legalservices.enterprise.common._1_0.common.OPAAttributesType;
 import uk.gov.legalservices.enterprise.common._1_0.common.OPAGoalType;
 import uk.gov.legalservices.enterprise.common._1_0.common.OPAInstanceType.Attributes;
 import uk.gov.legalservices.enterprise.common._1_0.common.OPAResultType;
-
 
 /**
  * Mapper interface for converting case data between different representations.
@@ -267,13 +266,14 @@ public interface CaseDetailsMapper {
   @Mapping(target = "meansAssesments", source = "meansAssesments.assesmentResults")
   @Mapping(target = "meritsAssesments", source = "meritsAssesments.assesmentResults")
   @Mapping(target = "larDetails", source = "LARDetails")
-  ApplicationDetails toApplicationDetails(
-      final uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ApplicationDetails
+
+  SubmittedApplicationDetails toApplicationDetails(
+      uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ApplicationDetails
           soaApplicationDetails);
 
   @InheritInverseConfiguration
   uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ApplicationDetails
-      toSoaApplicationDetails(final ApplicationDetails applicationDetails);
+      toSoaApplicationDetails(final SubmittedApplicationDetails applicationDetails);
 
   @Mapping(target = "costLimitId", source = "costLimitID")
   @Mapping(target = "billingProviderId", source = "billingProviderID")
