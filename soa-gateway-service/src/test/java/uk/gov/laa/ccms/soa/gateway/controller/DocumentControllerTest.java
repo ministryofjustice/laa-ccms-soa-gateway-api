@@ -19,7 +19,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import uk.gov.laa.ccms.soa.gateway.model.BaseDocument;
 import uk.gov.laa.ccms.soa.gateway.model.ClientTransactionResponse;
 import uk.gov.laa.ccms.soa.gateway.model.CoverSheet;
 import uk.gov.laa.ccms.soa.gateway.model.Document;
@@ -46,23 +45,23 @@ class DocumentControllerTest {
     public void testRegisterDocument_Success() throws Exception {
         final String soaGatewayUserLoginId = "user";
         final String soaGatewayUserRole = "EXTERNAL";
-        BaseDocument baseDocument = new BaseDocument();
+        Document document = new Document();
         ClientTransactionResponse clientTransactionResponse = new ClientTransactionResponse()
             .transactionId("trans123")
             .referenceNumber("doc123");
 
-        when(documentService.registerDocument(soaGatewayUserLoginId, soaGatewayUserRole, baseDocument, null))
+        when(documentService.registerDocument(soaGatewayUserLoginId, soaGatewayUserRole, document, null))
             .thenReturn(clientTransactionResponse);
 
         mockMvc.perform(
                 post("/documents")
-                    .content(new ObjectMapper().writeValueAsString(baseDocument))
+                    .content(new ObjectMapper().writeValueAsString(document))
                     .contentType(MediaType.APPLICATION_JSON)
                     .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
                     .header("SoaGateway-User-Role", soaGatewayUserRole))
             .andExpect(status().isOk());
 
-        verify(documentService).registerDocument(soaGatewayUserLoginId, soaGatewayUserRole, baseDocument, null);
+        verify(documentService).registerDocument(soaGatewayUserLoginId, soaGatewayUserRole, document, null);
     }
 
     @Test
