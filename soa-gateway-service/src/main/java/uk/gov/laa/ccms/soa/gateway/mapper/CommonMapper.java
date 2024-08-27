@@ -71,16 +71,36 @@ public interface CommonMapper {
         .orElse(null);
   }
 
+  /**
+   * Convert a y/n String to a boolean value.
+   *
+   * @param ynString the y/n string.
+   * @return true if the value is y/Y, false otherwise.
+   */
   default Boolean toBoolean(String ynString) {
     return ynString != null ? ynString.equalsIgnoreCase("Y") : null;
   }
 
+  /**
+   * Convert a boolean flag to a Y/N String.
+   *
+   * @param flag the boolean flag.
+   * @return "Y" if the boolean flag is true, otherwise "N".
+   */
   default String toYnString(Boolean flag) {
     return flag != null ? (flag ? "Y" : "N") : null;
   }
 
+  /**
+   * Convert a Base64 encoded string to an array of bytes.
+   *
+   * @param base64EncodedString the Base64 encoded string.
+   * @return the array of bytes, or null.
+   */
   default byte[] toByteArrayFromBase64EncodedString(String base64EncodedString) {
-    return Base64.getDecoder().decode(base64EncodedString);
+    return Optional.ofNullable(base64EncodedString)
+        .map(s -> Base64.getDecoder().decode(s))
+        .orElse(null);
   }
 
   /**

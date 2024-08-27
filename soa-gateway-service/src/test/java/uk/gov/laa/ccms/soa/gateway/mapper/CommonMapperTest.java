@@ -236,6 +236,16 @@ public class CommonMapperTest {
         assertEquals(opaAttributesType.getResponseValue(), opaAttribute.getResponseValue());
     }
 
+    @Test
+    public void testToByteArrayFromBase64EncodedString_handlesNullValue() {
+        assertNull(commonMapper.toByteArrayFromBase64EncodedString(null));
+    }
+
+    @Test
+    public void testToBase64EncodedStringFromByteArray_handlesNullValue() {
+        assertNull(commonMapper.toBase64EncodedStringFromByteArray(null));
+    }
+
     @ParameterizedTest
     @CsvSource(value = {
         "Y, true",

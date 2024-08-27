@@ -36,8 +36,8 @@ public class CoverSheetClient extends AbstractSoaClient {
    * @param serviceUrl         The URL endpoint for the cover sheet service.
    */
   public CoverSheetClient(WebServiceTemplate webServiceTemplate,
-      @Value("${laa.ccms.soa-gateway.document.service-name}") String serviceName,
-      @Value("${laa.ccms.soa-gateway.document.service-url}") String serviceUrl) {
+      @Value("${laa.ccms.soa-gateway.cover-sheet.service-name}") String serviceName,
+      @Value("${laa.ccms.soa-gateway.cover-sheet.service-url}") String serviceUrl) {
     this.webServiceTemplate = webServiceTemplate;
     this.serviceName = serviceName;
     this.serviceUrl = serviceUrl;
