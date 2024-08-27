@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.laa.ccms.soa.gateway.api.DocumentsApi;
-import uk.gov.laa.ccms.soa.gateway.model.BaseDocument;
 import uk.gov.laa.ccms.soa.gateway.model.ClientTransactionResponse;
 import uk.gov.laa.ccms.soa.gateway.model.CoverSheet;
 import uk.gov.laa.ccms.soa.gateway.model.Document;
@@ -29,7 +28,7 @@ public class DocumentController implements DocumentsApi {
    *
    * @param soaGatewayUserLoginId  (required) - the user requesting the data.
    * @param soaGatewayUserRole  (required) - the user role requesting the data.
-   * @param baseDocument  (required) - the base document details to register.
+   * @param document  (required) - the document details to register.
    * @param notificationReference  The ID of the notification to which this document
    *                               is related.
    * @return ResponseEntity wrapping the transaction id and registered document id.
@@ -38,14 +37,14 @@ public class DocumentController implements DocumentsApi {
   public ResponseEntity<ClientTransactionResponse> registerDocument(
           final String soaGatewayUserLoginId,
           final String soaGatewayUserRole,
-          final BaseDocument baseDocument,
+          final Document document,
           final String notificationReference) {
 
     try {
       ClientTransactionResponse response = documentService.registerDocument(
               soaGatewayUserLoginId,
               soaGatewayUserRole,
-              baseDocument,
+              document,
               notificationReference);
       return ResponseEntity.ok(response);
     } catch (Exception e) {

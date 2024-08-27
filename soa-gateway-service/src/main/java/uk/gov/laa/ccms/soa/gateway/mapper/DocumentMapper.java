@@ -23,11 +23,14 @@ public interface DocumentMapper {
   DocumentUploadElementType toDocumentUploadElementType(final BaseDocument document);
 
   @Mapping(target = "CCMSDocumentID", source = "documentId")
-  @Mapping(target = "channel", constant = "E")
   @Mapping(target = ".", source = "document")
   @Mapping(target = "binData", source = "document.fileData")
   DocumentUploadElementType toDocumentUploadElementType(final String documentId,
       final Document document);
+
+  @Mapping(target = "CCMSDocumentID", ignore = true)
+  @Mapping(target = "binData", source = "document.fileData")
+  DocumentUploadElementType toDocumentUploadElementType(final Document document);
 
   @Mapping(target = "transactionId", source = "headerRS.transactionID")
   @Mapping(target = "referenceNumber", source = "documentID")

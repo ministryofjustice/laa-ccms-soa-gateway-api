@@ -14,7 +14,6 @@ import uk.gov.laa.ccms.soa.gateway.client.CoverSheetClient;
 import uk.gov.laa.ccms.soa.gateway.client.DocumentClient;
 import uk.gov.laa.ccms.soa.gateway.mapper.CommonMapper;
 import uk.gov.laa.ccms.soa.gateway.mapper.DocumentMapper;
-import uk.gov.laa.ccms.soa.gateway.model.BaseDocument;
 import uk.gov.laa.ccms.soa.gateway.model.ClientTransactionResponse;
 import uk.gov.laa.ccms.soa.gateway.model.CoverSheet;
 import uk.gov.laa.ccms.soa.gateway.model.Document;
@@ -44,12 +43,12 @@ public class DocumentServiceTest {
     public void testRegisterDocument() {
         String soaGatewayUserLoginId = "soaGatewayUserLoginId";
         String soaGatewayUserRole = "soaGatewayUserRole";
-        BaseDocument baseDocument = new BaseDocument();
+        Document document = new Document();
         DocumentUploadElementType documentUploadElementType = new DocumentUploadElementType();
         DocumentUploadRS documentUploadRS = new DocumentUploadRS();
         ClientTransactionResponse clientTransactionResponse = new ClientTransactionResponse();
 
-        when(documentMapper.toDocumentUploadElementType(baseDocument))
+        when(documentMapper.toDocumentUploadElementType(document))
             .thenReturn(documentUploadElementType);
 
         // Stub the Client to return the mocked response
@@ -65,7 +64,7 @@ public class DocumentServiceTest {
         ClientTransactionResponse result = documentService.registerDocument(
             soaGatewayUserLoginId,
             soaGatewayUserRole,
-            baseDocument,
+            document,
             null);
 
         // Verify that the NotificationClient method was called with the expected arguments
