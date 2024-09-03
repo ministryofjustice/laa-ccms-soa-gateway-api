@@ -6,11 +6,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.soap.client.core.SoapActionCallback;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddRQ;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddUpdtStatusRQ;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddUpdtStatusRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseInqRQ;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseInqRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.ObjectFactory;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseAdd;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseInfo;
 
 /**
@@ -134,6 +137,37 @@ public class CaseServicesClient extends AbstractSoaClient {
     // Check and throw exception if the SOA call was not successful
     checkSoaCallSuccess(serviceName, response.getValue().getHeaderRS());
 
+    return response.getValue();
+  }
+
+  /**
+   * Register a new Case in CCMS.
+   *
+   * @param loggedInUserId      - the logged in UserId
+   * @param loggedInUserType    - the logged in UserType
+   * @param caseAdd             - the case to add
+   * @return Response object containing the result of the case creation.
+   */
+  public CaseAddRS createCaseApplication(
+      String loggedInUserId,
+      String loggedInUserType,
+      CaseAdd caseAdd) {
+
+    final String soapAction = String.format("%s/CreateCaseApplication", serviceName);
+    CaseAddRQ caseAddRq = CASE_FACTORY.createCaseAddRQ();
+    caseAddRq.setHeaderRQ(createHeaderRq(loggedInUserId, loggedInUserType));
+
+    caseAddRq.setCase(caseAdd);
+
+    JAXBElement<CaseAddRS> response =
+        (JAXBElement<CaseAddRS>) getWebServiceTemplate()
+            .marshalSendAndReceive(
+                serviceUrl,
+                CASE_FACTORY.createCaseAddRQ(caseAddRq),
+                new SoapActionCallback(soapAction));
+
+    // Check and throw exception if the SOA call was not successful
+    checkSoaCallSuccess(serviceName, response.getValue().getHeaderRS());
     return response.getValue();
   }
 
