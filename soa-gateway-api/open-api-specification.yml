@@ -450,8 +450,8 @@ paths:
     post:
       tags:
         - cases
-      summary: 'Create Cases'
-      operationId: 'createCases'
+      summary: 'Create a case'
+      operationId: 'createCase'
       requestBody:
         description: Create a case
         required: true
