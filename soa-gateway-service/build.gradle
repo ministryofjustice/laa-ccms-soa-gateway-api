@@ -9,7 +9,7 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
-    implementation 'org.springframework.boot:spring-boot-starter-validation:3.1.4'
+    implementation 'org.springframework.boot:spring-boot-starter-validation:3.3.3'
 
     //Enable access token authentication
     implementation 'uk.gov.laa.ccms.springboot:laa-ccms-spring-boot-starter-auth'
