@@ -75,11 +75,11 @@ public class CaseDetailsController implements CasesApi {
   }
 
   @Override
-  public ResponseEntity<CaseTransactionResponse> createCases(
+  public ResponseEntity<CaseTransactionResponse> createCase(
       final String soaGatewayUserLoginId,
       final String soaGatewayUserRole,
       final CaseDetail caseDetail) {
-    log.info("GET /cases");
+    log.info("POST /cases");
     try {
       final String transactionId = caseDetailsService.registerCase(
           soaGatewayUserLoginId,

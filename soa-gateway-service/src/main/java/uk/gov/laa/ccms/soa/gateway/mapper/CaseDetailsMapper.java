@@ -37,6 +37,7 @@ import uk.gov.laa.ccms.soa.gateway.model.SubmittedApplicationDetails;
 import uk.gov.laa.ccms.soa.gateway.model.TimeRelatedAward;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddUpdtStatusRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseInqRS;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ApplicationDetails;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.AwardElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.AwardsElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.Case;
@@ -267,13 +268,11 @@ public interface CaseDetailsMapper {
   @Mapping(target = "meritsAssesments", source = "meritsAssesments.assesmentResults")
   @Mapping(target = "larDetails", source = "LARDetails")
 
-  SubmittedApplicationDetails toApplicationDetails(
-      uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ApplicationDetails
-          soaApplicationDetails);
+  SubmittedApplicationDetails toSubmittedApplicationDetails(
+      ApplicationDetails soaApplicationDetails);
 
   @InheritInverseConfiguration
-  uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ApplicationDetails
-      toSoaApplicationDetails(final SubmittedApplicationDetails applicationDetails);
+  ApplicationDetails toSoaApplicationDetails(final SubmittedApplicationDetails applicationDetails);
 
   @Mapping(target = "costLimitId", source = "costLimitID")
   @Mapping(target = "billingProviderId", source = "billingProviderID")

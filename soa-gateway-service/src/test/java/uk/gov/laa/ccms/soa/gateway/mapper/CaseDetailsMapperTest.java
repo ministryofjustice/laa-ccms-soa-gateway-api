@@ -672,7 +672,7 @@ public class CaseDetailsMapperTest {
   public void testToApplicationDetails() {
     uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ApplicationDetails applicationDetails = buildApplicationDetails();
 
-    SubmittedApplicationDetails result = caseDetailsMapper.toApplicationDetails(applicationDetails);
+    SubmittedApplicationDetails result = caseDetailsMapper.toSubmittedApplicationDetails(applicationDetails);
 
     assertNotNull(result);
     assertEquals(applicationDetails.getApplicationAmendmentType(),
