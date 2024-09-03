@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import uk.gov.laa.ccms.soa.gateway.api.CasesApi;
 import uk.gov.laa.ccms.soa.gateway.model.CaseDetail;
 import uk.gov.laa.ccms.soa.gateway.model.CaseDetails;
+import uk.gov.laa.ccms.soa.gateway.model.CaseTransactionResponse;
 import uk.gov.laa.ccms.soa.gateway.model.TransactionStatus;
 import uk.gov.laa.ccms.soa.gateway.service.CaseDetailsService;
 
@@ -54,7 +55,7 @@ public class CaseDetailsController implements CasesApi {
       final Pageable pageable) {
     log.info("GET /cases");
     try {
-      CaseDetails caseDetails = caseDetailsService.getCaseDetails(
+      final CaseDetails caseDetails = caseDetailsService.getCaseDetails(
           soaGatewayUserLoginId,
           soaGatewayUserRole,
           caseReferenceNumber,
@@ -67,7 +68,26 @@ public class CaseDetailsController implements CasesApi {
           pageable);
 
       return ResponseEntity.ok(caseDetails);
-    } catch (Exception e) {
+    } catch (final Exception e) {
+      log.error("CaseDetailsController caught exception", e);
+      return ResponseEntity.internalServerError().build();
+    }
+  }
+
+  @Override
+  public ResponseEntity<CaseTransactionResponse> createCase(
+      final String soaGatewayUserLoginId,
+      final String soaGatewayUserRole,
+      final CaseDetail caseDetail) {
+    log.info("POST /cases");
+    try {
+      final String transactionId = caseDetailsService.registerCase(
+          soaGatewayUserLoginId,
+          soaGatewayUserRole,
+          caseDetail);
+      return ResponseEntity.ok(new CaseTransactionResponse()
+          .transactionId(transactionId));
+    } catch (final Exception e) {
       log.error("CaseDetailsController caught exception", e);
       return ResponseEntity.internalServerError().build();
     }
@@ -88,13 +108,13 @@ public class CaseDetailsController implements CasesApi {
       final String soaGatewayUserRole) {
     log.info("GET /cases/{}", caseReferenceNumber);
     try {
-      CaseDetail caseDetail = caseDetailsService.getCaseDetail(
+      final CaseDetail caseDetail = caseDetailsService.getCaseDetail(
           soaGatewayUserLoginId,
           soaGatewayUserRole,
           caseReferenceNumber);
 
       return ResponseEntity.ok(caseDetail);
-    } catch (Exception e) {
+    } catch (final Exception e) {
       log.error("CaseDetailsController caught exception", e);
       return ResponseEntity.internalServerError().build();
     }
@@ -115,13 +135,13 @@ public class CaseDetailsController implements CasesApi {
       final String soaGatewayUserRole) {
     log.info("GET /cases/status/{}", transactionRequestId);
     try {
-      TransactionStatus status = caseDetailsService.getCaseTransactionStatus(
+      final TransactionStatus status = caseDetailsService.getCaseTransactionStatus(
           soaGatewayUserLoginId,
           soaGatewayUserRole,
           transactionRequestId);
 
       return ResponseEntity.ok(status);
-    } catch (Exception e) {
+    } catch (final Exception e) {
       log.error("CaseDetailsController caught exception", e);
       return ResponseEntity.internalServerError().build();
     }

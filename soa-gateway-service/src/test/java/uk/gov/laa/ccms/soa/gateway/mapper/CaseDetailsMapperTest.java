@@ -2,18 +2,40 @@ package uk.gov.laa.ccms.soa.gateway.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
-import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildAddress;
-import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildAssesmentResultType;
-import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildRecordHistory;
-import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildUser;
+import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildApplicationDetails;
+import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildAwardElementType;
+import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildCase;
+import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildCaseDocsElementType;
+import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildCaseList;
+import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildCategoryOfLawElementType;
+import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildContactDetails;
+import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildCostAwardElementType;
+import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildCostLimitationElementType;
+import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildExtResourceElementType;
+import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildFinancialAwardElementType;
+import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildLARDetails;
+import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildLandAwardElementType;
+import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildLinkedCaseType;
+import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildOtherAssetElementType;
+import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildOtherPartyElementType;
+import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildOtherPartyPersonType;
+import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildOutcomeDetailElementType;
+import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildPriorAuthorityElementType;
+import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildProceedingElementType;
+import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildProviderDetails;
+import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildRecoveryAmountElementType;
+import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildScopeLimitationElementType;
+import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildTimeRelatedElementType;
 
 import java.math.BigDecimal;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,23 +45,31 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import uk.gov.laa.ccms.soa.gateway.model.AddressDetail;
-import uk.gov.laa.ccms.soa.gateway.model.SubmittedApplicationDetails;
+import uk.gov.laa.ccms.soa.gateway.model.AssessmentResult;
+import uk.gov.laa.ccms.soa.gateway.model.AssessmentScreen;
 import uk.gov.laa.ccms.soa.gateway.model.Award;
 import uk.gov.laa.ccms.soa.gateway.model.BaseClient;
 import uk.gov.laa.ccms.soa.gateway.model.CaseDetail;
 import uk.gov.laa.ccms.soa.gateway.model.CaseDetails;
 import uk.gov.laa.ccms.soa.gateway.model.CaseDoc;
+import uk.gov.laa.ccms.soa.gateway.model.CaseStatus;
 import uk.gov.laa.ccms.soa.gateway.model.CaseSummary;
 import uk.gov.laa.ccms.soa.gateway.model.CategoryOfLaw;
 import uk.gov.laa.ccms.soa.gateway.model.ContactDetail;
 import uk.gov.laa.ccms.soa.gateway.model.CostAward;
 import uk.gov.laa.ccms.soa.gateway.model.CostLimitation;
+import uk.gov.laa.ccms.soa.gateway.model.Discharge;
 import uk.gov.laa.ccms.soa.gateway.model.ExternalResource;
 import uk.gov.laa.ccms.soa.gateway.model.FinancialAward;
 import uk.gov.laa.ccms.soa.gateway.model.LandAward;
 import uk.gov.laa.ccms.soa.gateway.model.LarDetails;
 import uk.gov.laa.ccms.soa.gateway.model.LinkedCase;
 import uk.gov.laa.ccms.soa.gateway.model.NameDetail;
+import uk.gov.laa.ccms.soa.gateway.model.OfferedAmount;
+import uk.gov.laa.ccms.soa.gateway.model.OpaAttribute;
+import uk.gov.laa.ccms.soa.gateway.model.OpaEntity;
+import uk.gov.laa.ccms.soa.gateway.model.OpaGoal;
+import uk.gov.laa.ccms.soa.gateway.model.OpaInstance;
 import uk.gov.laa.ccms.soa.gateway.model.OtherAsset;
 import uk.gov.laa.ccms.soa.gateway.model.OtherParty;
 import uk.gov.laa.ccms.soa.gateway.model.OtherPartyOrganisation;
@@ -48,71 +78,53 @@ import uk.gov.laa.ccms.soa.gateway.model.OutcomeDetail;
 import uk.gov.laa.ccms.soa.gateway.model.PriorAuthority;
 import uk.gov.laa.ccms.soa.gateway.model.ProceedingDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ProviderDetail;
+import uk.gov.laa.ccms.soa.gateway.model.RecordHistory;
+import uk.gov.laa.ccms.soa.gateway.model.RecoveredAmount;
 import uk.gov.laa.ccms.soa.gateway.model.Recovery;
 import uk.gov.laa.ccms.soa.gateway.model.RecoveryAmount;
 import uk.gov.laa.ccms.soa.gateway.model.ScopeLimitation;
 import uk.gov.laa.ccms.soa.gateway.model.ServiceAddress;
+import uk.gov.laa.ccms.soa.gateway.model.SubmittedApplicationDetails;
 import uk.gov.laa.ccms.soa.gateway.model.TimeRelatedAward;
 import uk.gov.laa.ccms.soa.gateway.model.TransactionStatus;
 import uk.gov.laa.ccms.soa.gateway.model.UserDetail;
+import uk.gov.laa.ccms.soa.gateway.model.Valuation;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddUpdtStatusRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseInqRS;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ActionListElementType;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ApplicationDetails;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.AwardDetailElementType;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.AwardDetailElementType.AwardDetails;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.AwardElementType;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.AwardsElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.Case;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseDocs;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseAdd;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseDetailsAdd;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseDocsElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseList;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseStatusElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CategoryOfLawElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.Client;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ContactDetails;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CostAwardElementType;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CostAwardElementType.LiableParties;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CostLimitationElementType;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CostLimitations;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.DischargeElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ExtResourceElementType;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ExternalResources;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.FinancialAwardElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.LARDetails;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.LandAwardElementType;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.LandAwardElementType.OtherProprietors;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.LandAwardElementType.Valuation;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.LinkedCaseType;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.LinkedCases;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.MeansAssesments;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.MeritsAssesments;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.OtherAssetElementType;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.OtherAssetElementType.HeldBy;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.OtherParties;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.OtherPartyElementType;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.OtherPartyElementType.OtherPartyDetail;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.OtherPartyOrgType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.OtherPartyPersonType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.OutcomeDetailElementType;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.PriorAuthorities;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.PriorAuthorityAttribElementType;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.PriorAuthorityDetElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.PriorAuthorityElementType;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ProceedingDetElementType;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ProceedingDetElementType.ScopeLimitations;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ProceedingElementType;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.Proceedings;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ProviderDetails;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.RecoveryAmountElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.RecoveryElementType;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.RecoveryElementType.OfferedAmount;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.RecoveryElementType.RecoveredAmount;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ScopeLimitationElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ServiceAddrElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.TimeRelatedElementType;
 import uk.gov.legalservices.enterprise.common._1_0.common.Address;
+import uk.gov.legalservices.enterprise.common._1_0.common.AssesmentResultType;
 import uk.gov.legalservices.enterprise.common._1_0.common.Name;
+import uk.gov.legalservices.enterprise.common._1_0.common.OPAAttributesType;
+import uk.gov.legalservices.enterprise.common._1_0.common.User;
 import uk.gov.legalservices.enterprise.common._1_0.header.HeaderRSType;
 import uk.gov.legalservices.enterprise.common._1_0.header.Status;
 import uk.gov.legalservices.enterprise.common._1_0.header.StatusTextType;
@@ -120,18 +132,11 @@ import uk.gov.legalservices.enterprise.common._1_0.header.StatusTextType;
 @ExtendWith(MockitoExtension.class)
 public class CaseDetailsMapperTest {
 
-  private static DatatypeFactory datatypeFactory;
-
   @Mock
   CommonMapper commonMapper;
 
   @InjectMocks
   CaseDetailsMapperImpl caseDetailsMapper;
-
-  @BeforeAll
-  public static void setUp() throws DatatypeConfigurationException {
-    datatypeFactory = DatatypeFactory.newInstance();
-  }
 
   @Test
   public void testToCaseDetails() {
@@ -283,7 +288,7 @@ public class CaseDetailsMapperTest {
   }
 
   @Test
-  public void testToLarDetails() {
+  public void testToLARDetails() {
     LARDetails larDetails = buildLARDetails();
 
     LarDetails result = caseDetailsMapper.toLarDetails(larDetails);
@@ -396,8 +401,8 @@ public class CaseDetailsMapperTest {
     assertEquals(otherAssetElementType.getDescription(), result.getDescription());
     assertEquals(otherAssetElementType.getAwardedBy(), result.getAwardedBy());
     assertEquals(otherAssetElementType.getNoRecoveryDetails(), result.getNoRecoveryDetails());
-    assertEquals(otherAssetElementType.getHeldBy().getOtherPartyID().get(0),
-        result.getHeldBy().get(0));
+    assertEquals(otherAssetElementType.getHeldBy().getOtherPartyID().getFirst(),
+        result.getHeldBy().getFirst());
     assertEquals(otherAssetElementType.getRecovery(), result.getRecovery());
     assertEquals(otherAssetElementType.getAwardedPercentage(), result.getAwardedPercentage());
     assertEquals(otherAssetElementType.getDisputedAmount(), result.getDisputedAmount());
@@ -449,8 +454,8 @@ public class CaseDetailsMapperTest {
     assertEquals(landAwardElementType.getStatChargeExemptReason(),
         result.getStatChargeExemptReason());
     assertEquals(landAwardElementType.getRegistrationRef(), result.getRegistrationRef());
-    assertEquals(landAwardElementType.getOtherProprietors().getOtherPartyID().get(0),
-        result.getOtherProprietors().get(0));
+    assertEquals(landAwardElementType.getOtherProprietors().getOtherPartyID().getFirst(),
+        result.getOtherProprietors().getFirst());
 
     compareServiceAddress(landAwardElementType.getPropertyAddress(), result.getPropertyAddress());
   }
@@ -481,8 +486,8 @@ public class CaseDetailsMapperTest {
     assertEquals(financialAwardElementType.getOrderDateServed().toGregorianCalendar().getTime(),
         result.getOrderDateServed());
     assertEquals(financialAwardElementType.getAmount(), result.getAmount());
-    assertEquals(financialAwardElementType.getLiableParties().getOtherPartyID().get(0),
-        result.getLiableParties().get(0));
+    assertEquals(financialAwardElementType.getLiableParties().getOtherPartyID().getFirst(),
+        result.getLiableParties().getFirst());
 
     compareServiceAddress(financialAwardElementType.getServiceAddress(),
         result.getServiceAddress());
@@ -517,8 +522,8 @@ public class CaseDetailsMapperTest {
     assertEquals(costAwardElementType.getOrderDate().toGregorianCalendar().getTime(),
         result.getOrderDate());
     compareServiceAddress(costAwardElementType.getServiceAddress(), result.getServiceAddress());
-    assertEquals(costAwardElementType.getLiableParties().getOtherParyID().get(0),
-        result.getLiableParties().get(0));
+    assertEquals(costAwardElementType.getLiableParties().getOtherParyID().getFirst(),
+        result.getLiableParties().getFirst());
   }
 
   @Test
@@ -575,10 +580,10 @@ public class CaseDetailsMapperTest {
 
     assertNotNull(result);
     assertEquals(priorAuthorityElementType.getPriorAuthorityType(), result.getPriorAuthorityType());
-    assertEquals(priorAuthorityElementType.getDetails().getAttribute().get(0).getName(),
-        result.getDetails().get(0).getName());
-    assertEquals(priorAuthorityElementType.getDetails().getAttribute().get(0).getValue(),
-        result.getDetails().get(0).getValue());
+    assertEquals(priorAuthorityElementType.getDetails().getAttribute().getFirst().getName(),
+        result.getDetails().getFirst().getName());
+    assertEquals(priorAuthorityElementType.getDetails().getAttribute().getFirst().getValue(),
+        result.getDetails().getFirst().getValue());
     assertEquals(priorAuthorityElementType.getDescription(), result.getDescription());
     assertEquals(priorAuthorityElementType.getAssessedAmount(), result.getAssessedAmount());
     assertEquals(priorAuthorityElementType.getDecisionStatus(), result.getDecisionStatus());
@@ -667,7 +672,7 @@ public class CaseDetailsMapperTest {
   public void testToApplicationDetails() {
     uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ApplicationDetails applicationDetails = buildApplicationDetails();
 
-    SubmittedApplicationDetails result = caseDetailsMapper.toApplicationDetails(applicationDetails);
+    SubmittedApplicationDetails result = caseDetailsMapper.toSubmittedApplicationDetails(applicationDetails);
 
     assertNotNull(result);
     assertEquals(applicationDetails.getApplicationAmendmentType(),
@@ -780,515 +785,744 @@ public class CaseDetailsMapperTest {
     assertEquals(client.getSurname(), baseClient.getSurname());
   }
 
-  private CaseList buildCaseList() {
-    CaseList caseList = new CaseList();
-    caseList.setCaseReferenceNumber("caseref");
-    caseList.setProviderCaseReferenceNumber("provcaseref");
-    caseList.setCategoryOfLaw("catoflaw");
-    caseList.setFeeEarnerName("feeearner");
-    caseList.setDisplayStatus("status");
-    caseList.setClient(new Client());
-    caseList.getClient().setClientReferenceNumber("clientrefnum");
-    caseList.getClient().setFirstName("firstname");
-    caseList.getClient().setSurname("surname");
-    return caseList;
+  @Test
+  public void testToOpaAttributesType() {
+    OpaAttribute opaAttribute = new OpaAttribute()
+        .attribute("attr")
+        .caption("capt")
+        .userDefinedInd(Boolean.TRUE)
+        .responseText("rText")
+        .responseType("rType")
+        .responseValue("rValue");
+
+    OPAAttributesType result = caseDetailsMapper.toOpaAttributesType(opaAttribute);
+
+    assertNotNull(result);
+    assertEquals(opaAttribute.getAttribute(), result.getAttribute());
+    assertEquals(opaAttribute.getCaption(), result.getCaption());
+    assertEquals(opaAttribute.getResponseText(), result.getResponseText());
+    assertEquals(opaAttribute.getResponseType(), result.getResponseType());
+    assertEquals(opaAttribute.getResponseValue(), result.getResponseValue());
   }
 
-  private Case buildCase() {
-    Case sourceCase = new Case();
-    sourceCase.setCaseReferenceNumber("123");
-    sourceCase.setCaseDetails(buildCaseDetails());
-    return sourceCase;
+  @Test
+  public void testToAssesmentResultType() {
+    AssessmentResult assessmentResult = new AssessmentResult()
+        .addAssessmentDetailsItem(new AssessmentScreen()
+            .screenName("screen1")
+            .caption("capt")
+            .addEntityItem(new OpaEntity()
+                .caption("entCapt")
+                .entityName("entName")
+                .addInstancesItem(new OpaInstance()
+                    .addAttributesItem(new OpaAttribute())
+                    .caption("instCapt")
+                    .instanceLabel("instLab"))
+                .sequenceNumber(1)))
+        .assessmentId("assId")
+        .date(new Date())
+        .defaultInd(Boolean.TRUE)
+        .addResultsItem(new OpaGoal()
+            .attribute("att1")
+            .attributeValue("val"));
+
+    AssesmentResultType result = caseDetailsMapper.toAssesmentResultType(assessmentResult);
+
+    assertNotNull(result);
+    assertEquals(assessmentResult.getAssessmentId(), result.getAssesmentID());
+    assertNotNull(result.getAssesmentDetails());
+    assertNotNull(result.getAssesmentDetails().getAssessmentScreens());
+    assertEquals(1, result.getAssesmentDetails().getAssessmentScreens().size());
+    assertEquals(assessmentResult.getAssessmentDetails().getFirst().getCaption(), result.getAssesmentDetails().getAssessmentScreens().getFirst().getCaption());
+    assertEquals(assessmentResult.getAssessmentDetails().getFirst().getScreenName(), result.getAssesmentDetails().getAssessmentScreens().getFirst().getScreenName());
+
+    assertNotNull(result.getAssesmentDetails().getAssessmentScreens().getFirst().getEntity());
+    assertEquals(1, result.getAssesmentDetails().getAssessmentScreens().getFirst().getEntity().size());
+    assertEquals(assessmentResult.getAssessmentDetails().getFirst().getEntity().getFirst().getCaption(), result.getAssesmentDetails().getAssessmentScreens().getFirst().getEntity().getFirst().getCaption());
+    assertEquals(assessmentResult.getAssessmentDetails().getFirst().getEntity().getFirst().getEntityName(), result.getAssesmentDetails().getAssessmentScreens().getFirst().getEntity().getFirst().getEntityName());
+    assertEquals(assessmentResult.getAssessmentDetails().getFirst().getEntity().getFirst().getSequenceNumber(), result.getAssesmentDetails().getAssessmentScreens().getFirst().getEntity().getFirst().getSequenceNumber().intValue());
+
+    assertNotNull(result.getAssesmentDetails().getAssessmentScreens().getFirst().getEntity().getFirst().getInstances());
+    assertEquals(1, result.getAssesmentDetails().getAssessmentScreens().getFirst().getEntity().getFirst().getInstances().size());
+    assertNotNull(result.getAssesmentDetails().getAssessmentScreens().getFirst().getEntity().getFirst().getInstances().getFirst().getAttributes());
+    assertEquals(assessmentResult.getAssessmentDetails().getFirst().getEntity().getFirst().getInstances().getFirst().getCaption(),
+        result.getAssesmentDetails().getAssessmentScreens().getFirst().getEntity().getFirst().getInstances().getFirst().getCaption());
+    assertEquals(assessmentResult.getAssessmentDetails().getFirst().getEntity().getFirst().getInstances().getFirst().getInstanceLabel(),
+        result.getAssesmentDetails().getAssessmentScreens().getFirst().getEntity().getFirst().getInstances().getFirst().getInstanceLabel());
+
   }
 
-  private uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseDetails buildCaseDetails() {
-    uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseDetails caseDetails =
-        new uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseDetails();
-    caseDetails.setCertificateType("certtype");
-    caseDetails.setLegalHelpCosts(BigDecimal.TEN);
-    caseDetails.setCertificateDate(datatypeFactory.newXMLGregorianCalendar());
-    caseDetails.setPreCertificateCosts(BigDecimal.TEN);
-    caseDetails.setUndertakingAmount(BigDecimal.TEN);
+  @Test
+  public void testToContactDetails() {
+    ContactDetail contactDetail = new ContactDetail()
+        .correspondenceLanguage("lang")
+        .correspondenceMethod("meth")
+        .emailAddress("email")
+        .fax("fax")
+        .mobileNumber("mob")
+        .password("pass")
+        .passwordReminder("rem")
+        .telephoneHome("telhome")
+        .telephoneWork("telwork");
 
-    caseDetails.setApplicationDetails(buildApplicationDetails());
-    caseDetails.setCaseStatus(buildCaseStatus());
-    caseDetails.setCaseDocs(new CaseDocs());
-    caseDetails.getCaseDocs().getCaseDoc().add(buildCaseDocsElementType());
-    caseDetails.setLinkedCases(new LinkedCases());
-    caseDetails.getLinkedCases().getLinkedCase().add(buildLinkedCaseType());
-    caseDetails.setAwards(new AwardsElementType());
-    caseDetails.getAwards().getAward().add(buildAwardElementType());
-    caseDetails.setAvailableFunctions(buildAvailableFunctions());
-    caseDetails.setDischargeStatus(buildDischargeStatus());
-    caseDetails.setPriorAuthorities(new PriorAuthorities());
-    caseDetails.getPriorAuthorities().getPriorAuthority().add(buildPriorAuthorityElementType());
-    caseDetails.setRecordHistory(buildRecordHistory());
+    ContactDetails result = caseDetailsMapper.toContactDetails(contactDetail);
 
-    return caseDetails;
+    assertNotNull(result);
+    assertEquals(contactDetail.getEmailAddress(), result.getEmailAddress());
+    assertEquals(contactDetail.getFax(), result.getFax());
+    assertEquals(contactDetail.getMobileNumber(), result.getMobileNumber());
+    assertEquals(contactDetail.getTelephoneHome(), result.getTelephoneHome());
+    assertEquals(contactDetail.getTelephoneWork(), result.getTelephoneWork());
   }
 
-  private PriorAuthorityElementType buildPriorAuthorityElementType() {
-    PriorAuthorityAttribElementType priorAuthorityAttribElementType = new PriorAuthorityAttribElementType();
-    priorAuthorityAttribElementType.setName("aname");
-    priorAuthorityAttribElementType.setValue("avalue");
+  @Test
+  public void testToOtherPartyPersonType() {
+    OtherPartyPerson otherPartyPerson = new OtherPartyPerson()
+        .address(new AddressDetail()
+            .addressId("1")
+            .addressLine1("add1")
+            .addressLine2("add2")
+            .addressLine3("add3")
+            .addressLine4("add4")
+            .careOfName("cof")
+            .city("cty")
+            .country("thecountry")
+            .county("thecounty")
+            .house("thehouse")
+            .postalCode("postal")
+            .province("prov")
+            .state("thestate"))
+        .assessedAssets(BigDecimal.ONE)
+        .assessedIncome(BigDecimal.TEN)
+        .assessedIncomeFrequency("freq")
+        .assessmentDate(new Date())
+        .certificateNumber("certnum")
+        .contactDetails(new ContactDetail()) // tested elsewhere
+        .contactName("name")
+        .courtOrderedMeansAssesment(Boolean.TRUE)
+        .dateOfBirth(new Date())
+        .employersName("empname")
+        .employmentStatus("empstat")
+        .name(new NameDetail()
+            .firstName("1stname")
+            .fullName("fullname")
+            .middleName("midname")
+            .surname("sur")
+            .surnameAtBirth("birth")
+            .title("ttl"))
+        .niNumber("ni")
+        .organizationAddress("orgaddr")
+        .organizationName("orgname")
+        .otherInformation("otherinf")
+        .partyLegalAidedInd(Boolean.FALSE)
+        .publicFundingAppliedInd(Boolean.TRUE)
+        .relationToCase("rel2case")
+        .relationToClient("rel2client");
 
-    PriorAuthorityDetElementType priorAuthorityDetElementType = new PriorAuthorityDetElementType();
-    priorAuthorityDetElementType.getAttribute().add(priorAuthorityAttribElementType);
+    when(commonMapper.toAddress(otherPartyPerson.getAddress())).thenReturn(new Address());
 
-    PriorAuthorityElementType priorAuthorityElementType = new PriorAuthorityElementType();
-    priorAuthorityElementType.setDetails(priorAuthorityDetElementType);
-    priorAuthorityElementType.setPriorAuthorityType("priorauthtype");
-    priorAuthorityElementType.setAssessedAmount(BigDecimal.TEN);
-    priorAuthorityElementType.setDescription("adescription");
-    priorAuthorityElementType.setDecisionStatus("decstatus");
-    priorAuthorityElementType.setReasonForRequest("reqreason");
-    priorAuthorityElementType.setRequestAmount(BigDecimal.TEN);
+    OtherPartyPersonType result = caseDetailsMapper.toOtherPartyPersonType(otherPartyPerson);
 
-    return priorAuthorityElementType;
+    assertNotNull(result);
+    assertNotNull(result.getAddress());
+    assertEquals(otherPartyPerson.getAssessedAssets(), result.getAssessedAsstes());
+    assertEquals(otherPartyPerson.getAssessedIncome(), result.getAssessedIncome());
+    assertEquals(otherPartyPerson.getAssessedIncomeFrequency(), result.getAssessedIncomeFrequency());
+    assertEquals(otherPartyPerson.getAssessmentDate(), result.getAssessmentDate().toGregorianCalendar().getTime());
+    assertEquals(otherPartyPerson.getCertificateNumber(), result.getCertificateNumber());
+    assertNotNull(result.getContactDetails());
+    assertEquals(otherPartyPerson.getContactName(), result.getContactName());
+    assertEquals(otherPartyPerson.getDateOfBirth(), result.getDateOfBirth().toGregorianCalendar().getTime());
+    assertEquals(otherPartyPerson.getEmployersName(), result.getEmployersName());
+    assertEquals(otherPartyPerson.getEmploymentStatus(), result.getEmploymentStatus());
+    compareName(otherPartyPerson.getName(), result.getName());
+    assertEquals(otherPartyPerson.getNiNumber(), result.getNINumber());
+    assertEquals(otherPartyPerson.getOrganizationAddress(), result.getOrganizationAddress());
+    assertEquals(otherPartyPerson.getOrganizationName(), result.getOrganizationName());
+    assertEquals(otherPartyPerson.getOtherInformation(), result.getOtherInformation());
+    assertEquals(otherPartyPerson.getRelationToCase(), result.getRelationToCase());
+    assertEquals(otherPartyPerson.isCourtOrderedMeansAssesment(), result.isCourtOrderedMeansAssesment());
+    assertEquals(otherPartyPerson.isPartyLegalAidedInd(), result.isPartyLegalAidedInd());
+    assertEquals(otherPartyPerson.isPublicFundingAppliedInd(), result.isPublicFundingAppliedInd());
   }
 
-  private DischargeElementType buildDischargeStatus() {
-    DischargeElementType dischargeElementType = new DischargeElementType();
-    dischargeElementType.setOtherDetails("otherdets");
-    dischargeElementType.setReason("reason");
-    dischargeElementType.setClientContinuePvtInd(Boolean.TRUE);
+  @Test
+  public void testToTimeRelatedElementType() {
+    TimeRelatedAward timeRelatedAward = new TimeRelatedAward()
+        .amount(BigDecimal.ONE)
+        .awardDate(new Date())
+        .awardTriggeringEvent("event")
+        .awardType("type")
+        .description("descr")
+        .otherDetails("otherdets");
 
-    return dischargeElementType;
+    TimeRelatedElementType result = caseDetailsMapper.toTimeRelatedElementType(timeRelatedAward);
+
+    assertNotNull(result);
+    assertEquals(timeRelatedAward.getAmount(), result.getAmount());
+    assertEquals(timeRelatedAward.getAwardDate(), result.getAwardDate().toGregorianCalendar().getTime());
+    assertEquals(timeRelatedAward.getAwardTriggeringEvent(), result.getAwardTrigeringEvent());
+    assertEquals(timeRelatedAward.getAwardType(), result.getAwardType());
+    assertEquals(timeRelatedAward.getDescription(), result.getDescription());
+    assertEquals(timeRelatedAward.getOtherDetails(), result.getOtherDetails());
   }
 
-  private ActionListElementType buildAvailableFunctions() {
-    ActionListElementType actionListElementType = new ActionListElementType();
-    actionListElementType.getFunction().add("afunction");
+  @Test
+  public void testToRecoveryAmountElementType() {
+    RecoveryAmount recoveryAmount = new RecoveryAmount()
+        .amount(BigDecimal.ONE)
+        .dateReceived(new Date())
+        .paidToLsc(BigDecimal.TEN);
 
-    return actionListElementType;
+    RecoveryAmountElementType result = caseDetailsMapper.toRecoveryAmountElementType(recoveryAmount);
+
+    assertNotNull(result);
+    assertEquals(recoveryAmount.getAmount(), result.getAmount());
+    assertEquals(recoveryAmount.getDateReceived(), result.getDateReceived().toGregorianCalendar().getTime());
+    assertEquals(recoveryAmount.getPaidToLsc(), result.getPaidToLSC());
   }
 
-  private AwardElementType buildAwardElementType() {
-    AwardDetails awardDetails = new AwardDetails();
-    awardDetails.setCostAward(buildCostAwardElementType());
-    awardDetails.setFinancialAward(buildFinancialAwardElementType());
-    awardDetails.setLandAward(buildLandAwardElementType());
-    awardDetails.setOtherAsset(buildOtherAssetElementType());
+  @Test
+  public void testToOutcomeDetailElementType() {
+    OutcomeDetail outcomeDetail = new OutcomeDetail()
+        .additionalResultInfo("res")
+        .altAcceptanceReason("altRes")
+        .altDisputeResolution("altDisp")
+        .courtCode("code")
+        .finalWorkDate(new Date())
+        .issueDate(new Date())
+        .outcomeCourtCaseNumber("num")
+        .resolutionMethod("meth")
+        .result("res")
+        .stageEnd("end")
+        .widerBenefits("widerBen");
 
-    AwardDetailElementType awardDetailElementType = new AwardDetailElementType();
-    awardDetailElementType.setAwardDetails(awardDetails);
-    awardDetailElementType.setAwardCategory("awardcat");
+    OutcomeDetailElementType result = caseDetailsMapper.toOutcomeDetailElementType(outcomeDetail);
 
-    AwardElementType awardElementType = new AwardElementType();
-    awardElementType.setAwardDetails(awardDetailElementType);
-
-    return awardElementType;
+    assertNotNull(result);
+    assertEquals(outcomeDetail.getAdditionalResultInfo(), result.getAdditionalResultInfo());
+    assertEquals(outcomeDetail.getAltAcceptanceReason(), result.getAltAcceptanceReason());
+    assertEquals(outcomeDetail.getAltDisputeResolution(), result.getAltDisputeResolution());
+    assertEquals(outcomeDetail.getCourtCode(), result.getCourtCode());
+    assertEquals(outcomeDetail.getFinalWorkDate(), result.getFinalWorkDate().toGregorianCalendar().getTime());
+    assertEquals(outcomeDetail.getIssueDate(), result.getIssueDate().toGregorianCalendar().getTime());
+    assertEquals(outcomeDetail.getOutcomeCourtCaseNumber(), result.getOutcomeCourtCaseNumber());
+    assertEquals(outcomeDetail.getResolutionMethod(), result.getResolutionMethod());
+    assertEquals(outcomeDetail.getResult(), result.getResult());
+    assertEquals(outcomeDetail.getStageEnd(), result.getStageEnd());
+    assertEquals(outcomeDetail.getWiderBenefits(), result.getWiderBenifits());
   }
 
-  private CostAwardElementType buildCostAwardElementType() {
-    CostAwardElementType costAwardElementType = new CostAwardElementType();
-    costAwardElementType.setAwardedBy("awardperson");
-    costAwardElementType.setOtherDetails("otherdets");
-    costAwardElementType.setInterestAwardedRate(BigDecimal.TEN);
-    costAwardElementType.setCertificateCostRateLSC(BigDecimal.TEN);
-    costAwardElementType.setCertificateCostRateMarket(BigDecimal.TEN);
-    costAwardElementType.setCourtAssessmentStatus("courtassessstat");
-    costAwardElementType.setInterestAwardedStartDate(datatypeFactory.newXMLGregorianCalendar());
-    costAwardElementType.setOrderDate(datatypeFactory.newXMLGregorianCalendar());
-    costAwardElementType.setOrderDateServed(datatypeFactory.newXMLGregorianCalendar());
-    costAwardElementType.setPreCertificateAwardLSC(BigDecimal.TEN);
-    costAwardElementType.setPreCertificateAwardOth(BigDecimal.TEN);
-    costAwardElementType.setLiableParties(buildLiableParties());
-    costAwardElementType.setRecovery(buildRecoveryElementType());
-    costAwardElementType.setServiceAddress(buildServiceAddrElementType());
-    return costAwardElementType;
+  @Test
+  public void testToScopeLimitationElementType() {
+    ScopeLimitation scopeLimitation = new ScopeLimitation()
+        .delegatedFunctionsApply(Boolean.TRUE)
+        .scopeLimitation("scopelim")
+        .scopeLimitationId("id")
+        .scopeLimitationWording("word");
+
+    ScopeLimitationElementType result = caseDetailsMapper.toScopeLimitationElementType(scopeLimitation);
+
+    assertNotNull(result);
+    assertEquals(scopeLimitation.getScopeLimitation(), result.getScopeLimitation());
+    assertEquals(scopeLimitation.getScopeLimitationId(), result.getScopeLimitationID());
+    assertEquals(scopeLimitation.getScopeLimitationWording(), result.getScopeLimitationWording());
   }
 
-  private FinancialAwardElementType buildFinancialAwardElementType() {
-    FinancialAwardElementType financialAwardElementType = new FinancialAwardElementType();
-    financialAwardElementType.setAmount(BigDecimal.TEN);
-    financialAwardElementType.setAwardedBy("awardperson");
-    financialAwardElementType.setAwardJustifications("itsjustified");
-    financialAwardElementType.setInterimAward(BigDecimal.TEN);
-    financialAwardElementType.setOrderDateServed(datatypeFactory.newXMLGregorianCalendar());
-    financialAwardElementType.setOrderDate(datatypeFactory.newXMLGregorianCalendar());
-    financialAwardElementType.setOtherDetails("otherdets");
-    financialAwardElementType.setLiableParties(new FinancialAwardElementType.LiableParties());
-    financialAwardElementType.getLiableParties().getOtherPartyID().add("liableparty");
-    financialAwardElementType.setRecovery(buildRecoveryElementType());
-    financialAwardElementType.setServiceAddress(buildServiceAddrElementType());
-    financialAwardElementType.setStatutoryChangeReason("statchange");
-    return financialAwardElementType;
+  @Test
+  public void testToLarDetails() {
+    LarDetails larDetails = new LarDetails()
+        .larScopeFlag(Boolean.TRUE)
+        .legalHelpOfficeCode("code")
+        .legalHelpUfn("ufn");
+
+    LARDetails result = caseDetailsMapper.toLarDetails(larDetails);
+
+    assertNotNull(result);
+    assertEquals(larDetails.getLegalHelpOfficeCode(), result.getLegalHelpOfficeCode());
+    assertEquals(larDetails.getLegalHelpUfn(), result.getLegalHelpUFN());
+    assertEquals(larDetails.isLarScopeFlag(), result.isLARScopeFlag());
   }
 
-  private RecoveryElementType buildRecoveryElementType() {
-    RecoveredAmount recoveredAmount = new RecoveredAmount();
-    recoveredAmount.setClient(buildRecoveryAmountElementType());
-    recoveredAmount.setCourt(buildRecoveryAmountElementType());
-    recoveredAmount.setSolicitor(buildRecoveryAmountElementType());
+  @Test
+  public void testToProviderDetails() {
+    ProviderDetail providerDetail = new ProviderDetail()
+        .contactDetails(new ContactDetail()) // tested elsewhere
+        .contactUserId(new UserDetail()) // common mapper
+        .feeEarnerContactId("feeid")
+        .providerCaseReferenceNumber("provcaseref")
+        .providerFirmId("provfirmid")
+        .providerOfficeId("provoffid")
+        .supervisorContactId("supcontid");
 
-    OfferedAmount offeredAmount = new OfferedAmount();
-    offeredAmount.setAmount(BigDecimal.TEN);
-    offeredAmount.setConditionsOfOffer("acondition");
+    when(commonMapper.toUser(providerDetail.getContactUserId())).thenReturn(new User());
 
-    RecoveryElementType recoveryElementType = new RecoveryElementType();
-    recoveryElementType.setAwardValue(BigDecimal.TEN);
-    recoveryElementType.setOfferedAmount(offeredAmount);
-    recoveryElementType.setRecoveredAmount(recoveredAmount);
-    recoveryElementType.setLeaveOfCourtReqdInd(Boolean.TRUE);
-    recoveryElementType.setUnRecoveredAmount(BigDecimal.TEN);
-    return recoveryElementType;
+    ProviderDetails result = caseDetailsMapper.toProviderDetails(providerDetail);
+
+    assertNotNull(result);
+    assertNotNull(result.getContactDetails());
+    assertNotNull(result.getContactUserID());
+    assertEquals(providerDetail.getFeeEarnerContactId(), result.getFeeEarnerContactID());
+    assertEquals(providerDetail.getProviderCaseReferenceNumber(), result.getProviderCaseReferenceNumber());
+    assertEquals(providerDetail.getProviderFirmId(), result.getProviderFirmID());
+    assertEquals(providerDetail.getProviderOfficeId(), result.getProviderOfficeID());
+    assertEquals(providerDetail.getSupervisorContactId(), result.getSupervisorContactID());
   }
 
-  private static LiableParties buildLiableParties() {
-    LiableParties liableParties = new LiableParties();
-    liableParties.getOtherParyID().add("liableparty");
-    return liableParties;
+  @Test
+  public void testToOtherPartyElementType() {
+    OtherParty otherParty = new OtherParty()
+        .organisation(new OtherPartyOrganisation()
+            .address(new AddressDetail()) // common mapper
+            .contactDetails(new ContactDetail()) // tested elsewhere
+            .contactName("orgconname")
+            .currentlyTrading("curTrad")
+            .organizationName("orgname")
+            .organizationType("orgtype")
+            .otherInformation("orgotherinf")
+            .relationToCase("orgrel2case")
+            .relationToClient("orgrel2client"))
+        .otherPartyId("otherid")
+        .person(new OtherPartyPerson() // tested elsewhere
+            .address(new AddressDetail()))
+        .sharedInd(Boolean.TRUE);
+
+    when(commonMapper.toAddress(any(AddressDetail.class))).thenReturn(new Address());
+
+    OtherPartyElementType result = caseDetailsMapper.toOtherPartyElementType(otherParty);
+
+    assertNotNull(result);
+    assertEquals(otherParty.getOtherPartyId(), result.getOtherPartyID());
+    assertEquals(otherParty.isSharedInd(), result.isSharedInd());
+
+    assertNotNull(result.getOtherPartyDetail());
+    assertNotNull(result.getOtherPartyDetail().getPerson());
+
+    OtherPartyOrgType resultOrg = result.getOtherPartyDetail().getOrganization();
+    assertNotNull(resultOrg);
+    assertNotNull(resultOrg.getAddress());
+    assertNotNull(resultOrg.getContactDetails());
+    assertEquals(otherParty.getOrganisation().getContactName(), resultOrg.getContactName());
+    assertEquals(otherParty.getOrganisation().getCurrentlyTrading(), resultOrg.getCurrentlyTrading());
+    assertEquals(otherParty.getOrganisation().getOrganizationName(), resultOrg.getOrganizationName());
+    assertEquals(otherParty.getOrganisation().getOrganizationType(), resultOrg.getOrganizationType());
+    assertEquals(otherParty.getOrganisation().getOtherInformation(), resultOrg.getOtherInformation());
+    assertEquals(otherParty.getOrganisation().getRelationToCase(), resultOrg.getRelationToCase());
+    assertEquals(otherParty.getOrganisation().getRelationToClient(), resultOrg.getRelationToClient());
   }
 
-  private LandAwardElementType buildLandAwardElementType() {
-    OtherProprietors otherProprietors = new OtherProprietors();
-    otherProprietors.getOtherPartyID().add("otherprop");
+  @Test
+  public void testToOtherAssetElementType() {
+    OtherAsset otherAsset = new OtherAsset()
+        .awardedAmount(BigDecimal.TEN)
+        .awardedBy("awby")
+        .awardedPercentage(BigDecimal.ONE)
+        .description("descr")
+        .disputedAmount(BigDecimal.TWO)
+        .disputedPercentage(BigDecimal.ZERO)
+        .addHeldByItem("hb")
+        .noRecoveryDetails("norec")
+        .orderDate(new Date())
+        .recoveredAmount(BigDecimal.ONE)
+        .recoveredPercentage(BigDecimal.TWO)
+        .recovery("recov")
+        .statChargeExemptReason("scer")
+        .timeRelatedAward(new TimeRelatedAward()) // tested elsewhere
+        .valuation(new Valuation()
+            .amount(BigDecimal.ONE)
+            .criteria("valcrit")
+            .date(new Date()));
 
-    Valuation valuation = new Valuation();
-    valuation.setAmount(BigDecimal.TEN);
-    valuation.setDate(datatypeFactory.newXMLGregorianCalendar());
-    valuation.setCriteria("crit");
+    OtherAssetElementType result = caseDetailsMapper.toOtherAssetElementType(otherAsset);
 
-    LandAwardElementType landAwardElementType = new LandAwardElementType();
-    landAwardElementType.setAwardedBy("awardperson");
-    landAwardElementType.setAwardedPercentage(BigDecimal.TEN);
-    landAwardElementType.setDescription("adescr");
-    landAwardElementType.setRecovery("arecovery");
-    landAwardElementType.setEquity("equal");
-    landAwardElementType.setDisputedPercentage(BigDecimal.TEN);
-    landAwardElementType.setLandChargeRegistration("landreg");
-    landAwardElementType.setMortgageAmountDue(BigDecimal.TEN);
-    landAwardElementType.setNoRecoveryDetails("norecover");
-    landAwardElementType.setOrderDate(datatypeFactory.newXMLGregorianCalendar());
-    landAwardElementType.setOtherProprietors(otherProprietors);
-    landAwardElementType.setPropertyAddress(buildServiceAddrElementType());
-    landAwardElementType.setRegistrationRef("regref");
-    landAwardElementType.setStatChargeExemptReason("reason");
-    landAwardElementType.setTimeRelatedAward(buildTimeRelatedElementType());
-    landAwardElementType.setTitleNo("titleno");
-    landAwardElementType.setValuation(valuation);
-    return landAwardElementType;
+    assertNotNull(result);
+    assertEquals(otherAsset.getAwardedAmount(), result.getAwardedAmount());
+    assertEquals(otherAsset.getAwardedBy(), result.getAwardedBy());
+    assertEquals(otherAsset.getAwardedPercentage(), result.getAwardedPercentage());
+    assertEquals(otherAsset.getDescription(), result.getDescription());
+    assertEquals(otherAsset.getDisputedAmount(), result.getDisputedAmount());
+    assertEquals(otherAsset.getDisputedPercentage(), result.getDisputedPercentage());
+    assertNotNull(result.getHeldBy());
+    assertNotNull(result.getHeldBy().getOtherPartyID());
+    assertEquals(1, result.getHeldBy().getOtherPartyID().size());
+    assertEquals(otherAsset.getHeldBy().getFirst(), result.getHeldBy().getOtherPartyID().getFirst());
+    assertEquals(otherAsset.getNoRecoveryDetails(), result.getNoRecoveryDetails());
+    assertEquals(otherAsset.getOrderDate(), result.getOrderDate().toGregorianCalendar().getTime());
+    assertEquals(otherAsset.getRecoveredAmount(), result.getRecoveredAmount());
+    assertEquals(otherAsset.getRecoveredPercentage(), result.getRecoveredPercentage());
+    assertEquals(otherAsset.getRecovery(), result.getRecovery());
+    assertEquals(otherAsset.getStatChargeExemptReason(), result.getStatChargeExemptReason());
+    assertNotNull(result.getTimeRelatedAward());
+    assertNotNull(result.getValuation());
+    assertEquals(otherAsset.getValuation().getAmount(), result.getValuation().getAmount());
+    assertEquals(otherAsset.getValuation().getCriteria(), result.getValuation().getCriteria());
+    assertEquals(otherAsset.getValuation().getDate(), result.getValuation().getDate().toGregorianCalendar().getTime());
   }
 
-  private static ServiceAddrElementType buildServiceAddrElementType() {
-    ServiceAddrElementType serviceAddrElementType = new ServiceAddrElementType();
-    serviceAddrElementType.setAddressLine1("addr1");
-    serviceAddrElementType.setAddressLine2("addr2");
-    serviceAddrElementType.setAddressLine3("addr3");
-    return serviceAddrElementType;
+  @Test
+  public void testToLandAwardElementType() {
+    LandAward landAward = new LandAward()
+        .awardedBy("awBy")
+        .awardedPercentage(BigDecimal.ONE)
+        .description("descr")
+        .disputedPercentage(BigDecimal.TEN)
+        .equity("eq")
+        .landChargeRegistration("reg")
+        .mortgageAmountDue(BigDecimal.TEN)
+        .noRecoveryDetails("norec")
+        .orderDate(new Date())
+        .addOtherProprietorsItem("otherProp")
+        .propertyAddress(new ServiceAddress()
+            .addressLine1("add1")
+            .addressLine2("add2")
+            .addressLine3("add3"))
+        .recovery("recov")
+        .registrationRef("regref")
+        .statChargeExemptReason("statres")
+        .timeRelatedAward(new TimeRelatedAward()) // tested elsewhere
+        .titleNo("title")
+        .valuation(new Valuation()
+                    .amount(BigDecimal.ONE)
+                    .criteria("valcrit")
+                    .date(new Date()));
+
+    LandAwardElementType result = caseDetailsMapper.toLandAwardElementType(landAward);
+
+    assertNotNull(result);
+    assertEquals(landAward.getAwardedBy(), result.getAwardedBy());
+    assertEquals(landAward.getAwardedPercentage(), result.getAwardedPercentage());
+    assertEquals(landAward.getDescription(), result.getDescription());
+    assertEquals(landAward.getDisputedPercentage(), result.getDisputedPercentage());
+    assertEquals(landAward.getEquity(), result.getEquity());
+    assertEquals(landAward.getLandChargeRegistration(), result.getLandChargeRegistration());
+    assertEquals(landAward.getMortgageAmountDue(), result.getMortgageAmountDue());
+    assertEquals(landAward.getNoRecoveryDetails(), result.getNoRecoveryDetails());
+    assertEquals(landAward.getOrderDate(), result.getOrderDate().toGregorianCalendar().getTime());
+    assertNotNull(result.getOtherProprietors());
+    assertNotNull(result.getOtherProprietors().getOtherPartyID());
+    assertEquals(1, result.getOtherProprietors().getOtherPartyID().size());
+    assertEquals(landAward.getOtherProprietors().getFirst(), result.getOtherProprietors().getOtherPartyID().getFirst());
+    assertNotNull(result.getPropertyAddress());
+    assertEquals(landAward.getPropertyAddress().getAddressLine1(), result.getPropertyAddress().getAddressLine1());
+    assertEquals(landAward.getPropertyAddress().getAddressLine2(), result.getPropertyAddress().getAddressLine2());
+    assertEquals(landAward.getPropertyAddress().getAddressLine3(), result.getPropertyAddress().getAddressLine3());
+    assertEquals(landAward.getRecovery(), result.getRecovery());
+    assertEquals(landAward.getRegistrationRef(), result.getRegistrationRef());
+    assertEquals(landAward.getStatChargeExemptReason(), result.getStatChargeExemptReason());
+    assertNotNull(result.getTimeRelatedAward());
+    assertEquals(landAward.getTitleNo(), result.getTitleNo());
+    assertEquals(landAward.getValuation().getAmount(), result.getValuation().getAmount());
+    assertEquals(landAward.getValuation().getCriteria(), result.getValuation().getCriteria());
+    assertEquals(landAward.getValuation().getDate(), result.getValuation().getDate().toGregorianCalendar().getTime());
   }
 
-  private OtherAssetElementType buildOtherAssetElementType() {
-    HeldBy heldBy = new HeldBy();
-    heldBy.getOtherPartyID().add("holder");
+  @Test
+  public void testToFinancialAwardElementType() {
+    FinancialAward financialAward = new FinancialAward()
+        .amount(BigDecimal.ONE)
+        .awardedBy("by")
+        .awardJustifications("just")
+        .interimAward(BigDecimal.TWO)
+        .addLiablePartiesItem("party")
+        .orderDate(new Date())
+        .orderDateServed(new Date())
+        .otherDetails("otherdets")
+        .recovery(new Recovery()
+            .awardValue(BigDecimal.ZERO)
+            .leaveOfCourtReqdInd(Boolean.FALSE)
+            .offeredAmount(new OfferedAmount()
+                .amount(BigDecimal.ONE)
+                .conditionsOfOffer("cond"))
+            .recoveredAmount(new RecoveredAmount()) // tested elsewhere
+            .unRecoveredAmount(BigDecimal.TEN))
+        .serviceAddress(new ServiceAddress()
+            .addressLine1("add1")
+            .addressLine2("add2")
+            .addressLine3("add3"))
+        .statutoryChangeReason("stat");
 
-    OtherAssetElementType.Valuation otherValuation = new OtherAssetElementType.Valuation();
-    otherValuation.setAmount(BigDecimal.TEN);
-    otherValuation.setDate(datatypeFactory.newXMLGregorianCalendar());
-    otherValuation.setCriteria("crit");
+    FinancialAwardElementType result = caseDetailsMapper.toFinancialAwardElementType(financialAward);
 
-    OtherAssetElementType otherAssetElementType = new OtherAssetElementType();
-    otherAssetElementType.setAwardedBy("awardperson");
-    otherAssetElementType.setAwardedPercentage(BigDecimal.TEN);
-    otherAssetElementType.setDescription("descr");
-    otherAssetElementType.setRecovery("recover");
-    otherAssetElementType.setOrderDate(datatypeFactory.newXMLGregorianCalendar());
-    otherAssetElementType.setAwardedAmount(BigDecimal.TEN);
-    otherAssetElementType.setDisputedAmount(BigDecimal.TEN);
-    otherAssetElementType.setHeldBy(heldBy);
-    otherAssetElementType.setNoRecoveryDetails("norecover");
-    otherAssetElementType.setDisputedPercentage(BigDecimal.TEN);
-    otherAssetElementType.setRecoveredAmount(BigDecimal.TEN);
-    otherAssetElementType.setRecoveredPercentage(BigDecimal.TEN);
-    otherAssetElementType.setStatChargeExemptReason("exreason");
-    otherAssetElementType.setValuation(otherValuation);
-    otherAssetElementType.setTimeRelatedAward(buildTimeRelatedElementType());
-    return otherAssetElementType;
+    assertNotNull(result);
+    assertEquals(financialAward.getAmount(), result.getAmount());
+    assertEquals(financialAward.getAwardedBy(), result.getAwardedBy());
+    assertEquals(financialAward.getAwardJustifications(), result.getAwardJustifications());
+    assertEquals(financialAward.getInterimAward(), result.getInterimAward());
+    assertNotNull(result.getLiableParties());
+    assertNotNull(result.getLiableParties().getOtherPartyID());
+    assertEquals(1, result.getLiableParties().getOtherPartyID().size());
+    assertEquals(financialAward.getLiableParties().getFirst(), result.getLiableParties().getOtherPartyID().getFirst());
+    assertEquals(financialAward.getOrderDate(), result.getOrderDate().toGregorianCalendar().getTime());
+    assertEquals(financialAward.getOrderDateServed(), result.getOrderDateServed().toGregorianCalendar().getTime());
+    assertEquals(financialAward.getOtherDetails(), result.getOtherDetails());
+    assertNotNull(result.getRecovery());
+    assertEquals(financialAward.getServiceAddress().getAddressLine1(), result.getServiceAddress().getAddressLine1());
+    assertEquals(financialAward.getServiceAddress().getAddressLine2(), result.getServiceAddress().getAddressLine2());
+    assertEquals(financialAward.getServiceAddress().getAddressLine3(), result.getServiceAddress().getAddressLine3());
+    assertEquals(financialAward.getStatutoryChangeReason(), result.getStatutoryChangeReason());
   }
 
-  private RecoveryAmountElementType buildRecoveryAmountElementType() {
-    RecoveryAmountElementType recoveryAmountElementType = new RecoveryAmountElementType();
-    recoveryAmountElementType.setAmount(BigDecimal.TEN);
-    recoveryAmountElementType.setDateReceived(datatypeFactory.newXMLGregorianCalendar());
-    recoveryAmountElementType.setPaidToLSC(BigDecimal.TEN);
-    return recoveryAmountElementType;
+  private void compareName(NameDetail nameDetail, Name result) {
+    assertNotNull(result);
+    assertEquals(nameDetail.getFirstName(), result.getFirstName());
+    assertEquals(nameDetail.getFullName(), result.getFullName());
+    assertEquals(nameDetail.getMiddleName(), result.getMiddleName());
+    assertEquals(nameDetail.getSurname(), result.getSurname());
+    assertEquals(nameDetail.getTitle(), result.getTitle());
+    assertEquals(nameDetail.getSurnameAtBirth(), result.getSurnameAtBirth());
   }
 
-  private TimeRelatedElementType buildTimeRelatedElementType() {
-    TimeRelatedElementType timeRelatedElementType = new TimeRelatedElementType();
-    timeRelatedElementType.setAmount(BigDecimal.TEN);
-    timeRelatedElementType.setAwardType("awardType");
-    timeRelatedElementType.setDescription("adescr");
-    timeRelatedElementType.setOtherDetails("otherdets");
-    timeRelatedElementType.setAwardDate(datatypeFactory.newXMLGregorianCalendar());
-    timeRelatedElementType.setAwardTrigeringEvent("trigger");
-    return timeRelatedElementType;
+  @Test
+  @DisplayName("Test mapping CaseDetail to CaseAdd")
+  void testToCaseAdd() {
+    final CaseDetail caseDetail = new CaseDetail();
+    caseDetail.setCaseReferenceNumber("ref1");
+
+    final CaseAdd result = caseDetailsMapper.toCaseAdd(caseDetail);
+
+    assertNotNull(result);
+    assertEquals(caseDetail.getCaseReferenceNumber(), result.getCaseReferenceNumber());
+    assertNotNull(result.getCaseDetails());
   }
 
-  private Client buildClient() {
-    Client client = new Client();
-    client.setFirstName("firstname");
-    client.setSurname("asurname");
-    client.setClientReferenceNumber("clientref");
-
-    return client;
+  @Test
+  @DisplayName("Test mapping CaseDetail to CaseAdd with null CaseDetail")
+  void testToCaseAddWithNullCaseDetail() {
+    final CaseAdd result = caseDetailsMapper.toCaseAdd(null);
+    assertNull(result);
   }
 
-  private LinkedCaseType buildLinkedCaseType() {
-    LinkedCaseType linkedCaseType = new LinkedCaseType();
-    linkedCaseType.setCaseStatus("casestatus");
-    linkedCaseType.setCaseReferenceNumber("caseref");
-    linkedCaseType.setClient(buildClient());
-    linkedCaseType.setLinkType("linkType");
-    linkedCaseType.setFeeEarnerName("afeeearner");
-    linkedCaseType.setCategoryOfLawCode("catlawcode");
-    linkedCaseType.setCategoryOfLawDesc("catlawdesc");
-    linkedCaseType.setFeeEarnerID("feeearnerid");
-    linkedCaseType.setProviderReferenceNumber("providerref");
-    linkedCaseType.setPublicFundingAppliedInd(Boolean.TRUE);
+  @Test
+  @DisplayName("Test mapping CaseDetail to CaseAdd and CaseDetailsAdd")
+  void testToCaseAddAndCaseDetailsAdd() {
+    final CaseDetail caseDetail = new CaseDetail();
+    caseDetail.setCaseReferenceNumber("ref1");
+    caseDetail.setCertificateType("CERT_TYPE");
+    caseDetail.setCertificateDate(new Date());
+    caseDetail.setPreCertificateCosts(BigDecimal.valueOf(1000));
+    caseDetail.setLegalHelpCosts(BigDecimal.valueOf(2000));
+    caseDetail.setUndertakingAmount(BigDecimal.valueOf(3000));
+    caseDetail.setApplicationDetails(new SubmittedApplicationDetails());
+    caseDetail.setLinkedCases(Collections.singletonList(new LinkedCase()));
+    caseDetail.setAwards(Collections.singletonList(new Award()));
+    caseDetail.setPriorAuthorities(Collections.singletonList(new PriorAuthority()));
+    caseDetail.setDischargeStatus(new Discharge());
+    caseDetail.setCaseStatus(new CaseStatus());
+    caseDetail.setRecordHistory(new RecordHistory());
+    caseDetail.setCaseDocs(Collections.singletonList(new CaseDoc()));
 
-    return linkedCaseType;
+    final CaseAdd result = caseDetailsMapper.toCaseAdd(caseDetail);
+
+    assertNotNull(result);
+    assertEquals(caseDetail.getCaseReferenceNumber(), result.getCaseReferenceNumber());
+
+    final CaseDetailsAdd caseDetailsAdd = result.getCaseDetails();
+    assertNotNull(caseDetailsAdd);
+    assertEquals(caseDetail.getCertificateType(), caseDetailsAdd.getCertificateType());
+    assertEquals(caseDetail.getPreCertificateCosts(), caseDetailsAdd.getPreCertificateCosts());
+    assertEquals(caseDetail.getLegalHelpCosts(), caseDetailsAdd.getLegalHelpCosts());
+    assertEquals(caseDetail.getUndertakingAmount(), caseDetailsAdd.getUndertakingAmount());
+
+    assertNotNull(caseDetailsAdd.getApplicationDetails());
+    assertNotNull(caseDetailsAdd.getCertificateDate());
+    assertNotNull(caseDetailsAdd.getLinkedCases());
+    assertNotNull(caseDetailsAdd.getAwards());
+    assertNotNull(caseDetailsAdd.getPriorAuthorities());
+    assertNotNull(caseDetailsAdd.getDischargeStatus());
+    assertNotNull(caseDetailsAdd.getCaseStatus());
+    assertNotNull(caseDetailsAdd.getRecordHistory());
+    assertNotNull(caseDetailsAdd.getCaseDocs());
   }
 
-  private CaseDocsElementType buildCaseDocsElementType() {
-    CaseDocsElementType caseDocsElementType = new CaseDocsElementType();
-    caseDocsElementType.setCCMSDocumentID("docid");
-    caseDocsElementType.setDocumentSubject("docsubj");
-
-    return caseDocsElementType;
+  @Test
+  @DisplayName("Test mapping CaseDetail to CaseAdd and CaseDetailsAdd with null CaseDetail")
+  void testToCaseAddAndCaseDetailsAddWithNullCaseDetail() {
+    final CaseDetailsAdd result = caseDetailsMapper.caseDetailToCaseDetailsAdd(null);
+    assertNull(result);
   }
 
-  private CaseStatusElementType buildCaseStatus() {
-    CaseStatusElementType caseStatusElementType = new CaseStatusElementType();
-    caseStatusElementType.setActualCaseStatus("actstat");
-    caseStatusElementType.setDisplayCaseStatus("dispstat");
-    caseStatusElementType.setStatusUpdateInd(true);
+  @Test
+  @DisplayName("Test mapping ApplicationDetails to soa.ApplicationDetails")
+  void testToSoaApplicationDetails() {
+    final SubmittedApplicationDetails applicationDetails = new SubmittedApplicationDetails();
+    applicationDetails.setLarDetails(new LarDetails());
+    applicationDetails.setClient(new BaseClient());
+    applicationDetails.setPreferredAddress("Preferred Address");
+    applicationDetails.setCorrespondenceAddress(new AddressDetail());
+    applicationDetails.setProviderDetails(new ProviderDetail());
+    applicationDetails.setCategoryOfLaw(new CategoryOfLaw());
+    applicationDetails.setDateOfFirstAttendance(new Date());
+    applicationDetails.setPurposeOfApplication("Purpose of Application");
+    applicationDetails.setFixedHearingDateInd(true);
+    applicationDetails.setDateOfHearing(new Date());
+    applicationDetails.setPurposeOfHearing("Purpose of Hearing");
+    applicationDetails.setHighProfileCaseInd(true);
+    applicationDetails.setDevolvedPowersDate(new Date());
+    applicationDetails.setApplicationAmendmentType("Amendment Type");
+    applicationDetails.setCertificateType("Certificate Type");
 
-    return caseStatusElementType;
+    when(commonMapper.toAddress(eq(applicationDetails.getCorrespondenceAddress()))).thenReturn(
+        new Address());
+
+    final uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ApplicationDetails result =
+        caseDetailsMapper.toSoaApplicationDetails(applicationDetails);
+
+    assertNotNull(result);
+    assertNotNull(result.getOtherParties());
+    assertNotNull(result.getExternalResources());
+    assertNotNull(result.getProceedings());
+    assertNotNull(result.getMeansAssesments());
+    assertNotNull(result.getMeritsAssesments());
+    assertNotNull(result.getLARDetails());
+    assertNotNull(result.getClient());
+    assertEquals(applicationDetails.getPreferredAddress(), result.getPreferredAddress());
+    assertNotNull(result.getCorrespondenceAddress());
+    assertNotNull(result.getProviderDetails());
+    assertNotNull(result.getCategoryOfLaw());
+    assertNotNull(result.getDateOfFirstAttendance());
+    assertEquals(applicationDetails.getPurposeOfApplication(), result.getPurposeOfApplication());
+    assertEquals(applicationDetails.isFixedHearingDateInd(), result.isFixedHearingDateInd());
+    assertNotNull(result.getDateOfHearing());
+    assertEquals(applicationDetails.getPurposeOfHearing(), result.getPurposeOfHearing());
+    assertEquals(applicationDetails.isHighProfileCaseInd(), result.isHighProfileCaseInd());
+    assertNotNull(result.getDevolvedPowersDate());
+    assertEquals(applicationDetails.getApplicationAmendmentType(), result.getApplicationAmendmentType());
+    assertEquals(applicationDetails.getCertificateType(), result.getCertificateType());
   }
 
-  private uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ApplicationDetails buildApplicationDetails() {
-    uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ApplicationDetails applicationDetails =
-        new uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ApplicationDetails();
-    applicationDetails.setClient(buildClient());
-    applicationDetails.setApplicationAmendmentType("appamendtype");
-    applicationDetails.setLARDetails(buildLARDetails());
-    applicationDetails.setProviderDetails(buildProviderDetails());
-    applicationDetails.setCategoryOfLaw(buildCategoryOfLawElementType());
-    applicationDetails.setCertificateType("certtype");
-    applicationDetails.setCorrespondenceAddress(buildAddress());
-    applicationDetails.setDateOfFirstAttendance(datatypeFactory.newXMLGregorianCalendar());
-    applicationDetails.setDateOfHearing(datatypeFactory.newXMLGregorianCalendar());
-    applicationDetails.setDevolvedPowersDate(datatypeFactory.newXMLGregorianCalendar());
-    applicationDetails.setExternalResources(new ExternalResources());
-    applicationDetails.getExternalResources().getExternalResource()
-        .add(buildExtResourceElementType());
-    applicationDetails.setFixedHearingDateInd(Boolean.TRUE);
-    applicationDetails.setHighProfileCaseInd(Boolean.TRUE);
-    applicationDetails.setMeansAssesments(new MeansAssesments());
-    applicationDetails.getMeansAssesments().getAssesmentResults().add(buildAssesmentResultType());
-    applicationDetails.setMeritsAssesments(new MeritsAssesments());
-    applicationDetails.getMeritsAssesments().getAssesmentResults().add(buildAssesmentResultType());
-    applicationDetails.setOtherParties(new OtherParties());
-    applicationDetails.getOtherParties().getOtherParty().add(buildOtherPartyElementType());
-    applicationDetails.setPreferredAddress("preferredaddr");
-    applicationDetails.setProceedings(new Proceedings());
-    applicationDetails.getProceedings().getProceeding().add(buildProceedingElementType());
-    applicationDetails.setPurposeOfApplication("purpose");
-    applicationDetails.setPurposeOfHearing("hearingpurpose");
+  @Test
+  @DisplayName("Test mapping CostLimitation to CostLimitationElementType")
+  void testToCostLimitationElementType() {
+    final CostLimitation costLimitation = new CostLimitation();
+    costLimitation.setCostLimitId("CL123");
+    costLimitation.setBillingProviderId("BPID456");
+    costLimitation.setBillingProviderName("Provider Name");
+    costLimitation.setCostCategory("Category A");
+    costLimitation.setPaidToDate(BigDecimal.valueOf(1000));
+    costLimitation.setAmount(BigDecimal.valueOf(5000));
 
-    return applicationDetails;
+    final CostLimitationElementType result = caseDetailsMapper.toCostLimitationElementType(costLimitation);
+
+    assertNotNull(result);
+    assertEquals(costLimitation.getCostLimitId(), result.getCostLimitID());
+    assertEquals(costLimitation.getBillingProviderId(), result.getBillingProviderID());
+    assertEquals(costLimitation.getBillingProviderName(), result.getBillingProviderName());
+    assertEquals(costLimitation.getCostCategory(), result.getCostCategory());
+    assertEquals(costLimitation.getPaidToDate(), result.getPaidToDate());
+    assertEquals(costLimitation.getAmount(), result.getAmount());
   }
 
-  private ProceedingElementType buildProceedingElementType() {
-    OutcomeDetailElementType outcomeDetailElementType = buildOutcomeDetailElementType();
-
-    ScopeLimitationElementType scopeLimitationElementType = buildScopeLimitationElementType();
-
-    ProceedingDetElementType.ScopeLimitations scopeLimitations = new ScopeLimitations();
-    scopeLimitations.getScopeLimitation().add(scopeLimitationElementType);
-
-    ProceedingDetElementType proceedingDetElementType = new ProceedingDetElementType();
-    proceedingDetElementType.setClientInvolvementType("clientinvtype");
-    proceedingDetElementType.setProceedingType("proctype");
-    proceedingDetElementType.setMatterType("mattype");
-    proceedingDetElementType.setProceedingDescription("procdescr");
-    proceedingDetElementType.setOrderType("ordtype");
-    proceedingDetElementType.setDateCostsValid(datatypeFactory.newXMLGregorianCalendar());
-    proceedingDetElementType.setDateDevolvedPowersUsed(datatypeFactory.newXMLGregorianCalendar());
-    proceedingDetElementType.setDateGranted(datatypeFactory.newXMLGregorianCalendar());
-    proceedingDetElementType.setDevolvedPowersInd(Boolean.TRUE);
-    proceedingDetElementType.setLevelOfService("level");
-    proceedingDetElementType.setOutcome(outcomeDetailElementType);
-    proceedingDetElementType.setScopeLimitationApplied("alimit");
-    proceedingDetElementType.setScopeLimitations(scopeLimitations);
-    proceedingDetElementType.setStage("stage");
-
-    ActionListElementType actionListElementType = new ActionListElementType();
-    actionListElementType.getFunction().add("action");
-
-    ProceedingElementType proceedingElementType = new ProceedingElementType();
-    proceedingElementType.setProceedingDetails(proceedingDetElementType);
-    proceedingElementType.setProceedingCaseID("caseid");
-    proceedingElementType.setAvailableFunctions(actionListElementType);
-    proceedingElementType.setLeadProceedingIndicator(Boolean.TRUE);
-    proceedingElementType.setStatus("status");
-    proceedingElementType.setDateApplied(datatypeFactory.newXMLGregorianCalendar());
-    proceedingElementType.setOutcomeCourtCaseNumber("occn");
-
-    return proceedingElementType;
+  @Test
+  @DisplayName("Test mapping CostLimitation to CostLimitationElementType with null CostLimitation")
+  void testToCostLimitationElementTypeWithNullCostLimitation() {
+    final CostLimitationElementType result = caseDetailsMapper.toCostLimitationElementType(null);
+    assertNull(result);
   }
 
-  private ScopeLimitationElementType buildScopeLimitationElementType() {
-    ScopeLimitationElementType scopeLimitationElementType = new ScopeLimitationElementType();
-    scopeLimitationElementType.setScopeLimitation("limit");
-    scopeLimitationElementType.setScopeLimitationID("id");
-    scopeLimitationElementType.setScopeLimitationWording("wording");
-    scopeLimitationElementType.setDelegatedFunctionsApply(Boolean.TRUE);
-    return scopeLimitationElementType;
+  @Test
+  @DisplayName("Test mapping ExternalResource to ExtResourceElementType")
+  void testToExtResourceElementType() {
+    final ExternalResource externalResource = new ExternalResource();
+    externalResource.setExternalResourceRef("ExtResRef123");
+    externalResource.setExternalResourceType("ResourceTypeA");
+    externalResource.setDateInstructed(new Date());
+    externalResource.setLocation("LocationXYZ");
+    externalResource.setChambers("ChambersABC");
+
+    final ExtResourceElementType result = caseDetailsMapper.toExtResourceElementType(externalResource);
+
+    assertNotNull(result);
+    assertEquals(externalResource.getExternalResourceRef(), result.getExternalResourceRef());
+    assertEquals(externalResource.getExternalResourceType(), result.getExternalResourceType());
+    assertNotNull(result.getDateInstructed());
+    assertEquals(externalResource.getLocation(), result.getLocation());
+    assertEquals(externalResource.getChambers(), result.getChambers());
   }
 
-  private OutcomeDetailElementType buildOutcomeDetailElementType() {
-    OutcomeDetailElementType outcomeDetailElementType = new OutcomeDetailElementType();
-    outcomeDetailElementType.setOutcomeCourtCaseNumber("casenum");
-    outcomeDetailElementType.setAdditionalResultInfo("addresult");
-    outcomeDetailElementType.setAltAcceptanceReason("altacceptreason");
-    outcomeDetailElementType.setCourtCode("courtcode");
-    outcomeDetailElementType.setResult("result");
-    outcomeDetailElementType.setAltDisputeResolution("dispute");
-    outcomeDetailElementType.setFinalWorkDate(datatypeFactory.newXMLGregorianCalendar());
-    outcomeDetailElementType.setIssueDate(datatypeFactory.newXMLGregorianCalendar());
-    outcomeDetailElementType.setResolutionMethod("method");
-    outcomeDetailElementType.setStageEnd("end");
-    outcomeDetailElementType.setWiderBenifits("ben");
-    return outcomeDetailElementType;
+  @Test
+  @DisplayName("Test mapping ExternalResource to ExtResourceElementType with null ExternalResource")
+  void testToExtResourceElementTypeWithNullExternalResource() {
+    final ExtResourceElementType result = caseDetailsMapper.toExtResourceElementType(null);
+    assertNull(result);
   }
 
-  private OtherPartyElementType buildOtherPartyElementType() {
-    OtherPartyDetail otherPartyDetail = new OtherPartyDetail();
-    otherPartyDetail.setOrganization(buildOtherPartyOrgType());
-    otherPartyDetail.setPerson(buildOtherPartyPersonType());
+  @Test
+  @DisplayName("Test mapping ProceedingDetail to ProceedingElementType")
+  void testToProceedingElementType() {
+    final ProceedingDetail proceedingDetail = new ProceedingDetail();
+    proceedingDetail.setProceedingCaseId("CaseID123");
+    proceedingDetail.setDateApplied(new Date());
+    proceedingDetail.setStatus("StatusABC");
+    proceedingDetail.setLeadProceedingIndicator(true);
+    proceedingDetail.setOutcomeCourtCaseNumber("Outcome123");
 
-    OtherPartyElementType otherPartyElementType = new OtherPartyElementType();
-    otherPartyElementType.setOtherPartyDetail(otherPartyDetail);
-    otherPartyElementType.setOtherPartyID("partyid");
-    otherPartyElementType.setSharedInd(true);
+    final ProceedingElementType result = caseDetailsMapper.toProceedingElementType(proceedingDetail);
 
-    return otherPartyElementType;
+    assertNotNull(result);
+    assertNotNull(result.getAvailableFunctions());
+    assertNotNull(result.getProceedingDetails());
+    assertEquals(proceedingDetail.getProceedingCaseId(), result.getProceedingCaseID());
+    assertNotNull(result.getDateApplied());
+    assertEquals(proceedingDetail.getStatus(), result.getStatus());
+    assertEquals(proceedingDetail.isLeadProceedingIndicator(), result.isLeadProceedingIndicator());
+    assertEquals(proceedingDetail.getOutcomeCourtCaseNumber(), result.getOutcomeCourtCaseNumber());
   }
 
-  private OtherPartyOrgType buildOtherPartyOrgType() {
-    OtherPartyOrgType otherPartyOrgType = new OtherPartyOrgType();
-    otherPartyOrgType.setAddress(buildAddress());
-    otherPartyOrgType.setOtherInformation("otherinf");
-    otherPartyOrgType.setContactDetails(buildContactDetails());
-    otherPartyOrgType.setOrganizationType("orgtype");
-    otherPartyOrgType.setContactName("name");
-    otherPartyOrgType.setCurrentlyTrading("trading");
-    otherPartyOrgType.setOrganizationName("name");
-    otherPartyOrgType.setRelationToCase("relation");
-    otherPartyOrgType.setRelationToClient("toclient");
-    return otherPartyOrgType;
+  @Test
+  @DisplayName("Test mapping ProceedingDetail to ProceedingElementType with null ProceedingDetail")
+  void testToProceedingElementTypeWithNullProceedingDetail() {
+    final ProceedingElementType result = caseDetailsMapper.toProceedingElementType(null);
+    assertNull(result);
   }
 
-  private OtherPartyPersonType buildOtherPartyPersonType() {
-    OtherPartyPersonType otherPartyPersonType = new OtherPartyPersonType();
-    otherPartyPersonType.setAddress(buildAddress());
-    otherPartyPersonType.setContactDetails(buildContactDetails());
-    otherPartyPersonType.setOtherInformation("otherinf");
-    otherPartyPersonType.setName(buildName());
-    otherPartyPersonType.setContactName("name");
-    otherPartyPersonType.setDateOfBirth(datatypeFactory.newXMLGregorianCalendar());
-    otherPartyPersonType.setAssessedAsstes(BigDecimal.TEN);
-    otherPartyPersonType.setAssessedIncome(BigDecimal.TEN);
-    otherPartyPersonType.setAssessedIncomeFrequency("freq");
-    otherPartyPersonType.setAssessmentDate(datatypeFactory.newXMLGregorianCalendar());
-    return otherPartyPersonType;
+  @Test
+  @DisplayName("Test mapping CostAward to CostAwardElementType")
+  void testToCostAwardElementType() {
+    final CostAward costAward = new CostAward();
+    costAward.setPreCertificateAwardLsc(BigDecimal.valueOf(1000));
+    costAward.setCertificateCostRateLsc(BigDecimal.valueOf(1.5));
+    costAward.setOrderDate(new Date());
+    costAward.setCourtAssessmentStatus("Court Status");
+    costAward.setPreCertificateAwardOth(BigDecimal.valueOf(2000));
+    costAward.setCertificateCostRateMarket(BigDecimal.valueOf(2.5));
+    costAward.setAwardedBy("Awarded By Name");
+    costAward.setInterestAwardedRate(BigDecimal.valueOf(0.05));
+    costAward.setInterestAwardedStartDate(new Date());
+    costAward.setOtherDetails("Other details");
+    costAward.setOrderDateServed(new Date());
+    costAward.setServiceAddress(new ServiceAddress());
+    costAward.setRecovery(new Recovery());
+
+    final CostAwardElementType result = caseDetailsMapper.toCostAwardElementType(costAward);
+
+    assertNotNull(result);
+    assertNotNull(result.getLiableParties());
+    assertEquals(costAward.getPreCertificateAwardLsc(), result.getPreCertificateAwardLSC());
+    assertEquals(costAward.getCertificateCostRateLsc(), result.getCertificateCostRateLSC());
+    assertNotNull(result.getOrderDate());
+    assertEquals(costAward.getCourtAssessmentStatus(), result.getCourtAssessmentStatus());
+    assertEquals(costAward.getPreCertificateAwardOth(), result.getPreCertificateAwardOth());
+    assertEquals(costAward.getCertificateCostRateMarket(), result.getCertificateCostRateMarket());
+    assertEquals(costAward.getAwardedBy(), result.getAwardedBy());
+    assertEquals(costAward.getInterestAwardedRate(), result.getInterestAwardedRate());
+    assertNotNull(result.getInterestAwardedStartDate());
+    assertEquals(costAward.getOtherDetails(), result.getOtherDetails());
+    assertNotNull(result.getOrderDateServed());
+    assertNotNull(result.getServiceAddress());
+    assertNotNull(result.getRecovery());
   }
 
-  private Name buildName() {
-    Name name = new Name();
-    name.setFirstName("firstName");
-    name.setFullName("fullname");
-    name.setMiddleName("middle");
-    name.setSurname("surname");
-    name.setTitle("mr");
-    name.setSurnameAtBirth("atbirth");
-
-    return name;
+  @Test
+  @DisplayName("Test mapping CostAward to CostAwardElementType with null CostAward")
+  void testToCostAwardElementTypeWithNullCostAward() {
+    final CostAwardElementType result = caseDetailsMapper.toCostAwardElementType(null);
+    assertNull(result);
   }
 
-  private ContactDetails buildContactDetails() {
-    ContactDetails contactDetails = new ContactDetails();
-    contactDetails.setFax("faxnum");
-    contactDetails.setEmailAddress("email");
-    contactDetails.setMobileNumber("mobile");
-    contactDetails.setTelephoneHome("telhome");
-    contactDetails.setTelephoneWork("telwork");
 
-    return contactDetails;
-  }
 
-  private ExtResourceElementType buildExtResourceElementType() {
-    ExtResourceElementType extResourceElementType = new ExtResourceElementType();
-    extResourceElementType.setExternalResourceType("exttype");
-    extResourceElementType.setExternalResourceRef("extref");
-    extResourceElementType.setChambers("chambers");
-    extResourceElementType.setLocation("loc");
-    extResourceElementType.setCostCeiling(new CostLimitations());
-    extResourceElementType.getCostCeiling().getCostLimitation()
-        .add(buildCostLimitationElementType());
-    extResourceElementType.setDateInstructed(datatypeFactory.newXMLGregorianCalendar());
 
-    return extResourceElementType;
-  }
 
-  private CostLimitationElementType buildCostLimitationElementType() {
-    CostLimitationElementType costLimitationElementType = new CostLimitationElementType();
-    costLimitationElementType.setAmount(BigDecimal.TEN);
-    costLimitationElementType.setCostLimitID("limitid");
-    costLimitationElementType.setCostCategory("costcat");
-    costLimitationElementType.setPaidToDate(BigDecimal.TEN);
-    costLimitationElementType.setBillingProviderID("provid");
-    costLimitationElementType.setBillingProviderName("provname");
 
-    return costLimitationElementType;
-  }
 
-  private CategoryOfLawElementType buildCategoryOfLawElementType() {
-    CategoryOfLawElementType categoryOfLawElementType = new CategoryOfLawElementType();
-    categoryOfLawElementType.setCategoryOfLawCode("catcode");
-    categoryOfLawElementType.setCategoryOfLawDescription("catdesc");
-    categoryOfLawElementType.setCostLimitations(new CostLimitations());
-    categoryOfLawElementType.getCostLimitations().getCostLimitation()
-        .add(buildCostLimitationElementType());
-    categoryOfLawElementType.setGrantedAmount(BigDecimal.TEN);
-    categoryOfLawElementType.setRequestedAmount(BigDecimal.TEN);
-    categoryOfLawElementType.setTotalPaidToDate(BigDecimal.TEN);
-
-    return categoryOfLawElementType;
-  }
-
-  private ProviderDetails buildProviderDetails() {
-    ProviderDetails providerDetails = new ProviderDetails();
-    providerDetails.setContactDetails(buildContactDetails());
-    providerDetails.setProviderFirmID("firmid");
-    providerDetails.setProviderOfficeID("officeid");
-    providerDetails.setProviderCaseReferenceNumber("caseref");
-    providerDetails.setContactUserID(buildUser());
-    providerDetails.setFeeEarnerContactID("feeearner");
-    providerDetails.setSupervisorContactID("superid");
-
-    return providerDetails;
-  }
-
-  private LARDetails buildLARDetails() {
-    LARDetails larDetails = new LARDetails();
-    larDetails.setLARScopeFlag(Boolean.TRUE);
-    larDetails.setLegalHelpUFN("ufn");
-    larDetails.setLegalHelpOfficeCode("offcode");
-
-    return larDetails;
-  }
 }
