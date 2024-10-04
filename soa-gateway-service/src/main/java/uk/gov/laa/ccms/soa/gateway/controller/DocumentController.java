@@ -41,7 +41,7 @@ public class DocumentController implements DocumentsApi {
           final String notificationReference) {
 
     try {
-      ClientTransactionResponse response = documentService.registerDocument(
+      final ClientTransactionResponse response = documentService.registerDocument(
               soaGatewayUserLoginId,
               soaGatewayUserRole,
               document,
@@ -69,15 +69,17 @@ public class DocumentController implements DocumentsApi {
       final String soaGatewayUserLoginId,
       final String soaGatewayUserRole,
       final Document document,
-      final String notificationReference) {
+      final String notificationReference,
+      final String caseReferenceNumber) {
 
     try {
-      ClientTransactionResponse response = documentService.uploadDocument(
+      final ClientTransactionResponse response = documentService.uploadDocument(
           soaGatewayUserLoginId,
           soaGatewayUserRole,
           documentId,
           document,
-          notificationReference);
+          notificationReference,
+          caseReferenceNumber);
       return ResponseEntity.ok(response);
     } catch (Exception e) {
       log.error("DocumentController caught exception", e);

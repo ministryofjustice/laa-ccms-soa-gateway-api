@@ -11,6 +11,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
@@ -64,29 +66,40 @@ class DocumentControllerTest {
         verify(documentService).registerDocument(soaGatewayUserLoginId, soaGatewayUserRole, document, null);
     }
 
-    @Test
-    public void testUploadDocument_Success() throws Exception {
+    @ParameterizedTest
+    @CsvSource({
+        "CASE-12345, NOTIF-98765",  // Both case reference and notification reference provided
+        "CASE-12345, ",             // Only case reference provided
+        ", NOTIF-98765",            // Only notification reference provided
+        ", "                        // Neither case reference nor notification reference provided
+    })
+    public void testUploadDocument_Success(final String caseReference, final String notificationReference) throws Exception {
         final String soaGatewayUserLoginId = "user";
         final String soaGatewayUserRole = "EXTERNAL";
         final String documentId = "123";
 
-        Document document = new Document();
-        ClientTransactionResponse clientTransactionResponse = new ClientTransactionResponse()
+        final Document document = new Document();
+        final ClientTransactionResponse clientTransactionResponse = new ClientTransactionResponse()
             .transactionId("trans123")
             .referenceNumber(documentId);
 
-        when(documentService.uploadDocument(soaGatewayUserLoginId, soaGatewayUserRole, documentId, document, null))
+        // Mocking the service call with the dynamic case reference and notification reference
+        when(documentService.uploadDocument(soaGatewayUserLoginId, soaGatewayUserRole, documentId, document, notificationReference, caseReference))
             .thenReturn(clientTransactionResponse);
 
+        // Perform the mockMvc request with conditional headers based on case and notification references
         mockMvc.perform(
                 put("/documents/{document-id}", clientTransactionResponse.getReferenceNumber())
                     .content(new ObjectMapper().writeValueAsString(document))
                     .contentType(MediaType.APPLICATION_JSON)
                     .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
-                    .header("SoaGateway-User-Role", soaGatewayUserRole))
+                    .header("SoaGateway-User-Role", soaGatewayUserRole)
+                    .param("notification-reference", notificationReference)
+                    .param("case-reference-number", caseReference))
             .andExpect(status().isOk());
 
-        verify(documentService).uploadDocument(soaGatewayUserLoginId, soaGatewayUserRole, documentId, document, null);
+        // Verifying the service call with the appropriate parameters including case and notification references
+        verify(documentService).uploadDocument(soaGatewayUserLoginId, soaGatewayUserRole, documentId, document, notificationReference, caseReference);
     }
 
     @Test
