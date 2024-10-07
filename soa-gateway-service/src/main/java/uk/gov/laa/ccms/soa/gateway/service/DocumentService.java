@@ -50,7 +50,8 @@ public class DocumentService extends AbstractSoaService {
         soaGatewayUserLoginId,
         soaGatewayUserRole,
         documentMapper.toDocumentUploadElementType(document),
-        notificationReference);
+        notificationReference,
+        null);
 
     return documentMapper.toClientTransactionResponse(response);
   }
@@ -72,13 +73,15 @@ public class DocumentService extends AbstractSoaService {
       final String soaGatewayUserRole,
       final String documentId,
       final Document document,
-      final String notificationReference) {
+      final String notificationReference,
+      final String caseReferenceNumber) {
 
     final DocumentUploadRS response = documentClient.registerDocument(
         soaGatewayUserLoginId,
         soaGatewayUserRole,
         documentMapper.toDocumentUploadElementType(documentId, document),
-        notificationReference);
+        notificationReference,
+        caseReferenceNumber);
 
     return documentMapper.toClientTransactionResponse(response);
   }
