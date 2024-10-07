@@ -57,32 +57,36 @@ class DocumentClientTest {
 
     @Test
     public void testRegisterDocumentBuildsRegisterDocumentRequest() throws Exception {
-        ObjectFactory objectFactory = new ObjectFactory();
+        final ObjectFactory objectFactory = new ObjectFactory();
 
         // Mock the response of the WebServiceTemplate
         when(webServiceTemplate.marshalSendAndReceive(
-                eq(SERVICE_URL),
-                any(JAXBElement.class),
-                any(SoapActionCallback.class)))
-                .thenReturn(objectFactory.createDocumentUploadRS(new DocumentUploadRS()));
+            eq(SERVICE_URL),
+            any(JAXBElement.class),
+            any(SoapActionCallback.class)))
+            .thenReturn(objectFactory.createDocumentUploadRS(new DocumentUploadRS()));
 
-        DocumentUploadElementType documentUploadElementType = new DocumentUploadElementType();
+        final DocumentUploadElementType documentUploadElementType = new DocumentUploadElementType();
 
-        DocumentUploadRS response = client.registerDocument(
-                soaGatewayUserLoginId, soaGatewayUserRole, documentUploadElementType, null);
+        final String caseReference = "CASE-12345";
+        final String notificationReference = "NOTIF-98765";
+
+        final DocumentUploadRS response = client.registerDocument(
+            soaGatewayUserLoginId, soaGatewayUserRole, documentUploadElementType, notificationReference, caseReference);
 
         // Verify interactions
         verify(webServiceTemplate, times(1)).marshalSendAndReceive(
-                eq(SERVICE_URL),
-                requestCaptorUpload.capture(),
-                any(SoapActionCallback.class));
+            eq(SERVICE_URL),
+            requestCaptorUpload.capture(),
+            any(SoapActionCallback.class));
 
-        JAXBElement<DocumentUploadRQ> payload = requestCaptorUpload.getValue();
+        final JAXBElement<DocumentUploadRQ> payload = requestCaptorUpload.getValue();
         assertNotNull(payload.getValue().getHeaderRQ().getTimeStamp());
         assertEquals(soaGatewayUserLoginId, payload.getValue().getHeaderRQ().getUserLoginID());
         assertEquals(soaGatewayUserRole, payload.getValue().getHeaderRQ().getUserRole());
         assertEquals(documentUploadElementType, payload.getValue().getDocument());
-        assertEquals(NO_RELATED_NOTIFICATION, payload.getValue().getNotificationID());
+        assertEquals(notificationReference, payload.getValue().getNotificationID());
+        assertEquals(caseReference, payload.getValue().getCaseReferenceNumber());
         assertNotNull(response);
     }
 
@@ -100,7 +104,7 @@ class DocumentClientTest {
         DocumentUploadElementType documentUploadElementType = new DocumentUploadElementType();
 
         DocumentUploadRS response = client.registerDocument(
-            soaGatewayUserLoginId, soaGatewayUserRole, documentUploadElementType, "12345");
+            soaGatewayUserLoginId, soaGatewayUserRole, documentUploadElementType, "12345", null);
 
         // Verify interactions
         verify(webServiceTemplate, times(1)).marshalSendAndReceive(
@@ -137,6 +141,7 @@ class DocumentClientTest {
             soaGatewayUserLoginId,
             soaGatewayUserRole,
             notificationReference,
+            null,
             documentUploadElementType);
 
         // Verify interactions

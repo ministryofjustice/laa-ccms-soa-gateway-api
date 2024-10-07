@@ -70,12 +70,14 @@ public class DocumentClient extends AbstractSoaClient {
       final String loggedInUserId,
       final String loggedInUserType,
       final DocumentUploadElementType documentUploadElementType,
-      final String notificationReference) {
+      final String notificationReference,
+      final String caseReferenceNumber) {
 
     return this.uploadDocument(
         loggedInUserId,
         loggedInUserType,
         Objects.requireNonNullElse(notificationReference, NO_RELATED_NOTIFICATION),
+        caseReferenceNumber,
         documentUploadElementType);
   }
 
@@ -92,16 +94,17 @@ public class DocumentClient extends AbstractSoaClient {
       final String loggedInUserId,
       final String loggedInUserType,
       final String notificationReference,
+      final String caseReferenceNumber,
       final DocumentUploadElementType documentUploadElementType) {
 
     final String soapAction = String.format("%s/UploadDocument", serviceName);
-    DocumentUploadRQ documentUploadRq = CASE_BIM_FACTORY.createDocumentUploadRQ();
+    final DocumentUploadRQ documentUploadRq = CASE_BIM_FACTORY.createDocumentUploadRQ();
     documentUploadRq.setHeaderRQ(createHeaderRq(loggedInUserId, loggedInUserType));
     documentUploadRq.setNotificationID(notificationReference);
-
+    documentUploadRq.setCaseReferenceNumber(caseReferenceNumber);
     documentUploadRq.setDocument(documentUploadElementType);
 
-    JAXBElement<DocumentUploadRS> response =
+    final JAXBElement<DocumentUploadRS> response =
         (JAXBElement<DocumentUploadRS>) getWebServiceTemplate()
             .marshalSendAndReceive(
                 serviceUrl,

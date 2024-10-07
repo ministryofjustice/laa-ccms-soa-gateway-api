@@ -91,7 +91,7 @@ public class DocumentClientIntegrationTest {
         .andRespond(withPayload(documentUploadRS_valid));
 
     DocumentUploadRS response = client.registerDocument(testLoginId, testUserType,
-        documentUploadElementType, null);
+        documentUploadElementType, null, null);
 
     assertNotNull(response.getDocumentID());
 
@@ -133,6 +133,7 @@ public class DocumentClientIntegrationTest {
         testLoginId,
         testUserType,
         notificationReference,
+        null,
         documentUploadElementType);
 
     assertNotNull(response.getDocumentID());

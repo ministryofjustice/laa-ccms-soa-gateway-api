@@ -5,8 +5,11 @@ import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -53,8 +56,8 @@ public class DocumentServiceTest {
 
         // Stub the Client to return the mocked response
         when(documentClient.registerDocument(
-            soaGatewayUserLoginId, soaGatewayUserRole, documentUploadElementType, null))
-                .thenReturn(documentUploadRS);
+            soaGatewayUserLoginId, soaGatewayUserRole, documentUploadElementType, null, null))
+            .thenReturn(documentUploadRS);
 
         // Stub the Mapper to return the mocked gateway response
         when(documentMapper.toClientTransactionResponse(eq(documentUploadRS)))
@@ -72,7 +75,7 @@ public class DocumentServiceTest {
             soaGatewayUserLoginId,
             soaGatewayUserRole,
             documentUploadElementType,
-            null);
+            null, null);
 
         // Verify that the map function was called with the mocked response
         verify(documentMapper).toClientTransactionResponse(documentUploadRS);
@@ -81,23 +84,29 @@ public class DocumentServiceTest {
         assertEquals(clientTransactionResponse, result);
     }
 
-    @Test
-    public void testUploadDocument() {
-        String soaGatewayUserLoginId = "soaGatewayUserLoginId";
-        String soaGatewayUserRole = "soaGatewayUserRole";
+    @ParameterizedTest
+    @CsvSource({
+        "CASE-12345, NOTIF-98765",  // Both case reference and notification reference provided
+        "CASE-12345, ",             // Only case reference provided
+        ", NOTIF-98765",            // Only notification reference provided
+        ", "                        // Neither case reference nor notification reference provided
+    })
+    public void testUploadDocument(final String caseReference, final String notificationReference) {
+        final String soaGatewayUserLoginId = "soaGatewayUserLoginId";
+        final String soaGatewayUserRole = "soaGatewayUserRole";
         final String documentId = "docId123";
 
-        Document document = new Document();
-        DocumentUploadElementType documentUploadElementType = new DocumentUploadElementType();
-        DocumentUploadRS documentUploadRS = new DocumentUploadRS();
-        ClientTransactionResponse clientTransactionResponse = new ClientTransactionResponse();
+        final Document document = new Document();
+        final DocumentUploadElementType documentUploadElementType = new DocumentUploadElementType();
+        final DocumentUploadRS documentUploadRS = new DocumentUploadRS();
+        final ClientTransactionResponse clientTransactionResponse = new ClientTransactionResponse();
 
         when(documentMapper.toDocumentUploadElementType(documentId, document))
             .thenReturn(documentUploadElementType);
 
-        // Stub the Client to return the mocked response
+        // Stub the Client to return the mocked response with the dynamic caseReference and notificationReference
         when(documentClient.registerDocument(
-            soaGatewayUserLoginId, soaGatewayUserRole, documentUploadElementType, null))
+            soaGatewayUserLoginId, soaGatewayUserRole, documentUploadElementType, notificationReference, caseReference))
             .thenReturn(documentUploadRS);
 
         // Stub the Mapper to return the mocked gateway response
@@ -105,19 +114,19 @@ public class DocumentServiceTest {
             .thenReturn(clientTransactionResponse);
 
         // Call the service method
-        ClientTransactionResponse result = documentService.uploadDocument(
+        final ClientTransactionResponse result = documentService.uploadDocument(
             soaGatewayUserLoginId,
             soaGatewayUserRole,
             documentId,
             document,
-            null);
+            notificationReference, caseReference);
 
         // Verify that the NotificationClient method was called with the expected arguments
         verify(documentClient).registerDocument(
             soaGatewayUserLoginId,
             soaGatewayUserRole,
             documentUploadElementType,
-            null);
+            notificationReference, caseReference);
 
         // Verify that the map function was called with the mocked response
         verify(documentMapper).toClientTransactionResponse(documentUploadRS);
@@ -125,6 +134,7 @@ public class DocumentServiceTest {
         // Assert the result
         assertEquals(clientTransactionResponse, result);
     }
+
 
     @Test
     public void testDownloadDocument() {
