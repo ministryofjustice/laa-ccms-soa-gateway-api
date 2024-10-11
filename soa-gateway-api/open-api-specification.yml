@@ -1368,7 +1368,7 @@ components:
         organization_type:
           type: 'string'
         currently_trading:
-          type: 'string'
+          type: 'boolean'
         relation_To_client:
           type: 'string'
         relation_to_case:

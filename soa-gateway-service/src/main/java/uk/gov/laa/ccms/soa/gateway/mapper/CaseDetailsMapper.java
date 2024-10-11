@@ -26,6 +26,7 @@ import uk.gov.laa.ccms.soa.gateway.model.OpaAttribute;
 import uk.gov.laa.ccms.soa.gateway.model.OpaGoal;
 import uk.gov.laa.ccms.soa.gateway.model.OtherAsset;
 import uk.gov.laa.ccms.soa.gateway.model.OtherParty;
+import uk.gov.laa.ccms.soa.gateway.model.OtherPartyOrganisation;
 import uk.gov.laa.ccms.soa.gateway.model.OtherPartyPerson;
 import uk.gov.laa.ccms.soa.gateway.model.OutcomeDetail;
 import uk.gov.laa.ccms.soa.gateway.model.PriorAuthority;
@@ -58,6 +59,7 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.LinkedCaseUpd
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.LinkedCasesUpdate;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.OtherAssetElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.OtherPartyElementType;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.OtherPartyOrgType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.OtherPartyPersonType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.OutcomeDetailElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.PriorAuthorities;
@@ -364,7 +366,13 @@ public interface CaseDetailsMapper {
   OtherParty toOtherParty(final OtherPartyElementType otherPartyElementType);
 
   @InheritInverseConfiguration
+  @Mapping(target = "otherPartyDetail.organization", source = "organisation")
   OtherPartyElementType toOtherPartyElementType(final OtherParty otherParty);
+
+  OtherPartyOrganisation toOtherPartyOrganisation(final OtherPartyOrgType otherPartyOrgType);
+
+  @InheritInverseConfiguration
+  OtherPartyOrgType toOtherPartyOrgType(final OtherPartyOrganisation otherPartyOrganisation);
 
   @Mapping(target = "contactUserId", source = "contactUserID")
   @Mapping(target = "providerFirmId", source = "providerFirmID")
