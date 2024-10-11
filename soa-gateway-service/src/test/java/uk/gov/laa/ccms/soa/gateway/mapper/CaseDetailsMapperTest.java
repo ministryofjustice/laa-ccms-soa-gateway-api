@@ -1,6 +1,7 @@
 package uk.gov.laa.ccms.soa.gateway.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -372,6 +373,7 @@ public class CaseDetailsMapperTest {
     OtherPartyOrgType otherPartyOrgType = otherPartyElementType.getOtherPartyDetail()
         .getOrganization();
     OtherPartyOrganisation otherPartyOrganisation = result.getOrganisation();
+
     compareContactDetails(otherPartyOrgType.getContactDetails(),
         otherPartyOrganisation.getContactDetails());
     assertEquals(otherPartyOrgType.getOtherInformation(),
@@ -381,8 +383,7 @@ public class CaseDetailsMapperTest {
         otherPartyOrganisation.getOrganizationType());
     assertEquals(otherPartyOrgType.getContactName(),
         otherPartyOrganisation.getContactName());
-    assertEquals(otherPartyOrgType.getCurrentlyTrading(),
-        otherPartyOrganisation.getCurrentlyTrading());
+    assertFalse(otherPartyOrganisation.isCurrentlyTrading());
     assertEquals(otherPartyOrgType.getRelationToClient(),
         otherPartyOrganisation.getRelationToClient());
     assertNotNull(otherPartyOrganisation.getAddress());
@@ -1076,7 +1077,7 @@ public class CaseDetailsMapperTest {
             .address(new AddressDetail()) // common mapper
             .contactDetails(new ContactDetail()) // tested elsewhere
             .contactName("orgconname")
-            .currentlyTrading("curTrad")
+            .currentlyTrading(false)
             .organizationName("orgname")
             .organizationType("orgtype")
             .otherInformation("orgotherinf")
@@ -1103,7 +1104,6 @@ public class CaseDetailsMapperTest {
     assertNotNull(resultOrg.getAddress());
     assertNotNull(resultOrg.getContactDetails());
     assertEquals(otherParty.getOrganisation().getContactName(), resultOrg.getContactName());
-    assertEquals(otherParty.getOrganisation().getCurrentlyTrading(), resultOrg.getCurrentlyTrading());
     assertEquals(otherParty.getOrganisation().getOrganizationName(), resultOrg.getOrganizationName());
     assertEquals(otherParty.getOrganisation().getOrganizationType(), resultOrg.getOrganizationType());
     assertEquals(otherParty.getOrganisation().getOtherInformation(), resultOrg.getOtherInformation());
