@@ -665,7 +665,7 @@ public class SoaModelUtils {
     otherPartyOrgType.setContactDetails(buildContactDetails());
     otherPartyOrgType.setOrganizationType("orgtype");
     otherPartyOrgType.setContactName("name");
-    otherPartyOrgType.setCurrentlyTrading("trading");
+    otherPartyOrgType.setCurrentlyTrading("N");
     otherPartyOrgType.setOrganizationName("name");
     otherPartyOrgType.setRelationToCase("relation");
     otherPartyOrgType.setRelationToClient("toclient");
