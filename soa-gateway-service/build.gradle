@@ -118,6 +118,6 @@ jacocoTestCoverageVerification {
 checkstyleMain {
     //exclude auto generated files
     exclude '**/uk/gov/legalservices/**'
-    exclude '**/uk/gov/gsi/**'
+    exclude '**/uk/gov/gsi/legalaid/**'
     exclude '**/org/oasis_open/**'
 }
