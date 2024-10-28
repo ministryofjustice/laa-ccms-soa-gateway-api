@@ -30,6 +30,9 @@ laa:
       cover-sheet:
         service-name: http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/GetCoverSheet
         service-url: ${SOA_SERVICE_URL}/soa-infra/services/default/GetCoverSheet/getcoversheet_ep
+      user:
+        service-name: http://legalservices.gov.uk/CCMS/UserManagement/Case/1.0/UpdateUser
+        service-url: ${SOA_SERVICE_URL}/soa-infra/services/default/UpdateUser/UpdateUser_ep
     springboot:
       starter:
         auth:

@@ -79,6 +79,11 @@ wsimport {
         xjcarg("-XautoNameResolution")
         wsdlLocation = 'classpath:wsdl/Schema/BusinessServices/CCMS/CaseManagement/GetCoverSheet.wsdl'
     }
+
+    wsdl('Schema/BusinessServices/CCMS/UserManagement/UpdateUser.wsdl') {
+        xjcarg("-XautoNameResolution")
+        wsdlLocation = 'classpath:wsdl/Schema/BusinessServices/CCMS/UserManagement/UpdateUser.wsdl'
+    }
 }
 
 test {
@@ -113,5 +118,6 @@ jacocoTestCoverageVerification {
 checkstyleMain {
     //exclude auto generated files
     exclude '**/uk/gov/legalservices/**'
+    exclude '**/uk/gov/gsi/**'
     exclude '**/org/oasis_open/**'
 }
