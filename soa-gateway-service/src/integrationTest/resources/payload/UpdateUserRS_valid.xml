@@ -1,0 +1,28 @@
+<UpdateUserRS
+  xmlns:oracle-xsl-mapper="http://www.oracle.com/xsl/mapper/schemas"
+  xmlns:msg="http://legalaid.gsi.gov.uk/CCMS/Common/UserManagement/1.0/UserManagementBIM"
+  xmlns="http://legalaid.gsi.gov.uk/CCMS/Common/UserManagement/1.0/UserManagementBIM">
+  <header:HeaderRS
+    xmlns:header="http://legalservices.gov.uk/Enterprise/Common/1.0/Header">
+    <header:TransactionID>202410221651386890906216111</header:TransactionID>
+    <header:RequestDetails>
+      <header:TransactionRequestID>202410221651386890906216111</header:TransactionRequestID>
+      <header:Language>ENG</header:Language>
+      <header:TransactionIDREF/>
+      <header:TransactionName/>
+      <header:Source>PUI</header:Source>
+      <header:Target>Oracle EBusiness</header:Target>
+      <header:HostName/>
+      <header:UserLoginID>PENNY.WALL@SWITALSKIS.COM</header:UserLoginID>
+      <header:UserRole>EXTERNAL</header:UserRole>
+      <header:ApplicationResponsibility/>
+      <header:TimeStamp>2024-10-22T16:51:38.689</header:TimeStamp>
+    </header:RequestDetails>
+    <header:Status>
+      <header:Status>Success</header:Status>
+      <StatusFreeText
+        xmlns="http://legalservices.gov.uk/Enterprise/Common/1.0/Header">Profile option XXCCMS_PUI_FIRM value updated with provider firm id as 12345
+      </StatusFreeText>
+    </header:Status>
+  </header:HeaderRS>
+</UpdateUserRS>

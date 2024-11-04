@@ -43,7 +43,7 @@ public class SoaConfiguration {
   @Bean
   public Jaxb2Marshaller marshaller() {
     Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
-    marshaller.setPackagesToScan("uk.gov.legalservices");
+    marshaller.setPackagesToScan("uk.gov.legalservices", "uk.gov.gsi.legalaid");
     return marshaller;
   }
 
