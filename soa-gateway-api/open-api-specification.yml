@@ -770,6 +770,37 @@ paths:
           description: 'Not found'
         '500':
           description: 'Internal server error'
+  /users/options:
+    put:
+      tags:
+        - users
+      summary: 'Update User Options'
+      operationId: 'updateUserOptions'
+      parameters:
+        - $ref: '#/components/parameters/soaGatewayUserLoginId'
+        - $ref: '#/components/parameters/soaGatewayUserRole'
+      requestBody:
+        description: User options
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/userOptions"
+      responses:
+        '200':
+          description: 'Successful operation'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/clientTransactionResponse"
+        '400':
+          description: 'Bad request'
+        '401':
+          description: 'Unauthorized'
+        '404':
+          description: 'Not found'
+        '500':
+          description: 'Internal server error'
 components:
   securitySchemes:
     ApiKeyAuth:
@@ -840,6 +871,16 @@ components:
           type: 'integer'
         size:
           type: 'integer'
+    userOptions:
+      type: object
+      properties:
+        user_login_id:
+          type: string
+        provider_firm_id:
+          type: string
+      required:
+        - user_login_id
+        - provider_firm_id
     userDetail:
       type: object
       properties:

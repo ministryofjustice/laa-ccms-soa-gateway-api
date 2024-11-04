@@ -33,6 +33,9 @@ laa:
       cover-sheet:
         service-name: http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/GetCoverSheet
         service-url: http://localhost:8051/soa-infra/services/default/GetCoverSheet/getcoversheet_ep
+      user:
+        service-name: http://legalaid.gsi.gov.uk/CCMS/Common/UserManagement/1.0/UserManagementBIM
+        service-url: http://localhost:8051/soa-infra/services/default/UpdateUser/UpdateUser_ep
     springboot.starter.auth:
       authentication-header: "Authorization"
       authorized-clients: '[

@@ -46,7 +46,8 @@ public class SoaConfigurationTest {
 
         // Verify that the packages to scan are set correctly
         String[] packagesToScan = result.getPackagesToScan();
-        assertEquals(1, packagesToScan.length);
+        assertEquals(2, packagesToScan.length);
         assertEquals("uk.gov.legalservices", packagesToScan[0]);
+        assertEquals("uk.gov.gsi.legalaid", packagesToScan[1]);
     }
 }
