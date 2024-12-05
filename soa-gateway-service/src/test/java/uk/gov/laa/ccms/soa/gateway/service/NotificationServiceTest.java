@@ -87,65 +87,6 @@ class NotificationServiceTest {
   }
 
   @Test
-  void testGetNotificationSummary() {
-    // Create a mocked instance of NotificationCntInqRS
-
-    NotificationCntList notificationCntList = new NotificationCntList();
-
-    notificationCntList.setNotificationCount("5");
-    notificationCntList.setStandardActionCount("3");
-    notificationCntList.setOverdueActionCount("2");
-
-    NotificationCntInqRS.NotificationCntLists notificationCntLists
-        = new NotificationCntInqRS.NotificationCntLists();
-    notificationCntLists.getNotificationsCnt().add(notificationCntList);
-    NotificationCntInqRS response = new NotificationCntInqRS();
-    response.setNotificationCntLists(notificationCntLists);
-
-    // Create a mocked instance of NotificationSummary
-    NotificationSummary expectedSummary = new NotificationSummary();
-    expectedSummary.setNotifications(5);
-    expectedSummary.setStandardActions(3);
-    expectedSummary.setOverdueActions(2);
-
-    String searchLoginId = "searchLoginId";
-    String soaGatewayUserLoginId = "soaGatewayUserLoginId";
-    String soaGatewayUserRole = "soaGatewayUserRole";
-    Integer maxRecords = 10;
-
-    // Stub the NotificationClient to return the mocked response
-    when(notificationClient.getNotificationCount(searchLoginId, soaGatewayUserLoginId,
-        soaGatewayUserRole, maxRecords))
-        .thenReturn(response);
-
-    // Stub the NotificationMapper to return the mocked summary
-    when(notificationMapper.toNotificationSummary(eq(response))).thenReturn(expectedSummary);
-
-    // Call the service method
-
-    NotificationSummary result = notificationService.getNotificationSummary(
-        searchLoginId,
-        soaGatewayUserLoginId,
-        soaGatewayUserRole,
-        maxRecords
-    );
-
-    // Verify that the NotificationClient method was called with the expected arguments
-    verify(notificationClient).getNotificationCount(
-        searchLoginId,
-        soaGatewayUserLoginId,
-        soaGatewayUserRole,
-        maxRecords
-    );
-
-    // Verify that the map function in the NotificationMapper was called with the mocked response
-    verify(notificationMapper).toNotificationSummary(response);
-
-    // Assert the result
-    assertEquals(expectedSummary, result);
-  }
-
-  @Test
   void getNotifications() throws DatatypeConfigurationException {
     //creeate mock NotificationInqRS
     NotificationInqRS response = new NotificationInqRS();

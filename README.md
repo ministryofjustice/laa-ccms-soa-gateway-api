@@ -6,7 +6,6 @@ This API is made up of multiple projects:
 
 This application requires a consistent connection to Oracle SOA. 
 
-
 ## soa-gateway-api
 
 The soa-gateway-api project is a lightweight api interface that is generated using the open-api generator.
@@ -20,6 +19,13 @@ The tasks have also been configured so that when you run a gradle clean, all gen
 The soa-gateway-service implements the api interface generated in the soa-gateway-api subproject.
 This service handles all interactions with Oracle's SOA. Multiple SOA wsdl files are imported and 
 used to generate the model and client classes required to call the SOA WebService endpoints.
+
+## local development
+To run this service locally, you will need to set two environment variables:
+- `LAA_CCMS_SOAGATEWAY_USERNAME`
+- `LAA_CCMS_SOAGATEWAY_PASSWORD`
+
+To get the values for these two variables, contact another developer on the team.
 
 ## Common Components
 

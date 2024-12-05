@@ -31,33 +31,6 @@ public class NotificationService extends AbstractSoaService {
   private final NotificationMapper notificationMapper;
 
   /**
-   * Retrieves a summary of notifications for a given user based on search criteria.
-   *
-   * <p>Fetches the notification counts for the specified search login ID and
-   * SOA Gateway user credentials. It then maps the raw response into a more structured form,
-   * {@link NotificationSummary}.</p>
-   *
-   * @param searchLoginId         The search login ID to filter the notifications.
-   * @param soaGatewayUserLoginId The SOA Gateway user login ID.
-   * @param soaGatewayUserRole    The SOA Gateway user role.
-   * @param maxRecords            The maximum number of records to retrieve.
-   * @return A {@link NotificationSummary} representing the summary of notifications.
-   */
-  public NotificationSummary getNotificationSummary(final String searchLoginId,
-      final String soaGatewayUserLoginId,
-      final String soaGatewayUserRole,
-      final Integer maxRecords) {
-    final NotificationCntInqRS response = notificationClient.getNotificationCount(
-        searchLoginId,
-        soaGatewayUserLoginId,
-        soaGatewayUserRole,
-        maxRecords);
-
-    return notificationMapper.toNotificationSummary(response);
-  }
-
-
-  /**
    * Retrieves a list of notifications for a given user with selected search criteria.
    *
    * @param notification  The {#{@link Notification}} builder for the search criteria.
