@@ -9,9 +9,7 @@ import org.mapstruct.Named;
 import org.springframework.data.domain.Page;
 import uk.gov.laa.ccms.soa.gateway.model.Note;
 import uk.gov.laa.ccms.soa.gateway.model.Notification;
-import uk.gov.laa.ccms.soa.gateway.model.NotificationSummary;
 import uk.gov.laa.ccms.soa.gateway.model.Notifications;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationCntInqRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationInqRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.NotesElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.NotificationCntList;
@@ -21,28 +19,11 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.NotificationL
  * Mapper for transforming data related to notifications.
  *
  * <p>Uses the MapStruct framework to facilitate the conversion between the Legal Services endpoint
- * data model and the internal SoA gateway's {@link NotificationSummary} and {@link Notification}
+ * data model and the internal SoA gateway's {@link Notification}
  * models.</p>
  */
 @Mapper(componentModel = "spring", uses = CommonMapper.class)
 public interface NotificationMapper {
-
-  /**
-   * Converts a {@link NotificationCntInqRS} to a {@link NotificationSummary}.
-   *
-   * @param response The source data fetched from the Legal Services endpoint.
-   * @return The transformed {@link NotificationSummary}.
-   */
-  @Mapping(target = "notifications",
-      source = "notificationCntLists.notificationsCnt",
-      qualifiedByName = "notificationCountTranslator")
-  @Mapping(target = "standardActions",
-      source = "notificationCntLists.notificationsCnt",
-      qualifiedByName = "standardActionCountTranslator")
-  @Mapping(target = "overdueActions",
-      source = "notificationCntLists.notificationsCnt",
-      qualifiedByName = "overdueActionCountTranslator")
-  NotificationSummary toNotificationSummary(NotificationCntInqRS response);
 
   /**
    * Extracts the notification count from a list of {@link NotificationCntList}.
