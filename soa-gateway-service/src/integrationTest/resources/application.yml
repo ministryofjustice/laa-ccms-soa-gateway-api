@@ -24,6 +24,9 @@ laa:
       case:
         service-name: http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseServices
         service-url: http://localhost:8051/soa-infra/services/default/CaseServices/CaseServices_ep
+      provider-request:
+        service-name: http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/SubmitProviderRequest
+        service-url: http://localhost:8051/soa-infra/services/default/SubmitProviderRequest/submitproviderrequest_ep
       document:
         service-name: http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/DocumentServices
         service-url:  http://localhost:8051/soa-infra/services/default/DocumentServices/DocumentServices_ep
