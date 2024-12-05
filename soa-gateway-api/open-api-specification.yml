@@ -626,6 +626,40 @@ paths:
           description: 'Not found'
         '500':
           description: 'Internal server error'
+  /provider-requests:
+    post:
+      tags:
+        - provider-requests
+      summary: 'Submit Provider Request'
+      operationId: 'submitProviderRequest'
+      requestBody:
+        description: Provider request details
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/providerRequestDetail"
+      parameters:
+        - $ref: '#/components/parameters/soaGatewayUserLoginId'
+        - $ref: '#/components/parameters/soaGatewayUserRole'
+      responses:
+        '200':
+          description: 'Successful operation'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/providerRequestResponse"
+        '400':
+          description: 'Bad request'
+        '401':
+          description: 'Unauthorized'
+        '403':
+          description: 'Forbidden'
+        '404':
+          description: 'Not found'
+        '500':
+          description: 'Internal server error'
+
   /documents:
     post:
       tags:
@@ -845,6 +879,12 @@ components:
         reference_number:
           type: 'string'
           example: 'abc123'
+    providerRequestResponse:
+      type: 'object'
+      properties:
+        notification_id:
+          type: 'string'
+          example: '1234567890'
     clientTransactionResponse:
       type: 'object'
       properties:
@@ -2008,6 +2048,29 @@ components:
           $ref: '#/components/schemas/baseContact'
         other_information:
           type: 'string'
+    providerRequestDetail:
+      type: 'object'
+      properties:
+        case_reference_number:
+          type: 'string'
+        username:
+          type: 'string'
+        request_type:
+          type: 'string'
+        attributes:
+          type: array
+          default: [ ]
+          items:
+            $ref: '#/components/schemas/providerRequestAttribute'
+    providerRequestAttribute:
+        type: 'object'
+        properties:
+          label:
+            type: 'string'
+          text:
+            type: 'string'
+          document:
+            type: 'string'
 
 security:
   - ApiKeyAuth: []

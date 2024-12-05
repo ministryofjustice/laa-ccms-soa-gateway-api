@@ -84,6 +84,11 @@ wsimport {
         xjcarg("-XautoNameResolution")
         wsdlLocation = 'classpath:wsdl/Schema/BusinessServices/CCMS/UserManagement/UpdateUser.wsdl'
     }
+
+    wsdl('Schema/BusinessServices/CCMS/CaseManagement/SubmitProviderRequest.wsdl') {
+        xjcarg("-XautoNameResolution")
+        wsdlLocation = 'classpath:wsdl/Schema/BusinessServices/CCMS/CaseManagement/SubmitProviderRequest.wsdl'
+    }
 }
 
 test {
@@ -98,7 +103,8 @@ jacocoTestReport {
         classDirectories.setFrom(files(classDirectories.files.collect {
             fileTree(dir: it, exclude: ['**/SoaGatewayApplication.class',
                                         'org/oasis_open/docs/wss/**',
-                                        'uk/gov/legalservices/**'
+                                        'uk/gov/legalservices/**',
+                                        'uk/gov/gsi/legalaid/**'
             ])
         }))
     }
@@ -109,7 +115,8 @@ jacocoTestCoverageVerification {
         classDirectories.setFrom(files(classDirectories.files.collect {
             fileTree(dir: it, exclude: ['**/SoaGatewayApplication.class',
                                         'org/oasis_open/docs/wss/**',
-                                        'uk/gov/legalservices/**'
+                                        'uk/gov/legalservices/**',
+                                        'uk/gov/gsi/legalaid/**'
             ])
         }))
     }

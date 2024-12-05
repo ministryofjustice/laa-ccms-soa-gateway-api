@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<wsdl:definitions
+  name="SubmitProviderRequest"
+  targetNamespace="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/SubmitProviderRequest"
+  xmlns:ns1="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIM"
+  xmlns:plnk="http://schemas.xmlsoap.org/ws/2003/05/partner-link/"
+  xmlns:client="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/SubmitProviderRequest"
+  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+  xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+>
+  <wsdl:documentation>
+    <abstractWSDL>
+      http://bbplscapp02.lab.gov:8055/soa-infra/services/default/SubmitProviderRequest!1.0/SubmitProviderRequest.wsdl
+    </abstractWSDL>
+  </wsdl:documentation>
+  <plnk:partnerLinkType name="SubmitProviderRequest">
+    <plnk:role name="SubmitProviderRequestProvider">
+      <plnk:portType name="client:SubmitProviderRequest"/>
+    </plnk:role>
+  </plnk:partnerLinkType>
+  <wsdl:types>
+    <schema xmlns="http://www.w3.org/2001/XMLSchema">
+      <import namespace="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIM"
+        schemaLocation="../../../../Schema/BusinessObjects/CCMS/CaseManagement/Case/1.0/CaseBIM.xsd"/>
+      <import
+        namespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+        schemaLocation="../../../../Schema/BusinessObjects/Enterprise/External/oasis/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"/>
+    </schema>
+  </wsdl:types>
+  <wsdl:message name="SubmitProviderRequestRequestMsg">
+    <wsdl:part name="payload" element="ns1:ProviderRequestAddRQ"/>
+  </wsdl:message>
+  <wsdl:message name="SubmitProviderRequestResponseMsg">
+    <wsdl:part name="payload" element="ns1:ProviderRequestAddRS"/>
+  </wsdl:message>
+  <wsdl:message name="UsernameToken">
+    <wsdl:part name="Security" element="wsse:Security"/>
+  </wsdl:message>
+  <wsdl:portType name="SubmitProviderRequest">
+    <wsdl:operation name="process">
+      <wsdl:input message="client:SubmitProviderRequestRequestMsg"/>
+      <wsdl:output message="client:SubmitProviderRequestResponseMsg"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="SubmitProviderRequestSOAPBinding" type="client:SubmitProviderRequest">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="process">
+      <soap:operation style="document"
+        soapAction="http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/SubmitProviderRequest"/>
+      <wsdl:input>
+        <soap:body use="literal" parts="payload"/>
+        <soap:header message="client:UsernameToken" part="Security" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="payload"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="submitproviderrequest_ep">
+    <wsdl:port name="SubmitProviderRequest_pt" binding="client:SubmitProviderRequestSOAPBinding">
+      <soap:address
+        location="http://bbplscapp02.lab.gov:8055/soa-infra/services/default/SubmitProviderRequest/submitproviderrequest_ep"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
