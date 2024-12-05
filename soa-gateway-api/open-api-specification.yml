@@ -958,15 +958,6 @@ components:
           type: 'string'
         correspondence_language:
           type: 'string'
-    notificationSummary:
-      type: 'object'
-      properties:
-        notifications:
-          type: 'integer'
-        standard_actions:
-          type: 'integer'
-        overdue_actions:
-          type: 'integer'
     contractDetails:
       type: 'object'
       properties:
