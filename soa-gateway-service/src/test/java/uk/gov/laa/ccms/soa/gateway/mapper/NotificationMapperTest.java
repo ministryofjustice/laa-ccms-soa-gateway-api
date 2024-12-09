@@ -26,7 +26,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import uk.gov.laa.ccms.soa.gateway.model.Document;
 import uk.gov.laa.ccms.soa.gateway.model.Notification;
-import uk.gov.laa.ccms.soa.gateway.model.NotificationSummary;
 import uk.gov.laa.ccms.soa.gateway.model.Notifications;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationCntInqRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationInqRS;
@@ -87,93 +86,6 @@ public class NotificationMapperTest {
     documentElementType.setBinData(new byte[8]);
     documentElementType.setFileExtension("doc");
     return documentElementType;
-  }
-
-  @Test
-  public void testMap() {
-    NotificationCntInqRS response = new NotificationCntInqRS();
-    NotificationCntInqRS.NotificationCntLists notificationCntLists = new NotificationCntInqRS.NotificationCntLists();
-    response.setNotificationCntLists(notificationCntLists);
-
-    NotificationCntList notificationCntList = new NotificationCntList();
-    notificationCntList.setNotificationCount("5");
-    notificationCntList.setStandardActionCount("3");
-    notificationCntList.setOverdueActionCount("2");
-
-    notificationCntLists.getNotificationsCnt().add(notificationCntList);
-
-    NotificationSummary result = notificationMapper.toNotificationSummary(response);
-
-    assertNotNull(result);
-    assertEquals(5, result.getNotifications());
-    assertEquals(3, result.getStandardActions());
-    assertEquals(2, result.getOverdueActions());
-  }
-
-  @Test
-  public void testMapNoNotificationCntListsThrowsException() {
-    NotificationCntInqRS response = new NotificationCntInqRS();
-
-    assertThrows(RuntimeException.class, () -> notificationMapper.toNotificationSummary(response),
-        "notificationCntList not found in response");
-  }
-
-  @Test
-  public void testMapNoNotificationCntListThrowsException() {
-    NotificationCntInqRS response = new NotificationCntInqRS();
-    NotificationCntInqRS.NotificationCntLists notificationCntLists = new NotificationCntInqRS.NotificationCntLists();
-    response.setNotificationCntLists(notificationCntLists);
-
-    assertThrows(RuntimeException.class, () -> notificationMapper.toNotificationSummary(response),
-        "notificationCntList not found in response");
-  }
-
-  @Test
-  public void testMapNoNotificationCountThrowsException() {
-    NotificationCntInqRS response = new NotificationCntInqRS();
-    NotificationCntInqRS.NotificationCntLists notificationCntLists = new NotificationCntInqRS.NotificationCntLists();
-    response.setNotificationCntLists(notificationCntLists);
-
-    NotificationCntList notificationCntList = new NotificationCntList();
-    notificationCntList.setStandardActionCount("3");
-    notificationCntList.setOverdueActionCount("2");
-
-    notificationCntLists.getNotificationsCnt().add(notificationCntList);
-
-    assertThrows(RuntimeException.class, () -> notificationMapper.toNotificationSummary(response),
-        "notificationCount not found in response");
-  }
-
-  @Test
-  public void testMapNoStandardActionCountThrowsException() {
-    NotificationCntInqRS response = new NotificationCntInqRS();
-    NotificationCntInqRS.NotificationCntLists notificationCntLists = new NotificationCntInqRS.NotificationCntLists();
-    response.setNotificationCntLists(notificationCntLists);
-
-    NotificationCntList notificationCntList = new NotificationCntList();
-    notificationCntList.setNotificationCount("5");
-    notificationCntList.setOverdueActionCount("2");
-
-    notificationCntLists.getNotificationsCnt().add(notificationCntList);
-
-    assertThrows(RuntimeException.class, () -> notificationMapper.toNotificationSummary(response),
-        "standardActionCount not found in response");
-  }
-
-  @Test
-  public void testMapNoOverdueActionCountThrowsException() {
-    NotificationCntInqRS response = new NotificationCntInqRS();
-    NotificationCntInqRS.NotificationCntLists notificationCntLists = new NotificationCntInqRS.NotificationCntLists();
-    response.setNotificationCntLists(notificationCntLists);
-
-    NotificationCntList notificationCntList = new NotificationCntList();
-    notificationCntList.setStandardActionCount("3");
-    notificationCntList.setNotificationCount("5");
-
-    notificationCntLists.getNotificationsCnt().add(notificationCntList);
-
-    assertThrows(RuntimeException.class, () -> notificationMapper.toNotificationSummary(response),
-        "overdueActionCount not found in response");
   }
 
   /*

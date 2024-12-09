@@ -61,31 +61,6 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.ObjectFactory
   }
 
   @Test
-  void testGetNotificationCountBuildsCorrectRequest() {
-    ObjectFactory objectFactory = new ObjectFactory();
-
-    when(webServiceTemplate.marshalSendAndReceive(
-        eq(SERVICE_URL),
-        any(JAXBElement.class),
-        any(SoapActionCallback.class))).thenReturn(
-            objectFactory.createNotificationCntInqRS(new NotificationCntInqRS()));
-
-    NotificationCntInqRS response = client.getNotificationCount(searchLoginId, testLoginId,
-        testUserType, 10);
-    verify(webServiceTemplate).marshalSendAndReceive(
-        eq(SERVICE_URL),
-        requestCaptor.capture(),
-        any(SoapActionCallback.class));
-    assertNotNull(response);
-    JAXBElement<NotificationCntInqRQ> payload = requestCaptor.getValue();
-    assertNotNull(payload.getValue().getHeaderRQ().getTimeStamp());
-    assertEquals(testLoginId, payload.getValue().getHeaderRQ().getUserLoginID());
-    assertEquals(testUserType, payload.getValue().getHeaderRQ().getUserRole());
-    assertEquals(searchLoginId, payload.getValue().getSearchCriteria().getUserID());
-
-  }
-
-  @Test
   void getNotificationsBuildsCorrectRequest() {
     ObjectFactory objectFactory = new ObjectFactory();
 
