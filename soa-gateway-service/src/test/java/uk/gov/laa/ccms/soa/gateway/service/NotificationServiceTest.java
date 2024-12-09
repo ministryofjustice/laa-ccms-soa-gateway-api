@@ -2,7 +2,6 @@ package uk.gov.laa.ccms.soa.gateway.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -27,17 +26,14 @@ import org.springframework.data.domain.Pageable;
 import uk.gov.laa.ccms.soa.gateway.client.NotificationClient;
 import uk.gov.laa.ccms.soa.gateway.mapper.NotificationMapper;
 import uk.gov.laa.ccms.soa.gateway.model.Notification;
-import uk.gov.laa.ccms.soa.gateway.model.NotificationSummary;
 import uk.gov.laa.ccms.soa.gateway.model.Notifications;
 import uk.gov.laa.ccms.soa.gateway.model.UserDetail;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationCntInqRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationInqRQ.SearchCriteria;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationInqRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationInqRS.NotificationList;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.ObjectFactory;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.Notes;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.NotesElementType;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.NotificationCntList;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.NotificationElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.NotificationElementType.AttachedDocuments;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.NotificationElementType.AvailableResponses;
@@ -84,65 +80,6 @@ class NotificationServiceTest {
     GregorianCalendar grep = GregorianCalendar.from(zdt);
     XMLGregorianCalendar xmlGreg = DatatypeFactory.newInstance().newXMLGregorianCalendar(grep);
     return xmlGreg;
-  }
-
-  @Test
-  void testGetNotificationSummary() {
-    // Create a mocked instance of NotificationCntInqRS
-
-    NotificationCntList notificationCntList = new NotificationCntList();
-
-    notificationCntList.setNotificationCount("5");
-    notificationCntList.setStandardActionCount("3");
-    notificationCntList.setOverdueActionCount("2");
-
-    NotificationCntInqRS.NotificationCntLists notificationCntLists
-        = new NotificationCntInqRS.NotificationCntLists();
-    notificationCntLists.getNotificationsCnt().add(notificationCntList);
-    NotificationCntInqRS response = new NotificationCntInqRS();
-    response.setNotificationCntLists(notificationCntLists);
-
-    // Create a mocked instance of NotificationSummary
-    NotificationSummary expectedSummary = new NotificationSummary();
-    expectedSummary.setNotifications(5);
-    expectedSummary.setStandardActions(3);
-    expectedSummary.setOverdueActions(2);
-
-    String searchLoginId = "searchLoginId";
-    String soaGatewayUserLoginId = "soaGatewayUserLoginId";
-    String soaGatewayUserRole = "soaGatewayUserRole";
-    Integer maxRecords = 10;
-
-    // Stub the NotificationClient to return the mocked response
-    when(notificationClient.getNotificationCount(searchLoginId, soaGatewayUserLoginId,
-        soaGatewayUserRole, maxRecords))
-        .thenReturn(response);
-
-    // Stub the NotificationMapper to return the mocked summary
-    when(notificationMapper.toNotificationSummary(eq(response))).thenReturn(expectedSummary);
-
-    // Call the service method
-
-    NotificationSummary result = notificationService.getNotificationSummary(
-        searchLoginId,
-        soaGatewayUserLoginId,
-        soaGatewayUserRole,
-        maxRecords
-    );
-
-    // Verify that the NotificationClient method was called with the expected arguments
-    verify(notificationClient).getNotificationCount(
-        searchLoginId,
-        soaGatewayUserLoginId,
-        soaGatewayUserRole,
-        maxRecords
-    );
-
-    // Verify that the map function in the NotificationMapper was called with the mocked response
-    verify(notificationMapper).toNotificationSummary(response);
-
-    // Assert the result
-    assertEquals(expectedSummary, result);
   }
 
   @Test

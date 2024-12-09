@@ -3,41 +3,6 @@ info:
   title: 'SOA Gateway API'
   version: '1.0.0'
 paths:
-  /users/{user-id}/notifications/summary:
-    get:
-      tags:
-        - notifications
-      summary: 'Get User Notification Summary'
-      operationId: 'getUserNotificationSummary'
-      parameters:
-        - name: 'user-id'
-          in: 'path'
-          required: true
-          schema:
-            type: 'string'
-            example: 'abc123'
-        - $ref: '#/components/parameters/soaGatewayUserLoginId'
-        - $ref: '#/components/parameters/soaGatewayUserRole'
-        - $ref: '#/components/parameters/maxRecords'
-
-      responses:
-        '200':
-          description: 'Successful operation'
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/notificationSummary"
-        '400':
-          description: 'Bad request'
-        '401':
-          description: 'Unauthorized'
-        '403':
-          description: 'Forbidden'
-        '404':
-          description: 'Not found'
-        '500':
-          description: 'Internal server error'
-
   /notifications:
     get:
       tags:
@@ -1033,15 +998,6 @@ components:
           type: 'string'
         correspondence_language:
           type: 'string'
-    notificationSummary:
-      type: 'object'
-      properties:
-        notifications:
-          type: 'integer'
-        standard_actions:
-          type: 'integer'
-        overdue_actions:
-          type: 'integer'
     contractDetails:
       type: 'object'
       properties:
