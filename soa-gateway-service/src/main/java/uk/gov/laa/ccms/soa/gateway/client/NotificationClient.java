@@ -47,44 +47,6 @@ public class NotificationClient extends AbstractSoaClient {
   }
 
   /**
-   * Retrieves the notification count based on provided search criteria.
-   *
-   * @param searchLoginId    ID associated with the login/search operation.
-   * @param loggedInUserId   The logged-in user's ID.
-   * @param loggedInUserType Type of user that is logged in.
-   * @param maxSearchResults Maximum results for the search operation.
-   * @return NotificationCntInqRS  Response containing the notification count details.
-   */
-  public NotificationCntInqRS getNotificationCount(
-      final String searchLoginId,
-      final String loggedInUserId,
-      final String loggedInUserType,
-      final Integer maxSearchResults) {
-
-    final String soapAction = String.format("%s/GetNotificationCount", serviceName);
-    NotificationCntInqRQ inquiryRequest = CASE_FACTORY.createNotificationCntInqRQ();
-    inquiryRequest.setHeaderRQ(createHeaderRq(loggedInUserId, loggedInUserType));
-    inquiryRequest.setRecordCount(createRecordCount(maxSearchResults));
-
-    NotificationCntInqRQ.SearchCriteria searchCriteria = CASE_FACTORY
-        .createNotificationCntInqRQSearchCriteria();
-    searchCriteria.setUserID(searchLoginId);
-    inquiryRequest.setSearchCriteria(searchCriteria);
-
-    JAXBElement<NotificationCntInqRS> response =
-        (JAXBElement<NotificationCntInqRS>) getWebServiceTemplate()
-            .marshalSendAndReceive(
-                serviceUrl,
-                CASE_FACTORY.createNotificationCntInqRQ(inquiryRequest),
-                new SoapActionCallback(soapAction));
-
-    checkSoaCallSuccess(serviceName, response.getValue().getHeaderRS());
-
-    return response.getValue();
-  }
-
-
-  /**
    * Retrieves the notification list based on the provided search criteria.
    *
    * @param notification  The {#{@link Notification}} builder for the search criteria.

@@ -10,7 +10,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.Date;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -26,7 +25,6 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ws.client.WebServiceIOException;
 import uk.gov.laa.ccms.soa.gateway.model.Notification;
-import uk.gov.laa.ccms.soa.gateway.model.NotificationSummary;
 import uk.gov.laa.ccms.soa.gateway.model.Notifications;
 import uk.gov.laa.ccms.soa.gateway.service.NotificationService;
 
@@ -51,88 +49,6 @@ class NotificationControllerTest {
         .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
         .build();
     this.pageable = Pageable.ofSize(20);
-  }
-
-  @Test
-  void testGetUserNotificationSummary_Success() throws Exception {
-    // Mock input parameters
-
-    // Create a mock notification summary
-    NotificationSummary notificationSummary = new NotificationSummary();
-    notificationSummary.setNotifications(1);
-    notificationSummary.setStandardActions(2);
-    notificationSummary.setOverdueActions(3);
-    String soaGatewayUserLoginId = "user";
-    String soaGatewayUserRole = "EXTERNAL";
-    Integer maxRecords = 50;
-    String userId = "123";
-    // Mock the notificationService to return the mock notification summary
-    when(notificationService.getNotificationSummary(userId, soaGatewayUserLoginId,
-        soaGatewayUserRole, maxRecords))
-        .thenReturn(notificationSummary);
-
-    // Call the getUserNotificationSummary method
-    mockMvc.perform(
-            get("/users/{user-id}/notifications/summary?max-records={maxRecords}",
-                userId, maxRecords)
-                .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
-                .header("SoaGateway-User-Role", soaGatewayUserRole))
-        .andExpect(status().isOk());
-
-    // Verify that the notificationService method was called with the correct parameters
-    verify(notificationService).getNotificationSummary(userId, soaGatewayUserLoginId,
-        soaGatewayUserRole, maxRecords);
-  }
-
-  @Test
-  void testGetUserNotificationSummary_Exception() throws Exception {
-    // Mock input parameters
-    String userId = "123";
-    String soaGatewayUserLoginId = "user";
-    String soaGatewayUserRole = "EXTERNAL";
-    Integer maxRecords = 50;
-
-    // Mock the notificationService to throw an exception
-    when(notificationService.getNotificationSummary(userId, soaGatewayUserLoginId,
-        soaGatewayUserRole, maxRecords))
-        .thenThrow(new WebServiceIOException("Test exception"));
-
-    // Call the getUserNotificationSummary method
-    mockMvc.perform(
-            get("/users/{user-id}/notifications/summary?max-records={maxRecords}",
-                userId, maxRecords)
-                .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
-                .header("SoaGateway-User-Role", soaGatewayUserRole))
-        .andExpect(status().isInternalServerError());
-
-    // Verify that the notificationService method was called with the correct parameters
-    verify(notificationService).getNotificationSummary(userId, soaGatewayUserLoginId,
-        soaGatewayUserRole, maxRecords);
-  }
-
-  @ParameterizedTest
-  @CsvSource(value = {
-      "null, EXTERNAL", // SoaGateway-User-Login-Id is null
-      "user, null" // SoaGateway-User-Role is null
-  }, nullValues = {"null"})
-  void testGetUserNotificationSummary_HeaderBadRequest(String userLoginId, String userRole)
-      throws Exception {
-    // Call the getUserNotificationSummary method with null headers
-    MockHttpServletRequestBuilder requestBuilder =
-        get("/users/{user-id}/notifications/summary?max-records={maxRecords}",
-            "userId",
-            "50");
-
-    if (userLoginId != null) {
-      requestBuilder.header("SoaGateway-User-Login-Id", userLoginId);
-    }
-    if (userRole != null) {
-      requestBuilder.header("SoaGateway-User-Role", userRole);
-    }
-
-    // Call the getUserNotificationSummary method with optional headers
-    mockMvc.perform(requestBuilder)
-        .andExpect(status().isBadRequest());
   }
 
   @ParameterizedTest
