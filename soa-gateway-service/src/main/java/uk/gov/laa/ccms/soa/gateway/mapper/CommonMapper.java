@@ -8,7 +8,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import uk.gov.laa.ccms.soa.gateway.model.AddressDetail;
 import uk.gov.laa.ccms.soa.gateway.model.AssessmentResult;
-import uk.gov.laa.ccms.soa.gateway.model.CaseReferenceSummary;
 import uk.gov.laa.ccms.soa.gateway.model.Document;
 import uk.gov.laa.ccms.soa.gateway.model.OpaInstance;
 import uk.gov.laa.ccms.soa.gateway.model.RecordHistory;
@@ -57,10 +56,6 @@ public interface CommonMapper {
   @Mapping(target = "documentId", source = "documentID")
   @Mapping(target = "fileData", source = "binData")
   Document toDocument(DocumentElementType documentElementType);
-
-  @Mapping(target = "caseReferenceNumber",
-      expression = "java( mapFirstResultToString(response.getResults()) )")
-  CaseReferenceSummary toCaseReferenceSummary(ReferenceDataInqRS response);
 
   /**
    * Maps the first result from a list of strings.
