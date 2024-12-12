@@ -52,7 +52,7 @@ class DocumentControllerTest {
             .transactionId("trans123")
             .referenceNumber("doc123");
 
-        when(documentService.registerDocument(soaGatewayUserLoginId, soaGatewayUserRole, document, null))
+        when(documentService.registerDocument(soaGatewayUserLoginId, soaGatewayUserRole, document, null, null))
             .thenReturn(clientTransactionResponse);
 
         mockMvc.perform(
@@ -63,7 +63,7 @@ class DocumentControllerTest {
                     .header("SoaGateway-User-Role", soaGatewayUserRole))
             .andExpect(status().isOk());
 
-        verify(documentService).registerDocument(soaGatewayUserLoginId, soaGatewayUserRole, document, null);
+        verify(documentService).registerDocument(soaGatewayUserLoginId, soaGatewayUserRole, document, null, null);
     }
 
     @ParameterizedTest

@@ -37,6 +37,8 @@ public class DocumentService extends AbstractSoaService {
    * @param document               The document details to register
    * @param notificationReference  The ID of the notification to which this document
    *                               is related.
+   * @param caseReferenceNumber    The reference id of the case to which this document
+   *                               is related.
    * @return                       A {@link ClientTransactionResponse} object containing the
    *                               transaction id and ebs registered document id.
    */
@@ -44,14 +46,15 @@ public class DocumentService extends AbstractSoaService {
           final String soaGatewayUserLoginId,
           final String soaGatewayUserRole,
           final Document document,
-          final String notificationReference) {
+          final String notificationReference,
+          final String caseReferenceNumber) {
 
     final DocumentUploadRS response = documentClient.registerDocument(
         soaGatewayUserLoginId,
         soaGatewayUserRole,
         documentMapper.toDocumentUploadElementType(document),
         notificationReference,
-        null);
+        caseReferenceNumber);
 
     return documentMapper.toClientTransactionResponse(response);
   }
