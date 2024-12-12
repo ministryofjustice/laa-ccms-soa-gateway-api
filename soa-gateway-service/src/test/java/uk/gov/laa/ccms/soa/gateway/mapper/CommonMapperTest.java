@@ -22,7 +22,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.laa.ccms.soa.gateway.model.AddressDetail;
 import uk.gov.laa.ccms.soa.gateway.model.AssessmentResult;
 import uk.gov.laa.ccms.soa.gateway.model.AssessmentScreen;
-import uk.gov.laa.ccms.soa.gateway.model.CaseReferenceSummary;
 import uk.gov.laa.ccms.soa.gateway.model.Document;
 import uk.gov.laa.ccms.soa.gateway.model.OpaAttribute;
 import uk.gov.laa.ccms.soa.gateway.model.OpaEntity;
@@ -72,45 +71,6 @@ public class CommonMapperTest {
         assertEquals("sausage", document.getDocumentType());
         assertEquals("doc", document.getFileExtension());
         assertNull(document.getFileData());
-    }
-
-    @Test
-    public void testToCaseReferenceSummaryWithResult() {
-        // Create a mocked instance of the response object
-        String caseReferenceNumber = "1234567890";
-        ReferenceDataInqRS response = ReferenceDataInqRSBuilder.newBuilder()
-                .withResults(Collections.singletonList(caseReferenceNumber))
-                .build();
-
-        CaseReferenceSummary result = commonMapper.toCaseReferenceSummary(response);
-
-        assertNotNull(result);
-        assertEquals(caseReferenceNumber, result.getCaseReferenceNumber());
-    }
-
-    @Test
-    public void testToCaseReferenceSummaryWithEmptyResult() {
-        // Create a mocked instance of the response object with empty results
-        ReferenceDataInqRS response = ReferenceDataInqRSBuilder.newBuilder().build();
-
-        CaseReferenceSummary result = commonMapper.toCaseReferenceSummary(response);
-
-        assertNotNull(result);
-        assertNull(result.getCaseReferenceNumber());
-    }
-
-    @Test
-    public void testToCaseReferenceSummaryWithMultipleResults() {
-        // Create a mocked instance of the response object with multiple results
-        List<String> results = Arrays.asList("111111", "222222", "333333");
-        ReferenceDataInqRS response = ReferenceDataInqRSBuilder.newBuilder()
-                .withResults(results)
-                .build();
-
-        CaseReferenceSummary result = commonMapper.toCaseReferenceSummary(response);
-
-        assertNotNull(result);
-        assertEquals("111111", result.getCaseReferenceNumber());
     }
 
     @Test
