@@ -68,7 +68,7 @@ public class DocumentServiceTest {
             soaGatewayUserLoginId,
             soaGatewayUserRole,
             document,
-            null);
+            null, null);
 
         // Verify that the NotificationClient method was called with the expected arguments
         verify(documentClient).registerDocument(
