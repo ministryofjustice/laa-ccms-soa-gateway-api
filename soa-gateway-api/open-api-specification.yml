@@ -620,6 +620,11 @@ paths:
           schema:
             type: 'string'
             example: '1234567890'
+        - name: 'case-reference-number'
+          in: 'query'
+          schema:
+            type: 'string'
+            example: '1234567890'
       responses:
         '200':
           description: 'Successful operation'

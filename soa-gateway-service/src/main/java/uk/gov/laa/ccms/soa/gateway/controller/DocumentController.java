@@ -31,6 +31,8 @@ public class DocumentController implements DocumentsApi {
    * @param document  (required) - the document details to register.
    * @param notificationReference  The ID of the notification to which this document
    *                               is related.
+   * @param caseReferenceNumber    The reference id of the case to which this document
+   *                               is related.
    * @return ResponseEntity wrapping the transaction id and registered document id.
    */
   @Override
@@ -38,14 +40,16 @@ public class DocumentController implements DocumentsApi {
           final String soaGatewayUserLoginId,
           final String soaGatewayUserRole,
           final Document document,
-          final String notificationReference) {
+          final String notificationReference,
+          final String caseReferenceNumber) {
 
     try {
       final ClientTransactionResponse response = documentService.registerDocument(
               soaGatewayUserLoginId,
               soaGatewayUserRole,
               document,
-              notificationReference);
+              notificationReference,
+              caseReferenceNumber);
       return ResponseEntity.ok(response);
     } catch (Exception e) {
       log.error("DocumentController caught exception", e);

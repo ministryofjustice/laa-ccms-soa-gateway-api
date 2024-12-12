@@ -5,7 +5,6 @@ import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
-import org.mapstruct.factory.Mappers;
 import uk.gov.laa.ccms.soa.gateway.mapper.context.ProviderRequestMappingContext;
 import uk.gov.laa.ccms.soa.gateway.model.ProviderRequestAttribute;
 import uk.gov.laa.ccms.soa.gateway.model.ProviderRequestDetail;
