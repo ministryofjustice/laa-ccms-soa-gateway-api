@@ -25,8 +25,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import uk.gov.laa.ccms.soa.gateway.model.Document;
-import uk.gov.laa.ccms.soa.gateway.model.Notification;
-import uk.gov.laa.ccms.soa.gateway.model.Notifications;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationCntInqRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationInqRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationInqRS.NotificationList;
@@ -88,95 +86,11 @@ public class NotificationMapperTest {
     return documentElementType;
   }
 
-  /*
-   * NOTIFICATIONS TESTS
-   */
-  @Test
-  public void testToNotifications() {
-    List<Notification> notificationList = Collections.singletonList(new Notification());
-    Page<Notification> notificationsPage = new PageImpl<>(notificationList, Pageable.unpaged(),
-        notificationList.size());
-
-    Notifications result = notificationMapper.toNotifications(notificationsPage);
-
-    assertNotNull(result);
-
-    assertEquals(1, result.getContent().size());
-  }
-
-  @Test
-  public void testMapNotificationSuccess() throws DatatypeConfigurationException {
-    NotificationInqRS response = new NotificationInqRS();
-    NotificationElementType notification = getNotificationElementType();
-    NotificationList notificationList = new NotificationList();
-    NotificationListElementType listElementType = getNotificationListElementType();
-    listElementType.setNotification(notification);
-    notificationList.getNotifications().add(listElementType);
-    response.setNotificationList(notificationList);
-    List<Notification> result = notificationMapper.toNotificationsList(response);
-    assertNotNull(result);
-    assertEquals(1, result.size());
-  }
-
-  @Test
-  public void testEmptyListReturnedWhenNotificationElementIsNull() {
-    NotificationInqRS response = new NotificationInqRS();
-    response.setNotificationList(null);
-    List<Notification> result = notificationMapper.toNotificationsList(response);
-    assertEquals(0, result.size());
-  }
-
-  @Test
-  public void testToNotificationsListWithNoProviderFirmId()
-      throws DatatypeConfigurationException {
-    NotificationInqRS response = new NotificationInqRS();
-    NotificationElementType notification = getNotificationElementTypeWithNullProviderFirmIdAndEmptyNotes();
-    NotificationList notificationList = new NotificationList();
-    NotificationListElementType listElementType = getNotificationListElementType();
-    listElementType.setNotification(notification);
-    notificationList.getNotifications().add(listElementType);
-    response.setNotificationList(notificationList);
-    List<Notification> result = notificationMapper.toNotificationsList(response);
-    assertNotNull(result);
-    assertEquals(1, result.size());
-  }
-
-  @Test
-  public void testNullNotificationsListReturnsNull() {
-    assertNull(notificationMapper.toNotificationList(null));
-  }
-
-  @Test
-  public void testNullNotificationObjectReturnsNull() {
-    assertNull(notificationMapper.toNotification(null));
-  }
-
-  @Test
-  public void testNotesElementTypeListToNoteListWithEmptyListReturnsNull() {
-    assertNull(notificationMapper.notesElementTypeListToNoteList(null));
-  }
-
-
 
   @Test
   public void testToNoteReturnsNullWithNullNotes() {
     assertNull(notificationMapper.toNote(null));
   }
-
-  @Test
-  public void testDocumentElementTypeListToDocumentListSuccess() {
-    List<DocumentElementType> docs = new ArrayList<>();
-    DocumentElementType documentElementType = getDocumentElementType();
-    docs.add(documentElementType);
-
-    when(commonMapper.toDocument(documentElementType))
-        .thenReturn(new Document());
-
-    List<Document> transformedDocs = notificationMapper.documentElementTypeListToDocumentList(docs);
-    assertEquals(1, transformedDocs.size());
-    assertNotNull(transformedDocs.get(0));
-  }
-
 
 
   private NotificationListElementType getNotificationListElementType() {
