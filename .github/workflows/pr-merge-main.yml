@@ -23,13 +23,6 @@ jobs:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
-#      - name: Obtain service account token
-#        run: |
-#          npm install -g obtain-github-app-installation-access-token
-#          TOKEN="$(npx obtain-github-app-installation-access-token ci ${{ secrets.GH_APP_CREDENTIALS_TOKEN }})"
-#          echo "::add-mask::$TOKEN"
-#          echo "CAAB_SERVICE_TOKEN=$TOKEN" >> $GITHUB_ENV
-
       - uses: actions/checkout@v3
         with:
           ref: main
@@ -67,3 +60,33 @@ jobs:
         with:
           arguments: release -Prelease.useAutomaticVersion=true
 
+  vulnerability-report:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    env:
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      SNYK_ORG: legal-aid-agency
+      SNYK_TEST_EXCLUDE: build,generated
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Generate Snyk report and upload to LAA Dashboard
+        uses: snyk/actions/gradle@0.4.0
+        continue-on-error: true
+        with:
+          command: monitor
+          args: --org=${SNYK_ORG} --all-projects --exclude=$SNYK_TEST_EXCLUDE
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Generate sarif Snyk report
+        uses: snyk/actions/gradle@0.4.0
+        continue-on-error: true
+        with:
+          args: --org=${SNYK_ORG} --all-projects --exclude=$SNYK_TEST_EXCLUDE --sarif-file-output=snyk-report.sarif
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload result to GitHub Code Scanning
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: snyk-report.sarif
