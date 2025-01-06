@@ -9,13 +9,13 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
-    implementation 'org.springframework.boot:spring-boot-starter-validation:3.4.0'
+    implementation 'org.springframework.boot:spring-boot-starter-validation:3.4.1'
 
     //Enable access token authentication
     implementation 'uk.gov.laa.ccms.springboot:laa-ccms-spring-boot-starter-auth'
 
     //Enable Swagger UI
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.1'
 
     //Required for pagination
     implementation 'org.springframework.data:spring-data-commons:3.4.1'
@@ -34,7 +34,7 @@ dependencies {
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.ws:spring-ws-test'
-    testImplementation 'org.mockito:mockito-core:5.14.2'
+    testImplementation 'org.mockito:mockito-core:5.15.2'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.11.4'
 }
 
