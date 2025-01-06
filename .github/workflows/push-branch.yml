@@ -70,7 +70,7 @@ jobs:
         uses: snyk/actions/gradle@0.4.0
         continue-on-error: true
         with:
-          args: --org=$SNYK_ORG --all-projects --exclude=$SNYK_TEST_EXCLUDE --sarif-file-output=snyk-report.sarif
+          args: -d --org=$SNYK_ORG --all-projects --exclude=$SNYK_TEST_EXCLUDE --sarif-file-output=snyk-report.sarif
       - name: Fix undefined values
         run: |
           cat snyk-report.sarif | jq '
