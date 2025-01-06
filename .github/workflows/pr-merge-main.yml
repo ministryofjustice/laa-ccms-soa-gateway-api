@@ -83,4 +83,4 @@ jobs:
         continue-on-error: true
         with:
           command: monitor
-          args: --org=${SNYK_ORG} --all-projects --exclude=$SNYK_TEST_EXCLUDE
+          args: --org=$SNYK_ORG --all-projects --exclude=$SNYK_TEST_EXCLUDE
