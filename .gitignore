@@ -96,3 +96,6 @@ test-results/
 /kubectl_deploy/deploy.yaml
 /.java-version
 /gen/
+
+# Snyk
+.dccache
