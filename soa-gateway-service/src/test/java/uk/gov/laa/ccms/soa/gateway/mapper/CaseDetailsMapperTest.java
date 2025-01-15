@@ -51,10 +51,8 @@ import uk.gov.laa.ccms.soa.gateway.model.AssessmentScreen;
 import uk.gov.laa.ccms.soa.gateway.model.Award;
 import uk.gov.laa.ccms.soa.gateway.model.BaseClient;
 import uk.gov.laa.ccms.soa.gateway.model.CaseDetail;
-import uk.gov.laa.ccms.soa.gateway.model.CaseDetails;
 import uk.gov.laa.ccms.soa.gateway.model.CaseDoc;
 import uk.gov.laa.ccms.soa.gateway.model.CaseStatus;
-import uk.gov.laa.ccms.soa.gateway.model.CaseSummary;
 import uk.gov.laa.ccms.soa.gateway.model.CategoryOfLaw;
 import uk.gov.laa.ccms.soa.gateway.model.ContactDetail;
 import uk.gov.laa.ccms.soa.gateway.model.CostAward;
@@ -138,29 +136,6 @@ public class CaseDetailsMapperTest {
 
   @InjectMocks
   CaseDetailsMapperImpl caseDetailsMapper;
-
-  @Test
-  public void testToCaseDetails() {
-    List<CaseSummary> caseSummaryList = Collections.singletonList(new CaseSummary());
-    Page<CaseSummary> caseDetailPage = new PageImpl<>(caseSummaryList, Pageable.unpaged(),
-        caseSummaryList.size());
-
-    CaseDetails result = caseDetailsMapper.toCaseDetails(caseDetailPage);
-
-    assertNotNull(result);
-    assertEquals(1, result.getContent().size());
-  }
-
-  @Test
-  public void testToCaseSummaryList() {
-    CaseInqRS response = new CaseInqRS();
-    response.getCaseList().add(buildCaseList());
-
-    List<CaseSummary> result = caseDetailsMapper.toCaseSummaryList(response);
-
-    assertNotNull(result);
-    assertEquals(1, result.size());
-  }
 
   @Test
   public void testToCaseDetail() {
@@ -761,22 +736,6 @@ public class CaseDetailsMapperTest {
     assertEquals(contactDetails.getFax(), contactDetail.getFax());
     assertEquals(contactDetails.getTelephoneHome(), contactDetail.getTelephoneHome());
     assertEquals(contactDetails.getMobileNumber(), contactDetail.getMobileNumber());
-  }
-
-  @Test
-  public void testToCaseSummary() {
-    CaseList caseList = buildCaseList();
-
-    CaseSummary result = caseDetailsMapper.toCaseSummary(caseList);
-
-    assertNotNull(result);
-    assertEquals(caseList.getCaseReferenceNumber(), result.getCaseReferenceNumber());
-    assertEquals(caseList.getProviderCaseReferenceNumber(),
-        result.getProviderCaseReferenceNumber());
-    compareClients(caseList.getClient(), result.getClient());
-    assertEquals(caseList.getDisplayStatus(), result.getCaseStatusDisplay());
-    assertEquals(caseList.getCategoryOfLaw(), result.getCategoryOfLaw());
-    assertEquals(caseList.getFeeEarnerName(), result.getFeeEarnerName());
   }
 
   private void compareClients(Client client, BaseClient baseClient) {

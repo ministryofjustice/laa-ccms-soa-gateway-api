@@ -12,13 +12,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import uk.gov.laa.ccms.soa.gateway.SoaGatewaySortingException;
-import uk.gov.laa.ccms.soa.gateway.model.CaseSummary;
 import uk.gov.laa.ccms.soa.gateway.model.Notification;
 
 class PaginationUtilTest {
-
-
-
 
   @Test
   void testSortDescendingCorrectInPaginationUtil() {
@@ -76,22 +72,6 @@ class PaginationUtilTest {
   }
 
   @Test
-  void testSortOnOtherDomainObjects() {
-    List<CaseSummary> summery = new ArrayList<>();
-    summery.add(buildCaseSummary());
-    CaseSummary caseSummary = buildCaseSummary()
-        .caseReferenceNumber("1234678905")
-        .feeEarnerName("flobbit");
-    summery.add(caseSummary);
-
-    Pageable pageable = PageRequest.of(0, 10,
-        Sort.by("feeEarnerName").ascending());
-    Page<CaseSummary> caseSummariesPage = PaginationUtil.paginateList(pageable, summery, summery.size());
-    assertEquals("feeearner", caseSummariesPage.getContent().get(0).getFeeEarnerName());
-
-  }
-
-  @Test
   void testTotalElementsTooManyResultsFromSoa(){
     final Pageable pageable = PageRequest.of(0, 10,
         Sort.by("clientReferenceNumber").ascending());
@@ -105,15 +85,5 @@ class PaginationUtilTest {
 
     assertEquals(totalElements, notificationPage.getTotalElements());
   }
-
-  private uk.gov.laa.ccms.soa.gateway.model.CaseSummary buildCaseSummary(){
-    return new uk.gov.laa.ccms.soa.gateway.model.CaseSummary()
-        .caseReferenceNumber("1234567890")
-        .providerCaseReferenceNumber("ABCDEF")
-        .caseStatusDisplay("APPL")
-        .feeEarnerName("feeearner")
-        .categoryOfLaw("CAT1");
-  }
-
 
 }
