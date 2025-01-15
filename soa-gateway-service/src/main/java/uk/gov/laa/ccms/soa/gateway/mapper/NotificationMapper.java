@@ -8,8 +8,6 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.springframework.data.domain.Page;
 import uk.gov.laa.ccms.soa.gateway.model.Note;
-import uk.gov.laa.ccms.soa.gateway.model.Notification;
-import uk.gov.laa.ccms.soa.gateway.model.Notifications;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationInqRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.NotesElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.NotificationCntList;
@@ -19,8 +17,7 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.NotificationL
  * Mapper for transforming data related to notifications.
  *
  * <p>Uses the MapStruct framework to facilitate the conversion between the Legal Services endpoint
- * data model and the internal SoA gateway's {@link Notification}
- * models.</p>
+ * data model.</p>
  */
 @Mapper(componentModel = "spring", uses = CommonMapper.class)
 public interface NotificationMapper {
@@ -83,52 +80,6 @@ public interface NotificationMapper {
 
   // ----------------------               Notifications             --------------------------
 
-  /**
-   * Converts the {@link NotificationInqRS} object to a list of
-   * {@link uk.gov.laa.ccms.soa.gateway.model.Notification} objects.
-   *
-   * <p>This default method takes a {@link NotificationInqRS} instance and extracts the list of
-   * notifications from it. It then delegates the conversion of this list to the
-   * {@link #getNotificationCntList(List)} )} method. If the {@link NotificationInqRS} instance is
-   * null, or if it does not contain any notification data, an empty list is returned.</p>
-   *
-   * @param notificationInqRs The notificaiton inquiry response to be converted.
-   * @return A list of {@link uk.gov.laa.ccms.soa.gateway.model.Notification} objects or an empty
-   *     list if no notification data is available.
-   */
-  default List<Notification> toNotificationsList(NotificationInqRS notificationInqRs) {
-
-    if (notificationInqRs.getNotificationList() != null) {
-      NotificationInqRS.NotificationList notificationListObject
-          = notificationInqRs.getNotificationList();
-
-      if (notificationListObject.getNotifications() != null) {
-        List<NotificationListElementType> notificationList
-            = notificationListObject.getNotifications();
-        if (notificationList != null) {
-          return toNotificationList(notificationList);
-        }
-      }
-    }
-    return Collections.emptyList();
-  }
-
-  @Mapping(source = ".", target = "notifications")
-  List<Notification> toNotificationList(
-      List<NotificationListElementType> notificationList);
-
-  Notifications toNotifications(Page<Notification> page);
-
-  @Mapping(target = ".", source = "notification")
-  @Mapping(target = "notes", source = "notification.notes.note")
-  @Mapping(target = "availableResponses", source = "notification.availableResponses.response")
-  @Mapping(target = "uploadedDocuments", source = "notification.uploadedDocuments.document")
-  @Mapping(target = "attachedDocuments", source = "notification.attachedDocuments.document")
-  @Mapping(target = "notificationType", source = "notification.notitificationType")
-  @Mapping(target = "notificationOpenIndicator", source = "notification.notificationOpenInd")
-  @Mapping(target = "notificationId", source = "notification.notificationID")
-  @Mapping(target = "providerFirmId", source = "notification.providerFirmID")
-  Notification toNotification(NotificationListElementType notificationListElementType);
 
 
   @Mapping(target = "notesId", source = "notesID")
