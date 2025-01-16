@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.laa.ccms.soa.gateway.api.CasesApi;
 import uk.gov.laa.ccms.soa.gateway.model.CaseDetail;
-import uk.gov.laa.ccms.soa.gateway.model.CaseDetails;
 import uk.gov.laa.ccms.soa.gateway.model.CaseTransactionResponse;
 import uk.gov.laa.ccms.soa.gateway.model.TransactionStatus;
 import uk.gov.laa.ccms.soa.gateway.service.CaseDetailsService;
@@ -25,54 +24,6 @@ import uk.gov.laa.ccms.soa.gateway.service.CaseDetailsService;
 public class CaseDetailsController implements CasesApi {
 
   private final CaseDetailsService caseDetailsService;
-
-  /**
-   * Get a paged list of cases for the provided search criteria.
-   *
-   * @param soaGatewayUserLoginId  (required) - the user requesting the data.
-   * @param soaGatewayUserRole  (required) - the user role requesting the data.
-   * @param caseReferenceNumber  (optional) - the case reference number search criteria.
-   * @param providerCaseReference  (optional) - the provider case reference search criteria.
-   * @param caseStatus  (optional) - the case status search criteria.
-   * @param clientSurname  (optional) - the client surname search criteria.
-   * @param feeEarnerId  (optional) - the fee earner id search criteria
-   * @param officeId  (optional) - the office id search criteria.
-   * @param maxRecords  (optional, default to 100) - the maximum records to query.
-   * @param pageable - the page settings.
-   * @return ResponseEntity containing CaseDetails.
-   */
-  @Override
-  public ResponseEntity<CaseDetails> getCases(
-      final String soaGatewayUserLoginId,
-      final String soaGatewayUserRole,
-      final String caseReferenceNumber,
-      final String providerCaseReference,
-      final String caseStatus,
-      final String clientSurname,
-      final Integer feeEarnerId,
-      final Integer officeId,
-      final Integer maxRecords,
-      final Pageable pageable) {
-    log.info("GET /cases");
-    try {
-      final CaseDetails caseDetails = caseDetailsService.getCaseDetails(
-          soaGatewayUserLoginId,
-          soaGatewayUserRole,
-          caseReferenceNumber,
-          providerCaseReference,
-          caseStatus,
-          clientSurname,
-          feeEarnerId,
-          officeId,
-          maxRecords,
-          pageable);
-
-      return ResponseEntity.ok(caseDetails);
-    } catch (final Exception e) {
-      log.error("CaseDetailsController caught exception", e);
-      return ResponseEntity.internalServerError().build();
-    }
-  }
 
   @Override
   public ResponseEntity<CaseTransactionResponse> createCase(

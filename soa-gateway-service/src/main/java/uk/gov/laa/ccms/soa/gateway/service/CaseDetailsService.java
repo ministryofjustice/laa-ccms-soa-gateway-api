@@ -10,8 +10,6 @@ import org.springframework.stereotype.Service;
 import uk.gov.laa.ccms.soa.gateway.client.CaseServicesClient;
 import uk.gov.laa.ccms.soa.gateway.mapper.CaseDetailsMapper;
 import uk.gov.laa.ccms.soa.gateway.model.CaseDetail;
-import uk.gov.laa.ccms.soa.gateway.model.CaseDetails;
-import uk.gov.laa.ccms.soa.gateway.model.CaseSummary;
 import uk.gov.laa.ccms.soa.gateway.model.TransactionStatus;
 import uk.gov.laa.ccms.soa.gateway.util.PaginationUtil;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddRS;
@@ -35,63 +33,6 @@ public class CaseDetailsService extends AbstractSoaService {
   private final CaseServicesClient caseServicesClient;
 
   private final CaseDetailsMapper caseDetailsMapper;
-
-  /**
-   * Retrieves case details based on the provided search criteria.
-   *
-   * <p>This method communicates with the external Case Services system using the provided
-   * search criteria, fetches the relevant case details, and then maps and paginates these details
-   * to the desired format.</p>
-   *
-   * @param soaGatewayUserLoginId The user login ID for the SOA Gateway.
-   * @param soaGatewayUserRole    The user role in the SOA Gateway.
-   * @param caseReferenceNumber   The reference number for the case.
-   * @param providerCaseRefNumber The provider's reference number for the case.
-   * @param caseStatus            The status of the case.
-   * @param clientSurname         The surname of the client associated with the case.
-   * @param feeEarnerId           The ID of the fee earner associated with the case.
-   * @param officeId              The ID of the office handling the case.
-   * @param maxRecords            The maximum number of records to retrieve.
-   * @param pageable              The pagination details.
-   * @return A {@link CaseDetails} object containing the retrieved and processed case details.
-   */
-  public CaseDetails getCaseDetails(
-      final String soaGatewayUserLoginId,
-      final String soaGatewayUserRole,
-      final String caseReferenceNumber,
-      final String providerCaseRefNumber,
-      final String caseStatus,
-      final String clientSurname,
-      final Integer feeEarnerId,
-      final Integer officeId,
-      final Integer maxRecords,
-      final Pageable pageable
-  ) {
-    log.info("CaseDetailsService - getCaseDetails");
-    final CaseInfo caseInfo = buildCaseInfo(
-        caseReferenceNumber,
-        providerCaseRefNumber,
-        caseStatus,
-        clientSurname,
-        feeEarnerId,
-        officeId);
-
-    final CaseInqRS response = caseServicesClient.getCaseDetails(
-        soaGatewayUserLoginId,
-        soaGatewayUserRole,
-        maxRecords,
-        caseInfo);
-
-    final List<CaseSummary> caseSummaryList = caseDetailsMapper.toCaseSummaryList(response);
-
-    final int listSize =
-        getTotalElementsFromRecordCount(response.getRecordCount(), caseSummaryList.size());
-
-    final Page<CaseSummary> page = PaginationUtil.paginateList(pageable, caseSummaryList, listSize);
-
-
-    return caseDetailsMapper.toCaseDetails(page);
-  }
 
   /**
    * Retrieve the full details of a single Case based on the supplied caseReferenceNumber.

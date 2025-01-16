@@ -10,9 +10,7 @@ import uk.gov.laa.ccms.soa.gateway.model.AssessmentResult;
 import uk.gov.laa.ccms.soa.gateway.model.AssessmentScreen;
 import uk.gov.laa.ccms.soa.gateway.model.Award;
 import uk.gov.laa.ccms.soa.gateway.model.CaseDetail;
-import uk.gov.laa.ccms.soa.gateway.model.CaseDetails;
 import uk.gov.laa.ccms.soa.gateway.model.CaseDoc;
-import uk.gov.laa.ccms.soa.gateway.model.CaseSummary;
 import uk.gov.laa.ccms.soa.gateway.model.CategoryOfLaw;
 import uk.gov.laa.ccms.soa.gateway.model.ContactDetail;
 import uk.gov.laa.ccms.soa.gateway.model.CostAward;
@@ -84,31 +82,6 @@ import uk.gov.legalservices.enterprise.common._1_0.common.OPAResultType;
 @Mapper(componentModel = "spring", uses = CommonMapper.class)
 public interface CaseDetailsMapper {
 
-  List<CaseSummary> toCaseSummaryList(List<CaseList> caseList);
-
-  /**
-   * Converts the {@link CaseInqRS} object to a list of {@link CaseSummary} objects.
-   *
-   * <p>This default method takes a {@link CaseInqRS} instance and extracts the list of
-   * cases from it. It then delegates the conversion of this list to the
-   * {@link #toCaseSummaryList(List)} method. If the {@link CaseInqRS} instance is null, or if it
-   * does not contain any case data, an empty list is returned.</p>
-   *
-   * @param clientInqRs The case inquiry response to be converted.
-   * @return A list of {@link CaseSummary} objects or an empty list if no case data is available.
-   */
-  default List<CaseSummary> toCaseSummaryList(final CaseInqRS clientInqRs) {
-    if (clientInqRs != null) {
-      List<CaseList> caseList = clientInqRs.getCaseList();
-      if (caseList != null) {
-        return toCaseSummaryList(caseList);
-      }
-    }
-    return Collections.emptyList();
-  }
-
-  CaseDetails toCaseDetails(final Page<CaseSummary> page);
-
   @Mapping(target = ".", source = "caseDetails")
   @Mapping(target = "linkedCases", source = "caseDetails.linkedCases.linkedCase")
   @Mapping(target = "awards", source = "caseDetails.awards.award")
@@ -116,10 +89,6 @@ public interface CaseDetailsMapper {
   @Mapping(target = "availableFunctions", source = "caseDetails.availableFunctions.function")
   @Mapping(target = "caseDocs", source = "caseDetails.caseDocs.caseDoc")
   CaseDetail toCaseDetail(final Case sourceCase);
-
-  @Mapping(target = "caseStatusDisplay", source = "displayStatus")
-  CaseSummary toCaseSummary(CaseList clientList);
-
 
   @Mapping(target = "caseDetails", source = ".")
   CaseAdd toCaseAdd(final CaseDetail caseDetail);
