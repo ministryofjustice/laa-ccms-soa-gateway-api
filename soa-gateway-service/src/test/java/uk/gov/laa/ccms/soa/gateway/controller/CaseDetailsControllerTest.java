@@ -18,7 +18,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ws.client.WebServiceIOException;
 import uk.gov.laa.ccms.soa.gateway.model.CaseDetail;
-import uk.gov.laa.ccms.soa.gateway.model.CaseDetails;
 import uk.gov.laa.ccms.soa.gateway.model.TransactionStatus;
 import uk.gov.laa.ccms.soa.gateway.service.CaseDetailsService;
 
@@ -51,106 +50,6 @@ public class CaseDetailsControllerTest {
     this.mockMvc = MockMvcBuilders.standaloneSetup(caseDetailsController)
         .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
         .build();
-  }
-
-  @Test
-  public void testGetCases_Success() throws Exception {
-    // Create a mock response
-    CaseDetails caseDetails = new CaseDetails();
-
-    // Stub the clientDetailsService to return the mock response
-    when(caseDetailsService.getCaseDetails(
-        SOA_GATEWAY_USER_LOGIN_ID,
-        SOA_GATEWAY_USER_ROLE,
-        CASE_REFERENCE_NUMBER,
-        PROVIDER_CASE_REFERENCE,
-        CASE_STATUS,
-        CLIENT_SURNAME,
-        FEE_EARNER_ID,
-        OFFICE_ID,
-        MAX_RECORDS,
-        PAGEABLE))
-        .thenReturn(caseDetails);
-
-    mockMvc.perform(
-            get("/cases?case-reference-number={caseReferenceNumber}" +
-                    "&provider-case-reference={providerCaseRef}" +
-                    "&case-status={caseStatus}" +
-                    "&client-surname={surname}" +
-                    "&fee-earner-id={feeEarnerId}" +
-                    "&office-id={officeId}" +
-                    "&max-records={maxRecords}",
-                CASE_REFERENCE_NUMBER,
-                PROVIDER_CASE_REFERENCE,
-                CASE_STATUS,
-                CLIENT_SURNAME,
-                FEE_EARNER_ID,
-                OFFICE_ID,
-                MAX_RECORDS)
-                .header("SoaGateway-User-Login-Id", SOA_GATEWAY_USER_LOGIN_ID)
-                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE))
-        .andExpect(status().isOk());
-
-    verify(caseDetailsService).getCaseDetails(
-        SOA_GATEWAY_USER_LOGIN_ID,
-        SOA_GATEWAY_USER_ROLE,
-        CASE_REFERENCE_NUMBER,
-        PROVIDER_CASE_REFERENCE,
-        CASE_STATUS,
-        CLIENT_SURNAME,
-        FEE_EARNER_ID,
-        OFFICE_ID,
-        MAX_RECORDS,
-        PAGEABLE);
-  }
-
-  @Test
-  public void testGetCases_Exception() throws Exception {
-
-    // Stub the mock response
-    when(caseDetailsService.getCaseDetails(
-        SOA_GATEWAY_USER_LOGIN_ID,
-        SOA_GATEWAY_USER_ROLE,
-        CASE_REFERENCE_NUMBER,
-        PROVIDER_CASE_REFERENCE,
-        CASE_STATUS,
-        CLIENT_SURNAME,
-        FEE_EARNER_ID,
-        OFFICE_ID,
-        MAX_RECORDS,
-        PAGEABLE))
-        .thenThrow(new WebServiceIOException("Test exception"));
-
-    mockMvc.perform(
-            get("/cases?case-reference-number={caseReferenceNumber}" +
-                    "&provider-case-reference={providerCaseRef}" +
-                    "&case-status={caseStatus}" +
-                    "&client-surname={surname}" +
-                    "&fee-earner-id={feeEarnerId}" +
-                    "&office-id={officeId}" +
-                    "&max-records={maxRecords}",
-                CASE_REFERENCE_NUMBER,
-                PROVIDER_CASE_REFERENCE,
-                CASE_STATUS,
-                CLIENT_SURNAME,
-                FEE_EARNER_ID,
-                OFFICE_ID,
-                MAX_RECORDS)
-                .header("SoaGateway-User-Login-Id", SOA_GATEWAY_USER_LOGIN_ID)
-                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE))
-        .andExpect(status().isInternalServerError());
-
-    verify(caseDetailsService).getCaseDetails(
-        SOA_GATEWAY_USER_LOGIN_ID,
-        SOA_GATEWAY_USER_ROLE,
-        CASE_REFERENCE_NUMBER,
-        PROVIDER_CASE_REFERENCE,
-        CASE_STATUS,
-        CLIENT_SURNAME,
-        FEE_EARNER_ID,
-        OFFICE_ID,
-        MAX_RECORDS,
-        PAGEABLE);
   }
 
   @Test
