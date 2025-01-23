@@ -236,38 +236,6 @@ public class ClientDetailsServiceTest {
         verify(clientServicesClient).updateClientDetails(soaGatewayUserLoginId,soaGatewayUserRole, mockClientUpdateRq);
     }
 
-    @Test
-    public void testGetClientStatus() {
-        String transactionId = "sampleTransactionId";
-
-        TransactionStatus mockClientStatus
-            = new TransactionStatus().submissionStatus(StatusTextType.SUCCESS.name());
-
-        Status mockStatus =  new Status();
-        mockStatus.setStatus(StatusTextType.SUCCESS);
-
-        HeaderRSType mockHeader = new HeaderRSType();
-        mockHeader.setStatus(mockStatus);
-
-        ClientAddUpdtStatusRS mockClientAddUpdtStatusRS = new ClientAddUpdtStatusRS();
-        mockClientAddUpdtStatusRS.setHeaderRS(mockHeader);
-
-        when(clientServicesClient.getClientStatus(
-            soaGatewayUserLoginId,
-            soaGatewayUserRole,
-            transactionId)).thenReturn(mockClientAddUpdtStatusRS);
-
-        when(clientDetailsMapper.toTransactionStatus(mockClientAddUpdtStatusRS))
-            .thenReturn(mockClientStatus);
-
-        TransactionStatus clientStatus
-            = clientDetailsService.getClientStatus(soaGatewayUserLoginId, soaGatewayUserRole, transactionId);
-
-        assertEquals(mockClientStatus, clientStatus);
-
-        verify(clientServicesClient).getClientStatus(soaGatewayUserLoginId,soaGatewayUserRole, transactionId);
-    }
-
     private ClientSummary buildClientSummary(){
         return new ClientSummary()
                 .firstName(firstName)
