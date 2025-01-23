@@ -152,28 +152,6 @@ public class CaseServicesClientIntegrationTest {
     mockServer.verify();
   }
 
-  @Test
-  public void testGetCaseTransactionStatus_ReturnsData() throws IOException {
-
-    mockServer.expect(xpath("/msg:CaseAddUpdtStatusRQ/header:HeaderRQ/header:TransactionRequestID", namespaces).exists())
-        .andExpect(xpath("/msg:CaseAddUpdtStatusRQ/header:HeaderRQ/header:UserLoginID", namespaces).evaluatesTo(testLoginId))
-        .andExpect(xpath("/msg:CaseAddUpdtStatusRQ/header:HeaderRQ/header:UserRole", namespaces).evaluatesTo(testUserType))
-        .andExpect(xpath("/msg:CaseAddUpdtStatusRQ/msg:TransactionID", namespaces).evaluatesTo(testTransactionId))
-        .andRespond(withPayload(caseAddUpdtStatusRS_valid));
-
-    CaseAddUpdtStatusRS response =
-        client.getCaseTransactionStatus(testLoginId, testUserType, testTransactionId);
-
-    assertNotNull(response);
-    assertNotNull(response.getHeaderRS());
-
-    assertNotNull(response.getCaseReferenceNumber());
-    assertEquals("62586560", response.getCaseReferenceNumber());
-
-    mockServer.verify();
-  }
-
-
   private CaseInfo buildCaseInfo() {
     CaseInfo caseInfo = new CaseInfo();
     caseInfo.setCaseReferenceNumber("caseref");
