@@ -187,26 +187,6 @@ public class ClientServicesClientIntegrationTest {
     }
 
     @Test
-    public void testGetClientStatus_ReturnsData() throws IOException {
-
-        mockServer.expect(xpath("/msg:ClientAddUpdtStatusRQ/header:HeaderRQ/header:TransactionRequestID", namespaces).exists())
-            .andExpect(xpath("/msg:ClientAddUpdtStatusRQ/header:HeaderRQ/header:UserLoginID", namespaces).evaluatesTo(testLoginId))
-            .andExpect(xpath("/msg:ClientAddUpdtStatusRQ/header:HeaderRQ/header:UserRole", namespaces).evaluatesTo(testUserType))
-            .andExpect(xpath("/msg:ClientAddUpdtStatusRQ/msg:TransactionID", namespaces).evaluatesTo(testTransactionId))
-            .andRespond(withPayload(clientAddUpdtStatusRS_valid));
-
-        ClientAddUpdtStatusRS response = client.getClientStatus(testLoginId, testUserType, testTransactionId);
-
-        assertNotNull(response);
-        assertNotNull(response.getHeaderRS());
-
-        assertNotNull(response.getClientReferenceNumber());
-        assertEquals("62586560", response.getClientReferenceNumber());
-
-        mockServer.verify();
-    }
-
-    @Test
     public void testPostClient_ReturnsData() throws IOException, DatatypeConfigurationException {
 
         ClientDetails clientDetails = buildClientDetails();

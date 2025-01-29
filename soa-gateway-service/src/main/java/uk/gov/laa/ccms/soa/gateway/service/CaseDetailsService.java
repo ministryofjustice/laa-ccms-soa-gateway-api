@@ -89,47 +89,5 @@ public class CaseDetailsService extends AbstractSoaService {
     return response.getTransactionID();
   }
 
-  /**
-   * Fetches the status of a case transaction using its transaction ID. The method communicates
-   * with the external Case Services system and retrieves the current status of the specified
-   * transaction.
-   *
-   * @param soaGatewayUserLoginId      User login ID for the SOA Gateway.
-   * @param soaGatewayUserRole         User role in the SOA Gateway.
-   * @param transactionId              The transaction ID for which the status is to be fetched.
-   * @return                           The status of the specified case transaction.
-   */
-  public TransactionStatus getCaseTransactionStatus(
-      final String soaGatewayUserLoginId,
-      final String soaGatewayUserRole,
-      final String transactionId
-  ) {
-    log.info("CaseDetailsService - getCaseTransactionStatus");
-    CaseAddUpdtStatusRS response = caseServicesClient.getCaseTransactionStatus(
-        soaGatewayUserLoginId,
-        soaGatewayUserRole,
-        transactionId);
-
-    return caseDetailsMapper.toTransactionStatus(response);
-  }
-
-  private CaseInfo buildCaseInfo(
-      String caseReferenceNumber,
-      String providerCaseRefNumber,
-      String caseStatus,
-      String clientSurname,
-      Integer feeEarnerId,
-      Integer officeId) {
-    CaseInfo caseInfo = new CaseInfo();
-    caseInfo.setCaseReferenceNumber(caseReferenceNumber);
-    caseInfo.setProviderCaseReferenceNumber(providerCaseRefNumber);
-    caseInfo.setCaseStatus(caseStatus);
-    caseInfo.setClientSurname(clientSurname);
-    caseInfo.setFeeEarnerContactID(
-        Optional.ofNullable(feeEarnerId).map(String::valueOf).orElse(null));
-    caseInfo.setOfficeID(
-        Optional.ofNullable(officeId).map(String::valueOf).orElse(null));
-    return caseInfo;
-  }
 
 }
