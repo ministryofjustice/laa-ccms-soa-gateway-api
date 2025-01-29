@@ -117,43 +117,6 @@ public class ClientServicesClient extends AbstractSoaClient {
   }
 
   /**
-   * Retrieves the status of a client addition or update based on the provided transaction ID.
-   *
-   * <p>This method communicates with the service endpoint to fetch the status related to a
-   * specific transaction pertaining to client addition or update. If the SOA call is not
-   * successful, an exception will be thrown.</p>
-   *
-   * @param loggedInUserId   The ID of the user who is currently logged in.
-   * @param loggedInUserType The type of the user who is currently logged in.
-   * @param transactionId    The unique ID of the transaction for which the status is to be
-   *                         fetched.
-   * @return ClientAddUpdtStatusRS The response object containing the status of the client addition
-   *         or update.
-   */
-  public ClientAddUpdtStatusRS getClientStatus(
-      final String loggedInUserId,
-      final String loggedInUserType,
-      final String transactionId
-  ) {
-    final String soapAction = String.format("%s/GetClientTxnStatus", serviceName);
-    ClientAddUpdtStatusRQ clientAddUpdtStatusRq = CASE_FACTORY.createClientAddUpdtStatusRQ();
-    clientAddUpdtStatusRq.setHeaderRQ(createHeaderRq(loggedInUserId, loggedInUserType));
-    clientAddUpdtStatusRq.setTransactionID(transactionId);
-
-    JAXBElement<ClientAddUpdtStatusRS> response =
-        (JAXBElement<ClientAddUpdtStatusRS>) getWebServiceTemplate()
-            .marshalSendAndReceive(
-                serviceUrl,
-                CASE_FACTORY.createClientAddUpdtStatusRQ(clientAddUpdtStatusRq),
-                new SoapActionCallback(soapAction));
-
-    // Check and throw exception if the SOA call was not successful
-    checkSoaCallSuccess(serviceName, response.getValue().getHeaderRS());
-
-    return response.getValue();
-  }
-
-  /**
    * Retrieve client details based on the provided {@link ClientInfo} search criteria.
    *
    * @param loggedInUserId      The logged-in user ID.

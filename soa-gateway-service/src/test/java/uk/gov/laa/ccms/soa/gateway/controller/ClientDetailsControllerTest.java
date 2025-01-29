@@ -257,41 +257,6 @@ public class ClientDetailsControllerTest {
         verify(clientDetailsService).updateClient(any(),any(), any(), any());
     }
 
-    @Test
-    public void testGetClientStatus_Success() throws Exception {
-        String transactionRequestId = "trans123";
-        String expectedStatus = "COMPLETED";
-
-        TransactionStatus clientStatus = new TransactionStatus().submissionStatus(expectedStatus);
-
-        when(clientDetailsService.getClientStatus(soaGatewayUserLoginId, soaGatewayUserRole, transactionRequestId))
-            .thenReturn(clientStatus);
-
-        mockMvc.perform(
-                get("/clients/status/{transactionRequestId}", transactionRequestId)
-                    .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
-                    .header("SoaGateway-User-Role", soaGatewayUserRole))
-            .andExpect(status().isOk());
-
-        verify(clientDetailsService).getClientStatus(soaGatewayUserLoginId, soaGatewayUserRole, transactionRequestId);
-    }
-
-    @Test
-    public void testGetClientStatus_Exception() throws Exception {
-        String transactionRequestId = "trans123";
-
-        when(clientDetailsService.getClientStatus(any(), any(), any()))
-            .thenThrow(new RuntimeException("Test exception"));
-
-        mockMvc.perform(
-                get("/clients/status/{transactionRequestId}", transactionRequestId)
-                    .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
-                    .header("SoaGateway-User-Role", soaGatewayUserRole))
-            .andExpect(status().isInternalServerError());
-
-        verify(clientDetailsService).getClientStatus(any(), any(), any());
-    }
-
     private ClientSummary buildClientSummary(){
         return new ClientSummary()
                 .firstName(firstName)
