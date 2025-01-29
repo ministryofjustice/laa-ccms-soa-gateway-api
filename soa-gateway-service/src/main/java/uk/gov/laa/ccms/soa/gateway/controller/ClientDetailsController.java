@@ -59,33 +59,6 @@ public class ClientDetailsController implements ClientsApi {
   }
 
   /**
-   * Get the status of a client transaction.
-   *
-   * @param transactionRequestId  (required) - the id of the transaction.
-   * @param soaGatewayUserLoginId  (required) - the user requesting the data.
-   * @param soaGatewayUserRole  (required) - the user role requesting the data.
-   * @return ResponseEntity containing the transaction status details.
-   */
-  @Override
-  public ResponseEntity<TransactionStatus> getClientTransactionStatus(
-      String transactionRequestId,
-      String soaGatewayUserLoginId,
-      String soaGatewayUserRole) {
-    log.info("GET /clients/status/{}", transactionRequestId);
-    try {
-      TransactionStatus status = clientDetailsService.getClientStatus(
-          soaGatewayUserLoginId,
-          soaGatewayUserRole,
-          transactionRequestId);
-
-      return ResponseEntity.ok(status);
-    } catch (Exception e) {
-      log.error("ClientDetailsController caught exception", e);
-      return ResponseEntity.internalServerError().build();
-    }
-  }
-
-  /**
    * Get a list of clients based on the supplied search criteria.
    *
    * @param soaGatewayUserLoginId  (required) - the user requesting the data.

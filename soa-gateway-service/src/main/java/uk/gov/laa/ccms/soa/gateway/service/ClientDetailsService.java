@@ -173,28 +173,5 @@ public class ClientDetailsService extends AbstractSoaService {
     return response.getTransactionID();
   }
 
-  /**
-   * Fetches the status of a client transaction using its transaction ID. The method communicates
-   * with the external Client Services system and retrieves the current status of the specified
-   * transaction.
-   *
-   * @param soaGatewayUserLoginId      User login ID for the SOA Gateway.
-   * @param soaGatewayUserRole         User role in the SOA Gateway.
-   * @param transactionId              The transaction ID for which the status is to be fetched.
-   * @return                           The status of the specified client transaction.
-   */
-  public TransactionStatus getClientStatus(
-      final String soaGatewayUserLoginId,
-      final String soaGatewayUserRole,
-      final String transactionId
-  ) {
-    log.info("ClientDetailsService - getClientDetail");
-    ClientAddUpdtStatusRS response = clientServicesClient.getClientStatus(
-        soaGatewayUserLoginId,
-        soaGatewayUserRole,
-        transactionId);
-
-    return clientDetailsMapper.toTransactionStatus(response);
-  }
 
 }

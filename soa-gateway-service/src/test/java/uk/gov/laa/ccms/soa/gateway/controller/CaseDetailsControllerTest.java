@@ -100,40 +100,4 @@ public class CaseDetailsControllerTest {
         CASE_REFERENCE_NUMBER);
   }
 
-  @Test
-  public void testGetCaseTransactionStatus_Success() throws Exception {
-    String transactionRequestId = "trans123";
-    String expectedStatus = "COMPLETED";
-
-    TransactionStatus transactionStatus = new TransactionStatus().submissionStatus(expectedStatus);
-
-    when(caseDetailsService.getCaseTransactionStatus(
-        SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE, transactionRequestId))
-        .thenReturn(transactionStatus);
-
-    mockMvc.perform(
-            get("/cases/status/{transactionRequestId}", transactionRequestId)
-                .header("SoaGateway-User-Login-Id", SOA_GATEWAY_USER_LOGIN_ID)
-                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE))
-        .andExpect(status().isOk());
-
-    verify(caseDetailsService).getCaseTransactionStatus(
-        SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE, transactionRequestId);
-  }
-
-  @Test
-  public void testGetClientStatus_Exception() throws Exception {
-    String transactionRequestId = "trans123";
-
-    when(caseDetailsService.getCaseTransactionStatus(any(), any(), any()))
-        .thenThrow(new RuntimeException("Test exception"));
-
-    mockMvc.perform(
-            get("/cases/status/{transactionRequestId}", transactionRequestId)
-                .header("SoaGateway-User-Login-Id", SOA_GATEWAY_USER_LOGIN_ID)
-                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE))
-        .andExpect(status().isInternalServerError());
-
-    verify(caseDetailsService).getCaseTransactionStatus(any(), any(), any());
-  }
 }

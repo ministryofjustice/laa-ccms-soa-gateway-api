@@ -71,31 +71,5 @@ public class CaseDetailsController implements CasesApi {
     }
   }
 
-  /**
-   * Get the status of a case transaction.
-   *
-   * @param transactionRequestId  (required) - the id of the transaction.
-   * @param soaGatewayUserLoginId  (required) - the user requesting the data.
-   * @param soaGatewayUserRole  (required) - the user role requesting the data.
-   * @return a ResponseEntity containing the transaction status details.
-   */
-  @Override
-  public ResponseEntity<TransactionStatus> getCaseTransactionStatus(
-      final String transactionRequestId,
-      final String soaGatewayUserLoginId,
-      final String soaGatewayUserRole) {
-    log.info("GET /cases/status/{}", transactionRequestId);
-    try {
-      final TransactionStatus status = caseDetailsService.getCaseTransactionStatus(
-          soaGatewayUserLoginId,
-          soaGatewayUserRole,
-          transactionRequestId);
-
-      return ResponseEntity.ok(status);
-    } catch (final Exception e) {
-      log.error("CaseDetailsController caught exception", e);
-      return ResponseEntity.internalServerError().build();
-    }
-  }
 
 }

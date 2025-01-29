@@ -64,41 +64,4 @@ public class CaseDetailsServiceTest {
         assertEquals(expectedDetail, result);
     }
 
-    @Test
-    public void testGetCaseStatus() {
-        String transactionId = "sampleTransactionId";
-        String soaGatewayUserLoginId = "user";
-        String soaGatewayUserRole = "EXTERNAL";
-
-        TransactionStatus mockTransactionStatus
-            = new TransactionStatus().submissionStatus(StatusTextType.SUCCESS.name());
-
-        Status mockStatus =  new Status();
-        mockStatus.setStatus(StatusTextType.SUCCESS);
-
-        HeaderRSType mockHeader = new HeaderRSType();
-        mockHeader.setStatus(mockStatus);
-
-        CaseAddUpdtStatusRS mockCaseAddUpdtStatusRS = new CaseAddUpdtStatusRS();
-        mockCaseAddUpdtStatusRS.setHeaderRS(mockHeader);
-
-        when(caseServicesClient.getCaseTransactionStatus(
-            soaGatewayUserLoginId,
-            soaGatewayUserRole,
-            transactionId)).thenReturn(mockCaseAddUpdtStatusRS);
-
-        when(caseDetailsMapper.toTransactionStatus(mockCaseAddUpdtStatusRS))
-            .thenReturn(mockTransactionStatus);
-
-        TransactionStatus result
-            = caseDetailsService.getCaseTransactionStatus(
-                soaGatewayUserLoginId, soaGatewayUserRole, transactionId);
-
-        assertEquals(mockTransactionStatus, result);
-
-        verify(caseServicesClient).getCaseTransactionStatus(
-            soaGatewayUserLoginId,soaGatewayUserRole, transactionId);
-    }
-
-
 }

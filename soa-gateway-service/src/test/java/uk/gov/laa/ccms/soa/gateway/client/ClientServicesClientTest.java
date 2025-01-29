@@ -137,35 +137,6 @@ class ClientServicesClientTest {
         assertNotNull(response);
     }
 
-    @Test
-    public void testGetClientStatusBuildsCorrectRequest() throws Exception {
-        // Mocking expected values
-        String transactionId = "txn12345";
-
-        ObjectFactory objectFactory = new ObjectFactory();
-        ClientAddUpdtStatusRS mockResponse = objectFactory.createClientAddUpdtStatusRS();
-
-        when(webServiceTemplate.marshalSendAndReceive(
-            eq(SERVICE_URL),
-            any(JAXBElement.class),
-            any(SoapActionCallback.class)))
-            .thenReturn(objectFactory.createClientAddUpdtStatusRS(mockResponse));
-
-        ClientAddUpdtStatusRS response = client.getClientStatus(
-            soaGatewayUserLoginId, soaGatewayUserRole, transactionId
-        );
-
-        // Verify interactions
-        verify(webServiceTemplate, times(1)).marshalSendAndReceive(
-            eq(SERVICE_URL),
-            requestCaptor.capture(),
-            any(SoapActionCallback.class));
-
-        JAXBElement<?> payload = requestCaptor.getValue();
-        assertEquals(transactionId, ((ClientAddUpdtStatusRQ) payload.getValue()).getTransactionID());
-        assertNotNull(response);
-    }
-
     @Captor
     ArgumentCaptor<JAXBElement<ClientAddRQ>> clientAddRequestCaptor;
 
