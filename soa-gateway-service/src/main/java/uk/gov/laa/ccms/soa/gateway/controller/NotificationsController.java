@@ -21,7 +21,7 @@ import uk.gov.laa.ccms.soa.gateway.service.NotificationsService;
 @Slf4j
 public class NotificationsController implements NotificationsApi {
 
-  NotificationsService notificationsService;
+  private final NotificationsService notificationsService;
 
   /**
    * Update a notification.
