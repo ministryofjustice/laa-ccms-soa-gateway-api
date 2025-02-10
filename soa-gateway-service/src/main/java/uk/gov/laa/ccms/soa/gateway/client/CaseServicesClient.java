@@ -8,8 +8,6 @@ import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.soap.client.core.SoapActionCallback;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddRQ;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddRS;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddUpdtStatusRQ;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddUpdtStatusRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseInqRQ;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseInqRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.ObjectFactory;
