@@ -71,6 +71,7 @@ jobs:
       SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       SNYK_ORG: legal-aid-agency
       SNYK_TEST_EXCLUDE: build,generated
+      SNYK_TARGET_REFERENCE: main
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
@@ -83,4 +84,4 @@ jobs:
         continue-on-error: true
         with:
           command: monitor
-          args: --org=$SNYK_ORG --all-projects --exclude=$SNYK_TEST_EXCLUDE
+          args: --org=$SNYK_ORG --all-projects --exclude=$SNYK_TEST_EXCLUDE --target-reference=$SNYK_TARGET_REFERENCE
