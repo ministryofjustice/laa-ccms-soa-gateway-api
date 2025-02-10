@@ -9,20 +9,20 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
-    implementation 'org.springframework.boot:spring-boot-starter-validation:3.4.0'
+    implementation 'org.springframework.boot:spring-boot-starter-validation:3.4.2'
 
     //Enable access token authentication
     implementation 'uk.gov.laa.ccms.springboot:laa-ccms-spring-boot-starter-auth'
 
     //Enable Swagger UI
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.4'
 
     //Required for pagination
-    implementation 'org.springframework.data:spring-data-commons:3.4.1'
+    implementation 'org.springframework.data:spring-data-commons:3.4.2'
 
     // For mock Contract Details only
     // Prefer standalone version, see: https://github.com/wiremock/wiremock/issues/1760
-    implementation 'org.wiremock:wiremock-standalone:3.10.0'
+    implementation 'org.wiremock:wiremock-standalone:3.11.0'
 
     implementation 'org.springframework.ws:spring-ws-security'
     implementation 'org.modelmapper:modelmapper:3.2.2'
@@ -34,7 +34,7 @@ dependencies {
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.ws:spring-ws-test'
-    testImplementation 'org.mockito:mockito-core:5.14.2'
+    testImplementation 'org.mockito:mockito-core:5.15.2'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.11.4'
 }
 
