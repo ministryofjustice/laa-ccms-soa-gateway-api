@@ -576,6 +576,43 @@ paths:
           description: 'Not found'
         '500':
           description: 'Internal server error'
+  /notifications/{notification-id}:
+    put:
+      tags:
+        - notifications
+      summary: 'Update Notification'
+      operationId: 'updateNotification'
+      parameters:
+        - name: 'notification-id'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
+            example: '1234567890'
+        - $ref: '#/components/parameters/soaGatewayUserLoginId'
+        - $ref: '#/components/parameters/soaGatewayUserRole'
+      requestBody:
+        description: Notification
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/notification"
+      responses:
+        '200':
+          description: 'Successful operation'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/clientTransactionResponse"
+        '400':
+          description: 'Bad request'
+        '401':
+          description: 'Unauthorized'
+        '404':
+          description: 'Not found'
+        '500':
+          description: 'Internal server error'
 components:
   securitySchemes:
     ApiKeyAuth:
@@ -1612,6 +1649,18 @@ components:
           format: date
         message:
           type: 'string'
+    notification:
+      type: 'object'
+      properties:
+        user_id:
+          type: 'string'
+        action:
+          type: 'string'
+        message:
+          type: 'string'
+      required:
+        - user_id
+        - action
     baseDocument:
       type: 'object'
       properties:
@@ -1702,14 +1751,14 @@ components:
           items:
             $ref: '#/components/schemas/providerRequestAttribute'
     providerRequestAttribute:
-        type: 'object'
-        properties:
-          label:
-            type: 'string'
-          text:
-            type: 'string'
-          document:
-            type: 'string'
+      type: 'object'
+      properties:
+        label:
+          type: 'string'
+        text:
+          type: 'string'
+        document:
+          type: 'string'
 
 security:
   - ApiKeyAuth: []
