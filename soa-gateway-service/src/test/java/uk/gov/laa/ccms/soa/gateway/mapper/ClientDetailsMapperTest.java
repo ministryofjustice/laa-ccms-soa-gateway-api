@@ -11,7 +11,6 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -20,13 +19,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import uk.gov.laa.ccms.soa.gateway.model.AddressDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails;
-import uk.gov.laa.ccms.soa.gateway.model.ClientDetails;
 import uk.gov.laa.ccms.soa.gateway.model.ClientPersonalDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ClientSummary;
 import uk.gov.laa.ccms.soa.gateway.model.ContactDetail;
@@ -76,30 +71,6 @@ public class ClientDetailsMapperTest {
     private final String month = "6";
     private final String year = "2000";
 
-    @Test
-    public void testToClientDetails() {
-        List<ClientSummary> clientSummaryList = Collections.singletonList(new ClientSummary());
-        Page<ClientSummary> clientDetailPage = new PageImpl<>(clientSummaryList, Pageable.unpaged(), clientSummaryList.size());
-
-        ClientDetails result = clientDetailsMapper.toClientDetails(clientDetailPage);
-
-        assertNotNull(result);
-        assertEquals(1, result.getContent().size());
-    }
-
-    @Test
-    public void testToClientDetailList() {
-        ClientInqRS response = new ClientInqRS();
-        ClientInqRS.ClientList clientListObject = new ClientInqRS.ClientList();
-        List<ClientList> clientList = Collections.singletonList(buildClientList());
-        clientListObject.getClient().addAll(clientList);
-        response.setClientList(clientListObject);
-
-        List<ClientSummary> result = clientDetailsMapper.toClientSummaryList(response);
-
-        assertNotNull(result);
-        assertEquals(1, result.size());
-    }
 
     @Test
     public void testToClientSummary() {

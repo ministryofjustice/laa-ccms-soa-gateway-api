@@ -22,9 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ws.client.WebServiceIOException;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetail;
-import uk.gov.laa.ccms.soa.gateway.model.ClientDetails;
 import uk.gov.laa.ccms.soa.gateway.model.ClientSummary;
-import uk.gov.laa.ccms.soa.gateway.model.TransactionStatus;
 import uk.gov.laa.ccms.soa.gateway.service.ClientDetailsService;
 
 @ExtendWith(MockitoExtension.class)
@@ -107,80 +105,6 @@ public class ClientDetailsControllerTest {
                 .andExpect(status().isInternalServerError());
 
         verify(clientDetailsService).getClientDetail(any(), any(), any(), any());
-    }
-
-
-    @Test
-    public void testGetClients_Success() throws Exception {
-        // Create a mock client details response
-        ClientDetails clientDetails = new ClientDetails();
-
-        ClientSummary clientSummary= buildClientSummary();
-
-        // Stub the clientDetailsService to return the mock response
-        when(clientDetailsService.getClientDetails(
-                soaGatewayUserLoginId,
-                soaGatewayUserRole,
-                maxRecords,
-                clientSummary,
-                pageable))
-                .thenReturn(clientDetails);
-
-        mockMvc.perform(
-                        get("/clients?first-name={firstName}&surname={surname}" +
-                                        "&max-records={maxRecords}" +
-                                        "&gender={gender}"+
-                                        "&case-reference-number={caseReferenceNumber}" +
-                                        "&home-office-reference={homeOfficeReference}" +
-                                        "&national-insurance-number={nationalInsuranceNumber}",
-                                firstName,
-                                surname,
-                                maxRecords,
-                                gender,
-                                clientReferenceNumber,
-                                homeOfficeReference,
-                                nationalInsuranceNumber)
-                                .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
-                                .header("SoaGateway-User-Role", soaGatewayUserRole))
-                .andExpect(status().isOk());
-
-        verify(clientDetailsService).getClientDetails(soaGatewayUserLoginId,
-                soaGatewayUserRole, maxRecords, clientSummary, pageable);
-    }
-
-    @Test
-    public void testGetClients_Exception() throws Exception {
-        ClientSummary clientSummary= buildClientSummary();
-
-        // Stub the clientDetailsService to return the mock response
-        when(clientDetailsService.getClientDetails(
-                soaGatewayUserLoginId,
-                soaGatewayUserRole,
-                maxRecords,
-                new ClientSummary(),
-                pageable))
-                .thenThrow(new WebServiceIOException("Test exception"));
-
-        mockMvc.perform(
-                        get("/clients?first-name={firstName}&surname={surname}" +
-                                        "&max-records={maxRecords}" +
-                                        "&gender={gender}"+
-                                        "&case-reference-number={caseReferenceNumber}" +
-                                        "&home-office-reference={homeOfficeReference}" +
-                                        "&national-insurance-number={nationalInsuranceNumber}",
-                                firstName,
-                                surname,
-                                maxRecords,
-                                gender,
-                                clientReferenceNumber,
-                                homeOfficeReference,
-                                nationalInsuranceNumber)
-                                .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
-                                .header("SoaGateway-User-Role", soaGatewayUserRole))
-                .andExpect(status().isInternalServerError());
-
-        verify(clientDetailsService).getClientDetails(soaGatewayUserLoginId,
-                soaGatewayUserRole, maxRecords, clientSummary, pageable);
     }
 
     @Test

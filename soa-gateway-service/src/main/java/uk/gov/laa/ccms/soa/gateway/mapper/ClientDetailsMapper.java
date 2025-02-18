@@ -1,8 +1,6 @@
 package uk.gov.laa.ccms.soa.gateway.mapper;
 
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.XMLGregorianCalendar;
 import org.mapstruct.BeforeMapping;
@@ -10,10 +8,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
-import org.springframework.data.domain.Page;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails;
-import uk.gov.laa.ccms.soa.gateway.model.ClientDetails;
 import uk.gov.laa.ccms.soa.gateway.model.ClientPersonalDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ClientSummary;
 import uk.gov.laa.ccms.soa.gateway.model.TransactionStatus;
@@ -30,35 +26,6 @@ import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.Personal
  */
 @Mapper(componentModel = "spring", uses = CommonMapper.class)
 public interface ClientDetailsMapper {
-
-  @Mapping(target = ".", source = "client")
-  List<ClientSummary> toClientSummaryList(List<ClientList> clientList);
-
-  /**
-   * Converts the {@link ClientInqRS} object to a list of {@link ClientSummary} objects.
-   *
-   * <p>If the provided ClientInqRS object contains valid client data, it extracts and converts
-   * the list of client details. Otherwise, it returns an empty list.</p>
-   *
-   * @param clientInqRs The client inquiry response to be converted.
-   * @return List of {@link ClientSummary} objects or an empty list if no client data is available.
-   */
-  default List<ClientSummary> toClientSummaryList(ClientInqRS clientInqRs) {
-    if (clientInqRs.getClientList() != null) {
-      ClientInqRS.ClientList clientListObject = clientInqRs.getClientList();
-
-      if (clientListObject.getClient() != null) {
-        List<ClientList> clientList = clientListObject.getClient();
-
-        if (clientList != null) {
-          return toClientSummaryList(clientList);
-        }
-      }
-    }
-    return Collections.emptyList();
-  }
-
-  ClientDetails toClientDetails(Page<ClientSummary> page);
 
   @Mapping(target = ".", source = "name")
   @Mapping(target = "nationalInsuranceNumber", source = "NINumber")
