@@ -9,7 +9,7 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
-    implementation 'org.springframework.boot:spring-boot-starter-validation:3.4.0'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     //Enable access token authentication
     implementation 'uk.gov.laa.ccms.springboot:laa-ccms-spring-boot-starter-auth'
@@ -18,7 +18,7 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
 
     //Required for pagination
-    implementation 'org.springframework.data:spring-data-commons:3.4.1'
+    implementation 'org.springframework.data:spring-data-commons'
 
     // For mock Contract Details only
     // Prefer standalone version, see: https://github.com/wiremock/wiremock/issues/1760
@@ -96,6 +96,8 @@ test {
 
     // Hide warning for dynamic loading of agents https://github.com/mockito/mockito/issues/3037
     jvmArgs '-XX:+EnableDynamicAgentLoading'
+
+    finalizedBy jacocoTestReport
 }
 
 jacocoTestReport {
