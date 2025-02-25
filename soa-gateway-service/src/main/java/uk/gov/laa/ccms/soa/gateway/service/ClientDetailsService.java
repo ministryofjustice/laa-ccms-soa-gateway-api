@@ -1,23 +1,16 @@
 package uk.gov.laa.ccms.soa.gateway.service;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import uk.gov.laa.ccms.soa.gateway.client.ClientServicesClient;
 import uk.gov.laa.ccms.soa.gateway.mapper.ClientDetailsMapper;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails;
-import uk.gov.laa.ccms.soa.gateway.model.ClientDetails;
-import uk.gov.laa.ccms.soa.gateway.model.ClientSummary;
-import uk.gov.laa.ccms.soa.gateway.util.PaginationUtil;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientAddRS;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientInqRS;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientUpdateRQ;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientUpdateRS;
-import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientInfo;
 
 /**
  * Service responsible for handling client details operations.
@@ -36,50 +29,6 @@ public class ClientDetailsService extends AbstractSoaService {
   private final ClientDetailsMapper clientDetailsMapper;
 
 
-
-  /**
-   * Retrieves client details based on the provided search criteria and client summary.
-   *
-   * <p>This method communicates with the external Client Services system using the provided
-   * criteria and client summary, fetches the relevant client details, and then maps and
-   * paginates these details to the desired format.</p>
-   *
-   * @param soaGatewayUserLoginId  The user login ID for the SOA Gateway.
-   * @param soaGatewayUserRole     The user role in the SOA Gateway.
-   * @param maxRecords             The maximum number of records to retrieve.
-   * @param clientSummary          The summary details of the client.
-   * @param pageable               The pagination details.
-   * @return                       A {@link ClientDetails} object containing the retrieved and
-   *                               processed client details.
-   */
-  public ClientDetails getClientDetails(
-          final String soaGatewayUserLoginId,
-          final String soaGatewayUserRole,
-          final Integer maxRecords,
-          final ClientSummary clientSummary,
-          final Pageable pageable
-  ) {
-    log.info("ClientDetailsService - getClientDetails");
-    final ClientInfo clientInfo =  clientDetailsMapper.toClientInfo(clientSummary);
-
-    final ClientInqRS response = clientServicesClient.getClientDetails(
-            soaGatewayUserLoginId,
-            soaGatewayUserRole,
-            maxRecords,
-            clientInfo);
-
-    final List<ClientSummary> clientDetailList = clientDetailsMapper.toClientSummaryList(response);
-
-    final int listSize =
-        getTotalElementsFromRecordCount(response.getRecordCount(), clientDetailList.size());
-
-    final Page<ClientSummary> page = PaginationUtil.paginateList(
-        pageable,
-        clientDetailList,
-        listSize);
-
-    return clientDetailsMapper.toClientDetails(page);
-  }
 
   /**
    * Retrieves detailed information for a specific client based on the provided client reference
