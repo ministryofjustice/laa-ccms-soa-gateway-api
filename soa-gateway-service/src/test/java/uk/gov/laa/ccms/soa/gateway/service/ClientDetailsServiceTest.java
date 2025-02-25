@@ -4,35 +4,23 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.math.BigInteger;
-import java.util.Collections;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import uk.gov.laa.ccms.soa.gateway.client.ClientServicesClient;
 import uk.gov.laa.ccms.soa.gateway.mapper.ClientDetailsMapper;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails;
-import uk.gov.laa.ccms.soa.gateway.model.ClientDetails;
 import uk.gov.laa.ccms.soa.gateway.model.ClientSummary;
-import uk.gov.laa.ccms.soa.gateway.model.TransactionStatus;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientAddRS;
-import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientAddUpdtStatusRS;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientInqRS;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientUpdateRQ;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientUpdateRS;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientInfo;
-import uk.gov.legalservices.enterprise.common._1_0.common.RecordCount;
-import uk.gov.legalservices.enterprise.common._1_0.header.HeaderRSType;
-import uk.gov.legalservices.enterprise.common._1_0.header.Status;
-import uk.gov.legalservices.enterprise.common._1_0.header.StatusTextType;
 
 @ExtendWith(MockitoExtension.class)
 public class ClientDetailsServiceTest {
@@ -72,64 +60,6 @@ public class ClientDetailsServiceTest {
         this.maxRecords = 50;
 
         this.pageable = Pageable.ofSize(20);
-    }
-    @Test
-    public void testGetClientDetails() {
-
-
-        // Create a mocked instance of the mapped client details
-        ClientDetails clientDetails = new ClientDetails();
-
-        ClientInfo clientInfo = buildClientInfo();
-        ClientSummary clientSummary = buildClientSummary();
-
-        List<ClientSummary> clientSummaryList = Collections.singletonList(clientSummary);
-        Page<ClientSummary> clientSummaryPage = new PageImpl<>(clientSummaryList, pageable, clientSummaryList.size());
-
-        // Create a mocked instance of the response object
-        ClientInqRS response = new ClientInqRS();
-        response.setRecordCount(new RecordCount());
-        response.getRecordCount().setRecordsFetched(
-            BigInteger.valueOf(clientSummaryList.size()));
-
-        when(clientDetailsMapper.toClientInfo(clientSummary)).thenReturn(clientInfo);
-
-        // Stub the client to return the mocked response
-        when(clientServicesClient.getClientDetails(
-                soaGatewayUserLoginId,
-                soaGatewayUserRole,
-                maxRecords,
-                clientInfo))
-                .thenReturn(response);
-
-        // Stub the mapper to return the mocked client details
-        when(clientDetailsMapper.toClientSummaryList(response)).thenReturn(clientSummaryList);
-        when(clientDetailsMapper.toClientDetails(clientSummaryPage)).thenReturn(clientDetails);
-
-        // Call the service method
-        ClientDetails result = clientDetailsService.getClientDetails(
-                soaGatewayUserLoginId,
-                soaGatewayUserRole,
-                maxRecords,
-                clientSummary,
-                pageable
-        );
-
-        // Verify that the client method was called with the expected arguments
-        verify(clientServicesClient).getClientDetails(
-                soaGatewayUserLoginId,
-                soaGatewayUserRole,
-                maxRecords,
-                clientInfo
-        );
-
-        // Verify that the mapper methods were called
-        verify(clientDetailsMapper).toClientInfo(clientSummary);
-        verify(clientDetailsMapper).toClientSummaryList(response);
-        verify(clientDetailsMapper).toClientDetails(clientSummaryPage);
-
-        // Assert the result
-        assertEquals(clientDetails, result);
     }
 
     @Test

@@ -1,16 +1,12 @@
 package uk.gov.laa.ccms.soa.gateway.controller;
 
-import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.laa.ccms.soa.gateway.api.ClientsApi;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails;
-import uk.gov.laa.ccms.soa.gateway.model.ClientDetails;
-import uk.gov.laa.ccms.soa.gateway.model.ClientSummary;
 import uk.gov.laa.ccms.soa.gateway.model.ClientTransactionResponse;
 import uk.gov.laa.ccms.soa.gateway.service.ClientDetailsService;
 
@@ -51,64 +47,6 @@ public class ClientDetailsController implements ClientsApi {
               clientReferenceNumber);
 
       return ResponseEntity.ok(clientDetail);
-    } catch (Exception e) {
-      log.error("ClientDetailsController caught exception", e);
-      return ResponseEntity.internalServerError().build();
-    }
-  }
-
-  /**
-   * Get a list of clients based on the supplied search criteria.
-   *
-   * @param soaGatewayUserLoginId  (required) - the user requesting the data.
-   * @param soaGatewayUserRole  (required) - the user role requesting the data.
-   * @param firstName  (optional) - the first name.
-   * @param surname  (optional) - the surname.
-   * @param dateOfBirth  (optional) - the date of birth.
-   * @param gender  (optional) - the gender.
-   * @param caseReferenceNumber  (optional) - the case reference number.
-   * @param homeOfficeReference  (optional) - the home office reference.
-   * @param nationalInsuranceNumber  (optional) - the national insurance number.
-   * @param maxRecords  (optional, default to 100) - the maximum records to query.
-   * @param pageable - the page settings.
-   * @return ResponseEntity containing a list of client details.
-   */
-  @Override
-  public ResponseEntity<ClientDetails> getClients(
-          final String soaGatewayUserLoginId,
-          final String soaGatewayUserRole,
-          final String firstName,
-          final String surname,
-          final Date dateOfBirth,
-          final String gender,
-          final String caseReferenceNumber,
-          final String homeOfficeReference,
-          final String nationalInsuranceNumber,
-          final Integer maxRecords,
-          final Pageable pageable) {
-    log.info("GET /clients");
-    try {
-      // Build a ClientSummary to hold the search criteria.
-      // Note: caseReferenceNumber can actually hold a case or client reference.
-      ClientSummary clientSummary = new ClientSummary()
-              .firstName(firstName)
-              .surname(surname)
-              .dateOfBirth(dateOfBirth)
-              .gender(gender)
-              .clientReferenceNumber(caseReferenceNumber)
-              .homeOfficeReference(homeOfficeReference)
-              .nationalInsuranceNumber(nationalInsuranceNumber);
-
-      log.info("clientSummary: " + clientSummary.toString());
-
-      ClientDetails clientDetails = clientDetailsService.getClientDetails(
-              soaGatewayUserLoginId,
-              soaGatewayUserRole,
-              maxRecords,
-              clientSummary,
-              pageable);
-
-      return ResponseEntity.ok(clientDetails);
     } catch (Exception e) {
       log.error("ClientDetailsController caught exception", e);
       return ResponseEntity.internalServerError().build();
