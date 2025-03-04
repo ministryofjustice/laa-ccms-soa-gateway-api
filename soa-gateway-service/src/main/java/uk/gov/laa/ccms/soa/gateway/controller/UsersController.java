@@ -20,7 +20,7 @@ import uk.gov.laa.ccms.soa.gateway.service.UsersService;
 @RequiredArgsConstructor
 public class UsersController implements UsersApi {
 
-  UsersService usersService;
+  private final UsersService usersService;
 
   /**
    * Update user profile options in Ebs.
