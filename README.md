@@ -34,6 +34,21 @@ This API uses components from the [LAA CCMS Common Library](https://github.com/m
 - [laa-ccms-spring-boot-plugin](https://github.com/ministryofjustice/laa-ccms-spring-boot-common?tab=readme-ov-file#laa-ccms-spring-boot-gradle-plugin-for-java--spring-boot-projects)
 - [laa-ccms-spring-boot-starter-auth](https://github.com/ministryofjustice/laa-ccms-spring-boot-common/tree/main/laa-ccms-spring-boot-starters/laa-ccms-spring-boot-starter-auth)
 
+## Snyk code analysis (CI/CD)
+This project publishes vulnerability scans to the [LAA Snyk Dashboard (Google SSO)](https://app.snyk.io/org/legal-aid-agency).
+
+If you cannot see the LAA organisation when logged into the dashboard,
+please ask your lead developer/architect to have you added.
+
+Scans will be triggered in two ways:
+
+- Main branch - on commit, a vulnerability scan will be run and published to both the Snyk
+  server and GitHub Code Scanning. Vulnerabilites will not fail the build.
+- Feature branches - on commit, a vulnerability scan will be run to identify any new
+  vulnerabilites (compared to the main branch). If new vulnerabilites have been raised. A code
+  scan will also run to identify known security issues within the source code. If any issues are
+  found, the build will fail.
+
 ### Running Snyk locally
 To run Snyk locally, you will need to [install the Snyk CLI](https://docs.snyk.io/snyk-cli/install-or-update-the-snyk-cli).
 
