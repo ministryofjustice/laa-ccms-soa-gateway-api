@@ -43,7 +43,7 @@ jobs:
       snyk_organisation: 'legal-aid-agency'
       snyk_test_exclude: 'build,generated'
       snyk_target_reference: 'main'
-      github_code_scanning_report: 'true'
+      github_code_scanning_report: 'false'
     secrets:
       gh_token: ${{ secrets.GITHUB_TOKEN }}
       snyk_token: ${{ secrets.SNYK_TOKEN }}
