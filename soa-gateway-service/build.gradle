@@ -13,6 +13,10 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+    //Metrics
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'io.micrometer:micrometer-registry-prometheus'
+
     //Enable access token authentication
     implementation 'uk.gov.laa.ccms.springboot:laa-ccms-spring-boot-starter-auth'
 

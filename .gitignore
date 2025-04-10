@@ -99,3 +99,4 @@ test-results/
 
 # Snyk
 .dccache
+/soa-gateway-service/src/main/resources/application-secret.properties
