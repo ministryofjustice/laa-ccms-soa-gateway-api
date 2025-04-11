@@ -48,3 +48,15 @@ laa:
           authorized-roles: ${AUTHORIZED_ROLES}
           unprotected-uris: ${UNPROTECTED_URIS}
 
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - info
+          - metrics
+          - prometheus

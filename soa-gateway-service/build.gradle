@@ -13,6 +13,10 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+    //Metrics
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'io.micrometer:micrometer-registry-prometheus'
+
     //Enable access token authentication
     implementation 'uk.gov.laa.ccms.springboot:laa-ccms-spring-boot-starter-auth'
 
@@ -26,7 +30,12 @@ dependencies {
     // Prefer standalone version, see: https://github.com/wiremock/wiremock/issues/1760
     implementation 'org.wiremock:wiremock-standalone:3.12.1'
 
-    implementation 'org.springframework.ws:spring-ws-security'
+    // Exclude guava from spring-ws-security
+    implementation('org.springframework.ws:spring-ws-security') {
+        exclude group: 'com.google.guava', module: 'guava'
+    }
+    // Overriding transitive dependency
+    implementation 'com.google.guava:guava:33.4.7-jre'
     implementation 'org.modelmapper:modelmapper:3.2.2'
     implementation 'org.apache.commons:commons-lang3:3.17.0'
     implementation "org.mapstruct:mapstruct:1.6.3"
@@ -35,9 +44,14 @@ dependencies {
     annotationProcessor "org.mapstruct:mapstruct-processor:1.6.3"
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.ws:spring-ws-test'
+    // Adding exclusion for legacy JUnit 4
+    testImplementation ('org.springframework.ws:spring-ws-test'){
+        exclude group: 'junit', module: 'junit'
+    }
     testImplementation 'org.mockito:mockito-core:5.16.1'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.12.1'
+
+
 }
 
 wsimport {
