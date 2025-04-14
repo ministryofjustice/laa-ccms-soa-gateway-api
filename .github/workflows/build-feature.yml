@@ -32,7 +32,7 @@ jobs:
       gh_token: ${{ secrets.GITHUB_TOKEN }}
 
   vulnerability-scan:
-    uses: ministryofjustice/laa-ccms-common-workflows/.github/workflows/snyk-vulnerability-scan.yml@v1
+    uses: ministryofjustice/laa-ccms-common-workflows/.github/workflows/snyk-vulnerability-scan.yml@fix/snyk-bug
     permissions:
       contents: read
     with:

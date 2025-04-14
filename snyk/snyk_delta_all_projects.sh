@@ -32,7 +32,7 @@ args=("$*")
 
 run_snyk_delta () {
     # add in any other arguments you would like to use
-    DEBUG="*" snyk-delta -d
+    snyk-delta
 }
 
 run_snyk_test () {
