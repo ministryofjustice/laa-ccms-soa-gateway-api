@@ -1,6 +1,9 @@
 spring:
   application:
     name: laa-ccms-soa-gateway-api
+  threads:
+    virtual:
+      enabled: true
 
 springdoc:
   enable-spring-security: false
