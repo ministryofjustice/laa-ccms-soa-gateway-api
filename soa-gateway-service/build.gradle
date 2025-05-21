@@ -5,6 +5,16 @@ plugins {
 apply plugin: 'uk.gov.laa.ccms.springboot.laa-ccms-spring-boot-gradle-plugin'
 
 dependencies {
+
+    constraints {
+        implementation('org.bouncycastle:bcprov-jdk15on:1.70') {
+            because("Fixes CVE-2018-1000613")
+        }
+        implementation("org.springframework.security:spring-security-core:6.4.6") {
+            because("Fixes CVE-2025-41232")
+        }
+    }
+
     implementation project(':soa-gateway-api')
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -33,6 +43,7 @@ dependencies {
     // Exclude guava from spring-ws-security
     implementation('org.springframework.ws:spring-ws-security') {
         exclude group: 'com.google.guava', module: 'guava'
+        exclude group: 'org.springframework.security', module: 'spring-security-core'
     }
     // Overriding transitive dependency
     implementation 'com.google.guava:guava:33.4.8-jre'
@@ -45,7 +56,7 @@ dependencies {
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     // Adding exclusion for legacy JUnit 4
-    testImplementation ('org.springframework.ws:spring-ws-test'){
+    testImplementation('org.springframework.ws:spring-ws-test') {
         exclude group: 'junit', module: 'junit'
     }
     testImplementation 'org.mockito:mockito-core:5.17.0'
