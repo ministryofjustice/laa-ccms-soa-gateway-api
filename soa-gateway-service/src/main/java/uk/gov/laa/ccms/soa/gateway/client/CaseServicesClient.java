@@ -10,8 +10,11 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddRQ;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseInqRQ;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseInqRS;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseUpdateRQ;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseUpdateRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.ObjectFactory;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseAdd;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseDetailsAdd;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseInfo;
 
 /**
@@ -127,8 +130,62 @@ public class CaseServicesClient extends AbstractSoaClient {
                 CASE_FACTORY.createCaseAddRQ(caseAddRq),
                 new SoapActionCallback(soapAction));
 
-    // Check and throw exception if the SOA call was not successful
-    checkSoaCallSuccess(serviceName, response.getValue().getHeaderRS());
+    isSuccessOrThrowException(serviceName, response.getValue().getHeaderRS());
+    return response.getValue();
+  }
+
+  /**
+   * Amends an existing Case in CCMS.
+   *
+   * @param loggedInUserId      - the logged in UserId
+   * @param loggedInUserType    - the logged in UserType
+   * @param caseAdd             - the case to add
+   * @return Response object containing the result of the case creation.
+   */
+  public CaseUpdateRS updateCase(
+        String loggedInUserId,
+        String loggedInUserType,
+        CaseAdd caseAdd
+  ) {
+    final String soapAction = String.format("%s/UpdateCaseApplication", serviceName);
+    CaseUpdateRQ caseUpdateRq = CASE_FACTORY.createCaseUpdateRQ();
+    caseUpdateRq.setHeaderRQ(createHeaderRq(loggedInUserId, loggedInUserType));
+    /* UpdateApplicationDetails applicationDetails = caseUpdateRQ.getApplicationDetails();
+    applicationDetails.setApplicationAmendmentType(caseAdd.getCaseDetails()
+    .getApplicationDetails().getApplicationAmendmentType()); */
+
+    if (caseAdd.getCaseReferenceNumber() != null) {
+      caseUpdateRq.setCaseReferenceNumber(caseAdd.getCaseReferenceNumber());
+    }
+
+    if (caseAdd.getCaseDetails() != null) {
+      CaseDetailsAdd caseDetails = caseAdd.getCaseDetails();
+
+      caseUpdateRq.setActualCaseStatus(caseUpdateRq.getActualCaseStatus());
+      caseUpdateRq.setAwards(caseDetails.getAwards());
+      caseUpdateRq.setCaseDocs(caseDetails.getCaseDocs());
+      caseUpdateRq.setDischargeStatus(caseDetails.getDischargeStatus());
+      caseUpdateRq.setLinkedCases(caseDetails.getLinkedCases());
+      caseUpdateRq.setLegalHelpCosts(caseDetails.getLegalHelpCosts());
+      caseUpdateRq.setMessages(caseUpdateRq.getMessages());
+      caseUpdateRq.setCaseDocs(caseDetails.getCaseDocs());
+      caseUpdateRq.setNotifications(caseUpdateRq.getNotifications());
+      caseUpdateRq.setOutcomes(caseUpdateRq.getOutcomes());
+      caseUpdateRq.setPreCertificateCosts(caseDetails.getPreCertificateCosts());
+      caseUpdateRq.setPriorAuthorities(caseDetails.getPriorAuthorities());
+      caseUpdateRq.setRecordHistory(caseDetails.getRecordHistory());
+      caseUpdateRq.setUndertakings(caseUpdateRq.getUndertakings());
+      caseUpdateRq.setUpdateMsgType(caseUpdateRq.getUpdateMsgType());
+    }
+
+    JAXBElement<CaseUpdateRS> response =
+            (JAXBElement<CaseUpdateRS>) getWebServiceTemplate()
+                    .marshalSendAndReceive(
+                            serviceUrl,
+                            CASE_FACTORY.createCaseUpdateRQ(caseUpdateRq),
+                            new SoapActionCallback(soapAction));
+
+    isSuccessOrThrowException(serviceName, response.getValue().getHeaderRS());
     return response.getValue();
   }
 
@@ -140,8 +197,7 @@ public class CaseServicesClient extends AbstractSoaClient {
                 CASE_FACTORY.createCaseInqRQ(caseInqRq),
                 new SoapActionCallback(soapAction));
 
-    // Check and throw exception if the SOA call was not successful
-    checkSoaCallSuccess(serviceName, response.getValue().getHeaderRS());
+    isSuccessOrThrowException(serviceName, response.getValue().getHeaderRS());
     return response;
   }
 }

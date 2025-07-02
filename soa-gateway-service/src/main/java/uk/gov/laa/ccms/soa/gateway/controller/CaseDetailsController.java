@@ -69,5 +69,31 @@ public class CaseDetailsController implements CasesApi {
     }
   }
 
-
+  /**
+   * Amends a single case by reference number.
+   *
+   * @param soaGatewayUserLoginId (required) - the user requesting the data.
+   * @param soaGatewayUserRole    (required) - the user requesting the data.
+   * @param caseDetail            Update a case (required)
+   * @return a CaseTransactionResponse containing the requests operation result.
+   */
+  @Override
+  public ResponseEntity<CaseTransactionResponse> updateCase(
+      final String soaGatewayUserLoginId,
+      final String soaGatewayUserRole,
+      final CaseDetail caseDetail
+  ) {
+    log.info("PUT /cases/update");
+    try {
+      final String transactionId = caseDetailsService.amendCase(
+              soaGatewayUserLoginId,
+              soaGatewayUserRole,
+              caseDetail);
+      return ResponseEntity.ok(new CaseTransactionResponse()
+              .transactionId(transactionId));
+    } catch (final Exception e) {
+      log.error("CaseDetailsController caught exception", e);
+      return ResponseEntity.internalServerError().build();
+    }
+  }
 }
