@@ -83,7 +83,7 @@ public class CaseDetailsController implements CasesApi {
       final String soaGatewayUserRole,
       final CaseDetail caseDetail
   ) {
-    log.info("PUT /cases/update");
+    log.info("PUT /cases");
     try {
       final String transactionId = caseDetailsService.amendCase(
               soaGatewayUserLoginId,
