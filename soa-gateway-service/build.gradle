@@ -48,7 +48,7 @@ dependencies {
     // Overriding transitive dependency
     implementation 'com.google.guava:guava:33.4.8-jre'
     implementation 'org.modelmapper:modelmapper:3.2.4'
-    implementation 'org.apache.commons:commons-lang3:3.17.0'
+    implementation 'org.apache.commons:commons-lang3:3.18.0'
     implementation "org.mapstruct:mapstruct:1.6.3"
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
