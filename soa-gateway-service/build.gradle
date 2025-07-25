@@ -10,9 +10,9 @@ dependencies {
         implementation('org.bouncycastle:bcprov-jdk15on:1.70') {
             because("Fixes CVE-2018-1000613")
         }
-        implementation("org.springframework.security:spring-security-core:6.5.1") {
-            because("Fixes CVE-2025-41232")
-        }
+//        implementation("org.springframework.security:spring-security-core:6.5.1") {
+//            because("Fixes CVE-2025-41232")
+//        }
     }
 
     implementation project(':soa-gateway-api')
