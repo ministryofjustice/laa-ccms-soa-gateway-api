@@ -10,7 +10,7 @@ dependencies {
         implementation('org.bouncycastle:bcprov-jdk15on:1.70') {
             because("Fixes CVE-2018-1000613")
         }
-        implementation("org.springframework.security:spring-security-core:6.5.5") {
+        implementation("org.springframework.security:spring-security-core:6.5.6") {
             because("Fixes CVE-2025-41232")
         }
     }
@@ -47,7 +47,7 @@ dependencies {
     }
     // Overriding transitive dependency
     implementation 'com.google.guava:guava:33.5.0-jre'
-    implementation 'org.modelmapper:modelmapper:3.2.4'
+    implementation 'org.modelmapper:modelmapper:3.2.5'
     implementation 'org.apache.commons:commons-lang3:3.19.0'
     implementation "org.mapstruct:mapstruct:1.6.3"
     compileOnly 'org.projectlombok:lombok'
@@ -60,7 +60,7 @@ dependencies {
         exclude group: 'junit', module: 'junit'
     }
     testImplementation 'org.mockito:mockito-core:5.20.0'
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.13.4'
+    testImplementation 'org.junit.jupiter:junit-jupiter:6.0.0'
 
 
 }
