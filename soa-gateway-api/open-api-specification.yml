@@ -881,6 +881,8 @@ components:
           type: 'number'
         undertaking_amount:
           type: 'number'
+        undertaking_maximum_amount:
+          type: 'number'
         linked_cases:
           type: 'array'
           items:
@@ -932,11 +934,11 @@ components:
           type: 'array'
           items:
             $ref: '#/components/schemas/proceedingDetail'
-        means_assesments:
+        means_assessments:
           type: 'array'
           items:
             $ref: '#/components/schemas/assessmentResult'
-        merits_assesments:
+        merits_assessments:
           type: 'array'
           items:
             $ref: '#/components/schemas/assessmentResult'
@@ -1133,7 +1135,7 @@ components:
           type: 'boolean'
         certificateNumber:
           type: 'string'
-        court_ordered_means_assesment:
+        court_ordered_means_assessment:
           type: 'boolean'
         assessed_income_frequency:
           type: 'string'

@@ -2,10 +2,13 @@ package uk.gov.laa.ccms.soa.gateway.mapper;
 
 import java.util.Collections;
 import java.util.List;
+import org.mapstruct.BeanMapping;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.springframework.data.domain.Page;
+import uk.gov.laa.ccms.soa.gateway.model.AddressDetail;
 import uk.gov.laa.ccms.soa.gateway.model.AssessmentResult;
 import uk.gov.laa.ccms.soa.gateway.model.AssessmentScreen;
 import uk.gov.laa.ccms.soa.gateway.model.Award;
@@ -36,6 +39,8 @@ import uk.gov.laa.ccms.soa.gateway.model.SubmittedApplicationDetails;
 import uk.gov.laa.ccms.soa.gateway.model.TimeRelatedAward;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddUpdtStatusRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseInqRS;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseUpdateRQ;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseUpdateRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ApplicationDetails;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.AwardElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.AwardsElementType;
@@ -68,6 +73,9 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ProviderDetai
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.RecoveryAmountElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ScopeLimitationElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.TimeRelatedElementType;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.UndertakingElementType;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.UpdateApplicationDetails;
+import uk.gov.legalservices.enterprise.common._1_0.common.Address;
 import uk.gov.legalservices.enterprise.common._1_0.common.AssesmentResultType;
 import uk.gov.legalservices.enterprise.common._1_0.common.AssessmentDetailType;
 import uk.gov.legalservices.enterprise.common._1_0.common.AssessmentScreenType;
@@ -88,10 +96,36 @@ public interface CaseDetailsMapper {
   @Mapping(target = "priorAuthorities", source = "caseDetails.priorAuthorities.priorAuthority")
   @Mapping(target = "availableFunctions", source = "caseDetails.availableFunctions.function")
   @Mapping(target = "caseDocs", source = "caseDetails.caseDocs.caseDoc")
+  @Mapping(target = "undertakingMaximumAmount", ignore = true)
   CaseDetail toCaseDetail(final Case sourceCase);
 
   @Mapping(target = "caseDetails", source = ".")
   CaseAdd toCaseAdd(final CaseDetail caseDetail);
+
+  @Mapping(target = "updateMsgType", source = "caseUpdateType")
+  @Mapping(target = "applicationDetails.undertakings", source = ".")
+  @Mapping(target = "applicationDetails.supervisorContactID", source = "")
+  @Mapping(target = "applicationDetails.feeEarnerContactID", source = "")
+  @Mapping(target = "priorAuthorities.priorAuthority", source = "priorAuthorities")
+  @Mapping(target = "linkedCases.linkedCase", source = "linkedCases")
+  @Mapping(target = "priorAuthorities.priorAuthority", source = "")
+  @Mapping(target = "notifications", ignore = true)
+  CaseUpdateRQ toCaseUpdateRq(final CaseDetail caseDetail, String caseUpdateType);
+
+  @Mapping(target = "otherParties.otherParty", source = "otherParties")
+  @Mapping(target = "externalResources.externalResource", source = "externalResources")
+  @Mapping(target = "proceedings.proceeding", source = "proceedings")
+  @Mapping(target = "meansAssesments.assesmentResults", source = "meansAssessments")
+  @Mapping(target = "meritsAssesments.assesmentResults", source = "meritsAssessments")
+  UpdateApplicationDetails toUpdateApplicationDetails(final SubmittedApplicationDetails applicationDetails);
+
+  @Mapping(target = "addressID", source = "addressId")
+  @Mapping(target = "coffName", source = "careOfName")
+  Address toAddress(final AddressDetail addressDetail);
+
+  @Mapping(target = "maxAmount", source = "undertakingMaximumAmount")
+  @Mapping(target = "enteredAmount", source = "undertakingAmount")
+  UndertakingElementType toUndertakingElementType(final CaseDetail caseDetail);
 
   /**
    * Transform a list of LinkedCase to a LinkedCasesUpdate.
@@ -238,7 +272,6 @@ public interface CaseDetailsMapper {
   @Mapping(target = "meansAssesments", source = "meansAssesments.assesmentResults")
   @Mapping(target = "meritsAssesments", source = "meritsAssesments.assesmentResults")
   @Mapping(target = "larDetails", source = "LARDetails")
-
   SubmittedApplicationDetails toSubmittedApplicationDetails(
       ApplicationDetails soaApplicationDetails);
 

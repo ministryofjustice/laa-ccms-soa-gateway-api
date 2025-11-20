@@ -101,12 +101,11 @@ public class CaseDetailsService extends AbstractSoaService {
           final CaseDetail caseDetail
   ) {
     log.info("CaseDetailsService - amendCase");
-    final CaseAdd caseAdd = caseDetailsMapper.toCaseAdd(caseDetail);
 
     final CaseUpdateRS response = caseServicesClient.updateCase(
             soaGatewayUserLoginId,
             soaGatewayUserRole,
-            caseAdd);
+            caseDetail);
 
     return response.getTransactionID();
   }
