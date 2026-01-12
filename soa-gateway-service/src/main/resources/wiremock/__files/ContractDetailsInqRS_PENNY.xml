@@ -32,6 +32,14 @@
       <refdata:ContractualDevolvedPowers xmlns:refdata="http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/ReferenceDataBIO">Yes - Excluding JR Proceedings</refdata:ContractualDevolvedPowers>
       <refdata:RemainderAuthorisation xmlns:refdata="http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/ReferenceDataBIO">true</refdata:RemainderAuthorisation>
     </msg:ContractDetail>
+      <msg:ContractDetail>
+          <refdata:CategoryofLaw xmlns:refdata="http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/ReferenceDataBIO">AAP</refdata:CategoryofLaw>
+          <refdata:SubCategory xmlns:refdata="http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/ReferenceDataBIO">Not Applicable</refdata:SubCategory>
+          <refdata:AuthorisationType xmlns:refdata="http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/ReferenceDataBIO">Schedule</refdata:AuthorisationType>
+          <refdata:CreateNewMatters xmlns:refdata="http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/ReferenceDataBIO">true</refdata:CreateNewMatters>
+          <refdata:ContractualDevolvedPowers xmlns:refdata="http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/ReferenceDataBIO">Yes - Excluding JR Proceedings</refdata:ContractualDevolvedPowers>
+          <refdata:RemainderAuthorisation xmlns:refdata="http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/ReferenceDataBIO">true</refdata:RemainderAuthorisation>
+      </msg:ContractDetail>
   </msg:ContractDetails>
 </ContractDetailsRS>
   </soapenv:Body>
