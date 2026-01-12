@@ -9,6 +9,7 @@ import uk.gov.laa.ccms.soa.gateway.model.CaseDetail;
 import uk.gov.laa.ccms.soa.gateway.util.PaginationUtil;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseInqRS;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseUpdateRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseAdd;
 
 /**
@@ -82,5 +83,32 @@ public class CaseDetailsService extends AbstractSoaService {
     return response.getTransactionID();
   }
 
+  /**
+   * Amends an existing case based on the provided case details.
+   *
+   * <p>This method communicates with the external Case Services system using the provided
+   * case details, amends an existing case in CCMS, and then extracts the returned transaction id
+   * for return.</p>
+   *
+   * @param soaGatewayUserLoginId The user login ID for the SOA Gateway.
+   * @param soaGatewayUserRole    The user role in the SOA Gateway.
+   * @param caseDetail            The case details to amend.
+   * @return A {@link String} representing the SOA transaction id for the case amendment.
+   */
+  public String amendCase(
+          final String soaGatewayUserLoginId,
+          final String soaGatewayUserRole,
+          final CaseDetail caseDetail
+  ) {
+    log.info("CaseDetailsService - amendCase");
+    final CaseAdd caseAdd = caseDetailsMapper.toCaseAdd(caseDetail);
+
+    final CaseUpdateRS response = caseServicesClient.updateCase(
+            soaGatewayUserLoginId,
+            soaGatewayUserRole,
+            caseAdd);
+
+    return response.getTransactionID();
+  }
 
 }

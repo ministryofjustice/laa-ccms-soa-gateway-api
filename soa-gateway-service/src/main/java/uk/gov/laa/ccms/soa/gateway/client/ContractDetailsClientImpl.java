@@ -78,7 +78,7 @@ public class ContractDetailsClientImpl extends AbstractSoaClient implements Cont
                             new SoapActionCallback(soapAction));
 
     // Check and throw exception if the SOA call was not successful
-    checkSoaCallSuccess(serviceName, response.getValue().getHeaderRS());
+    isSuccessOrThrowException(serviceName, response.getValue().getHeaderRS());
 
     return response.getValue();
   }

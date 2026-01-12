@@ -183,6 +183,38 @@ paths:
           description: 'Not found'
         '500':
           description: 'Internal server error'
+    put:
+      tags:
+        - cases
+      summary: 'Update a case'
+      operationId: 'updateCase'
+      requestBody:
+        description: Update a case
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/caseDetail"
+      parameters:
+        - $ref: '#/components/parameters/soaGatewayUserLoginId'
+        - $ref: '#/components/parameters/soaGatewayUserRole'
+      responses:
+        '200':
+          description: 'Successful operation'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/caseTransactionResponse"
+        '400':
+          description: 'Bad request'
+        '401':
+          description: 'Unauthorized'
+        '403':
+          description: 'Forbidden'
+        '404':
+          description: 'Not found'
+        '500':
+          description: 'Internal server error'
   /cases/{case-reference-number}:
     get:
       tags:

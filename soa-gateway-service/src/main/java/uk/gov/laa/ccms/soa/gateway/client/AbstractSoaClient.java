@@ -112,7 +112,7 @@ public abstract class AbstractSoaClient {
     // e.g. 2016051215540200506053
   }
 
-  protected void checkSoaCallSuccess(String serviceName, HeaderRSType headerRsType) {
+  protected void isSuccessOrThrowException(String serviceName, HeaderRSType headerRsType) {
     Optional.ofNullable(headerRsType)
         .map(HeaderRSType::getStatus)
         .filter(status -> Optional.ofNullable(status.getStatus())
