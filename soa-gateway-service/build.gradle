@@ -2,7 +2,12 @@ plugins {
     id 'uk.co.boothen.gradle.wsimport' version '0.25'
 }
 
-apply plugin: 'uk.gov.laa.ccms.springboot.laa-ccms-spring-boot-gradle-plugin'
+apply plugin: 'uk.gov.laa.springboot.laa-spring-boot-gradle-plugin'
+
+repositories {
+    mavenCentral()
+    maven { url 'https://build.shibboleth.net/maven/releases/' } // for opensaml
+}
 
 dependencies {
 
@@ -28,7 +33,7 @@ dependencies {
     implementation 'io.micrometer:micrometer-registry-prometheus'
 
     //Enable access token authentication
-    implementation 'uk.gov.laa.ccms.springboot:laa-ccms-spring-boot-starter-auth'
+    implementation 'uk.gov.laa.springboot:laa-spring-boot-starter-auth'
 
     //Enable Swagger UI
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.0'
