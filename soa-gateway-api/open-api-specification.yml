@@ -198,6 +198,14 @@ paths:
       parameters:
         - $ref: '#/components/parameters/soaGatewayUserLoginId'
         - $ref: '#/components/parameters/soaGatewayUserRole'
+        - name: 'case-update-type'
+          in: query
+          required: true
+          schema:
+            type: 'string'
+            enum: ['Undertaking', 'Outcome', 'ProviderDetails', 'CostAlloc',
+                   'MeansReassessment', 'LegalAmendment', 'CorrespondenceDtls']
+          example: 'ProviderDetails'
       responses:
         '200':
           description: 'Successful operation'
@@ -934,10 +942,14 @@ components:
           type: 'array'
           items:
             $ref: '#/components/schemas/proceedingDetail'
+        means_assessment_amended:
+          type: 'boolean'
         means_assessments:
           type: 'array'
           items:
             $ref: '#/components/schemas/assessmentResult'
+        merits_assessment_amended:
+          type: 'boolean'
         merits_assessments:
           type: 'array'
           items:

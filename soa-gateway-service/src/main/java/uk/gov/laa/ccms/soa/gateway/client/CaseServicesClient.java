@@ -19,6 +19,7 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseAdd;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseDetailsAdd;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseInfo;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.OutcomeElementType;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.Outcomes;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.UndertakingElementType;
 
 /**
@@ -33,14 +34,6 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.UndertakingEl
 @SuppressWarnings("unchecked")
 @Component
 public class CaseServicesClient extends AbstractSoaClient {
-
-  public static final String MESSAGE_TYPE_UNDERTAKING = "Undertaking";
-  public static final String MESSAGE_TYPE_OUTCOME = "Outcome";
-
-  /**
-   * The Message Type to be used for Means Assessments Legal Amendment amendments.
-   */
-  private static final String MESSAGE_TYPE_MEANS_ASSESSMENT_LEGAL_AMENDMENT = "LegalAmendment";
 
   private final String serviceName;
 
@@ -151,107 +144,16 @@ public class CaseServicesClient extends AbstractSoaClient {
    *
    * @param loggedInUserId      - the logged in UserId
    * @param loggedInUserType    - the logged in UserType
-   * @param caseDetail          - the case details to update
+   * @param caseUpdateRq        - the details of the case update request
    * @return Response object containing the result of the case creation.
    */
   public CaseUpdateRS updateCase(
-        String loggedInUserId,
-        String loggedInUserType,
-        CaseDetail caseDetail
+      String loggedInUserId,
+      String loggedInUserType,
+      CaseUpdateRQ caseUpdateRq
   ) {
     final String soapAction = String.format("%s/UpdateCaseApplication", serviceName);
-    CaseUpdateRQ caseUpdateRq = CASE_FACTORY.createCaseUpdateRQ();
     caseUpdateRq.setHeaderRQ(createHeaderRq(loggedInUserId, loggedInUserType));
-    /* UpdateApplicationDetails applicationDetails = caseUpdateRQ.getApplicationDetails();
-    applicationDetails.setApplicationAmendmentType(caseAdd.getCaseDetails()
-    .getApplicationDetails().getApplicationAmendmentType()); */
-
-
-    // MY UPDATES
-
-//    if (caseDetail != null) {
-//      recordHistory
-//          .setDateCreated(DateUtils.convertDateToXMLDateWithTimestamp(caseDetail.getDateCreated()));
-//    }
-//    result.setRecordHistory(recordHistory);
-
-    // TODO CCMSPUI-695 enter undertaking
-    boolean isUndertakingUpdate = false;
-
-    // TODO CCMSPUI-695 enter undertaking
-    boolean isOutcomeUpdate = false;
-
-    if (isUndertakingUpdate) {
-      caseUpdateRq.setUpdateMsgType(MESSAGE_TYPE_UNDERTAKING);
-      UndertakingElementType undertakingElementType = new UndertakingElementType();
-      undertakingElementType.setEnteredAmount(caseDetail.getUndertakingAmount());
-      undertakingElementType.setMaxAmount(caseDetail.getUndertakingMaximumAmount());
-      caseUpdateRq.setUndertakings(undertakingElementType);
-    } else if (isOutcomeUpdate) {
-      caseUpdateRq.setUpdateMsgType(MESSAGE_TYPE_OUTCOME);
-      caseUpdateRq.setPreCertificateCosts(caseDetail.getPreCertificateCosts());
-      caseUpdateRq.setLegalHelpCosts(caseDetail.getLegalHelpCosts());
-      OutcomeElementType outcomeElementType = new OutcomeElementType();
-      outcomeElementType.setProceedingCaseID(caseDetail.getApplicationDetails().proceedings().);
-      caseUpdateRq.setOutcomes(CaseToEBSCaseConverter.convertToEBSOutcome(caseOutcome));
-      caseUpdateRq.setAwards(CaseToEBSCaseConverter.convertToEBSAwards(caseOutcome));
-      caseUpdateRq.setDischargeStatus(CaseToEBSCaseConverter.convertToEBSDischargeCase(caseOutcome));
-      caseUpdateRq.setApplicationDetails(
-          CaseToEBSCaseConverter.convertToEBSOutcomeDetails(caseDetail, caseOutcome));
-    } else {
-      if (app != null && app.isAmendmentQuick()) {
-        caseUpdateRq.setUpdateMsgType(app.getAmendmentQuickType()); // Added 09/04
-      } else {
-        caseUpdateRq.setUpdateMsgType(MESSAGE_TYPE_MEANS_ASSESSMENT_LEGAL_AMENDMENT);
-      }
-    }
-
-    if (caseDetail != null) {
-      caseUpdateRq.setCaseReferenceNumber(caseDetail.getCaseReferenceNumber());
-    }
-    if (app != null) {
-      caseUpdateRq.setApplicationDetails(CaseToEBSCaseConverter
-          .convertToEBSApplicationDetails(app, caseDetail, userInfo.getCcmsUser()));
-      caseUpdateRq.setPriorAuthorities(CaseToEBSCaseConverter.addAmendmentPriorAuthorities(app, caseDetail));
-
-      boolean hasLinkedCases = !app.getLinkedCases().isEmpty();
-      if (hasLinkedCases) {
-        caseUpdateRq.setLinkedCases(
-            CaseToEBSCaseConverter.convertToEBSLinkedCasesUpdate(app.getLinkedCases()));
-      }
-    }
-
-    //To add caseDocs for uploaded document
-    if (app != null || caseOutcome != null) {
-      caseUpdateRq.setCaseDocs(convertToEbsCaseDocs(app, caseOutcome));
-    }
-
-    // MY UPDATES
-
-
-//    if (caseAdd.getCaseReferenceNumber() != null) {
-//      caseUpdateRq.setCaseReferenceNumber(caseAdd.getCaseReferenceNumber());
-//    }
-//
-//    if (caseAdd.getCaseDetails() != null) {
-//      CaseDetailsAdd caseDetails = caseAdd.getCaseDetails();
-//
-//      caseUpdateRq.setActualCaseStatus(caseUpdateRq.getActualCaseStatus());
-//      caseUpdateRq.setAwards(caseDetails.getAwards());
-//      caseUpdateRq.setCaseDocs(caseDetails.getCaseDocs());
-//      caseUpdateRq.setDischargeStatus(caseDetails.getDischargeStatus());
-//      caseUpdateRq.setLinkedCases(caseDetails.getLinkedCases());
-//      caseUpdateRq.setLegalHelpCosts(caseDetails.getLegalHelpCosts());
-//      caseUpdateRq.setMessages(caseUpdateRq.getMessages());
-//      caseUpdateRq.setCaseDocs(caseDetails.getCaseDocs());
-//      caseUpdateRq.setNotifications(caseUpdateRq.getNotifications());
-//      caseUpdateRq.setOutcomes(caseUpdateRq.getOutcomes());
-//      caseUpdateRq.setPreCertificateCosts(caseDetails.getPreCertificateCosts());
-//      caseUpdateRq.setPriorAuthorities(caseDetails.getPriorAuthorities());
-//      caseUpdateRq.setRecordHistory(caseDetails.getRecordHistory());
-//      caseUpdateRq.setUndertakings(caseUpdateRq.getUndertakings());
-//      caseUpdateRq.setUpdateMsgType(caseUpdateRq.getUpdateMsgType());
-//    }
 
     JAXBElement<CaseUpdateRS> response =
             (JAXBElement<CaseUpdateRS>) getWebServiceTemplate()

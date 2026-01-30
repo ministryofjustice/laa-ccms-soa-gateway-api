@@ -1,17 +1,25 @@
 package uk.gov.laa.ccms.soa.gateway.mapper;
 
+import java.math.BigInteger;
+import java.time.Instant;
+import java.util.Objects;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
+import uk.gov.laa.ccms.soa.gateway.model.PriorAuthorityAttribute;
 import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildApplicationDetails;
 import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildAwardElementType;
 import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildCase;
 import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildCaseDocsElementType;
-import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildCaseList;
 import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildCategoryOfLawElementType;
 import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildContactDetails;
 import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildCostAwardElementType;
@@ -42,9 +50,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import uk.gov.laa.ccms.soa.gateway.model.AddressDetail;
 import uk.gov.laa.ccms.soa.gateway.model.AssessmentResult;
 import uk.gov.laa.ccms.soa.gateway.model.AssessmentScreen;
@@ -89,41 +94,72 @@ import uk.gov.laa.ccms.soa.gateway.model.TransactionStatus;
 import uk.gov.laa.ccms.soa.gateway.model.UserDetail;
 import uk.gov.laa.ccms.soa.gateway.model.Valuation;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddUpdtStatusRS;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseInqRS;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseUpdateRQ;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ActionListElementType;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.AssessmentResultsElementType;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.AwardDetailElementType;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.AwardDetailElementType.AwardDetails;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.AwardElementType;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.AwardsElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.Case;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseAdd;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseDetailsAdd;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseDocs;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseDocsElementType;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseList;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CategoryOfLawElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.Client;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ContactDetails;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CostAwardElementType;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CostAwardElementType.LiableParties;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CostLimitationElementType;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CostLimitations;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ExtResourceElementType;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ExternalResources;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.FinancialAwardElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.LARDetails;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.LandAwardElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.LinkedCaseType;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.LinkedCaseUpdateType;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.LinkedCasesUpdate;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.MeansAssesments;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.MeritsAssesments;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.OtherAssetElementType;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.OtherParties;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.OtherPartyElementType;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.OtherPartyElementType.OtherPartyDetail;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.OtherPartyOrgType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.OtherPartyPersonType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.OutcomeDetailElementType;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.OutcomeElementType;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.Outcomes;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.PriorAuthorities;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.PriorAuthorityAttribElementType;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.PriorAuthorityDetElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.PriorAuthorityElementType;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ProceedingDetElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ProceedingElementType;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.Proceedings;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ProviderDetails;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.RecoveryAmountElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.RecoveryElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ScopeLimitationElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ServiceAddrElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.TimeRelatedElementType;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.UndertakingElementType;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.UpdateApplicationDetails;
 import uk.gov.legalservices.enterprise.common._1_0.common.Address;
 import uk.gov.legalservices.enterprise.common._1_0.common.AssesmentResultType;
+import uk.gov.legalservices.enterprise.common._1_0.common.AssessmentDetailType;
+import uk.gov.legalservices.enterprise.common._1_0.common.AssessmentScreenType;
 import uk.gov.legalservices.enterprise.common._1_0.common.Name;
 import uk.gov.legalservices.enterprise.common._1_0.common.OPAAttributesType;
+import uk.gov.legalservices.enterprise.common._1_0.common.OPAEntityType;
+import uk.gov.legalservices.enterprise.common._1_0.common.OPAGoalType;
+import uk.gov.legalservices.enterprise.common._1_0.common.OPAInstanceType;
+import uk.gov.legalservices.enterprise.common._1_0.common.OPAInstanceType.Attributes;
+import uk.gov.legalservices.enterprise.common._1_0.common.OPAResultType;
 import uk.gov.legalservices.enterprise.common._1_0.common.User;
+import uk.gov.legalservices.enterprise.common._1_0.header.HeaderRQType;
 import uk.gov.legalservices.enterprise.common._1_0.header.HeaderRSType;
 import uk.gov.legalservices.enterprise.common._1_0.header.Status;
 import uk.gov.legalservices.enterprise.common._1_0.header.StatusTextType;
@@ -136,6 +172,17 @@ public class CaseDetailsMapperTest {
 
   @InjectMocks
   CaseDetailsMapperImpl caseDetailsMapper;
+
+  DatatypeFactory df;
+
+  @BeforeEach
+  void setup() {
+    try {
+      df = DatatypeFactory.newInstance();
+    } catch (DatatypeConfigurationException e) {
+      throw new RuntimeException(e);
+    }
+  }
 
   @Test
   public void testToCaseDetail() {
@@ -859,7 +906,7 @@ public class CaseDetailsMapperTest {
         .certificateNumber("certnum")
         .contactDetails(new ContactDetail()) // tested elsewhere
         .contactName("name")
-        .courtOrderedMeansAssesment(Boolean.TRUE)
+        .courtOrderedMeansAssessment(Boolean.TRUE)
         .dateOfBirth(new Date())
         .employersName("empname")
         .employmentStatus("empstat")
@@ -901,7 +948,7 @@ public class CaseDetailsMapperTest {
     assertEquals(otherPartyPerson.getOrganizationName(), result.getOrganizationName());
     assertEquals(otherPartyPerson.getOtherInformation(), result.getOtherInformation());
     assertEquals(otherPartyPerson.getRelationToCase(), result.getRelationToCase());
-    assertEquals(otherPartyPerson.isCourtOrderedMeansAssesment(), result.isCourtOrderedMeansAssesment());
+    assertEquals(otherPartyPerson.isCourtOrderedMeansAssessment(), result.isCourtOrderedMeansAssesment());
     assertEquals(otherPartyPerson.isPartyLegalAidedInd(), result.isPartyLegalAidedInd());
     assertEquals(otherPartyPerson.isPublicFundingAppliedInd(), result.isPublicFundingAppliedInd());
   }
@@ -1478,10 +1525,1408 @@ public class CaseDetailsMapperTest {
     assertNull(result);
   }
 
+  @Test
+  @DisplayName("Test mapping CaseDetail to CaseUpdateRQ")
+  void testToCaseUpdateRq() throws DatatypeConfigurationException {
 
+    CaseDetail caseDetail = buildCaseDetail();
 
+    CaseUpdateRQ expected = buildExpectedCaseUpdateRq("caseUpdateType");
 
+    // Mock mappings handled by commonMapper
+    OtherPartyPersonType expectedOtherPerson = expected.getApplicationDetails().getOtherParties().getOtherParty().stream()
+        .map(OtherPartyElementType::getOtherPartyDetail)
+        .map(OtherPartyDetail::getPerson)
+        .filter(Objects::nonNull)
+        .findFirst()
+        .orElseThrow(() -> new IllegalStateException("Expected person other party not found"));
 
+    when(commonMapper.toAddress(eq(buildPersonAddressDetail()))).thenReturn(
+        expectedOtherPerson.getAddress());
 
+    OtherPartyOrgType expectedOtherOrganisation = expected.getApplicationDetails().getOtherParties().getOtherParty().stream()
+        .map(OtherPartyElementType::getOtherPartyDetail)
+        .map(OtherPartyDetail::getOrganization)
+        .filter(Objects::nonNull)
+        .findFirst()
+        .orElseThrow(() -> new IllegalStateException("Expected organisation other party not found"));
+
+    when(commonMapper.toAddress(eq(buildOrganisationAddressDetail()))).thenReturn(
+        expectedOtherOrganisation.getAddress());
+
+    when(commonMapper.toAddress(eq(caseDetail.getApplicationDetails().getCorrespondenceAddress()))).thenReturn(
+        expected.getApplicationDetails().getCorrespondenceAddress());
+
+    when(commonMapper.toYnString(true)).thenReturn("Y");
+
+    CaseUpdateRQ result = caseDetailsMapper.toCaseUpdateRq(caseDetail, "caseUpdateType");
+
+    assertThat(result).usingRecursiveComparison().isEqualTo(expected);
+  }
+
+  private CaseDetail buildCaseDetail() {
+    BaseClient baseClient = buildBaseClient();
+
+    SubmittedApplicationDetails submittedApplicationDetails
+        = buildSubmittedApplicationDetails(baseClient);
+
+    LinkedCase linkedCase = buildLinkedCase(baseClient);
+
+    Award award = buildAward();
+
+    PriorAuthority priorAuthority = buildPriorAuthority();
+
+    CaseStatus caseStatus = buildCaseStatus();
+
+    RecordHistory recordHistory = buildRecordHistory();
+
+    CaseDoc caseDoc = buildCaseDoc();
+
+    CaseDetail caseDetail = new CaseDetail();
+    caseDetail.setCaseReferenceNumber("caseReferenceNumber");
+    caseDetail.setApplicationDetails(submittedApplicationDetails);
+    caseDetail.setCertificateType("certificateType");
+    caseDetail.setCertificateDate(new Date());
+    caseDetail.setPreCertificateCosts(BigDecimal.valueOf(1000));
+    caseDetail.setLegalHelpCosts(BigDecimal.valueOf(2000));
+    caseDetail.setUndertakingAmount(BigDecimal.valueOf(3000));
+    caseDetail.setUndertakingMaximumAmount(BigDecimal.valueOf(4000));
+    caseDetail.setLinkedCases(Collections.singletonList(linkedCase));
+    caseDetail.setAwards(Collections.singletonList(award));
+    caseDetail.setPriorAuthorities(Collections.singletonList(priorAuthority));
+    caseDetail.setDischargeStatus(null);
+    caseDetail.setAvailableFunctions(List.of("availableFunction"));
+    caseDetail.setCaseStatus(caseStatus);
+    caseDetail.setRecordHistory(recordHistory);
+    caseDetail.setCaseDocs(Collections.singletonList(caseDoc));
+
+    return caseDetail;
+  }
+
+  private CaseUpdateRQ buildExpectedCaseUpdateRq(final String caseUpdateType) {
+
+    UpdateApplicationDetails applicationDetails = buildExpectedUpdateApplicationDetails();
+
+    LinkedCasesUpdate linkedCasesUpdate = buildExpectedLinkedCasesUpdate();
+
+    AwardsElementType awardsElementType = buildExpectedAwardsElementType();
+
+    PriorAuthorities priorAuthorities = buildExpectedPriorAuthorities();
+
+    Outcomes outcomes = buildExpectedOutcomes();
+
+    uk.gov.legalservices.enterprise.common._1_0.common.RecordHistory recordHistory = buildExpectedRecordHistory();
+
+    CaseDocs caseDocs = buildExpectedCaseDocs();
+
+    CaseUpdateRQ caseUpdateRQ = new CaseUpdateRQ();
+    caseUpdateRQ.setCaseReferenceNumber("caseReferenceNumber");
+    caseUpdateRQ.setUpdateMsgType(caseUpdateType);
+    caseUpdateRQ.setApplicationDetails(applicationDetails);
+    caseUpdateRQ.setPreCertificateCosts(BigDecimal.valueOf(1000L));
+    caseUpdateRQ.setLegalHelpCosts(BigDecimal.valueOf(2000L));
+    caseUpdateRQ.setActualCaseStatus(null);
+    caseUpdateRQ.setMessages(null);
+    caseUpdateRQ.setNotifications(null);
+    caseUpdateRQ.setLinkedCases(linkedCasesUpdate);
+    caseUpdateRQ.setAwards(awardsElementType);
+    caseUpdateRQ.setPriorAuthorities(priorAuthorities);
+    caseUpdateRQ.setDischargeStatus(null);
+    caseUpdateRQ.setUndertakings(null);
+    caseUpdateRQ.setOutcomes(outcomes);
+    caseUpdateRQ.setRecordHistory(recordHistory);
+    caseUpdateRQ.setCaseDocs(caseDocs);
+
+    return caseUpdateRQ;
+  }
+
+  private CaseDoc buildCaseDoc() {
+    CaseDoc caseDoc = new CaseDoc();
+    caseDoc.setCcmsDocumentId("ccmsDocumentId");
+    caseDoc.setDocumentSubject("documentSubject");
+
+    return caseDoc;
+  }
+
+  private CaseDocs buildExpectedCaseDocs() {
+    CaseDocsElementType caseDocsElementType = new CaseDocsElementType();
+    caseDocsElementType.setCCMSDocumentID("ccmsDocumentId");
+    caseDocsElementType.setDocumentSubject("documentSubject");
+
+    CaseDocs caseDocs = new CaseDocs();
+    caseDocs.getCaseDoc().add(caseDocsElementType);
+
+    return caseDocs;
+  }
+
+  private RecordHistory buildRecordHistory() {
+    UserDetail createdBy = new UserDetail();
+    createdBy.setUserType("createdByUserType");
+    createdBy.setUserName("createdByUserName");
+    createdBy.setUserLoginId("createdByUserLoginId");
+
+    UserDetail lastUpdatedBy = new UserDetail();
+    lastUpdatedBy.setUserType("lastUpdatedByUserType");
+    lastUpdatedBy.setUserName("lastUpdatedByUserName");
+    lastUpdatedBy.setUserLoginId("lastUpdatedByUserLoginId");
+
+    RecordHistory recordHistory = new RecordHistory();
+    recordHistory.setCreatedBy(createdBy);
+    recordHistory.setDateCreated(Date.from(Instant.parse("2001-12-01T12:00:00.00Z")));
+    recordHistory.setDateLastUpdated(Date.from(Instant.parse("2001-12-02T12:00:00.00Z")));
+    recordHistory.setLastUpdatedBy(lastUpdatedBy);
+
+    return recordHistory;
+  }
+
+  private uk.gov.legalservices.enterprise.common._1_0.common.RecordHistory buildExpectedRecordHistory() {
+    uk.gov.legalservices.enterprise.common._1_0.common.RecordHistory recordHistory = new uk.gov.legalservices.enterprise.common._1_0.common.RecordHistory();
+    recordHistory.setCreatedBy(null);
+    recordHistory.setDateCreated(df.newXMLGregorianCalendar("2001-12-01T12:00:00.000Z"));
+    recordHistory.setLastUpdatedBy(null);
+    recordHistory.setDateLastUpdated(df.newXMLGregorianCalendar("2001-12-02T12:00:00.000Z"));
+
+    return recordHistory;
+  }
+
+  private CaseStatus buildCaseStatus() {
+    CaseStatus caseStatus = new CaseStatus();
+    caseStatus.setActualCaseStatus("actualCaseStatus");
+    caseStatus.setDisplayCaseStatus("displayCaseStatus");
+    caseStatus.setStatusUpdateInd(false);
+
+    return caseStatus;
+  }
+
+  private SubmittedApplicationDetails buildSubmittedApplicationDetails(BaseClient baseClient) {
+    LarDetails larDetails = buildLarDetails();
+
+    ProviderDetail providerDetail = buildProviderDetail();
+
+    ProceedingDetail proceedingDetail = buildProceeding();
+
+    AddressDetail addressDetail = buildAddressDetail();
+
+    CategoryOfLaw categoryOfLaw = buildCategoryOfLaw();
+
+    AssessmentResult meansAssessment = buildAssessmentResult("means", 100, "2001-01-01T12:00:00.00Z");
+    AssessmentResult meritsAssessment = buildAssessmentResult("merits", 200, "2001-01-02T12:00:00.00Z");
+
+    OtherParty personOtherParty = buildPersonOtherParty();
+    OtherParty organisationOtherParty = buildOrganisationOtherParty();
+
+    ExternalResource externalResource = buildExternalResource();
+
+    final SubmittedApplicationDetails applicationDetails = new SubmittedApplicationDetails();
+    applicationDetails.setLarDetails(larDetails);
+    applicationDetails.setClient(baseClient);
+    applicationDetails.setPreferredAddress("preferredAddress");
+    applicationDetails.setCorrespondenceAddress(addressDetail);
+    applicationDetails.setProviderDetails(providerDetail);
+    applicationDetails.setCategoryOfLaw(categoryOfLaw);
+    applicationDetails.setOtherParties(List.of(personOtherParty, organisationOtherParty));
+    applicationDetails.setExternalResources(List.of(externalResource));
+    applicationDetails.setDateOfFirstAttendance(Date.from(Instant.parse("2001-02-01T12:00:00.00Z")));
+    applicationDetails.setPurposeOfApplication("purposeOfApplication");
+    applicationDetails.setFixedHearingDateInd(true);
+    applicationDetails.setDateOfHearing(Date.from(Instant.parse("2001-02-02T12:00:00.00Z")));
+    applicationDetails.setPurposeOfHearing("purposeOfHearing");
+    applicationDetails.setHighProfileCaseInd(true);
+    applicationDetails.setDevolvedPowersDate(Date.from(Instant.parse("2001-02-03T12:00:00.00Z")));
+    applicationDetails.setApplicationAmendmentType("applicationAmendmentType");
+    applicationDetails.setCertificateType("certificateType");
+    applicationDetails.setMeansAssessmentAmended(true);
+    applicationDetails.setMeansAssessments(List.of(meansAssessment));
+    applicationDetails.setMeritsAssessments(List.of(meritsAssessment));
+    applicationDetails.setMeritsAssessmentAmended(true);
+    applicationDetails.setProceedings(List.of(proceedingDetail));
+
+    return applicationDetails;
+  }
+
+  private UpdateApplicationDetails buildExpectedUpdateApplicationDetails() {
+    Address address = buildExpectedAddress();
+
+    ProviderDetails providerDetails = buildExpectedProviderDetails();
+
+    CategoryOfLawElementType categoryOfLawElementType = buildExpectedCategoryOfLawElementType();
+
+    OtherPartyElementType personOtherPartyElementType = buildExpectedPersonOtherPartyElementType();
+
+    OtherPartyElementType organisationOtherPartyElementType = buildExpectedOrgOtherPartyElementType();
+
+    OtherParties otherParties = new OtherParties();
+    otherParties.getOtherParty().addAll(List.of(personOtherPartyElementType, organisationOtherPartyElementType));
+
+    ExternalResources externalResources = buildExpectedExternalResources();
+
+    Proceedings proceedings = buildExpectedProceedings();
+
+    MeansAssesments meansAssessments = new MeansAssesments();
+    meansAssessments.getAssesmentResults().add(
+        buildExpectedAssesmentResultType("means", BigInteger.valueOf(100L), "2001-01-01T12:00:00.000Z"));
+
+    MeritsAssesments meritsAssessments = new MeritsAssesments();
+    meritsAssessments.getAssesmentResults().add(
+        buildExpectedAssesmentResultType("merits", BigInteger.valueOf(200L), "2001-01-02T12:00:00.000Z"));
+
+    UndertakingElementType undertakingElementType = buildExpectedUndertakingElementType();
+
+    LARDetails larDetails = buildExpectedLARDetails();
+
+    UpdateApplicationDetails applicationDetails = new UpdateApplicationDetails();
+    applicationDetails.setPreferredAddress("preferredAddress");
+    applicationDetails.setCorrespondenceAddress(address);
+    applicationDetails.setProviderDetails(providerDetails);
+    applicationDetails.setCategoryOfLaw(categoryOfLawElementType);
+    applicationDetails.setOtherParties(otherParties);
+    applicationDetails.setExternalResources(externalResources);
+    applicationDetails.setProceedings(proceedings);
+    applicationDetails.setMeansAssesments(meansAssessments);
+    applicationDetails.setMeritsAssesments(meritsAssessments);
+    applicationDetails.setUndertakings(undertakingElementType);
+    applicationDetails.setDateOfFirstAttendance(df.newXMLGregorianCalendar("2001-02-01T12:00:00.000Z"));
+    applicationDetails.setPurposeOfApplication("purposeOfApplication");
+    applicationDetails.setFixedHearingDateInd(true);
+    applicationDetails.setDateOfHearing(df.newXMLGregorianCalendar("2001-02-02T12:00:00.000Z"));
+    applicationDetails.setPurposeOfHearing("purposeOfHearing");
+    applicationDetails.setHighProfileCaseInd(true);
+    applicationDetails.setSupervisorContactID("supervisorContactId");
+    applicationDetails.setFeeEarnerContactID("feeEarnerContactId");
+    applicationDetails.setDevolvedPowersDate(df.newXMLGregorianCalendar("2001-02-03T12:00:00.000Z"));
+    applicationDetails.setApplicationAmendmentType("applicationAmendmentType");
+    applicationDetails.setLARDetails(larDetails);
+    applicationDetails.setCertificateType("certificateType");
+
+    return applicationDetails;
+  }
+
+  private PriorAuthority buildPriorAuthority() {
+    PriorAuthorityAttribute priorAuthorityAttribute = new PriorAuthorityAttribute();
+    priorAuthorityAttribute.setName("name");
+    priorAuthorityAttribute.setValue("value");
+
+    PriorAuthority priorAuthority = new PriorAuthority();
+    priorAuthority.setDetails(List.of(priorAuthorityAttribute));
+    priorAuthority.setPriorAuthorityType("priorAuthorityType");
+    priorAuthority.setDescription("description");
+    priorAuthority.setAssessedAmount(BigDecimal.valueOf(1010));
+    priorAuthority.setDecisionStatus("decisionStatus");
+    priorAuthority.setReasonForRequest("reasonForRequest");
+    priorAuthority.setRequestAmount(BigDecimal.valueOf(1010));
+
+    return priorAuthority;
+  }
+
+  private PriorAuthorities buildExpectedPriorAuthorities() {
+    PriorAuthorityAttribElementType priorAuthorityAttribElementType = new PriorAuthorityAttribElementType();
+    priorAuthorityAttribElementType.setName("name");
+    priorAuthorityAttribElementType.setValue("value");
+
+    PriorAuthorityDetElementType priorAuthorityDetElementType = new PriorAuthorityDetElementType();
+    priorAuthorityDetElementType.getAttribute().add(priorAuthorityAttribElementType);
+
+    PriorAuthorityElementType priorAuthorityElementType = new PriorAuthorityElementType();
+    priorAuthorityElementType.setPriorAuthorityType("priorAuthorityType");
+    priorAuthorityElementType.setDescription("description");
+    priorAuthorityElementType.setReasonForRequest("reasonForRequest");
+    priorAuthorityElementType.setRequestAmount(BigDecimal.valueOf(1010L));
+    priorAuthorityElementType.setDecisionStatus("decisionStatus");
+    priorAuthorityElementType.setAssessedAmount(BigDecimal.valueOf(1010L));
+    priorAuthorityElementType.setDetails(priorAuthorityDetElementType);
+
+    PriorAuthorities priorAuthorities = new PriorAuthorities();
+    priorAuthorities.getPriorAuthority().add(priorAuthorityElementType);
+
+    return priorAuthorities;
+  }
+
+  private Award buildAward() {
+    CostAward costAward = buildCostAward();
+
+    FinancialAward financialAward = buildFinancialAward();
+
+    LandAward landAward = buildLandAward();
+
+    OtherAsset otherAsset = buildOtherAsset();
+
+    Award award = new Award();
+    award.setAwardCategory("awardCategory");
+    award.setAwardType("awardType");
+    award.setAwardId("awardId");
+    award.setCostAward(costAward);
+    award.setFinancialAward(financialAward);
+    award.setDeleteAllowed(false);
+    award.setLandAward(landAward);
+    award.setOtherAsset(otherAsset);
+    award.setUpdateAllowed(false);
+
+    return award;
+  }
+
+  private AwardsElementType buildExpectedAwardsElementType() {
+    CostAwardElementType costAwardElementType = buildExpectedCostAwardElementType();
+
+    FinancialAwardElementType financialAwardElementType = buildExpectedFinancialAwardElementType();
+
+    LandAwardElementType landAwardElementType = buildExpectedLandAwardElementType();
+
+    OtherAssetElementType otherAssetElementType = buildExpectedOtherAssetElementType();
+
+    AwardDetails awardDetails = new AwardDetails();
+    awardDetails.setCostAward(costAwardElementType);
+    awardDetails.setFinancialAward(financialAwardElementType);
+    awardDetails.setLandAward(landAwardElementType);
+    awardDetails.setOtherAsset(otherAssetElementType);
+
+    AwardDetailElementType awardDetailElementType = new AwardDetailElementType();
+    awardDetailElementType.setAwardCategory("awardCategory");
+    awardDetailElementType.setAwardDetails(awardDetails);
+
+    AwardElementType awardElementType = new AwardElementType();
+    awardElementType.setAwardID("awardId");
+    awardElementType.setAwardType("awardType");
+    awardElementType.setDeleteAllowed(false);
+    awardElementType.setUpdateAllowed(false);
+    awardElementType.setAwardDetails(awardDetailElementType);
+
+    AwardsElementType awardsElementType = new AwardsElementType();
+    awardsElementType.getAward().add(awardElementType);
+
+    return awardsElementType;
+  }
+
+  private LandAward buildLandAward() {
+    ServiceAddress laServiceAddress = new ServiceAddress();
+    laServiceAddress.setAddressLine1("addressLine1");
+    laServiceAddress.setAddressLine2("addressLine2");
+    laServiceAddress.setAddressLine3("addressLine3");
+
+    TimeRelatedAward laTimeRelatedAward = new TimeRelatedAward();
+    laTimeRelatedAward.setAmount(BigDecimal.valueOf(1010));
+    laTimeRelatedAward.setAwardDate(Date.from(Instant.parse("2001-06-01T12:00:00.00Z")));
+    laTimeRelatedAward.setAwardType("awardType");
+    laTimeRelatedAward.setOtherDetails("otherDetails");
+    laTimeRelatedAward.setDescription("description");
+    laTimeRelatedAward.setAwardTriggeringEvent("awardTriggeringEvent");
+
+    Valuation laValuation = new Valuation();
+    laValuation.setAmount(BigDecimal.valueOf(1010));
+    laValuation.setCriteria("criteria");
+    laValuation.setDate(Date.from(Instant.parse("2001-07-01T12:00:00.00Z")));
+
+    LandAward landAward = new LandAward();
+    landAward.setAwardedBy("awardedBy");
+    landAward.setAwardedPercentage(BigDecimal.valueOf(1010));
+    landAward.setDescription("description");
+    landAward.setEquity("equity");
+    landAward.setDisputedPercentage(BigDecimal.valueOf(1010));
+    landAward.setLandChargeRegistration("landChargeRegistration");
+    landAward.setMortgageAmountDue(BigDecimal.valueOf(1010));
+    landAward.setNoRecoveryDetails("noRecoveryDetails");
+    landAward.setOtherProprietors(List.of("otherProprietor"));
+    landAward.setPropertyAddress(laServiceAddress);
+    landAward.setRegistrationRef("registrationRef");
+    landAward.setStatChargeExemptReason("statChargeExemptReason");
+    landAward.setTimeRelatedAward(laTimeRelatedAward);
+    landAward.setTitleNo("titleNo");
+    landAward.setValuation(laValuation);
+    landAward.setOrderDate(Date.from(Instant.parse("2001-08-01T12:00:00.00Z")));
+    landAward.setRecovery("recovery");
+
+    return landAward;
+  }
+
+  private LandAwardElementType buildExpectedLandAwardElementType() {
+    ServiceAddrElementType laServiceAddrElementType = new ServiceAddrElementType();
+    laServiceAddrElementType.setAddressLine1("addressLine1");
+    laServiceAddrElementType.setAddressLine2("addressLine2");
+    laServiceAddrElementType.setAddressLine3("addressLine3");
+
+    LandAwardElementType.Valuation laValuation = new LandAwardElementType.Valuation();
+    laValuation.setAmount(BigDecimal.valueOf(1010L));
+    laValuation.setCriteria("criteria");
+    laValuation.setDate(df.newXMLGregorianCalendar("2001-07-01T12:00:00.000Z"));
+
+    LandAwardElementType.OtherProprietors laOtherProprietors = new LandAwardElementType.OtherProprietors();
+    laOtherProprietors.getOtherPartyID().add("otherProprietor");
+
+    TimeRelatedElementType laTimeRelatedElement = new TimeRelatedElementType();
+    laTimeRelatedElement.setAwardType("awardType");
+    laTimeRelatedElement.setDescription("description");
+    laTimeRelatedElement.setAmount(BigDecimal.valueOf(1010L));
+    laTimeRelatedElement.setAwardTrigeringEvent("awardTriggeringEvent");
+    laTimeRelatedElement.setAwardDate(df.newXMLGregorianCalendar("2001-06-01T12:00:00.000Z"));
+    laTimeRelatedElement.setOtherDetails("otherDetails");
+
+    LandAwardElementType landAwardElementType = new LandAwardElementType();
+    landAwardElementType.setOrderDate(df.newXMLGregorianCalendar("2001-08-01T12:00:00.000Z"));
+    landAwardElementType.setDescription("description");
+    landAwardElementType.setTitleNo("titleNo");
+    landAwardElementType.setPropertyAddress(laServiceAddrElementType);
+    landAwardElementType.setValuation(laValuation);
+    landAwardElementType.setDisputedPercentage(BigDecimal.valueOf(1010L));
+    landAwardElementType.setAwardedPercentage(BigDecimal.valueOf(1010L));
+    landAwardElementType.setMortgageAmountDue(BigDecimal.valueOf(1010L));
+    landAwardElementType.setEquity("equity");
+    landAwardElementType.setAwardedBy("awardedBy");
+    landAwardElementType.setRecovery("recovery");
+    landAwardElementType.setNoRecoveryDetails("noRecoveryDetails");
+    landAwardElementType.setStatChargeExemptReason("statChargeExemptReason");
+    landAwardElementType.setLandChargeRegistration("landChargeRegistration");
+    landAwardElementType.setRegistrationRef("registrationRef");
+    landAwardElementType.setOtherProprietors(laOtherProprietors);
+    landAwardElementType.setTimeRelatedAward(laTimeRelatedElement);
+
+    return landAwardElementType;
+  }
+
+  private OtherAsset buildOtherAsset() {
+    TimeRelatedAward oaTimeRelatedAward = new TimeRelatedAward();
+    oaTimeRelatedAward.setAmount(BigDecimal.valueOf(1010));
+    oaTimeRelatedAward.setAwardDate(Date.from(Instant.parse("2001-09-01T12:00:00.00Z")));
+    oaTimeRelatedAward.setAwardType("awardType");
+    oaTimeRelatedAward.setOtherDetails("otherDetails");
+    oaTimeRelatedAward.setDescription("description");
+    oaTimeRelatedAward.setAwardTriggeringEvent("awardTriggeringEvent");
+
+    Valuation oaValuation = new Valuation();
+    oaValuation.setAmount(BigDecimal.valueOf(1010));
+    oaValuation.setCriteria("criteria");
+    oaValuation.setDate(Date.from(Instant.parse("2001-10-01T12:00:00.00Z")));
+
+    OtherAsset otherAsset = new OtherAsset();
+    otherAsset.setAwardedBy("awardedBy");
+    otherAsset.setAwardedAmount(BigDecimal.valueOf(1010));
+    otherAsset.setAwardedPercentage(BigDecimal.valueOf(1010));
+    otherAsset.setDescription("description");
+    otherAsset.setDisputedAmount(BigDecimal.valueOf(1010));
+    otherAsset.setDisputedPercentage(BigDecimal.valueOf(1010));
+    otherAsset.setNoRecoveryDetails("noRecoveryDetails");
+    otherAsset.setStatChargeExemptReason("statChargeExemptReason");
+    otherAsset.setTimeRelatedAward(oaTimeRelatedAward);
+    otherAsset.setValuation(oaValuation);
+    otherAsset.setOrderDate(Date.from(Instant.parse("2001-11-01T12:00:00.00Z")));
+    otherAsset.setRecovery("recovery");
+    otherAsset.setValuation(oaValuation);
+    otherAsset.setHeldBy(List.of("heldBy"));
+    otherAsset.recoveredAmount(BigDecimal.valueOf(1010));
+    otherAsset.recoveredPercentage(BigDecimal.valueOf(1010));
+
+    return otherAsset;
+  }
+
+  private OtherAssetElementType buildExpectedOtherAssetElementType() {
+    OtherAssetElementType.Valuation oaValuation = new OtherAssetElementType.Valuation();
+    oaValuation.setAmount(BigDecimal.valueOf(1010L));
+    oaValuation.setCriteria("criteria");
+    oaValuation.setDate(df.newXMLGregorianCalendar("2001-10-01T12:00:00.000Z"));
+
+    OtherAssetElementType.HeldBy oaHeldBy = new OtherAssetElementType.HeldBy();
+    oaHeldBy.getOtherPartyID().add("heldBy");
+
+    TimeRelatedElementType oaTimeRelatedElement = new TimeRelatedElementType();
+    oaTimeRelatedElement.setAwardType("awardType");
+    oaTimeRelatedElement.setDescription("description");
+    oaTimeRelatedElement.setAmount(BigDecimal.valueOf(1010L));
+    oaTimeRelatedElement.setAwardTrigeringEvent("awardTriggeringEvent");
+    oaTimeRelatedElement.setAwardDate(df.newXMLGregorianCalendar("2001-09-01T12:00:00.000Z"));
+    oaTimeRelatedElement.setOtherDetails("otherDetails");
+
+    OtherAssetElementType otherAssetElementType = new OtherAssetElementType();
+    otherAssetElementType.setOrderDate(df.newXMLGregorianCalendar("2001-11-01T12:00:00.000Z"));
+    otherAssetElementType.setDescription("description");
+    otherAssetElementType.setValuation(oaValuation);
+    otherAssetElementType.setAwardedAmount(BigDecimal.valueOf(1010L));
+    otherAssetElementType.setAwardedPercentage(BigDecimal.valueOf(1010L));
+    otherAssetElementType.setRecoveredAmount(BigDecimal.valueOf(1010L));
+    otherAssetElementType.setRecoveredPercentage(BigDecimal.valueOf(1010L));
+    otherAssetElementType.setDisputedAmount(BigDecimal.valueOf(1010L));
+    otherAssetElementType.setDisputedPercentage(BigDecimal.valueOf(1010L));
+    otherAssetElementType.setRecoveredPercentage(BigDecimal.valueOf(1010L));
+    otherAssetElementType.setAwardedBy("awardedBy");
+    otherAssetElementType.setRecovery("recovery");
+    otherAssetElementType.setNoRecoveryDetails("noRecoveryDetails");
+    otherAssetElementType.setHeldBy(oaHeldBy);
+    otherAssetElementType.setTimeRelatedAward(oaTimeRelatedElement);
+    otherAssetElementType.setStatChargeExemptReason("statChargeExemptReason");
+
+    return otherAssetElementType;
+  }
+
+  private FinancialAward buildFinancialAward() {
+    OfferedAmount faOfferedAmount = new OfferedAmount();
+    faOfferedAmount.setAmount(BigDecimal.valueOf(1001));
+    faOfferedAmount.setConditionsOfOffer("conditionsOfOffer");
+
+    RecoveryAmount faClient = new RecoveryAmount();
+    faClient.setAmount(BigDecimal.valueOf(1001));
+    faClient.setDateReceived(Date.from(Instant.parse("2001-03-01T12:00:00.00Z")));
+    faClient.setPaidToLsc(BigDecimal.valueOf(1001));
+
+    RecoveryAmount faCourt = new RecoveryAmount();
+    faCourt.setAmount(BigDecimal.valueOf(1001));
+    faCourt.setDateReceived(Date.from(Instant.parse("2001-03-01T12:00:00.00Z")));
+    faCourt.setPaidToLsc(BigDecimal.valueOf(1001));
+
+    RecoveryAmount faSolicitor = new RecoveryAmount();
+    faSolicitor.setAmount(BigDecimal.valueOf(1001));
+    faSolicitor.setDateReceived(Date.from(Instant.parse("2001-03-01T12:00:00.00Z")));
+    faSolicitor.setPaidToLsc(BigDecimal.valueOf(1001));
+
+    RecoveredAmount faRecoveredAmount = new RecoveredAmount();
+    faRecoveredAmount.setClient(faClient);
+    faRecoveredAmount.setCourt(faCourt);
+    faRecoveredAmount.setSolicitor(faSolicitor);
+
+    Recovery faRecovery = new Recovery();
+    faRecovery.setAwardValue(BigDecimal.valueOf(1010));
+    faRecovery.setOfferedAmount(faOfferedAmount);
+    faRecovery.setLeaveOfCourtReqdInd(false);
+    faRecovery.setRecoveredAmount(faRecoveredAmount);
+    faRecovery.setUnRecoveredAmount(BigDecimal.valueOf(1010));
+
+    ServiceAddress faServiceAddress = new ServiceAddress();
+    faServiceAddress.setAddressLine1("addressLine1");
+    faServiceAddress.setAddressLine2("addressLine2");
+    faServiceAddress.setAddressLine3("addressLine3");
+
+    FinancialAward financialAward = new FinancialAward();
+    financialAward.setAwardedBy("awardedBy");
+    financialAward.setAwardJustifications("awardJustifications");
+    financialAward.setInterimAward(BigDecimal.valueOf(1011));
+    financialAward.setStatutoryChangeReason("statutoryChangeReason");
+    financialAward.setLiableParties(List.of("liableParty"));
+    financialAward.setOrderDate(Date.from(Instant.parse("2001-05-01T12:00:00.00Z")));
+    financialAward.setOrderDateServed(Date.from(Instant.parse("2001-05-02T12:00:00.00Z")));
+    financialAward.setOtherDetails("otherDetails");
+    financialAward.setRecovery(faRecovery);
+    financialAward.setServiceAddress(faServiceAddress);
+    financialAward.amount(BigDecimal.valueOf(1010));
+
+    return financialAward;
+  }
+
+  private FinancialAwardElementType buildExpectedFinancialAwardElementType() {
+    ServiceAddrElementType faServiceAddrElementType = new ServiceAddrElementType();
+    faServiceAddrElementType.setAddressLine1("addressLine1");
+    faServiceAddrElementType.setAddressLine2("addressLine2");
+    faServiceAddrElementType.setAddressLine3("addressLine3");
+
+    RecoveryAmountElementType faSolicitor = new RecoveryAmountElementType();
+    faSolicitor.setAmount(BigDecimal.valueOf(1001L));
+    faSolicitor.setDateReceived(df.newXMLGregorianCalendar("2001-03-01T12:00:00.000Z"));
+    faSolicitor.setPaidToLSC(BigDecimal.valueOf(1001L));
+
+    RecoveryAmountElementType faCourt = new RecoveryAmountElementType();
+    faCourt.setAmount(BigDecimal.valueOf(1001L));
+    faCourt.setDateReceived(df.newXMLGregorianCalendar("2001-03-01T12:00:00.000Z"));
+    faCourt.setPaidToLSC(BigDecimal.valueOf(1001L));
+
+    RecoveryAmountElementType faClient = new RecoveryAmountElementType();
+    faClient.setAmount(BigDecimal.valueOf(1001L));
+    faClient.setDateReceived(df.newXMLGregorianCalendar("2001-03-01T12:00:00.000Z"));
+    faClient.setPaidToLSC(BigDecimal.valueOf(1001L));
+
+    RecoveryElementType.RecoveredAmount faRecoveredAmount = new RecoveryElementType.RecoveredAmount();
+    faRecoveredAmount.setSolicitor(faSolicitor);
+    faRecoveredAmount.setCourt(faCourt);
+    faRecoveredAmount.setClient(faClient);
+
+    RecoveryElementType.OfferedAmount faOfferedAmount = new RecoveryElementType.OfferedAmount();
+    faOfferedAmount.setAmount(BigDecimal.valueOf(1001L));
+    faOfferedAmount.setConditionsOfOffer("conditionsOfOffer");
+
+    RecoveryElementType faRecoveryElementType = new RecoveryElementType();
+    faRecoveryElementType.setAwardValue(BigDecimal.valueOf(1010L));
+    faRecoveryElementType.setRecoveredAmount(faRecoveredAmount);
+    faRecoveryElementType.setUnRecoveredAmount(BigDecimal.valueOf(1010L));
+    faRecoveryElementType.setLeaveOfCourtReqdInd(false);
+    faRecoveryElementType.setOfferedAmount(faOfferedAmount);
+
+    FinancialAwardElementType.LiableParties liableParties = new FinancialAwardElementType.LiableParties();
+    liableParties.getOtherPartyID().add("liableParty");
+
+    FinancialAwardElementType financialAwardElementType = new FinancialAwardElementType();
+    financialAwardElementType.setOrderDate(df.newXMLGregorianCalendar("2001-05-01T12:00:00.000Z"));
+    financialAwardElementType.setAmount(BigDecimal.valueOf(1010L));
+    financialAwardElementType.setInterimAward(BigDecimal.valueOf(1011L));
+    financialAwardElementType.setAwardedBy("awardedBy");
+    financialAwardElementType.setAwardJustifications("awardJustifications");
+    financialAwardElementType.setStatutoryChangeReason("statutoryChangeReason");
+    financialAwardElementType.setOtherDetails("otherDetails");
+    financialAwardElementType.setLiableParties(liableParties);
+    financialAwardElementType.setOrderDateServed(df.newXMLGregorianCalendar("2001-05-02T12:00:00.000Z"));
+    financialAwardElementType.setServiceAddress(faServiceAddrElementType);
+    financialAwardElementType.setRecovery(faRecoveryElementType);
+
+    return financialAwardElementType;
+  }
+
+  private CostAward buildCostAward() {
+    OfferedAmount offeredAmount = new OfferedAmount();
+    offeredAmount.setAmount(BigDecimal.valueOf(1001));
+    offeredAmount.setConditionsOfOffer("conditionsOfOffer");
+
+    RecoveryAmount client = new RecoveryAmount();
+    client.setAmount(BigDecimal.valueOf(1001));
+    client.setDateReceived(Date.from(Instant.parse("2001-03-01T12:00:00.00Z")));
+    client.setPaidToLsc(BigDecimal.valueOf(1001));
+
+    RecoveryAmount court = new RecoveryAmount();
+    court.setAmount(BigDecimal.valueOf(1001));
+    court.setDateReceived(Date.from(Instant.parse("2001-03-01T12:00:00.00Z")));
+    court.setPaidToLsc(BigDecimal.valueOf(1001));
+
+    RecoveryAmount solicitor = new RecoveryAmount();
+    solicitor.setAmount(BigDecimal.valueOf(1001));
+    solicitor.setDateReceived(Date.from(Instant.parse("2001-03-01T12:00:00.00Z")));
+    solicitor.setPaidToLsc(BigDecimal.valueOf(1001));
+
+    RecoveredAmount recoveredAmount = new RecoveredAmount();
+    recoveredAmount.setClient(client);
+    recoveredAmount.setCourt(court);
+    recoveredAmount.setSolicitor(solicitor);
+
+    Recovery recovery = new Recovery();
+    recovery.setAwardValue(BigDecimal.valueOf(1010));
+    recovery.setOfferedAmount(offeredAmount);
+    recovery.setLeaveOfCourtReqdInd(false);
+    recovery.setRecoveredAmount(recoveredAmount);
+    recovery.setUnRecoveredAmount(BigDecimal.valueOf(1010));
+
+    ServiceAddress serviceAddress = new ServiceAddress();
+    serviceAddress.setAddressLine1("addressLine1");
+    serviceAddress.setAddressLine2("addressLine2");
+    serviceAddress.setAddressLine3("addressLine3");
+
+    CostAward costAward = new CostAward();
+    costAward.setAwardedBy("awardedBy");
+    costAward.setCertificateCostRateLsc(BigDecimal.valueOf(1100));
+    costAward.setCertificateCostRateMarket(BigDecimal.valueOf(1200));
+    costAward.setInterestAwardedRate(BigDecimal.valueOf(1300));
+    costAward.setInterestAwardedStartDate(Date.from(Instant.parse("2001-04-01T12:00:00.00Z")));
+    costAward.setCourtAssessmentStatus("courtAssessmentStatus");
+    costAward.setLiableParties(List.of("liableParty"));
+    costAward.setOrderDate(Date.from(Instant.parse("2001-04-02T12:00:00.00Z")));
+    costAward.setOrderDateServed(Date.from(Instant.parse("2001-04-03T12:00:00.00Z")));
+    costAward.setOtherDetails("otherDetails");
+    costAward.setPreCertificateAwardLsc(BigDecimal.valueOf(1400));
+    costAward.setPreCertificateAwardOth(BigDecimal.valueOf(1500));
+    costAward.setRecovery(recovery);
+    costAward.setServiceAddress(serviceAddress);
+
+    return costAward;
+  }
+
+  private CostAwardElementType buildExpectedCostAwardElementType() {
+    ServiceAddrElementType caServiceAddrElementType = new ServiceAddrElementType();
+    caServiceAddrElementType.setAddressLine1("addressLine1");
+    caServiceAddrElementType.setAddressLine2("addressLine2");
+    caServiceAddrElementType.setAddressLine3("addressLine3");
+
+    RecoveryAmountElementType caSolicitor = new RecoveryAmountElementType();
+    caSolicitor.setAmount(BigDecimal.valueOf(1001L));
+    caSolicitor.setDateReceived(df.newXMLGregorianCalendar("2001-03-01T12:00:00.000Z"));
+    caSolicitor.setPaidToLSC(BigDecimal.valueOf(1001L));
+
+    RecoveryAmountElementType caCourt = new RecoveryAmountElementType();
+    caCourt.setAmount(BigDecimal.valueOf(1001L));
+    caCourt.setDateReceived(df.newXMLGregorianCalendar("2001-03-01T12:00:00.000Z"));
+    caCourt.setPaidToLSC(BigDecimal.valueOf(1001L));
+
+    RecoveryAmountElementType caClient = new RecoveryAmountElementType();
+    caClient.setAmount(BigDecimal.valueOf(1001L));
+    caClient.setDateReceived(df.newXMLGregorianCalendar("2001-03-01T12:00:00.000Z"));
+    caClient.setPaidToLSC(BigDecimal.valueOf(1001L));
+
+    RecoveryElementType.RecoveredAmount caRecoveredAmount = new RecoveryElementType.RecoveredAmount();
+    caRecoveredAmount.setSolicitor(caSolicitor);
+    caRecoveredAmount.setCourt(caCourt);
+    caRecoveredAmount.setClient(caClient);
+
+    RecoveryElementType.OfferedAmount caOfferedAmount = new RecoveryElementType.OfferedAmount();
+    caOfferedAmount.setAmount(BigDecimal.valueOf(1001L));
+    caOfferedAmount.setConditionsOfOffer("conditionsOfOffer");
+
+    RecoveryElementType caRecoveryElementType = new RecoveryElementType();
+    caRecoveryElementType.setAwardValue(BigDecimal.valueOf(1010L));
+    caRecoveryElementType.setRecoveredAmount(caRecoveredAmount);
+    caRecoveryElementType.setUnRecoveredAmount(BigDecimal.valueOf(1010L));
+    caRecoveryElementType.setLeaveOfCourtReqdInd(false);
+    caRecoveryElementType.setOfferedAmount(caOfferedAmount);
+
+    CostAwardElementType.LiableParties caLiableParties = new CostAwardElementType.LiableParties();
+    caLiableParties.getOtherParyID().add("liableParty");
+
+    CostAwardElementType costAwardElementType = new CostAwardElementType();
+    costAwardElementType.setOrderDate(df.newXMLGregorianCalendar("2001-04-02T12:00:00.000Z"));
+    costAwardElementType.setCourtAssessmentStatus("courtAssessmentStatus");
+    costAwardElementType.setPreCertificateAwardLSC(BigDecimal.valueOf(1400L));
+    costAwardElementType.setPreCertificateAwardOth(BigDecimal.valueOf(1500L));
+    costAwardElementType.setCertificateCostRateLSC(BigDecimal.valueOf(1100L));
+    costAwardElementType.setCertificateCostRateMarket(BigDecimal.valueOf(1200L));
+    costAwardElementType.setAwardedBy("awardedBy");
+    costAwardElementType.setInterestAwardedRate(BigDecimal.valueOf(1300L));
+    costAwardElementType.setInterestAwardedStartDate(df.newXMLGregorianCalendar("2001-04-01T12:00:00.000Z"));
+    costAwardElementType.setOtherDetails("otherDetails");
+    costAwardElementType.setLiableParties(caLiableParties);
+    costAwardElementType.setOrderDateServed(df.newXMLGregorianCalendar("2001-04-03T12:00:00.000Z"));
+    costAwardElementType.setServiceAddress(caServiceAddrElementType);
+    costAwardElementType.setRecovery(caRecoveryElementType);
+
+    return costAwardElementType;
+  }
+
+  private LinkedCase buildLinkedCase(BaseClient baseClient) {
+    LinkedCase linkedCase = new LinkedCase();
+    linkedCase.setCaseStatus("caseStatus");
+    linkedCase.setCaseReferenceNumber("caseReferenceNumber");
+    linkedCase.setClient(baseClient);
+    linkedCase.setLinkType("linkType");
+    linkedCase.setCategoryOfLawCode("categoryOfLawCode");
+    linkedCase.setCategoryOfLawDesc("categoryOfLawDesc");
+    linkedCase.setFeeEarnerId("feeEarnerId");
+    linkedCase.setFeeEarnerName("feeEarnerName");
+    linkedCase.setProviderReferenceNumber("providerReferenceNumber");
+    linkedCase.setPublicFundingAppliedInd(false);
+
+    return linkedCase;
+  }
+
+  private LinkedCasesUpdate buildExpectedLinkedCasesUpdate() {
+    LinkedCaseUpdateType linkedCaseUpdateType = new LinkedCaseUpdateType();
+    linkedCaseUpdateType.setCaseReferenceNumber("caseReferenceNumber");
+    linkedCaseUpdateType.setLinkType("linkType");
+    linkedCaseUpdateType.setPublicFundingAppliedInd(false);
+
+    LinkedCasesUpdate linkedCasesUpdate = new LinkedCasesUpdate();
+    linkedCasesUpdate.getLinkedCase().add(linkedCaseUpdateType);
+
+    return linkedCasesUpdate;
+  }
+
+  private ExternalResource buildExternalResource() {
+    CostLimitation costLimitation = new CostLimitation();
+    costLimitation.setCostLimitId("costLimitId");
+    costLimitation.setBillingProviderId("billingProviderId");
+    costLimitation.setBillingProviderName("billingProviderName");
+    costLimitation.setCostCategory("costCategory");
+    costLimitation.setPaidToDate(BigDecimal.valueOf(1010));
+    costLimitation.setAmount(BigDecimal.valueOf(1010));
+
+    ExternalResource externalResource = new ExternalResource();
+    externalResource.setExternalResourceRef("externalResourceRef");
+    externalResource.setExternalResourceType("externalResourceType");
+    externalResource.setDateInstructed(Date.from(Instant.parse("2001-04-01T12:00:00.00Z")));
+    externalResource.setCostCeiling(List.of(costLimitation));
+    externalResource.setLocation("location");
+    externalResource.setChambers("chambers");
+
+    return externalResource;
+  }
+
+  private ExternalResources buildExpectedExternalResources() {
+    CostLimitationElementType erCostLimitationElementType = new CostLimitationElementType();
+    erCostLimitationElementType.setCostLimitID("costLimitId");
+    erCostLimitationElementType.setBillingProviderID("billingProviderId");
+    erCostLimitationElementType.setBillingProviderName("billingProviderName");
+    erCostLimitationElementType.setCostCategory("costCategory");
+    erCostLimitationElementType.setPaidToDate(BigDecimal.valueOf(1010L));
+    erCostLimitationElementType.setAmount(BigDecimal.valueOf(1010L));
+
+    CostLimitations erCostLimitations = new CostLimitations();
+    erCostLimitations.getCostLimitation().add(erCostLimitationElementType);
+
+    ExtResourceElementType extResourceElementType = new ExtResourceElementType();
+    extResourceElementType.setExternalResourceRef("externalResourceRef");
+    extResourceElementType.setExternalResourceType("externalResourceType");
+    extResourceElementType.setDateInstructed(df.newXMLGregorianCalendar("2001-04-01T12:00:00.00Z"));
+    extResourceElementType.setCostCeiling(erCostLimitations);
+    extResourceElementType.setLocation("location");
+    extResourceElementType.setChambers("chambers");
+
+    ExternalResources externalResources = new ExternalResources();
+    externalResources.getExternalResource().add(extResourceElementType);
+
+    return externalResources;
+  }
+
+  private OtherParty buildOrganisationOtherParty() {
+    AddressDetail organisationAddressDetail = buildOrganisationAddressDetail();
+
+    ContactDetail organisationContactDetail = new ContactDetail();
+    organisationContactDetail.setPassword("organisationPassword");
+    organisationContactDetail.setPasswordReminder("organisationPasswordReminder");
+    organisationContactDetail.setCorrespondenceMethod("organisationCorrespondenceMethod");
+    organisationContactDetail.setCorrespondenceLanguage("organisationCorrespondenceLanguage");
+    organisationContactDetail.setTelephoneHome("organisationTelephoneHome");
+    organisationContactDetail.setTelephoneWork("organisationTelephoneWork");
+    organisationContactDetail.setMobileNumber("organisationMobileNumber");
+    organisationContactDetail.setEmailAddress("organisationEmailAddress");
+    organisationContactDetail.setFax("organisationFax");
+
+    OtherPartyOrganisation otherPartyOrganisation = new OtherPartyOrganisation();
+    otherPartyOrganisation.setOrganizationName("organisationOrganizationName");
+    otherPartyOrganisation.setOrganizationType("organisationOrganizationType");
+    otherPartyOrganisation.setCurrentlyTrading(true);
+    otherPartyOrganisation.setRelationToClient("organisationRelationToClient");
+    otherPartyOrganisation.setRelationToCase("organisationRelationToCase");
+    otherPartyOrganisation.setAddress(organisationAddressDetail);
+    otherPartyOrganisation.setContactName("organisationContactName");
+    otherPartyOrganisation.setContactDetails(organisationContactDetail);
+    otherPartyOrganisation.setOtherInformation("organisationOtherInformation");
+
+    OtherParty organisationOtherParty = new OtherParty();
+    organisationOtherParty.setOtherPartyId("organisationOtherPartyId");
+    organisationOtherParty.setOrganisation(otherPartyOrganisation);
+    organisationOtherParty.setPerson(null);
+    organisationOtherParty.setSharedInd(false);
+
+    return organisationOtherParty;
+  }
+
+  private OtherPartyElementType buildExpectedOrgOtherPartyElementType() {
+    Address organisationAddress = new Address();
+    organisationAddress.setAddressID("organisationAddressId");
+    organisationAddress.setHouse("organisationHouse");
+    organisationAddress.setCoffName("organisationCareOfName");
+    organisationAddress.setAddressLine1("organisationAddressLine1");
+    organisationAddress.setAddressLine2("organisationAddressLine2");
+    organisationAddress.setAddressLine3("organisationAddressLine3");
+    organisationAddress.setAddressLine4("organisationAddressLine4");
+    organisationAddress.setCity("organisationCity");
+    organisationAddress.setCountry("organisationCountry");
+    organisationAddress.setCounty("organisationCounty");
+    organisationAddress.setState("organisationState");
+    organisationAddress.setProvince("organisationProvince");
+    organisationAddress.setPostalCode("organisationPostalCode");
+
+    ContactDetails organisationContactDetails = new ContactDetails();
+    organisationContactDetails.setTelephoneHome("organisationTelephoneHome");
+    organisationContactDetails.setTelephoneWork("organisationTelephoneWork");
+    organisationContactDetails.setMobileNumber("organisationMobileNumber");
+    organisationContactDetails.setEmailAddress("organisationEmailAddress");
+    organisationContactDetails.setFax("organisationFax");
+
+    OtherPartyOrgType otherPartyOrgType = new OtherPartyOrgType();
+    otherPartyOrgType.setOrganizationName("organisationOrganizationName");
+    otherPartyOrgType.setOrganizationType("organisationOrganizationType");
+    otherPartyOrgType.setCurrentlyTrading("Y");
+    otherPartyOrgType.setRelationToClient("organisationRelationToClient");
+    otherPartyOrgType.setRelationToCase("organisationRelationToCase");
+    otherPartyOrgType.setAddress(organisationAddress);
+    otherPartyOrgType.setContactName("organisationContactName");
+    otherPartyOrgType.setContactDetails(organisationContactDetails);
+    otherPartyOrgType.setOtherInformation("organisationOtherInformation");
+
+    OtherPartyDetail organisationOtherPartyDetail = new OtherPartyDetail();
+    organisationOtherPartyDetail.setOrganization(otherPartyOrgType);
+
+    OtherPartyElementType organisationOtherPartyElementType = new OtherPartyElementType();
+    organisationOtherPartyElementType.setOtherPartyID("organisationOtherPartyId");
+    organisationOtherPartyElementType.setSharedInd(false);
+    organisationOtherPartyElementType.setOtherPartyDetail(organisationOtherPartyDetail);
+
+    return organisationOtherPartyElementType;
+  }
+
+  private AddressDetail buildOrganisationAddressDetail() {
+    AddressDetail organisationAddressDetail = new AddressDetail();
+    organisationAddressDetail.setAddressId("organisationAddressId");
+    organisationAddressDetail.setHouse("organisationHouse");
+    organisationAddressDetail.setCareOfName("organisationCareOfName");
+    organisationAddressDetail.setAddressLine1("organisationAddressLine1");
+    organisationAddressDetail.setAddressLine2("organisationAddressLine2");
+    organisationAddressDetail.setAddressLine3("organisationAddressLine3");
+    organisationAddressDetail.setAddressLine4("organisationAddressLine4");
+    organisationAddressDetail.setCity("organisationCity");
+    organisationAddressDetail.setCountry("organisationCountry");
+    organisationAddressDetail.setCounty("organisationCounty");
+    organisationAddressDetail.setProvince("organisationProvince");
+    organisationAddressDetail.setState("organisationState");
+    organisationAddressDetail.setPostalCode("organisationPostalCode");
+
+    return organisationAddressDetail;
+  }
+
+  private OtherParty buildPersonOtherParty() {
+    NameDetail nameDetail = new NameDetail();
+    nameDetail.setTitle("personTitle");
+    nameDetail.setSurname("personSurname");
+    nameDetail.setFirstName("personFirstName");
+    nameDetail.setMiddleName("personMiddleName");
+    nameDetail.setSurnameAtBirth("personSurnameAtBirth");
+    nameDetail.setFullName("personFullName");
+
+    AddressDetail personAddressDetail = buildPersonAddressDetail();
+
+    ContactDetail personContactDetail = new ContactDetail();
+    personContactDetail.setPassword("personPassword");
+    personContactDetail.setPasswordReminder("personPasswordReminder");
+    personContactDetail.setCorrespondenceMethod("personCorrespondenceMethod");
+    personContactDetail.setCorrespondenceLanguage("personCorrespondenceLanguage");
+    personContactDetail.setTelephoneHome("personTelephoneHome");
+    personContactDetail.setTelephoneWork("personTelephoneWork");
+    personContactDetail.setMobileNumber("personMobileNumber");
+    personContactDetail.setEmailAddress("personEmailAddress");
+    personContactDetail.setFax("personFax");
+
+    OtherPartyPerson otherPartyPerson = new OtherPartyPerson();
+    otherPartyPerson.setName(nameDetail);
+    otherPartyPerson.setDateOfBirth(Date.from(Instant.parse("2001-03-01T12:00:00.00Z")));
+    otherPartyPerson.setAddress(personAddressDetail);
+    otherPartyPerson.setRelationToClient("personRelationToClient");
+    otherPartyPerson.setRelationToCase("personRelationToCase");
+    otherPartyPerson.setNiNumber("personNiNumber");
+    otherPartyPerson.setContactName("personContactName");
+    otherPartyPerson.setContactDetails(personContactDetail);
+    otherPartyPerson.setOrganizationName("personOrganizationName");
+    otherPartyPerson.setEmployersName("personEmployersName");
+    otherPartyPerson.setEmploymentStatus("personEmploymentStatus");
+    otherPartyPerson.setOrganizationAddress("personOrganizationAddress");
+    otherPartyPerson.setPartyLegalAidedInd(false);
+    otherPartyPerson.setCertificateNumber("personCertificateNumber");
+    otherPartyPerson.setCourtOrderedMeansAssessment(false);
+    otherPartyPerson.setAssessedIncomeFrequency("personAssessedIncomeFrequency");
+    otherPartyPerson.setAssessedIncome(BigDecimal.valueOf(1010));
+    otherPartyPerson.setAssessedAssets(BigDecimal.valueOf(1010));
+    otherPartyPerson.setAssessmentDate(Date.from(Instant.parse("2001-03-02T12:00:00.00Z")));
+    otherPartyPerson.setPublicFundingAppliedInd(false);
+    otherPartyPerson.setOtherInformation("personOtherInformation");
+
+    OtherParty personOtherParty = new OtherParty();
+    personOtherParty.setOtherPartyId("personOtherPartyId");
+    personOtherParty.setOrganisation(null);
+    personOtherParty.setPerson(otherPartyPerson);
+    personOtherParty.setSharedInd(false);
+
+    return personOtherParty;
+  }
+
+  private OtherPartyElementType buildExpectedPersonOtherPartyElementType() {
+    Name personName = new Name();
+    personName.setTitle("personTitle");
+    personName.setSurname("personSurname");
+    personName.setFirstName("personFirstName");
+    personName.setMiddleName("personMiddleName");
+    personName.setSurnameAtBirth("personSurnameAtBirth");
+    personName.setFullName("personFullName");
+
+    Address personAddress = new Address();
+    personAddress.setAddressID("personAddressId");
+    personAddress.setHouse("personHouse");
+    personAddress.setCoffName("personCareOfName");
+    personAddress.setAddressLine1("personAddressLine1");
+    personAddress.setAddressLine2("personAddressLine2");
+    personAddress.setAddressLine3("personAddressLine3");
+    personAddress.setAddressLine4("personAddressLine4");
+    personAddress.setCity("personCity");
+    personAddress.setCountry("personCountry");
+    personAddress.setCounty("personCounty");
+    personAddress.setState("personState");
+    personAddress.setProvince("personProvince");
+    personAddress.setPostalCode("personPostalCode");
+
+    ContactDetails personContactDetails = new ContactDetails();
+    personContactDetails.setTelephoneHome("personTelephoneHome");
+    personContactDetails.setTelephoneWork("personTelephoneWork");
+    personContactDetails.setMobileNumber("personMobileNumber");
+    personContactDetails.setEmailAddress("personEmailAddress");
+    personContactDetails.setFax("personFax");
+
+    OtherPartyPersonType otherPartyPersonType = new OtherPartyPersonType();
+    otherPartyPersonType.setName(personName);
+    otherPartyPersonType.setDateOfBirth(df.newXMLGregorianCalendar("2001-03-01T12:00:00.000Z"));
+    otherPartyPersonType.setAddress(personAddress);
+    otherPartyPersonType.setRelationToClient("personRelationToClient");
+    otherPartyPersonType.setRelationToCase("personRelationToCase");
+    otherPartyPersonType.setNINumber("personNiNumber");
+    otherPartyPersonType.setContactName("personContactName");
+    otherPartyPersonType.setContactDetails(personContactDetails);
+    otherPartyPersonType.setOrganizationName("personOrganizationName");
+    otherPartyPersonType.setEmployersName("personEmployersName");
+    otherPartyPersonType.setEmploymentStatus("personEmploymentStatus");
+    otherPartyPersonType.setOrganizationAddress("personOrganizationAddress");
+    otherPartyPersonType.setPartyLegalAidedInd(false);
+    otherPartyPersonType.setCertificateNumber("personCertificateNumber");
+    otherPartyPersonType.setCourtOrderedMeansAssesment(false);
+    otherPartyPersonType.setAssessedIncomeFrequency("personAssessedIncomeFrequency");
+    otherPartyPersonType.setAssessedIncome(BigDecimal.valueOf(1010));
+    otherPartyPersonType.setAssessedAsstes(BigDecimal.valueOf(1010L));
+    otherPartyPersonType.setAssessmentDate(df.newXMLGregorianCalendar("2001-03-02T12:00:00.000Z"));
+    otherPartyPersonType.setPublicFundingAppliedInd(false);
+    otherPartyPersonType.setOtherInformation("personOtherInformation");
+
+    OtherPartyDetail personOtherPartyDetail = new OtherPartyDetail();
+    personOtherPartyDetail.setPerson(otherPartyPersonType);
+
+    OtherPartyElementType personOtherPartyElementType = new OtherPartyElementType();
+    personOtherPartyElementType.setOtherPartyID("personOtherPartyId");
+    personOtherPartyElementType.setSharedInd(false);
+    personOtherPartyElementType.setOtherPartyDetail(personOtherPartyDetail);
+
+    return personOtherPartyElementType;
+  }
+
+  private AddressDetail buildPersonAddressDetail() {
+    AddressDetail personAddressDetail = new AddressDetail();
+    personAddressDetail.setAddressId("personAddressId");
+    personAddressDetail.setHouse("personHouse");
+    personAddressDetail.setCareOfName("personCareOfName");
+    personAddressDetail.setAddressLine1("personAddressLine1");
+    personAddressDetail.setAddressLine2("personAddressLine2");
+    personAddressDetail.setAddressLine3("personAddressLine3");
+    personAddressDetail.setAddressLine4("personAddressLine4");
+    personAddressDetail.setCity("personCity");
+    personAddressDetail.setCountry("personCountry");
+    personAddressDetail.setCounty("personCounty");
+    personAddressDetail.setProvince("personProvince");
+    personAddressDetail.setState("personState");
+    personAddressDetail.setPostalCode("personPostalCode");
+
+    return personAddressDetail;
+  }
+
+  private AssessmentResult buildAssessmentResult(String prefix, Integer opaEntitySequence, String assessmentDate) {
+    OpaAttribute meansOpaAttribute = new OpaAttribute();
+    meansOpaAttribute.setCaption(prefix + "OpaAttributeCaption");
+    meansOpaAttribute.setResponseText(prefix + "OpaAttributeResponseText");
+    meansOpaAttribute.setResponseType(prefix + "OpaAttributeResponseType");
+    meansOpaAttribute.setResponseValue(prefix + "OpaAttributeResponseValue");
+    meansOpaAttribute.setUserDefinedInd(false);
+    meansOpaAttribute.setAttribute(prefix + "OpaAttributeAttribute");
+
+    OpaInstance meansOpaInstance = new OpaInstance();
+    meansOpaInstance.setCaption(prefix + "OpaInstanceCaption");
+    meansOpaInstance.setInstanceLabel(prefix + "OpaInstanceLabel");
+    meansOpaInstance.setAttributes(List.of(meansOpaAttribute));
+
+    OpaEntity meansOpaEntity = new OpaEntity();
+    meansOpaEntity.setCaption(prefix + "OpaCaption");
+    meansOpaEntity.setEntityName(prefix + "OpaEntityName");
+    meansOpaEntity.setSequenceNumber(opaEntitySequence);
+    meansOpaEntity.setInstances(List.of(meansOpaInstance));
+
+    AssessmentScreen meansAssessmentScreen = new AssessmentScreen();
+    meansAssessmentScreen.setCaption(prefix + "Caption");
+    meansAssessmentScreen.setScreenName(prefix + "ScreenName");
+    meansAssessmentScreen.setEntity(List.of(meansOpaEntity));
+
+    OpaGoal meansOpaGoal = new OpaGoal();
+    meansOpaGoal.setAttribute(prefix + "OpaGoalAttribute");
+    meansOpaGoal.setAttributeValue(prefix + "OpaGoalAttributeValue");
+
+    AssessmentResult meansAssessment = new AssessmentResult();
+    meansAssessment.setAssessmentDetails(List.of(meansAssessmentScreen));
+    meansAssessment.setAssessmentId(prefix + "AssessmentId");
+    meansAssessment.setDate(Date.from(Instant.parse(assessmentDate)));
+    meansAssessment.setResults(List.of(meansOpaGoal));
+    meansAssessment.setDefaultInd(true);
+
+    return meansAssessment;
+  }
+
+  private AssesmentResultType buildExpectedAssesmentResultType(String prefix, BigInteger opaEntitySequence, String assessmentDate) {
+    OPAGoalType meansOpaGoalType = new OPAGoalType();
+    meansOpaGoalType.setAttribute(prefix + "OpaGoalAttribute");
+    meansOpaGoalType.setAttributeValue(prefix + "OpaGoalAttributeValue");
+
+    OPAResultType meansOpaResultType = new OPAResultType();
+    meansOpaResultType.getGoal().add(meansOpaGoalType);
+
+    OPAAttributesType meansOpaAttributesType = new OPAAttributesType();
+    meansOpaAttributesType.setAttribute(prefix + "OpaAttributeAttribute");
+    meansOpaAttributesType.setCaption(prefix + "OpaAttributeCaption");
+    meansOpaAttributesType.setResponseType(prefix + "OpaAttributeResponseType");
+    meansOpaAttributesType.setResponseValue(prefix + "OpaAttributeResponseValue");
+    meansOpaAttributesType.setResponseText(prefix + "OpaAttributeResponseText");
+    meansOpaAttributesType.setUserDefinedInd(false);
+
+    Attributes meansAttributes = new Attributes();
+    meansAttributes.getAttribute().add(meansOpaAttributesType);
+
+    OPAInstanceType meansOpaInstanceType = new OPAInstanceType();
+    meansOpaInstanceType.setInstanceLabel(prefix + "OpaInstanceLabel");
+    meansOpaInstanceType.setCaption(prefix + "OpaInstanceCaption");
+    meansOpaInstanceType.setAttributes(meansAttributes);
+
+    OPAEntityType meansOpaEntityType = new OPAEntityType();
+    meansOpaEntityType.setSequenceNumber(opaEntitySequence);
+    meansOpaEntityType.setEntityName(prefix + "OpaEntityName");
+    meansOpaEntityType.setCaption(prefix + "OpaCaption");
+    meansOpaEntityType.getInstances().add(meansOpaInstanceType);
+
+    AssessmentScreenType meansAssessmentScreenType = new AssessmentScreenType();
+    meansAssessmentScreenType.setScreenName(prefix + "ScreenName");
+    meansAssessmentScreenType.setCaption(prefix + "Caption");
+    meansAssessmentScreenType.getEntity().add(meansOpaEntityType);
+
+    AssessmentDetailType meansAssessmentDetailType = new AssessmentDetailType();
+    meansAssessmentDetailType.getAssessmentScreens().add(meansAssessmentScreenType);
+
+    AssesmentResultType assessmentResultType = new AssesmentResultType();
+    assessmentResultType.setAssesmentID(prefix + "AssessmentId");
+    assessmentResultType.setDefault(true);
+    assessmentResultType.setDate(df.newXMLGregorianCalendar(assessmentDate));
+    assessmentResultType.setResults(meansOpaResultType);
+    assessmentResultType.setAssesmentDetails(meansAssessmentDetailType);
+
+    return assessmentResultType;
+  }
+
+  private BaseClient buildBaseClient() {
+    BaseClient baseClient = new BaseClient();
+    baseClient.setClientReferenceNumber("clientReferenceNumber");
+    baseClient.setFirstName("firstName");
+    baseClient.setSurname("surname");
+
+    return baseClient;
+  }
+
+  private CategoryOfLaw buildCategoryOfLaw() {
+    CostLimitation costLimitation = new CostLimitation();
+    costLimitation.setAmount(BigDecimal.valueOf(11L));
+    costLimitation.setCostLimitId("costLimitId");
+    costLimitation.setCostCategory("costCategory");
+    costLimitation.setBillingProviderId("billingProviderId");
+    costLimitation.setBillingProviderName("billingProviderName");
+    costLimitation.setPaidToDate(BigDecimal.valueOf(12L));
+
+    CategoryOfLaw categoryOfLaw = new CategoryOfLaw();
+    categoryOfLaw.setCategoryOfLawCode("categoryOfLawCode");
+    categoryOfLaw.setCategoryOfLawDescription("categoryOfLawDescription");
+    categoryOfLaw.setCostLimitations(List.of(costLimitation));
+    categoryOfLaw.setGrantedAmount(BigDecimal.valueOf(1L));
+    categoryOfLaw.setRequestedAmount(BigDecimal.valueOf(2L));
+    categoryOfLaw.setTotalPaidToDate(BigDecimal.valueOf(3L));
+
+    return categoryOfLaw;
+  }
+
+  private CategoryOfLawElementType buildExpectedCategoryOfLawElementType() {
+    CostLimitationElementType costLimitationElementType = new CostLimitationElementType();
+    costLimitationElementType.setCostLimitID("costLimitId");
+    costLimitationElementType.setBillingProviderID("billingProviderId");
+    costLimitationElementType.setBillingProviderName("billingProviderName");
+    costLimitationElementType.setCostCategory("costCategory");
+    costLimitationElementType.setPaidToDate(BigDecimal.valueOf(12L));
+    costLimitationElementType.setAmount(BigDecimal.valueOf(11L));
+
+    CostLimitations costLimitations = new CostLimitations();
+    costLimitations.getCostLimitation().add(costLimitationElementType);
+
+    CategoryOfLawElementType categoryOfLawElementType = new CategoryOfLawElementType();
+    categoryOfLawElementType.setCategoryOfLawCode("categoryOfLawCode");
+    categoryOfLawElementType.setCategoryOfLawDescription("categoryOfLawDescription");
+    categoryOfLawElementType.setRequestedAmount(BigDecimal.valueOf(2L));
+    categoryOfLawElementType.setGrantedAmount(BigDecimal.valueOf(1L));
+    categoryOfLawElementType.setTotalPaidToDate(BigDecimal.valueOf(3L));
+    categoryOfLawElementType.setCostLimitations(costLimitations);
+
+    return categoryOfLawElementType;
+  }
+
+  private AddressDetail buildAddressDetail() {
+    AddressDetail addressDetail = new AddressDetail();
+    addressDetail.setAddressId("addressId");
+    addressDetail.setAddressLine1("addressLine1");
+    addressDetail.setAddressLine2("addressLine2");
+    addressDetail.setAddressLine3("addressLine3");
+    addressDetail.setAddressLine4("addressLine4");
+    addressDetail.setCareOfName("careOfName");
+    addressDetail.setCity("city");
+    addressDetail.setCountry("country");
+    addressDetail.setCounty("county");
+    addressDetail.setHouse("house");
+    addressDetail.setPostalCode("postalCode");
+    addressDetail.setProvince("province");
+    addressDetail.setState("state");
+
+    return addressDetail;
+  }
+
+  private Address buildExpectedAddress() {
+    Address address = new Address();
+    address.setAddressID("addressId");
+    address.setAddressLine1("addressLine1");
+    address.setAddressLine2("addressLine2");
+    address.setAddressLine3("addressLine3");
+    address.setAddressLine4("addressLine4");
+    address.setCoffName("careOfName");
+    address.setCity("city");
+    address.setCountry("country");
+    address.setCounty("county");
+    address.setHouse("house");
+    address.setPostalCode("postalCode");
+    address.setProvince("province");
+    address.setState("state");
+
+    return address;
+  }
+
+  private LarDetails buildLarDetails() {
+    LarDetails larDetails = new LarDetails();
+    larDetails.setLarScopeFlag(true);
+    larDetails.setLegalHelpUfn("legalHelpUfn");
+    larDetails.setLegalHelpOfficeCode("legalHelpOfficeCode");
+
+    return larDetails;
+  }
+
+  private LARDetails buildExpectedLARDetails() {
+    LARDetails larDetails = new LARDetails();
+    larDetails.setLARScopeFlag(true);
+    larDetails.setLegalHelpOfficeCode("legalHelpOfficeCode");
+    larDetails.setLegalHelpUFN("legalHelpUfn");
+
+    return larDetails;
+  }
+
+  private ProviderDetail buildProviderDetail() {
+    ContactDetail contactDetail = new ContactDetail();
+    contactDetail.setCorrespondenceLanguage("correspondenceLanguage");
+    contactDetail.setEmailAddress("emailAddress");
+    contactDetail.setFax("fax");
+    contactDetail.setCorrespondenceMethod("correspondenceMethod");
+    contactDetail.setMobileNumber("mobileNumber");
+    contactDetail.setPasswordReminder("passwordReminder");
+    contactDetail.setTelephoneHome("telephoneHome");
+    contactDetail.setTelephoneWork("telephoneWork");
+    contactDetail.setPassword("password");
+
+    UserDetail userDetail = new UserDetail();
+    userDetail.setUserLoginId("userLoginId");
+    userDetail.setUserName("userName");
+    userDetail.setUserType("userType");
+
+    ProviderDetail providerDetail = new ProviderDetail();
+    providerDetail.setProviderCaseReferenceNumber("providerCaseReferenceNumber");
+    providerDetail.setProviderFirmId("providerFirmId");
+    providerDetail.setProviderOfficeId("providerOfficeId");
+    providerDetail.setFeeEarnerContactId("feeEarnerContactId");
+    providerDetail.setSupervisorContactId("supervisorContactId");
+    providerDetail.setContactDetails(contactDetail);
+    providerDetail.setContactUserId(userDetail);
+
+    return providerDetail;
+  }
+
+  private ProviderDetails buildExpectedProviderDetails() {
+    ContactDetails contactDetails = new ContactDetails();
+    contactDetails.setTelephoneHome("telephoneHome");
+    contactDetails.setTelephoneWork("telephoneWork");
+    contactDetails.setMobileNumber("mobileNumber");
+    contactDetails.setEmailAddress("emailAddress");
+    contactDetails.setFax("fax");
+
+    ProviderDetails providerDetails = new ProviderDetails();
+    providerDetails.setProviderCaseReferenceNumber("providerCaseReferenceNumber");
+    providerDetails.setProviderFirmID("providerFirmId");
+    providerDetails.setProviderOfficeID("providerOfficeId");
+    providerDetails.setContactUserID(null);
+    providerDetails.setContactDetails(contactDetails);
+    providerDetails.setSupervisorContactID("supervisorContactId");
+    providerDetails.setFeeEarnerContactID("feeEarnerContactId");
+
+    return providerDetails;
+  }
+
+  private ProceedingDetail buildProceeding() {
+
+    ScopeLimitation scopeLimitation = new ScopeLimitation();
+    scopeLimitation.setScopeLimitation("scopeLimitation");
+    scopeLimitation.setScopeLimitationId("scopeLimitationId");
+    scopeLimitation.setScopeLimitationWording("scopeLimitationWording");
+    scopeLimitation.setDelegatedFunctionsApply(false);
+
+    ProceedingDetail proceeding = new ProceedingDetail();
+    proceeding.setProceedingCaseId("proceedingCaseId");
+    proceeding.setStatus("status");
+    proceeding.setMatterType("matterType");
+    proceeding.setProceedingType("proceedingType");
+    proceeding.setLevelOfService("levelOfService");
+    proceeding.setProceedingDescription("proceedingDescription");
+    proceeding.setClientInvolvementType("clientInvolvementType");
+    proceeding.setStage("stage");
+    proceeding.setDateApplied(Date.from(Instant.parse("2001-01-01T12:00:00.00Z")));
+    proceeding.setAvailableFunctions(List.of("proceedingAvailableFunction"));
+    proceeding.setDateCostsValid(Date.from(Instant.parse("2001-01-02T12:00:00.00Z")));
+    proceeding.setDateDevolvedPowersUsed(Date.from(Instant.parse("2001-01-03T12:00:00.00Z")));
+    proceeding.setLeadProceedingIndicator(true);
+    proceeding.setOrderType("orderType");
+    proceeding.setDevolvedPowersInd(false);
+    proceeding.setDateGranted(Date.from(Instant.parse("2001-01-04T12:00:00.00Z")));
+    proceeding.setOutcome(null);
+    proceeding.setOutcomeCourtCaseNumber("courtCaseNumber");
+    proceeding.setScopeLimitationApplied("scopeLimitationApplied");
+    proceeding.setScopeLimitations(List.of(scopeLimitation));
+
+    return proceeding;
+  }
+
+  private Proceedings buildExpectedProceedings() {
+    ActionListElementType actionListElementType = new ActionListElementType();
+    actionListElementType.getFunction().add("proceedingAvailableFunction");
+
+    ScopeLimitationElementType scopeLimitationElementType = new ScopeLimitationElementType();
+    scopeLimitationElementType.setScopeLimitationID("scopeLimitationId");
+    scopeLimitationElementType.setScopeLimitation("scopeLimitation");
+    scopeLimitationElementType.setScopeLimitationWording("scopeLimitationWording");
+    scopeLimitationElementType.setDelegatedFunctionsApply(false);
+
+    ProceedingDetElementType.ScopeLimitations scopeLimitations = new ProceedingDetElementType.ScopeLimitations();
+    scopeLimitations.getScopeLimitation().add(scopeLimitationElementType);
+
+    ProceedingDetElementType proceedingDetElementType = new ProceedingDetElementType();
+    proceedingDetElementType.setProceedingType("proceedingType");
+    proceedingDetElementType.setProceedingDescription("proceedingDescription");
+    proceedingDetElementType.setDateCostsValid(df.newXMLGregorianCalendar("2001-01-02T12:00:00.000Z"));
+    proceedingDetElementType.setOrderType("orderType");
+    proceedingDetElementType.setMatterType("matterType");
+    proceedingDetElementType.setLevelOfService("levelOfService");
+    proceedingDetElementType.setStage("stage");
+    proceedingDetElementType.setClientInvolvementType("clientInvolvementType");
+    proceedingDetElementType.setScopeLimitations(scopeLimitations);
+    proceedingDetElementType.setScopeLimitationApplied("scopeLimitationApplied");
+    proceedingDetElementType.setDevolvedPowersInd(false);
+    proceedingDetElementType.setDateDevolvedPowersUsed(df.newXMLGregorianCalendar("2001-01-03T12:00:00.000Z"));
+    proceedingDetElementType.setDateGranted(df.newXMLGregorianCalendar("2001-01-04T12:00:00.000Z"));
+    proceedingDetElementType.setOutcome(null);
+
+    ProceedingElementType proceedingElementType = new ProceedingElementType();
+    proceedingElementType.setProceedingCaseID("proceedingCaseId");
+    proceedingElementType.setDateApplied(df.newXMLGregorianCalendar("2001-01-01T12:00:00.000Z"));
+    proceedingElementType.setStatus("status");
+    proceedingElementType.setLeadProceedingIndicator(true);
+    proceedingElementType.setOutcomeCourtCaseNumber("courtCaseNumber");
+    proceedingElementType.setAvailableFunctions(actionListElementType);
+    proceedingElementType.setProceedingDetails(proceedingDetElementType);
+
+    Proceedings proceedings = new Proceedings();
+    proceedings.getProceeding().add(proceedingElementType);
+
+    return proceedings;
+  }
+
+  private UndertakingElementType buildExpectedUndertakingElementType() {
+    UndertakingElementType undertakingElementType = new UndertakingElementType();
+    undertakingElementType.setMaxAmount(BigDecimal.valueOf(4000L));
+    undertakingElementType.setEnteredAmount(BigDecimal.valueOf(3000L));
+    undertakingElementType.setDetails(null);
+
+    return undertakingElementType;
+  }
+
+  private Outcomes buildExpectedOutcomes() {
+    OutcomeElementType outcomeElementType = new OutcomeElementType();
+    outcomeElementType.setProceedingCaseID("proceedingCaseId");
+    outcomeElementType.setOutcomeDetails(null);
+
+    Outcomes outcomes = new Outcomes();
+    outcomes.getOutcome().add(outcomeElementType);
+
+    return outcomes;
+  }
 
 }

@@ -9,6 +9,7 @@ import uk.gov.laa.ccms.soa.gateway.model.CaseDetail;
 import uk.gov.laa.ccms.soa.gateway.util.PaginationUtil;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseInqRS;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseUpdateRQ;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseUpdateRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseAdd;
 
@@ -96,16 +97,19 @@ public class CaseDetailsService extends AbstractSoaService {
    * @return A {@link String} representing the SOA transaction id for the case amendment.
    */
   public String amendCase(
-          final String soaGatewayUserLoginId,
-          final String soaGatewayUserRole,
-          final CaseDetail caseDetail
+      final String soaGatewayUserLoginId,
+      final String soaGatewayUserRole,
+      final CaseDetail caseDetail,
+      final String caseUpdateType
   ) {
     log.info("CaseDetailsService - amendCase");
 
+    CaseUpdateRQ caseUpdateRq = caseDetailsMapper.toCaseUpdateRq(caseDetail, caseUpdateType);
+
     final CaseUpdateRS response = caseServicesClient.updateCase(
-            soaGatewayUserLoginId,
-            soaGatewayUserRole,
-            caseDetail);
+        soaGatewayUserLoginId,
+        soaGatewayUserRole,
+        caseUpdateRq);
 
     return response.getTransactionID();
   }

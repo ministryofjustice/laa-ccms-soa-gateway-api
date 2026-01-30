@@ -1,14 +1,18 @@
 package uk.gov.laa.ccms.soa.gateway.mapper;
 
-import java.util.Collections;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
-import org.mapstruct.BeanMapping;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+import org.mapstruct.AfterMapping;
+import org.mapstruct.Context;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.NullValuePropertyMappingStrategy;
-import org.springframework.data.domain.Page;
-import uk.gov.laa.ccms.soa.gateway.model.AddressDetail;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.Named;
 import uk.gov.laa.ccms.soa.gateway.model.AssessmentResult;
 import uk.gov.laa.ccms.soa.gateway.model.AssessmentScreen;
 import uk.gov.laa.ccms.soa.gateway.model.Award;
@@ -38,9 +42,7 @@ import uk.gov.laa.ccms.soa.gateway.model.ScopeLimitation;
 import uk.gov.laa.ccms.soa.gateway.model.SubmittedApplicationDetails;
 import uk.gov.laa.ccms.soa.gateway.model.TimeRelatedAward;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddUpdtStatusRS;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseInqRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseUpdateRQ;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseUpdateRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ApplicationDetails;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.AwardElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.AwardsElementType;
@@ -48,7 +50,6 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.Case;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseAdd;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseDocs;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseDocsElementType;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseList;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CategoryOfLawElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ContactDetails;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CostAwardElementType;
@@ -65,6 +66,7 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.OtherPartyEle
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.OtherPartyOrgType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.OtherPartyPersonType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.OutcomeDetailElementType;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.OutcomeElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.PriorAuthorities;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.PriorAuthorityElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ProceedingDetElementType;
@@ -75,7 +77,6 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ScopeLimitati
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.TimeRelatedElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.UndertakingElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.UpdateApplicationDetails;
-import uk.gov.legalservices.enterprise.common._1_0.common.Address;
 import uk.gov.legalservices.enterprise.common._1_0.common.AssesmentResultType;
 import uk.gov.legalservices.enterprise.common._1_0.common.AssessmentDetailType;
 import uk.gov.legalservices.enterprise.common._1_0.common.AssessmentScreenType;
@@ -90,6 +91,10 @@ import uk.gov.legalservices.enterprise.common._1_0.common.OPAResultType;
 @Mapper(componentModel = "spring", uses = CommonMapper.class)
 public interface CaseDetailsMapper {
 
+  String APP_TYPE_SUBSTANTIVE = "SUB";
+  String APP_TYPE_EMERGENCY_DEVOLVED_POWERS = "DP";
+  String APP_TYPE_SUBSTANTIVE_DEVOLVED_POWERS = "SUBDP";
+
   @Mapping(target = ".", source = "caseDetails")
   @Mapping(target = "linkedCases", source = "caseDetails.linkedCases.linkedCase")
   @Mapping(target = "awards", source = "caseDetails.awards.award")
@@ -102,29 +107,110 @@ public interface CaseDetailsMapper {
   @Mapping(target = "caseDetails", source = ".")
   CaseAdd toCaseAdd(final CaseDetail caseDetail);
 
-  @Mapping(target = "updateMsgType", source = "caseUpdateType")
-  @Mapping(target = "applicationDetails.undertakings", source = ".")
-  @Mapping(target = "applicationDetails.supervisorContactID", source = "")
-  @Mapping(target = "applicationDetails.feeEarnerContactID", source = "")
-  @Mapping(target = "priorAuthorities.priorAuthority", source = "priorAuthorities")
-  @Mapping(target = "linkedCases.linkedCase", source = "linkedCases")
-  @Mapping(target = "priorAuthorities.priorAuthority", source = "")
+  @Mapping(target = "updateMsgType", expression = "java( caseUpdateType )")
+  @Mapping(target = "priorAuthorities.priorAuthority", source = "caseDetail.priorAuthorities")
+  @Mapping(target = "linkedCases.linkedCase", source = "caseDetail.linkedCases")
+  @Mapping(target = "applicationDetails", source = ".")
+  @Mapping(target = "outcomes.outcome", source = "caseDetail.applicationDetails.proceedings")
+  @Mapping(target = "awards.award", source = "caseDetail.awards")
   @Mapping(target = "notifications", ignore = true)
-  CaseUpdateRQ toCaseUpdateRq(final CaseDetail caseDetail, String caseUpdateType);
+  @Mapping(target = "headerRQ", ignore = true)
+  @Mapping(target = "actualCaseStatus", ignore = true)
+  @Mapping(target = "messages", ignore = true)
+  @Mapping(target = "undertakings", ignore = true)
+  CaseUpdateRQ toCaseUpdateRq(final CaseDetail caseDetail, @Context String caseUpdateType);
 
-  @Mapping(target = "otherParties.otherParty", source = "otherParties")
-  @Mapping(target = "externalResources.externalResource", source = "externalResources")
-  @Mapping(target = "proceedings.proceeding", source = "proceedings")
-  @Mapping(target = "meansAssesments.assesmentResults", source = "meansAssessments")
-  @Mapping(target = "meritsAssesments.assesmentResults", source = "meritsAssessments")
-  UpdateApplicationDetails toUpdateApplicationDetails(final SubmittedApplicationDetails applicationDetails);
+  @Mapping(target = "proceedingCaseID", source = "proceedingCaseId")
+  @Mapping(target = "outcomeDetails", source = "outcome")
+  OutcomeElementType toOutcomeElementType(final ProceedingDetail proceedingDetail);
 
-  @Mapping(target = "addressID", source = "addressId")
-  @Mapping(target = "coffName", source = "careOfName")
-  Address toAddress(final AddressDetail addressDetail);
+  @Mapping(target = "otherParties.otherParty", source = "applicationDetails.otherParties")
+  @Mapping(target = "supervisorContactID",
+      source = "applicationDetails.providerDetails.supervisorContactId")
+  @Mapping(target = "feeEarnerContactID",
+      source = "applicationDetails.providerDetails.feeEarnerContactId")
+  @Mapping(target = "externalResources.externalResource",
+      source = "applicationDetails.externalResources")
+  @Mapping(target = "proceedings.proceeding",
+      source = "applicationDetails.proceedings")
+  @Mapping(target = "meansAssesments.assesmentResults",
+      source = "applicationDetails.meansAssessments")
+  @Mapping(target = "meritsAssesments.assesmentResults",
+      source = "applicationDetails.meritsAssessments")
+  @Mapping(target = ".", source = "applicationDetails")
+  @Mapping(target = "undertakings", source = "caseDetail")
+  @Mapping(target = "applicationAmendmentType", source = ".",
+      qualifiedByName = "mapToApplicationAmendmentType")
+  @Mapping(target = "LARDetails", source = "applicationDetails.larDetails")
+  UpdateApplicationDetails toUpdateApplicationDetails(
+      final CaseDetail caseDetail, @Context String caseUpdateType);
+
+  /**
+   * Determine the application amendment type based on the status of the case.
+   *
+   * @param caseDetail the case detail
+   * @param caseUpdateType the case update type
+   * @return the determined application amendment type
+   */
+  @Named("mapToApplicationAmendmentType")
+  default String mapToApplicationAmendmentType(final CaseDetail caseDetail,
+      @Context final String caseUpdateType) {
+
+    String amendmentType = caseDetail.getApplicationDetails().getApplicationAmendmentType();
+
+    boolean reassessment =
+        caseDetail != null && !caseDetail.getAvailableFunctions().contains("MNLA");
+
+    SubmittedApplicationDetails amendment = caseDetail.getApplicationDetails();
+
+    if (amendment.isMeansAssessmentAmended()) {
+      if ("MeansReassessment".equals(caseUpdateType) && reassessment) {
+        //CR217 - Merits Reassessment so ensure the amendment type is substantive
+        amendmentType = APP_TYPE_SUBSTANTIVE;
+      }
+    }
+    return amendmentType;
+  }
+
+  /**
+   * After mapping {@code SubmittedApplicationDetails}, set the devolved powers date depending on
+   * the application amendment type.
+   *
+   * @param applicationDetails the application details
+   * @param updateApplicationDetails the updated application details to map to
+   */
+  @AfterMapping
+  default void setDevolvedPowersDate(SubmittedApplicationDetails applicationDetails,
+      @MappingTarget UpdateApplicationDetails updateApplicationDetails) {
+
+    List<String> devolvedPowersTypeList =
+        List.of(APP_TYPE_EMERGENCY_DEVOLVED_POWERS, APP_TYPE_SUBSTANTIVE_DEVOLVED_POWERS);
+
+    XMLGregorianCalendar result = null;
+
+    if (updateApplicationDetails.getApplicationAmendmentType() != null
+        && devolvedPowersTypeList.contains(applicationDetails.getApplicationAmendmentType())) {
+      GregorianCalendar gregCal = new GregorianCalendar();
+      Date devolvedPowersDate = applicationDetails.getDevolvedPowersDate();
+
+      if (devolvedPowersDate != null) {
+        gregCal.setTime(devolvedPowersDate);
+
+        try {
+          result = DatatypeFactory.newInstance()
+              .newXMLGregorianCalendar(gregCal);
+        } catch (DatatypeConfigurationException e) {
+          throw new SoaGatewayMappingException("Unable to process devolved powers date.", e);
+        }
+      }
+    }
+
+    updateApplicationDetails.setDevolvedPowersDate(result);
+  }
 
   @Mapping(target = "maxAmount", source = "undertakingMaximumAmount")
   @Mapping(target = "enteredAmount", source = "undertakingAmount")
+  @Mapping(target = "details", ignore = true)
   UndertakingElementType toUndertakingElementType(final CaseDetail caseDetail);
 
   /**
@@ -269,9 +355,11 @@ public interface CaseDetailsMapper {
   @Mapping(target = "otherParties", source = "otherParties.otherParty")
   @Mapping(target = "externalResources", source = "externalResources.externalResource")
   @Mapping(target = "proceedings", source = "proceedings.proceeding")
-  @Mapping(target = "meansAssesments", source = "meansAssesments.assesmentResults")
-  @Mapping(target = "meritsAssesments", source = "meritsAssesments.assesmentResults")
+  @Mapping(target = "meansAssessments", source = "meansAssesments.assesmentResults")
+  @Mapping(target = "meritsAssessments", source = "meritsAssesments.assesmentResults")
   @Mapping(target = "larDetails", source = "LARDetails")
+  @Mapping(target = "meansAssessmentAmended", ignore = true)
+  @Mapping(target = "meritsAssessmentAmended", ignore = true)
   SubmittedApplicationDetails toSubmittedApplicationDetails(
       ApplicationDetails soaApplicationDetails);
 
@@ -320,6 +408,7 @@ public interface CaseDetailsMapper {
   LinkedCaseUpdateType toLinkedCaseUpdateType(final LinkedCase linkedCase);
 
   @Mapping(target = "awardId", source = "awardID")
+  @Mapping(target = "awardCategory", source = "awardDetails.awardCategory")
   @Mapping(target = ".", source = "awardDetails")
   @Mapping(target = "financialAward", source = "awardDetails.awardDetails.financialAward")
   @Mapping(target = "costAward", source = "awardDetails.awardDetails.costAward")
@@ -419,6 +508,7 @@ public interface CaseDetailsMapper {
 
   @Mapping(target = "niNumber", source = "NINumber")
   @Mapping(target = "assessedAssets", source = "assessedAsstes")
+  @Mapping(target = "courtOrderedMeansAssessment", source = "courtOrderedMeansAssesment")
   OtherPartyPerson toOtherPartyPerson(final OtherPartyPersonType otherPartyPersonType);
 
   @InheritInverseConfiguration

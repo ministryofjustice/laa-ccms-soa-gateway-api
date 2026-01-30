@@ -78,19 +78,17 @@ public class CaseDetailsController implements CasesApi {
    * @return a CaseTransactionResponse containing the requests operation result.
    */
   @Override
-  public ResponseEntity<CaseTransactionResponse> updateCase(
-      final String soaGatewayUserLoginId,
-      final String soaGatewayUserRole,
-      final CaseDetail caseDetail
-  ) {
+  public ResponseEntity<CaseTransactionResponse> updateCase(String soaGatewayUserLoginId,
+      String soaGatewayUserRole, String caseUpdateType, CaseDetail caseDetail) {
     log.info("PUT /cases");
     try {
       final String transactionId = caseDetailsService.amendCase(
-              soaGatewayUserLoginId,
-              soaGatewayUserRole,
-              caseDetail);
+          soaGatewayUserLoginId,
+          soaGatewayUserRole,
+          caseDetail,
+          caseUpdateType);
       return ResponseEntity.ok(new CaseTransactionResponse()
-              .transactionId(transactionId));
+          .transactionId(transactionId));
     } catch (final Exception e) {
       log.error("CaseDetailsController caught exception", e);
       return ResponseEntity.internalServerError().build();
