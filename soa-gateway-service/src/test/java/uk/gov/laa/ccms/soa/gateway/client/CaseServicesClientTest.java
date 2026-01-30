@@ -1,5 +1,6 @@
 package uk.gov.laa.ccms.soa.gateway.client;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -24,6 +25,8 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddUpdtSt
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddUpdtStatusRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseInqRQ;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseInqRS;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseUpdateRQ;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseUpdateRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.ObjectFactory;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseInfo;
 
@@ -44,6 +47,9 @@ class CaseServicesClientTest {
 
     @Captor
     ArgumentCaptor<JAXBElement<CaseInqRQ>> requestCaptor;
+
+    @Captor
+    ArgumentCaptor<JAXBElement<CaseUpdateRQ>> caseUpdateRequestCaptor;
 
     private CaseServicesClient client;
 
@@ -119,6 +125,41 @@ class CaseServicesClientTest {
         assertNull(payload.getValue().getSearchCriteria().getCaseInfo());
         assertEquals("123", payload.getValue().getSearchCriteria().getCaseReferenceNumber());
         assertNotNull(response);
+    }
+
+    @Test
+    public void updateCaseBuildsCorrectRequest() {
+        ObjectFactory objectFactory = new ObjectFactory();
+
+        CaseUpdateRQ caseUpdateRQ = new CaseUpdateRQ();
+        caseUpdateRQ.setCaseReferenceNumber("caseReferenceNumber");
+
+        CaseUpdateRS caseUpdateRS = new CaseUpdateRS();
+        caseUpdateRS.setTransactionID("transactionId");
+
+        // Mock the response of the WebServiceTemplate
+        when(webServiceTemplate.marshalSendAndReceive(
+            eq(SERVICE_URL),
+            any(JAXBElement.class),
+            any(SoapActionCallback.class)))
+            .thenReturn(objectFactory.createCaseUpdateRS(caseUpdateRS));
+
+        CaseUpdateRS response = client.updateCase(
+            SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE, caseUpdateRQ
+        );
+
+        // Verify interactions
+        verify(webServiceTemplate, times(1)).marshalSendAndReceive(
+            eq(SERVICE_URL),
+            caseUpdateRequestCaptor.capture(),
+            any(SoapActionCallback.class));
+
+        JAXBElement<CaseUpdateRQ> payload = caseUpdateRequestCaptor.getValue();
+        assertNotNull(payload.getValue().getHeaderRQ().getTimeStamp());
+        assertEquals(SOA_GATEWAY_USER_LOGIN_ID, payload.getValue().getHeaderRQ().getUserLoginID());
+        assertEquals(SOA_GATEWAY_USER_ROLE, payload.getValue().getHeaderRQ().getUserRole());
+        assertEquals("caseReferenceNumber", payload.getValue().getCaseReferenceNumber());
+        assertEquals("transactionId", response.getTransactionID());
     }
 
     private CaseInfo buildCaseInfo(){

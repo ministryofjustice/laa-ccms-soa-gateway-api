@@ -1559,9 +1559,17 @@ public class CaseDetailsMapperTest {
 
     when(commonMapper.toYnString(true)).thenReturn("Y");
 
+    when(commonMapper.toUser(buildCreatedBy())).thenReturn(buildExpectedCreatedBy());
+
+    when(commonMapper.toUser(buildLastUpdatedBy())).thenReturn(buildExpectedLastUpdatedBy());
+
+    when(commonMapper.toUser(caseDetail.getApplicationDetails().getProviderDetails().getContactUserId()))
+        .thenReturn(expected.getApplicationDetails().getProviderDetails().getContactUserID());
+
     CaseUpdateRQ result = caseDetailsMapper.toCaseUpdateRq(caseDetail, "caseUpdateType");
 
-    assertThat(result).usingRecursiveComparison().isEqualTo(expected);
+    assertThat(result).usingRecursiveComparison()
+        .isEqualTo(expected);
   }
 
   private CaseDetail buildCaseDetail() {
@@ -1659,16 +1667,46 @@ public class CaseDetailsMapperTest {
     return caseDocs;
   }
 
-  private RecordHistory buildRecordHistory() {
+  private UserDetail buildCreatedBy() {
     UserDetail createdBy = new UserDetail();
     createdBy.setUserType("createdByUserType");
     createdBy.setUserName("createdByUserName");
     createdBy.setUserLoginId("createdByUserLoginId");
 
+    return createdBy;
+  }
+
+  private User buildExpectedCreatedBy() {
+    User createdBy = new User();
+    createdBy.setUserType("createdByUserType");
+    createdBy.setUserName("createdByUserName");
+    createdBy.setUserLoginID("createdByUserLoginId");
+
+    return createdBy;
+  }
+
+  private UserDetail buildLastUpdatedBy() {
     UserDetail lastUpdatedBy = new UserDetail();
     lastUpdatedBy.setUserType("lastUpdatedByUserType");
     lastUpdatedBy.setUserName("lastUpdatedByUserName");
     lastUpdatedBy.setUserLoginId("lastUpdatedByUserLoginId");
+
+    return lastUpdatedBy;
+  }
+
+  private User buildExpectedLastUpdatedBy() {
+    User lastUpdatedBy = new User();
+    lastUpdatedBy.setUserType("lastUpdatedByUserType");
+    lastUpdatedBy.setUserName("lastUpdatedByUserName");
+    lastUpdatedBy.setUserLoginID("lastUpdatedByUserLoginId");
+
+    return lastUpdatedBy;
+  }
+
+  private RecordHistory buildRecordHistory() {
+    UserDetail createdBy = buildCreatedBy();
+
+    UserDetail lastUpdatedBy = buildLastUpdatedBy();
 
     RecordHistory recordHistory = new RecordHistory();
     recordHistory.setCreatedBy(createdBy);
@@ -1680,10 +1718,14 @@ public class CaseDetailsMapperTest {
   }
 
   private uk.gov.legalservices.enterprise.common._1_0.common.RecordHistory buildExpectedRecordHistory() {
+    User createdBy = buildExpectedCreatedBy();
+
+    User lastUpdatedBy = buildExpectedLastUpdatedBy();
+
     uk.gov.legalservices.enterprise.common._1_0.common.RecordHistory recordHistory = new uk.gov.legalservices.enterprise.common._1_0.common.RecordHistory();
-    recordHistory.setCreatedBy(null);
+    recordHistory.setCreatedBy(createdBy);
     recordHistory.setDateCreated(df.newXMLGregorianCalendar("2001-12-01T12:00:00.000Z"));
-    recordHistory.setLastUpdatedBy(null);
+    recordHistory.setLastUpdatedBy(lastUpdatedBy);
     recordHistory.setDateLastUpdated(df.newXMLGregorianCalendar("2001-12-02T12:00:00.000Z"));
 
     return recordHistory;
@@ -2840,6 +2882,19 @@ public class CaseDetailsMapperTest {
     scopeLimitation.setScopeLimitationWording("scopeLimitationWording");
     scopeLimitation.setDelegatedFunctionsApply(false);
 
+    OutcomeDetail outcomeDetail = new OutcomeDetail();
+    outcomeDetail.setIssueDate(Date.from(Instant.parse("2001-06-01T12:00:00.00Z")));
+    outcomeDetail.setFinalWorkDate(Date.from(Instant.parse("2001-06-02T12:00:00.00Z")));
+    outcomeDetail.setStageEnd("stageEnd");
+    outcomeDetail.setResolutionMethod("resolutionMethod");
+    outcomeDetail.setResult("result");
+    outcomeDetail.setAdditionalResultInfo("additionalResultInfo");
+    outcomeDetail.setAltDisputeResolution("altDisputeResolution");
+    outcomeDetail.setAltAcceptanceReason("altAcceptanceReason");
+    outcomeDetail.setCourtCode("courtCode");
+    outcomeDetail.setWiderBenefits("widerBenefits");
+    outcomeDetail.setOutcomeCourtCaseNumber("outcomeCourtCaseNumber");
+
     ProceedingDetail proceeding = new ProceedingDetail();
     proceeding.setProceedingCaseId("proceedingCaseId");
     proceeding.setStatus("status");
@@ -2857,7 +2912,7 @@ public class CaseDetailsMapperTest {
     proceeding.setOrderType("orderType");
     proceeding.setDevolvedPowersInd(false);
     proceeding.setDateGranted(Date.from(Instant.parse("2001-01-04T12:00:00.00Z")));
-    proceeding.setOutcome(null);
+    proceeding.setOutcome(outcomeDetail);
     proceeding.setOutcomeCourtCaseNumber("courtCaseNumber");
     proceeding.setScopeLimitationApplied("scopeLimitationApplied");
     proceeding.setScopeLimitations(List.of(scopeLimitation));
@@ -2878,6 +2933,8 @@ public class CaseDetailsMapperTest {
     ProceedingDetElementType.ScopeLimitations scopeLimitations = new ProceedingDetElementType.ScopeLimitations();
     scopeLimitations.getScopeLimitation().add(scopeLimitationElementType);
 
+    OutcomeDetailElementType outcomeDetailElementType = buildExpectedOutcomeDetailElementType();
+
     ProceedingDetElementType proceedingDetElementType = new ProceedingDetElementType();
     proceedingDetElementType.setProceedingType("proceedingType");
     proceedingDetElementType.setProceedingDescription("proceedingDescription");
@@ -2892,7 +2949,7 @@ public class CaseDetailsMapperTest {
     proceedingDetElementType.setDevolvedPowersInd(false);
     proceedingDetElementType.setDateDevolvedPowersUsed(df.newXMLGregorianCalendar("2001-01-03T12:00:00.000Z"));
     proceedingDetElementType.setDateGranted(df.newXMLGregorianCalendar("2001-01-04T12:00:00.000Z"));
-    proceedingDetElementType.setOutcome(null);
+    proceedingDetElementType.setOutcome(outcomeDetailElementType);
 
     ProceedingElementType proceedingElementType = new ProceedingElementType();
     proceedingElementType.setProceedingCaseID("proceedingCaseId");
@@ -2909,6 +2966,23 @@ public class CaseDetailsMapperTest {
     return proceedings;
   }
 
+  private OutcomeDetailElementType buildExpectedOutcomeDetailElementType() {
+    OutcomeDetailElementType outcomeDetailElementType = new OutcomeDetailElementType();
+    outcomeDetailElementType.setIssueDate(df.newXMLGregorianCalendar("2001-06-01T12:00:00.000Z"));
+    outcomeDetailElementType.setFinalWorkDate(df.newXMLGregorianCalendar("2001-06-02T12:00:00.000Z"));
+    outcomeDetailElementType.setStageEnd("stageEnd");
+    outcomeDetailElementType.setResolutionMethod("resolutionMethod");
+    outcomeDetailElementType.setResult("result");
+    outcomeDetailElementType.setAdditionalResultInfo("additionalResultInfo");
+    outcomeDetailElementType.setAltDisputeResolution("altDisputeResolution");
+    outcomeDetailElementType.setAltAcceptanceReason("altAcceptanceReason");
+    outcomeDetailElementType.setCourtCode("courtCode");
+    outcomeDetailElementType.setWiderBenifits("widerBenefits");
+    outcomeDetailElementType.setOutcomeCourtCaseNumber("outcomeCourtCaseNumber");
+
+    return outcomeDetailElementType;
+  }
+
   private UndertakingElementType buildExpectedUndertakingElementType() {
     UndertakingElementType undertakingElementType = new UndertakingElementType();
     undertakingElementType.setMaxAmount(BigDecimal.valueOf(4000L));
@@ -2919,9 +2993,11 @@ public class CaseDetailsMapperTest {
   }
 
   private Outcomes buildExpectedOutcomes() {
+    OutcomeDetailElementType outcomeDetailElementType = buildExpectedOutcomeDetailElementType();
+
     OutcomeElementType outcomeElementType = new OutcomeElementType();
     outcomeElementType.setProceedingCaseID("proceedingCaseId");
-    outcomeElementType.setOutcomeDetails(null);
+    outcomeElementType.setOutcomeDetails(outcomeDetailElementType);
 
     Outcomes outcomes = new Outcomes();
     outcomes.getOutcome().add(outcomeElementType);
