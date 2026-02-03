@@ -112,7 +112,7 @@ public class DocumentClient extends AbstractSoaClient {
                 new SoapActionCallback(soapAction));
 
     // Check and throw exception if the SOA call was not successful
-    checkSoaCallSuccess(serviceName, response.getValue().getHeaderRS());
+    isSuccessOrThrowException(serviceName, response.getValue().getHeaderRS());
 
     return response.getValue();
   }
@@ -143,7 +143,7 @@ public class DocumentClient extends AbstractSoaClient {
                 new SoapActionCallback(soapAction));
 
     // Check and throw exception if the SOA call was not successful
-    checkSoaCallSuccess(serviceName, response.getValue().getHeaderRS());
+    isSuccessOrThrowException(serviceName, response.getValue().getHeaderRS());
 
     return response.getValue().getDocument();
   }

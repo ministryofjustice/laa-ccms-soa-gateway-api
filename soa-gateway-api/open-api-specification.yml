@@ -183,6 +183,46 @@ paths:
           description: 'Not found'
         '500':
           description: 'Internal server error'
+    put:
+      tags:
+        - cases
+      summary: 'Update a case'
+      operationId: 'updateCase'
+      requestBody:
+        description: Update a case
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/caseDetail"
+      parameters:
+        - $ref: '#/components/parameters/soaGatewayUserLoginId'
+        - $ref: '#/components/parameters/soaGatewayUserRole'
+        - name: 'case-update-type'
+          in: query
+          required: true
+          schema:
+            type: 'string'
+            enum: ['Undertaking', 'Outcome', 'ProviderDetails', 'CostAlloc',
+                   'MeansReassessment', 'LegalAmendment', 'CorrespondenceDtls']
+          example: 'ProviderDetails'
+      responses:
+        '200':
+          description: 'Successful operation'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/caseTransactionResponse"
+        '400':
+          description: 'Bad request'
+        '401':
+          description: 'Unauthorized'
+        '403':
+          description: 'Forbidden'
+        '404':
+          description: 'Not found'
+        '500':
+          description: 'Internal server error'
   /cases/{case-reference-number}:
     get:
       tags:
@@ -849,6 +889,8 @@ components:
           type: 'number'
         undertaking_amount:
           type: 'number'
+        undertaking_maximum_amount:
+          type: 'number'
         linked_cases:
           type: 'array'
           items:
@@ -900,11 +942,15 @@ components:
           type: 'array'
           items:
             $ref: '#/components/schemas/proceedingDetail'
-        means_assesments:
+        means_assessment_amended:
+          type: 'boolean'
+        means_assessments:
           type: 'array'
           items:
             $ref: '#/components/schemas/assessmentResult'
-        merits_assesments:
+        merits_assessment_amended:
+          type: 'boolean'
+        merits_assessments:
           type: 'array'
           items:
             $ref: '#/components/schemas/assessmentResult'
@@ -1101,7 +1147,7 @@ components:
           type: 'boolean'
         certificateNumber:
           type: 'string'
-        court_ordered_means_assesment:
+        court_ordered_means_assessment:
           type: 'boolean'
         assessed_income_frequency:
           type: 'string'
