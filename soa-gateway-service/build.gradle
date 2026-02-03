@@ -7,8 +7,8 @@ apply plugin: 'uk.gov.laa.springboot.laa-spring-boot-gradle-plugin'
 dependencies {
 
     constraints {
-        implementation('org.bouncycastle:bcprov-jdk15on:1.70') {
-            because("Fixes CVE-2018-1000613")
+        implementation('org.bouncycastle:bcprov-jdk18on:1.79') {
+            because("Fixes CVE-2025-8916")
         }
         implementation("org.springframework.security:spring-security-core:6.5.5") {
             because("Fixes CVE-2025-41232")
