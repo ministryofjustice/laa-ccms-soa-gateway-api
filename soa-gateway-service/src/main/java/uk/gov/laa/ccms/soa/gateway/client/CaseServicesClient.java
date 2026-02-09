@@ -6,13 +6,21 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.soap.client.core.SoapActionCallback;
+import uk.gov.laa.ccms.soa.gateway.model.CaseDetail;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddRQ;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseInqRQ;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseInqRS;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseUpdateRQ;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseUpdateRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.ObjectFactory;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.Case;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseAdd;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseDetailsAdd;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseInfo;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.OutcomeElementType;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.Outcomes;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.UndertakingElementType;
 
 /**
  * Provides a client interface for interacting with Case Management Services in the SOA-based
@@ -127,8 +135,34 @@ public class CaseServicesClient extends AbstractSoaClient {
                 CASE_FACTORY.createCaseAddRQ(caseAddRq),
                 new SoapActionCallback(soapAction));
 
-    // Check and throw exception if the SOA call was not successful
-    checkSoaCallSuccess(serviceName, response.getValue().getHeaderRS());
+    isSuccessOrThrowException(serviceName, response.getValue().getHeaderRS());
+    return response.getValue();
+  }
+
+  /**
+   * Amends an existing Case in CCMS.
+   *
+   * @param loggedInUserId      - the logged in UserId
+   * @param loggedInUserType    - the logged in UserType
+   * @param caseUpdateRq        - the details of the case update request
+   * @return Response object containing the result of the case creation.
+   */
+  public CaseUpdateRS updateCase(
+      String loggedInUserId,
+      String loggedInUserType,
+      CaseUpdateRQ caseUpdateRq
+  ) {
+    final String soapAction = String.format("%s/UpdateCaseApplication", serviceName);
+    caseUpdateRq.setHeaderRQ(createHeaderRq(loggedInUserId, loggedInUserType));
+
+    JAXBElement<CaseUpdateRS> response =
+            (JAXBElement<CaseUpdateRS>) getWebServiceTemplate()
+                    .marshalSendAndReceive(
+                            serviceUrl,
+                            CASE_FACTORY.createCaseUpdateRQ(caseUpdateRq),
+                            new SoapActionCallback(soapAction));
+
+    isSuccessOrThrowException(serviceName, response.getValue().getHeaderRS());
     return response.getValue();
   }
 
@@ -140,8 +174,7 @@ public class CaseServicesClient extends AbstractSoaClient {
                 CASE_FACTORY.createCaseInqRQ(caseInqRq),
                 new SoapActionCallback(soapAction));
 
-    // Check and throw exception if the SOA call was not successful
-    checkSoaCallSuccess(serviceName, response.getValue().getHeaderRS());
+    isSuccessOrThrowException(serviceName, response.getValue().getHeaderRS());
     return response;
   }
 }

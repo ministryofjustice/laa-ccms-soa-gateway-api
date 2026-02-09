@@ -13,9 +13,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.laa.ccms.soa.gateway.client.CaseServicesClient;
 import uk.gov.laa.ccms.soa.gateway.mapper.CaseDetailsMapper;
+import uk.gov.laa.ccms.soa.gateway.model.CaseDetail;
 import uk.gov.laa.ccms.soa.gateway.model.TransactionStatus;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddUpdtStatusRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseInqRS;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseUpdateRQ;
+import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseUpdateRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.Case;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseInfo;
 import uk.gov.legalservices.enterprise.common._1_0.header.HeaderRSType;
@@ -62,6 +65,24 @@ public class CaseDetailsServiceTest {
 
         // Assert
         assertEquals(expectedDetail, result);
+    }
+
+    @Test
+    void amendCase_returnsTransactionId() {
+
+        CaseDetail caseDetail = new CaseDetail();
+        CaseUpdateRQ caseUpdateRQ = new CaseUpdateRQ();
+
+        CaseUpdateRS caseUpdateRS = new CaseUpdateRS();
+        caseUpdateRS.setTransactionID("transactionId");
+
+        when(caseDetailsMapper.toCaseUpdateRq(caseDetail, "caseUpdateType")).thenReturn(caseUpdateRQ);
+        when(caseServicesClient.updateCase(SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE, caseUpdateRQ)).thenReturn(caseUpdateRS);
+
+        String result =
+            caseDetailsService.amendCase(SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE, caseDetail, "caseUpdateType");
+
+        assertEquals(caseUpdateRS.getTransactionID(), result);
     }
 
 }

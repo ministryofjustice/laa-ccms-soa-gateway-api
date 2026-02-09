@@ -66,7 +66,7 @@ public class ReferenceDataClient extends AbstractSoaClient {
                     CASE_FACTORY.createReferenceDataInqRQ(referenceDataInqRq),
                     new SoapActionCallback(soapAction));
 
-    checkSoaCallSuccess(serviceName, response.getValue().getHeaderRS());
+    isSuccessOrThrowException(serviceName, response.getValue().getHeaderRS());
 
     return response.getValue();
 
