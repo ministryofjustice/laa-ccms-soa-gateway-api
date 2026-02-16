@@ -13,7 +13,7 @@ import uk.gov.laa.ccms.soa.gateway.service.ClientDetailsService;
 /**
  * Controller for managing client details related requests.
  *
- * <p> Provides endpoints for retrieving specific client detail or a list of clients based on
+ * <p>Provides endpoints for retrieving specific client detail or a list of clients based on
  * various search criteria. Implements the{@link ClientsApi} to ensure consistent API behavior.</p>
  */
 @RestController
