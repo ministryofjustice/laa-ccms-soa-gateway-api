@@ -85,10 +85,6 @@ public class NotificationsControllerTest {
         .action(action)
         .message("message");
 
-    when(notificationsService.updateNotification(SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE,
-        notification, notificationId))
-        .thenReturn("67890");
-
     mockMvc.perform(
             put("/notifications/{notification-id}", notificationId)
                 .content(new ObjectMapper().writeValueAsString(notification))
