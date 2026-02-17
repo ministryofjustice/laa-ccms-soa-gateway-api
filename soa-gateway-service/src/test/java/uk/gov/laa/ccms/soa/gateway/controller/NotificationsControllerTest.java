@@ -13,19 +13,15 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ws.client.WebServiceIOException;
 import uk.gov.laa.ccms.soa.gateway.model.Notification;
 import uk.gov.laa.ccms.soa.gateway.service.NotificationsService;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration
-@WebAppConfiguration
+@ExtendWith(MockitoExtension.class)
 public class NotificationsControllerTest {
 
   private static final String SOA_GATEWAY_USER_LOGIN_ID = "user";

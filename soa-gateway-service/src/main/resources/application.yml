@@ -43,13 +43,13 @@ laa:
       user:
         service-name: http://legalaid.gsi.gov.uk/CCMS/Common/UserManagement/1.0/UserManagementBIM
         service-url: ${SOA_SERVICE_URL}/soa-infra/services/default/UpdateUser/UpdateUser_ep
-    springboot:
-      starter:
-        auth:
-          authentication-header: "Authorization"
-          authorized-clients: ${AUTHORIZED_CLIENTS}
-          authorized-roles: ${AUTHORIZED_ROLES}
-          unprotected-uris: ${UNPROTECTED_URIS}
+  springboot:
+    starter:
+      auth:
+        authentication-header: "Authorization"
+        authorized-clients: ${AUTHORIZED_CLIENTS}
+        authorized-roles: ${AUTHORIZED_ROLES}
+        unprotected-uris: ${UNPROTECTED_URIS}
 
 management:
   endpoint:

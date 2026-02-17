@@ -11,18 +11,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import uk.gov.laa.ccms.soa.gateway.model.UserOptions;
 import uk.gov.laa.ccms.soa.gateway.service.UsersService;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration
-@WebAppConfiguration
+@ExtendWith(MockitoExtension.class)
 public class UsersControllerTest {
 
   private static final String SOA_GATEWAY_USER_LOGIN_ID = "user";
