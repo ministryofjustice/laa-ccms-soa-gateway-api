@@ -64,9 +64,6 @@ public class UsersControllerTest {
     final UserOptions userOptions = new UserOptions()
         .providerFirmId("12345");
 
-    when(usersService.updateUserOptions(SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE, userOptions))
-        .thenReturn("67890");
-
     mockMvc.perform(
             put("/users/options")
                 .content(new ObjectMapper().writeValueAsString(userOptions))
@@ -81,9 +78,6 @@ public class UsersControllerTest {
 
     final UserOptions userOptions = new UserOptions()
         .userLoginId("user@login.com");
-
-    when(usersService.updateUserOptions(SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE, userOptions))
-        .thenReturn("67890");
 
     mockMvc.perform(
             put("/users/options")
