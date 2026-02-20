@@ -14,7 +14,7 @@ import uk.gov.laa.ccms.soa.gateway.service.OrganisationService;
 /**
  * Controller for managing organisation related requests.
  *
- * <p> Provides endpoints for retrieving a list of organisation based on
+ * <p>Provides endpoints for retrieving a list of organisation based on
  * various search criteria. Implements the{@link OrganisationsApi} to ensure
  * consistent API behavior.</p>
  */
