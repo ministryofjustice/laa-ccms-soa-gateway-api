@@ -3,7 +3,6 @@ package uk.gov.laa.ccms.soa.gateway.client;
 import jakarta.xml.bind.JAXBElement;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.soap.client.core.SoapActionCallback;
@@ -22,7 +21,6 @@ import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabim.Obje
 @Slf4j
 @SuppressWarnings("unchecked")
 @Component
-@Profile("!dev & !local")
 public class ContractDetailsClientImpl extends AbstractSoaClient implements ContractDetailsClient  {
   private static final ObjectFactory CASE_FACTORY = new ObjectFactory();
 
