@@ -13,6 +13,9 @@ dependencies {
         implementation("org.springframework.security:spring-security-core:6.5.5") {
             because("Fixes CVE-2025-41232")
         }
+        implementation('org.bouncycastle:bcpkix-jdk18on:1.79') {
+            because("Fixes multiple CVEs")
+        }
     }
 
     implementation project(':soa-gateway-api')
