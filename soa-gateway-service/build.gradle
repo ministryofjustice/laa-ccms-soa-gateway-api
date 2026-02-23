@@ -2,7 +2,7 @@ plugins {
     id 'uk.co.boothen.gradle.wsimport' version '0.23'
 }
 
-apply plugin: 'uk.gov.laa.ccms.springboot.laa-ccms-spring-boot-gradle-plugin'
+apply plugin: 'uk.gov.laa.springboot.laa-spring-boot-gradle-plugin'
 
 dependencies {
 
@@ -12,6 +12,9 @@ dependencies {
         }
         implementation("org.springframework.security:spring-security-core:6.5.5") {
             because("Fixes CVE-2025-41232")
+        }
+        implementation('org.bouncycastle:bcpkix-jdk18on:1.79') {
+            because("Fixes multiple CVEs")
         }
     }
 
@@ -28,7 +31,7 @@ dependencies {
     implementation 'io.micrometer:micrometer-registry-prometheus'
 
     //Enable access token authentication
-    implementation 'uk.gov.laa.ccms.springboot:laa-ccms-spring-boot-starter-auth'
+    implementation 'uk.gov.laa.springboot:laa-spring-boot-starter-auth'
 
     //Enable Swagger UI
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13'
