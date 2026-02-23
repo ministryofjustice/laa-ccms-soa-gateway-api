@@ -12,8 +12,8 @@ laa:
       username: soa-user
       password: soa-password
       contract-details:
-        service-port: 8052
-        service-url: http://localhost:${laa.ccms.soa-gateway.contract-details.service-port}/soa-infra/services/default/GetContractDetails/getcontractdetails_ep
+        service-port: 7777
+        service-url: http://localhost:${laa.ccms.soa-gateway.contract-details.service-port}/mockGetContractDetailsSOAPBinding
     springboot:
       starter:
         auth:

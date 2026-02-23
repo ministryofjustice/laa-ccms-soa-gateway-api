@@ -29,6 +29,8 @@ To run this service locally, you will need to set two environment variables:
 
 To get the values for these two variables, contact another developer on the team.
 
+In addition to setting these environment variables, you will need  https://github.com/ministryofjustice/laa-ccms-mock-contracts to be running for local and dev profiles. 
+
 ## Common Components
 
 This API uses components from the [LAA CCMS Common Library](https://github.com/ministryofjustice/laa-ccms-spring-boot-common):
