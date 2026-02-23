@@ -1,5 +1,5 @@
 plugins {
-    id 'uk.co.boothen.gradle.wsimport' version '0.23'
+    id 'uk.co.boothen.gradle.wsimport' version '0.25'
 }
 
 apply plugin: 'uk.gov.laa.springboot.laa-spring-boot-gradle-plugin'
