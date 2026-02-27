@@ -211,7 +211,8 @@ public class SoaModelUtils {
     return sourceCase;
   }
 
-  public static uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseDetails buildCaseDetails() {
+  public static uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseDetails
+      buildCaseDetails() {
     DatatypeFactory datatypeFactory;
     try {
       datatypeFactory = DatatypeFactory.newInstance();
@@ -245,7 +246,8 @@ public class SoaModelUtils {
   }
 
   public static PriorAuthorityElementType buildPriorAuthorityElementType() {
-    PriorAuthorityAttribElementType priorAuthorityAttribElementType = new PriorAuthorityAttribElementType();
+    PriorAuthorityAttribElementType priorAuthorityAttribElementType =
+        new PriorAuthorityAttribElementType();
     priorAuthorityAttribElementType.setName("aname");
     priorAuthorityAttribElementType.setValue("avalue");
 
@@ -527,7 +529,8 @@ public class SoaModelUtils {
     return caseStatusElementType;
   }
 
-  public static uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ApplicationDetails buildApplicationDetails() {
+  public static uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ApplicationDetails
+      buildApplicationDetails() {
     DatatypeFactory datatypeFactory;
     try {
       datatypeFactory = DatatypeFactory.newInstance();
@@ -535,8 +538,9 @@ public class SoaModelUtils {
       throw new RuntimeException(e);
     }
 
-    uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ApplicationDetails applicationDetails =
-        new uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ApplicationDetails();
+    uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ApplicationDetails
+        applicationDetails =
+            new uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ApplicationDetails();
     applicationDetails.setClient(buildClient());
     applicationDetails.setApplicationAmendmentType("appamendtype");
     applicationDetails.setLARDetails(buildLARDetails());
@@ -548,7 +552,9 @@ public class SoaModelUtils {
     applicationDetails.setDateOfHearing(datatypeFactory.newXMLGregorianCalendar());
     applicationDetails.setDevolvedPowersDate(datatypeFactory.newXMLGregorianCalendar());
     applicationDetails.setExternalResources(new ExternalResources());
-    applicationDetails.getExternalResources().getExternalResource()
+    applicationDetails
+        .getExternalResources()
+        .getExternalResource()
         .add(buildExtResourceElementType());
     applicationDetails.setFixedHearingDateInd(Boolean.TRUE);
     applicationDetails.setHighProfileCaseInd(Boolean.TRUE);
@@ -731,7 +737,9 @@ public class SoaModelUtils {
     extResourceElementType.setChambers("chambers");
     extResourceElementType.setLocation("loc");
     extResourceElementType.setCostCeiling(new CostLimitations());
-    extResourceElementType.getCostCeiling().getCostLimitation()
+    extResourceElementType
+        .getCostCeiling()
+        .getCostLimitation()
         .add(buildCostLimitationElementType());
     extResourceElementType.setDateInstructed(datatypeFactory.newXMLGregorianCalendar());
 
@@ -755,7 +763,9 @@ public class SoaModelUtils {
     categoryOfLawElementType.setCategoryOfLawCode("catcode");
     categoryOfLawElementType.setCategoryOfLawDescription("catdesc");
     categoryOfLawElementType.setCostLimitations(new CostLimitations());
-    categoryOfLawElementType.getCostLimitations().getCostLimitation()
+    categoryOfLawElementType
+        .getCostLimitations()
+        .getCostLimitation()
         .add(buildCostLimitationElementType());
     categoryOfLawElementType.setGrantedAmount(BigDecimal.TEN);
     categoryOfLawElementType.setRequestedAmount(BigDecimal.TEN);

@@ -1,6 +1,5 @@
 package uk.gov.laa.ccms.soa.gateway.service;
 
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -11,9 +10,7 @@ import uk.gov.laa.ccms.soa.gateway.model.ProviderRequestDetail;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.ProviderRequestAddRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ProviderRequestElementType;
 
-/**
- * Service for handling provider request operations.
- */
+/** Service for handling provider request operations. */
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -22,7 +19,6 @@ public class ProviderRequestsService extends AbstractSoaService {
   private final ProviderRequestClient providerRequestClient;
 
   private final ProviderRequestsMapper providerRequestsMapper;
-
 
   /**
    * Submits a provider request and returns the notification ID.
@@ -35,8 +31,7 @@ public class ProviderRequestsService extends AbstractSoaService {
   public String submitProviderRequest(
       final String soaGatewayUserLoginId,
       final String soaGatewayUserRole,
-      final ProviderRequestDetail providerRequestDetail
-  ) {
+      final ProviderRequestDetail providerRequestDetail) {
     log.info("ProviderRequestsService - submitProviderRequest");
 
     final ProviderRequestMappingContext providerRequestMappingContext =
@@ -47,16 +42,12 @@ public class ProviderRequestsService extends AbstractSoaService {
             .build();
 
     final ProviderRequestElementType providerRequestElementType =
-        providerRequestsMapper.toProviderRequestElementType(
-            providerRequestMappingContext);
+        providerRequestsMapper.toProviderRequestElementType(providerRequestMappingContext);
 
-    final ProviderRequestAddRS response = providerRequestClient.submitProviderRequest(
-        soaGatewayUserLoginId,
-        soaGatewayUserRole,
-        providerRequestElementType);
+    final ProviderRequestAddRS response =
+        providerRequestClient.submitProviderRequest(
+            soaGatewayUserLoginId, soaGatewayUserRole, providerRequestElementType);
 
     return response.getNotificationID();
   }
-
-
 }

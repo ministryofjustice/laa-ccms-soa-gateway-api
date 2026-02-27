@@ -32,14 +32,11 @@ class ProviderRequestClientTest {
   public static final String SERVICE_NAME = "myService";
   public static final String SERVICE_URL = "myUrl";
 
-  @Mock
-  Logger mockLogger;
+  @Mock Logger mockLogger;
 
-  @Mock
-  WebServiceTemplate webServiceTemplate;
+  @Mock WebServiceTemplate webServiceTemplate;
 
-  @Captor
-  ArgumentCaptor<JAXBElement<ProviderRequestAddRQ>> requestCaptor;
+  @Captor ArgumentCaptor<JAXBElement<ProviderRequestAddRQ>> requestCaptor;
 
   private ProviderRequestClient client;
 
@@ -60,20 +57,21 @@ class ProviderRequestClientTest {
     final ProviderRequestAddRS mockResponse = new ProviderRequestAddRS();
     mockResponse.setNotificationID("notif123");
 
-    final JAXBElement<ProviderRequestAddRS> responseJaxbElement = objectFactory.createProviderRequestAddRS(mockResponse);
+    final JAXBElement<ProviderRequestAddRS> responseJaxbElement =
+        objectFactory.createProviderRequestAddRS(mockResponse);
 
     when(webServiceTemplate.marshalSendAndReceive(
-        eq(SERVICE_URL),
-        any(JAXBElement.class),
-        any(SoapActionCallback.class)))
+            eq(SERVICE_URL), any(JAXBElement.class), any(SoapActionCallback.class)))
         .thenReturn(responseJaxbElement);
 
-    final ProviderRequestAddRS actualResponse = client.submitProviderRequest(
-        soaGatewayUserLoginId, soaGatewayUserRole, providerRequestElementType);
+    final ProviderRequestAddRS actualResponse =
+        client.submitProviderRequest(
+            soaGatewayUserLoginId, soaGatewayUserRole, providerRequestElementType);
 
     assertEquals("notif123", actualResponse.getNotificationID());
     verify(webServiceTemplate, times(1))
-        .marshalSendAndReceive(eq(SERVICE_URL), any(JAXBElement.class), any(SoapActionCallback.class));
+        .marshalSendAndReceive(
+            eq(SERVICE_URL), any(JAXBElement.class), any(SoapActionCallback.class));
   }
 
   @Test
@@ -85,17 +83,19 @@ class ProviderRequestClientTest {
     final ProviderRequestAddRS mockResponse = new ProviderRequestAddRS();
     mockResponse.setNotificationID("notif123");
 
-    final JAXBElement<ProviderRequestAddRS> responseJaxbElement = objectFactory.createProviderRequestAddRS(mockResponse);
+    final JAXBElement<ProviderRequestAddRS> responseJaxbElement =
+        objectFactory.createProviderRequestAddRS(mockResponse);
 
     when(webServiceTemplate.marshalSendAndReceive(
-        eq(SERVICE_URL),
-        any(JAXBElement.class),
-        any(SoapActionCallback.class)))
+            eq(SERVICE_URL), any(JAXBElement.class), any(SoapActionCallback.class)))
         .thenReturn(responseJaxbElement);
 
-    client.submitProviderRequest(soaGatewayUserLoginId, soaGatewayUserRole, providerRequestElementType);
+    client.submitProviderRequest(
+        soaGatewayUserLoginId, soaGatewayUserRole, providerRequestElementType);
 
-    verify(webServiceTemplate).marshalSendAndReceive(eq(SERVICE_URL), requestCaptor.capture(), any(SoapActionCallback.class));
+    verify(webServiceTemplate)
+        .marshalSendAndReceive(
+            eq(SERVICE_URL), requestCaptor.capture(), any(SoapActionCallback.class));
     final ProviderRequestAddRQ capturedRequest = requestCaptor.getValue().getValue();
 
     assertNotNull(capturedRequest);
@@ -108,19 +108,19 @@ class ProviderRequestClientTest {
     final ProviderRequestElementType providerRequestElementType = new ProviderRequestElementType();
 
     when(webServiceTemplate.marshalSendAndReceive(
-        eq(SERVICE_URL),
-        any(JAXBElement.class),
-        any(SoapActionCallback.class)))
+            eq(SERVICE_URL), any(JAXBElement.class), any(SoapActionCallback.class)))
         .thenThrow(new RuntimeException("SOAP request failed"));
 
-    final RuntimeException exception = assertThrows(
-        RuntimeException.class,
-        () -> client.submitProviderRequest(soaGatewayUserLoginId, soaGatewayUserRole, providerRequestElementType)
-    );
+    final RuntimeException exception =
+        assertThrows(
+            RuntimeException.class,
+            () ->
+                client.submitProviderRequest(
+                    soaGatewayUserLoginId, soaGatewayUserRole, providerRequestElementType));
 
     assertEquals("SOAP request failed", exception.getMessage());
     verify(webServiceTemplate, times(1))
-        .marshalSendAndReceive(eq(SERVICE_URL), any(JAXBElement.class), any(SoapActionCallback.class));
+        .marshalSendAndReceive(
+            eq(SERVICE_URL), any(JAXBElement.class), any(SoapActionCallback.class));
   }
-
 }

@@ -14,11 +14,9 @@ import uk.gov.laa.ccms.soa.gateway.model.UserOptions;
 @ExtendWith(MockitoExtension.class)
 public class UserMapperTest {
 
-  @Mock
-  CommonMapper commonMapper;
+  @Mock CommonMapper commonMapper;
 
-  @InjectMocks
-  UserMapperImpl userMapper;
+  @InjectMocks UserMapperImpl userMapper;
 
   @Test
   public void testToCcmsUser() {
@@ -31,5 +29,4 @@ public class UserMapperTest {
     assertEquals("user@login.com", user.getLoginID());
     assertEquals(new BigDecimal(12345), user.getProviderFirmID());
   }
-
 }

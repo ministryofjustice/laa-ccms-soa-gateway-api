@@ -15,7 +15,6 @@ import uk.gov.laa.ccms.soa.gateway.SoaGatewaySortingException;
 @Slf4j
 public class GlobalExceptionHandler {
 
-
   /**
    * Handles the {@link SoaGatewaySortingException} by logging the error and returning an
    * appropriate error response.
@@ -26,9 +25,6 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(value = {SoaGatewaySortingException.class})
   public ResponseEntity<Object> handleSoaGatewaySortingException(
       final SoaGatewaySortingException e) {
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-        .body(e.getLocalizedMessage());
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getLocalizedMessage());
   }
-
-
 }

@@ -27,14 +27,11 @@ public class ContractDetailsClientImplTest {
 
   public static final String SERVICE_NAME = "myService";
   public static final String SERVICE_URL = "myUrl";
-  @Mock
-  Logger mockLogger;
+  @Mock Logger mockLogger;
 
-  @Mock
-  WebServiceTemplate webServiceTemplate;
+  @Mock WebServiceTemplate webServiceTemplate;
 
-  @Captor
-  ArgumentCaptor<JAXBElement<ContractDetailsInqRQ>> requestCaptor;
+  @Captor ArgumentCaptor<JAXBElement<ContractDetailsInqRQ>> requestCaptor;
 
   private ContractDetailsClientImpl client;
 
@@ -48,10 +45,8 @@ public class ContractDetailsClientImplTest {
     ObjectFactory objectFactory = new ObjectFactory();
 
     when(webServiceTemplate.marshalSendAndReceive(
-        eq(SERVICE_URL),
-        any(JAXBElement.class),
-        any(SoapActionCallback.class))).thenReturn(
-            objectFactory.createContractDetailsRS(new ContractDetailsInqRS()));
+            eq(SERVICE_URL), any(JAXBElement.class), any(SoapActionCallback.class)))
+        .thenReturn(objectFactory.createContractDetailsRS(new ContractDetailsInqRS()));
 
     final String searchFirmId = "searchFirmId";
     final String searchOfficeId = "searchOfficeId";
@@ -59,17 +54,13 @@ public class ContractDetailsClientImplTest {
     final String testUserType = "testType";
     final Integer maxRecords = 50;
 
-    ContractDetailsInqRS response = client.getContractDetails(
-        searchFirmId,
-        searchOfficeId,
-        testLoginId,
-        testUserType,
-        maxRecords);
+    ContractDetailsInqRS response =
+        client.getContractDetails(
+            searchFirmId, searchOfficeId, testLoginId, testUserType, maxRecords);
 
-    verify(webServiceTemplate).marshalSendAndReceive(
-        eq(SERVICE_URL),
-        requestCaptor.capture(),
-        any(SoapActionCallback.class));
+    verify(webServiceTemplate)
+        .marshalSendAndReceive(
+            eq(SERVICE_URL), requestCaptor.capture(), any(SoapActionCallback.class));
 
     JAXBElement<ContractDetailsInqRQ> payload = requestCaptor.getValue();
     assertNotNull(payload.getValue().getHeaderRQ().getTimeStamp());

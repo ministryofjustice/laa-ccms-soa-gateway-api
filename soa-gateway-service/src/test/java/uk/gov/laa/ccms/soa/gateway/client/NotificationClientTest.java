@@ -33,14 +33,11 @@ public class NotificationClientTest {
   private static final String SOA_GATEWAY_USER_LOGIN_ID = "user";
   private static final String SOA_GATEWAY_USER_ROLE = "EXTERNAL";
 
-  @Mock
-  Logger mockLogger;
+  @Mock Logger mockLogger;
 
-  @Mock
-  WebServiceTemplate webServiceTemplate;
+  @Mock WebServiceTemplate webServiceTemplate;
 
-  @Captor
-  ArgumentCaptor<JAXBElement<NotificationUpdateRQ>> requestCaptor;
+  @Captor ArgumentCaptor<JAXBElement<NotificationUpdateRQ>> requestCaptor;
 
   private NotificationClient client;
 
@@ -55,10 +52,8 @@ public class NotificationClientTest {
 
     final String notificationId = "12345";
 
-    final Notification notification = new Notification()
-        .userId("userId")
-        .action("action")
-        .message("message");
+    final Notification notification =
+        new Notification().userId("userId").action("action").message("message");
 
     HeaderRSType headerRSType = new HeaderRSType();
     headerRSType.setTransactionID("12345");
@@ -68,19 +63,17 @@ public class NotificationClientTest {
 
     // Mock the response of the WebServiceTemplate
     when(webServiceTemplate.marshalSendAndReceive(
-        eq(SERVICE_URL),
-        any(JAXBElement.class),
-        any(SoapActionCallback.class)))
+            eq(SERVICE_URL), any(JAXBElement.class), any(SoapActionCallback.class)))
         .thenReturn(objectFactory.createNotificationUpdateRS(notificationUpdateRS));
 
-    NotificationUpdateRS actual = client.updateNotification(
-        SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE, notification, notificationId);
+    NotificationUpdateRS actual =
+        client.updateNotification(
+            SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE, notification, notificationId);
 
     // Verify interactions
-    verify(webServiceTemplate, times(1)).marshalSendAndReceive(
-        eq(SERVICE_URL),
-        requestCaptor.capture(),
-        any(SoapActionCallback.class));
+    verify(webServiceTemplate, times(1))
+        .marshalSendAndReceive(
+            eq(SERVICE_URL), requestCaptor.capture(), any(SoapActionCallback.class));
 
     JAXBElement<NotificationUpdateRQ> payload = requestCaptor.getValue();
     assertNotNull(payload.getValue().getHeaderRQ().getTimeStamp());
@@ -93,5 +86,4 @@ public class NotificationClientTest {
     assertNotNull(actual);
     assertEquals("12345", actual.getHeaderRS().getTransactionID());
   }
-
 }

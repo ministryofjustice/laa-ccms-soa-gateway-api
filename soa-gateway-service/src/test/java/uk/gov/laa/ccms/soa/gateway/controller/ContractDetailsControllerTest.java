@@ -22,114 +22,118 @@ import uk.gov.laa.ccms.soa.gateway.service.ContractDetailsService;
 
 @ExtendWith(MockitoExtension.class)
 class ContractDetailsControllerTest {
-    @Mock
-    private ContractDetailsService contractDetailsService;
+  @Mock private ContractDetailsService contractDetailsService;
 
-    @InjectMocks
-    private ContractDetailsController contractDetailsController;
+  @InjectMocks private ContractDetailsController contractDetailsController;
 
-    private MockMvc mockMvc;
+  private MockMvc mockMvc;
 
-    @BeforeEach
-    public void setup() {
-        mockMvc = MockMvcBuilders.standaloneSetup(contractDetailsController).build();
-    }
+  @BeforeEach
+  public void setup() {
+    mockMvc = MockMvcBuilders.standaloneSetup(contractDetailsController).build();
+  }
 
-    @Test
-    public void testGetContractDetails_Success() throws Exception {
-        // Mock input parameters
-        Integer providerFirmId = 123;
-        Integer officeId = 345;
-        String soaGatewayUserLoginId = "user";
-        String soaGatewayUserRole = "EXTERNAL";
-        Integer maxRecords = 50;
+  @Test
+  public void testGetContractDetails_Success() throws Exception {
+    // Mock input parameters
+    Integer providerFirmId = 123;
+    Integer officeId = 345;
+    String soaGatewayUserLoginId = "user";
+    String soaGatewayUserRole = "EXTERNAL";
+    Integer maxRecords = 50;
 
-        // Create a mock gateway response
-        String authType = "authType";
-        String catOfLaw = "catOfLaw";
-        String subCat = "subCat";
-        String conDevPowers = "conDevPowers";
-        ContractDetails contractDetails = new ContractDetails();
-        contractDetails.addContractsItem(
-            new uk.gov.laa.ccms.soa.gateway.model.ContractDetail()
-                .authorisationType(authType)
-                .categoryofLaw(catOfLaw)
-                .contractualDevolvedPowers(conDevPowers)
-                .subCategory(subCat)
-                .remainderAuthorisation(true)
-                .createNewMatters(true));
+    // Create a mock gateway response
+    String authType = "authType";
+    String catOfLaw = "catOfLaw";
+    String subCat = "subCat";
+    String conDevPowers = "conDevPowers";
+    ContractDetails contractDetails = new ContractDetails();
+    contractDetails.addContractsItem(
+        new uk.gov.laa.ccms.soa.gateway.model.ContractDetail()
+            .authorisationType(authType)
+            .categoryofLaw(catOfLaw)
+            .contractualDevolvedPowers(conDevPowers)
+            .subCategory(subCat)
+            .remainderAuthorisation(true)
+            .createNewMatters(true));
 
-        when(contractDetailsService.getContractDetails(
-            providerFirmId,
-            officeId,
-            soaGatewayUserLoginId,
-            soaGatewayUserRole,
-            maxRecords))
-                .thenReturn(contractDetails);
+    when(contractDetailsService.getContractDetails(
+            providerFirmId, officeId, soaGatewayUserLoginId, soaGatewayUserRole, maxRecords))
+        .thenReturn(contractDetails);
 
-        mockMvc.perform(
-            get("/contract-details?providerFirmId={providerFirmId}&officeId={officeId}&max-records={maxRecords}",
-                providerFirmId,
-                officeId,
-                maxRecords)
+    mockMvc
+        .perform(
+            get(
+                    "/contract-details?providerFirmId={providerFirmId}&officeId={officeId}&max-records={maxRecords}",
+                    providerFirmId,
+                    officeId,
+                    maxRecords)
                 .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
                 .header("SoaGateway-User-Role", soaGatewayUserRole))
-                .andExpect(status().isOk());
+        .andExpect(status().isOk());
 
-        verify(contractDetailsService).getContractDetails(providerFirmId,
-            officeId, soaGatewayUserLoginId, soaGatewayUserRole, maxRecords);
-    }
+    verify(contractDetailsService)
+        .getContractDetails(
+            providerFirmId, officeId, soaGatewayUserLoginId, soaGatewayUserRole, maxRecords);
+  }
 
-    @Test
-    public void testGetContractDetails_Exception() throws Exception {
-        // Mock input parameters
-        Integer providerFirmId = 123;
-        Integer officeId = 345;
-        String soaGatewayUserLoginId = "user";
-        String soaGatewayUserRole = "EXTERNAL";
-        Integer maxRecords = 50;
+  @Test
+  public void testGetContractDetails_Exception() throws Exception {
+    // Mock input parameters
+    Integer providerFirmId = 123;
+    Integer officeId = 345;
+    String soaGatewayUserLoginId = "user";
+    String soaGatewayUserRole = "EXTERNAL";
+    Integer maxRecords = 50;
 
-        // Mock the notificationService to throw an exception
-        when(contractDetailsService.getContractDetails(providerFirmId,
-            officeId, soaGatewayUserLoginId, soaGatewayUserRole, maxRecords))
-                .thenThrow(new WebServiceIOException("Test exception"));
+    // Mock the notificationService to throw an exception
+    when(contractDetailsService.getContractDetails(
+            providerFirmId, officeId, soaGatewayUserLoginId, soaGatewayUserRole, maxRecords))
+        .thenThrow(new WebServiceIOException("Test exception"));
 
-        // Call the getUserNotificationSummary method
-        mockMvc.perform(
-            get("/contract-details?providerFirmId={providerFirmId}&officeId={officeId}&max-records={maxRecords}",
-                providerFirmId,
-                officeId,
-                maxRecords)
+    // Call the getUserNotificationSummary method
+    mockMvc
+        .perform(
+            get(
+                    "/contract-details?providerFirmId={providerFirmId}&officeId={officeId}&max-records={maxRecords}",
+                    providerFirmId,
+                    officeId,
+                    maxRecords)
                 .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
                 .header("SoaGateway-User-Role", soaGatewayUserRole))
-                .andExpect(status().isInternalServerError());
+        .andExpect(status().isInternalServerError());
 
-        // Verify that the notificationService method was called with the correct parameters
-        verify(contractDetailsService).getContractDetails(providerFirmId, officeId,
-            soaGatewayUserLoginId, soaGatewayUserRole, maxRecords);
-    }
+    // Verify that the notificationService method was called with the correct parameters
+    verify(contractDetailsService)
+        .getContractDetails(
+            providerFirmId, officeId, soaGatewayUserLoginId, soaGatewayUserRole, maxRecords);
+  }
 
-    @ParameterizedTest
-    @CsvSource(value = {
-            "null, EXTERNAL", // SoaGateway-User-Login-Id is null
-            "user, null" // SoaGateway-User-Role is null
-    }, nullValues={"null"})
-    public void testGetContractDetails_HeaderBadRequest(String userLoginId, String userRole) throws Exception {
-        // Call the getUserNotificationSummary method with null headers
-        MockHttpServletRequestBuilder requestBuilder = get("/contract-details?providerFirmId={providerFirmId}&officeId={officeId}&max-records={maxRecords}",
+  @ParameterizedTest
+  @CsvSource(
+      value = {
+        "null, EXTERNAL", // SoaGateway-User-Login-Id is null
+        "user, null" // SoaGateway-User-Role is null
+      },
+      nullValues = {"null"})
+  public void testGetContractDetails_HeaderBadRequest(String userLoginId, String userRole)
+      throws Exception {
+    // Call the getUserNotificationSummary method with null headers
+    MockHttpServletRequestBuilder requestBuilder =
+        get(
+            "/contract-details?providerFirmId={providerFirmId}&officeId={officeId}&max-records={maxRecords}",
             "providerFirmId",
             "officeId",
             "50");
 
-        if (userLoginId != null) {
-            requestBuilder.header("SoaGateway-User-Login-Id", userLoginId);
-        }
-        if (userRole != null) {
-            requestBuilder.header("SoaGateway-User-Role", userRole);
-        }
-
-        // Call the getUserNotificationSummary method with optional headers
-        mockMvc.perform(requestBuilder)
-                .andExpect(status().isBadRequest());
+    if (userLoginId != null) {
+      requestBuilder.header("SoaGateway-User-Login-Id", userLoginId);
     }
+    if (userRole != null) {
+      requestBuilder.header("SoaGateway-User-Role", userRole);
+    }
+
+    // Call the getUserNotificationSummary method with optional headers
+    mockMvc.perform(requestBuilder).andExpect(status().isBadRequest());
+  }
 }

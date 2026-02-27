@@ -12,9 +12,7 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ProviderReque
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ProviderRequestTextElementType;
 import uk.gov.legalservices.enterprise.common._1_0.common.User;
 
-/**
- * Mapper for converting provider request details to various element types.
- */
+/** Mapper for converting provider request details to various element types. */
 @Mapper(componentModel = "spring", uses = CommonMapper.class)
 public interface ProviderRequestsMapper {
 
@@ -28,8 +26,7 @@ public interface ProviderRequestsMapper {
   @Mapping(target = "user", source = "providerRequestMappingContext", qualifiedByName = "toUser")
   @Mapping(target = "requestDetails", source = "providerRequestDetail")
   ProviderRequestElementType toProviderRequestElementType(
-      ProviderRequestMappingContext providerRequestMappingContext
-  );
+      ProviderRequestMappingContext providerRequestMappingContext);
 
   /**
    * Converts a ProviderRequestMappingContext to a User.
@@ -65,11 +62,8 @@ public interface ProviderRequestsMapper {
    * @param providerRequestDetail the provider request detail
    * @return the converted RequestDetails
    */
-  @Mapping(target = "request.requestType",
-      source = "requestType")
-  @Mapping(target = "request.requestText",
-      source = "attributes",
-      qualifiedByName = "mapAttributes")
+  @Mapping(target = "request.requestType", source = "requestType")
+  @Mapping(target = "request.requestText", source = "attributes", qualifiedByName = "mapAttributes")
   ProviderRequestElementType.RequestDetails toRequestDetails(
       ProviderRequestDetail providerRequestDetail);
 

@@ -22,15 +22,14 @@ import uk.gov.legalservices.enterprise.common._1_0.header.StatusTextType;
 /**
  * Provides an abstract base for SOA (Service-Oriented Architecture) client implementations.
  *
- * <p>The `AbstractSoaClient` class serves as a foundational layer for interacting with
- * SOA-based services. It provides utility methods for header creation, transaction ID
- * generation, and SOA call success validation. Derived classes can extend this to
- * implement specific service calls.</p>
+ * <p>The `AbstractSoaClient` class serves as a foundational layer for interacting with SOA-based
+ * services. It provides utility methods for header creation, transaction ID generation, and SOA
+ * call success validation. Derived classes can extend this to implement specific service calls.
  *
- * <p>Transaction ID generation adopts a specific format and constraints, as explained
- * in the `generateTransactionId` method documentation.</p>
+ * <p>Transaction ID generation adopts a specific format and constraints, as explained in the
+ * `generateTransactionId` method documentation.
  *
- * @author [Your Name]  // Optional, if you want to include the author's name
+ * @author [Your Name] // Optional, if you want to include the author's name
  */
 @Slf4j
 public abstract class AbstractSoaClient {
@@ -42,7 +41,7 @@ public abstract class AbstractSoaClient {
   private static final ObjectFactory COMMON_HEADER_FACTORY = new ObjectFactory();
 
   private static final uk.gov.legalservices.enterprise.common._1_0.common.ObjectFactory
-          COMMON_FACTORY = new uk.gov.legalservices.enterprise.common._1_0.common.ObjectFactory();
+      COMMON_FACTORY = new uk.gov.legalservices.enterprise.common._1_0.common.ObjectFactory();
 
   protected WebServiceTemplate webServiceTemplate;
 
@@ -63,7 +62,7 @@ public abstract class AbstractSoaClient {
    * @return HeaderRQType
    */
   protected HeaderRQType createHeaderRq(
-          final String loggedInUserId, final String loggedInUserType) {
+      final String loggedInUserId, final String loggedInUserType) {
     HeaderRQType headerRqType = COMMON_HEADER_FACTORY.createHeaderRQType();
     headerRqType.setLanguage("ENG");
     headerRqType.setUserLoginID(loggedInUserId);
@@ -73,8 +72,8 @@ public abstract class AbstractSoaClient {
     headerRqType.setTarget(SystemsList.ORACLE_E_BUSINESS);
 
     try {
-      headerRqType.setTimeStamp(DatatypeFactory.newInstance().newXMLGregorianCalendar(
-          LocalDate.now().toString()));
+      headerRqType.setTimeStamp(
+          DatatypeFactory.newInstance().newXMLGregorianCalendar(LocalDate.now().toString()));
     } catch (DatatypeConfigurationException e) {
       log.error("Failed to create DatatypeFactory", e);
       throw new RuntimeException(e);
@@ -92,20 +91,18 @@ public abstract class AbstractSoaClient {
   }
 
   /**
-   * Generate a transaction id for a SOA call.
-   * K024-677
-   * Whilst this should be a UUID and a String type is returned, we can't adopt it!
-   * Cap. Gem inform us that their down stream system store persists the ref.
-   * as a 30 digit number field. The old timestamp format "yyyyMMddHHmmssSSS"
-   * does not have sufficient granularity to support our production needs.
-   * added a 5 digit random number (zero packed) to act as noise/millis
-   * I found that with just 4 digits I was getting a number of duplicates.
-   * this reduced significantly with 5 digit noise.
+   * Generate a transaction id for a SOA call. K024-677 Whilst this should be a UUID and a String
+   * type is returned, we can't adopt it! Cap. Gem inform us that their down stream system store
+   * persists the ref. as a 30 digit number field. The old timestamp format "yyyyMMddHHmmssSSS" does
+   * not have sufficient granularity to support our production needs. added a 5 digit random number
+   * (zero packed) to act as noise/millis I found that with just 4 digits I was getting a number of
+   * duplicates. this reduced significantly with 5 digit noise.
    *
    * @return String
    */
   protected static String generateTransactionId() {
-    return String.format("%s%010d",
+    return String.format(
+        "%s%010d",
         new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date()),
         (new Random().nextInt(999999998) + 1));
     //      yyyyMMddHHmmssSSS
@@ -115,17 +112,19 @@ public abstract class AbstractSoaClient {
   protected void isSuccessOrThrowException(String serviceName, HeaderRSType headerRsType) {
     Optional.ofNullable(headerRsType)
         .map(HeaderRSType::getStatus)
-        .filter(status -> Optional.ofNullable(status.getStatus())
-            .orElse(StatusTextType.ERROR) != SUCCESS)
-        .ifPresent(status -> {
-          final String errorMsg = String.format(
-                  "Failure in SOA call %s. Status Code: %s. Status Text: %s",
-              serviceName,
-              Optional.ofNullable(status.getStatus())
-                  .orElse(StatusTextType.ERROR).value(),
-              status.getStatusFreeText());
-          log.error(errorMsg);
-          throw new RuntimeException(errorMsg);
-        });
+        .filter(
+            status ->
+                Optional.ofNullable(status.getStatus()).orElse(StatusTextType.ERROR) != SUCCESS)
+        .ifPresent(
+            status -> {
+              final String errorMsg =
+                  String.format(
+                      "Failure in SOA call %s. Status Code: %s. Status Text: %s",
+                      serviceName,
+                      Optional.ofNullable(status.getStatus()).orElse(StatusTextType.ERROR).value(),
+                      status.getStatusFreeText());
+              log.error(errorMsg);
+              throw new RuntimeException(errorMsg);
+            });
   }
 }

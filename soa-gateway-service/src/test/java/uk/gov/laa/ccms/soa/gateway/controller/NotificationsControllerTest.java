@@ -27,11 +27,9 @@ public class NotificationsControllerTest {
   private static final String SOA_GATEWAY_USER_LOGIN_ID = "user";
   private static final String SOA_GATEWAY_USER_ROLE = "EXTERNAL";
 
-  @Mock
-  private NotificationsService notificationsService;
+  @Mock private NotificationsService notificationsService;
 
-  @InjectMocks
-  private NotificationsController notificationsController;
+  @InjectMocks private NotificationsController notificationsController;
 
   private MockMvc mockMvc;
 
@@ -41,24 +39,25 @@ public class NotificationsControllerTest {
   }
 
   @ParameterizedTest
-  @CsvSource(value = {
-      "message",
-      "null" // message is not required
-  }, nullValues={"null"})
+  @CsvSource(
+      value = {
+        "message",
+        "null" // message is not required
+      },
+      nullValues = {"null"})
   public void testUpdateNotification_success(String message) throws Exception {
 
     String notificationId = "notificationId";
 
-    final Notification notification = new Notification()
-        .userId("userId")
-        .action("action")
-        .message(message);
+    final Notification notification =
+        new Notification().userId("userId").action("action").message(message);
 
-    when(notificationsService.updateNotification(SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE,
-        notification, notificationId))
+    when(notificationsService.updateNotification(
+            SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE, notification, notificationId))
         .thenReturn("12345");
 
-    mockMvc.perform(
+    mockMvc
+        .perform(
             put("/notifications/{notification-id}", notificationId)
                 .content(new ObjectMapper().writeValueAsString(notification))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -66,26 +65,25 @@ public class NotificationsControllerTest {
                 .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE))
         .andExpect(status().isOk());
 
-    verify(notificationsService).updateNotification(SOA_GATEWAY_USER_LOGIN_ID,
-        SOA_GATEWAY_USER_ROLE, notification, notificationId);
+    verify(notificationsService)
+        .updateNotification(
+            SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE, notification, notificationId);
   }
 
   @ParameterizedTest
-  @CsvSource(value = {
-      "null,   userId",
-      "action, null"
-  }, nullValues={"null"})
-  public void testUpdateNotification_withNullRequiredFields_returnsBadRequest(String action,
-      String userId) throws Exception {
+  @CsvSource(
+      value = {"null,   userId", "action, null"},
+      nullValues = {"null"})
+  public void testUpdateNotification_withNullRequiredFields_returnsBadRequest(
+      String action, String userId) throws Exception {
 
     String notificationId = "notificationId";
 
-    final Notification notification = new Notification()
-        .userId(userId)
-        .action(action)
-        .message("message");
+    final Notification notification =
+        new Notification().userId(userId).action(action).message("message");
 
-    mockMvc.perform(
+    mockMvc
+        .perform(
             put("/notifications/{notification-id}", notificationId)
                 .content(new ObjectMapper().writeValueAsString(notification))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -99,16 +97,15 @@ public class NotificationsControllerTest {
 
     String notificationId = "notificationId";
 
-    final Notification notification = new Notification()
-        .userId("userId")
-        .action("action")
-        .message("message");
+    final Notification notification =
+        new Notification().userId("userId").action("action").message("message");
 
-    when(notificationsService.updateNotification(SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE,
-        notification, notificationId))
+    when(notificationsService.updateNotification(
+            SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE, notification, notificationId))
         .thenThrow(new WebServiceIOException("Test exception"));
 
-    mockMvc.perform(
+    mockMvc
+        .perform(
             put("/notifications/{notification-id}", notificationId)
                 .content(new ObjectMapper().writeValueAsString(notification))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -116,5 +113,4 @@ public class NotificationsControllerTest {
                 .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE))
         .andExpect(status().isInternalServerError());
   }
-
 }

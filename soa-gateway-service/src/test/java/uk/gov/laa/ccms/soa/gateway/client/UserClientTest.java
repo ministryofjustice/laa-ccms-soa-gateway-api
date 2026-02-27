@@ -33,14 +33,11 @@ public class UserClientTest {
   private static final String SOA_GATEWAY_USER_LOGIN_ID = "user";
   private static final String SOA_GATEWAY_USER_ROLE = "EXTERNAL";
 
-  @Mock
-  Logger mockLogger;
+  @Mock Logger mockLogger;
 
-  @Mock
-  WebServiceTemplate webServiceTemplate;
+  @Mock WebServiceTemplate webServiceTemplate;
 
-  @Captor
-  ArgumentCaptor<JAXBElement<UpdateUserRQ>> requestCaptor;
+  @Captor ArgumentCaptor<JAXBElement<UpdateUserRQ>> requestCaptor;
 
   private UserClient client;
 
@@ -59,24 +56,20 @@ public class UserClientTest {
     UpdateUserRS updateUserRS = new UpdateUserRS();
     updateUserRS.setHeaderRS(headerRSType);
 
-
     // Mock the response of the WebServiceTemplate
     when(webServiceTemplate.marshalSendAndReceive(
-        eq(SERVICE_URL),
-        any(JAXBElement.class),
-        any(SoapActionCallback.class)))
+            eq(SERVICE_URL), any(JAXBElement.class), any(SoapActionCallback.class)))
         .thenReturn(objectFactory.createUpdateUserRS(updateUserRS));
 
     CCMSUser ccmsUser = new CCMSUser();
 
-    UpdateUserRS actual = client.updateUser(
-        SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE, ccmsUser);
+    UpdateUserRS actual =
+        client.updateUser(SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE, ccmsUser);
 
     // Verify interactions
-    verify(webServiceTemplate, times(1)).marshalSendAndReceive(
-        eq(SERVICE_URL),
-        requestCaptor.capture(),
-        any(SoapActionCallback.class));
+    verify(webServiceTemplate, times(1))
+        .marshalSendAndReceive(
+            eq(SERVICE_URL), requestCaptor.capture(), any(SoapActionCallback.class));
 
     JAXBElement<UpdateUserRQ> payload = requestCaptor.getValue();
     assertNotNull(payload.getValue().getHeaderRQ().getTimeStamp());
@@ -85,5 +78,4 @@ public class UserClientTest {
     assertNotNull(actual);
     assertEquals("12345", actual.getHeaderRS().getTransactionID());
   }
-
 }

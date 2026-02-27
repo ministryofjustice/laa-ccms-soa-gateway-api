@@ -27,105 +27,91 @@ import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabim.Obje
 @ExtendWith(MockitoExtension.class)
 class CommonOrgClientTest {
 
-    public static final String SERVICE_NAME = "myService";
-    public static final String SERVICE_URL = "myUrl";
-    private static final String SOA_GATEWAY_USER_LOGIN_ID = "user";
-    private static final String SOA_GATEWAY_USER_ROLE = "EXTERNAL";
-    private static final Integer MAX_RECORDS = 50;
+  public static final String SERVICE_NAME = "myService";
+  public static final String SERVICE_URL = "myUrl";
+  private static final String SOA_GATEWAY_USER_LOGIN_ID = "user";
+  private static final String SOA_GATEWAY_USER_ROLE = "EXTERNAL";
+  private static final Integer MAX_RECORDS = 50;
 
-    @Mock
-    Logger mockLogger;
+  @Mock Logger mockLogger;
 
-    @Mock
-    WebServiceTemplate webServiceTemplate;
+  @Mock WebServiceTemplate webServiceTemplate;
 
-    @Captor
-    ArgumentCaptor<JAXBElement<CommonOrgInqRQ>> requestCaptor;
+  @Captor ArgumentCaptor<JAXBElement<CommonOrgInqRQ>> requestCaptor;
 
-    private CommonOrgClient client;
+  private CommonOrgClient client;
 
-    @BeforeEach
-    void setup() {
-        this.client = new CommonOrgClient(webServiceTemplate, SERVICE_NAME, SERVICE_URL);
-    }
+  @BeforeEach
+  void setup() {
+    this.client = new CommonOrgClient(webServiceTemplate, SERVICE_NAME, SERVICE_URL);
+  }
 
+  @Test
+  public void testGetOrganisationsBuildsCorrectRequest() {
+    ObjectFactory objectFactory = new ObjectFactory();
 
-    @Test
-    public void testGetOrganisationsBuildsCorrectRequest() {
-        ObjectFactory objectFactory = new ObjectFactory();
+    // Mock the response of the WebServiceTemplate
+    when(webServiceTemplate.marshalSendAndReceive(
+            eq(SERVICE_URL), any(JAXBElement.class), any(SoapActionCallback.class)))
+        .thenReturn(objectFactory.createCommonOrgInqRS(new CommonOrgInqRS()));
 
-        // Mock the response of the WebServiceTemplate
-        when(webServiceTemplate.marshalSendAndReceive(
-                eq(SERVICE_URL),
-                any(JAXBElement.class),
-                any(SoapActionCallback.class)))
-                .thenReturn(objectFactory.createCommonOrgInqRS(new CommonOrgInqRS()));
+    Organization organisation = buildOrganisation();
 
-        Organization organisation = buildOrganisation();
-        
-        CommonOrgInqRS response = client.getOrganisations(
-            SOA_GATEWAY_USER_LOGIN_ID, 
-            SOA_GATEWAY_USER_ROLE, 
-            MAX_RECORDS, 
-            organisation);
+    CommonOrgInqRS response =
+        client.getOrganisations(
+            SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE, MAX_RECORDS, organisation);
 
-        // Verify interactions
-        verify(webServiceTemplate, times(1)).marshalSendAndReceive(
-                eq(SERVICE_URL),
-                requestCaptor.capture(),
-                any(SoapActionCallback.class));
+    // Verify interactions
+    verify(webServiceTemplate, times(1))
+        .marshalSendAndReceive(
+            eq(SERVICE_URL), requestCaptor.capture(), any(SoapActionCallback.class));
 
-        JAXBElement<CommonOrgInqRQ> payload = requestCaptor.getValue();
-        assertNotNull(payload.getValue().getHeaderRQ().getTimeStamp());
-        assertEquals(SOA_GATEWAY_USER_LOGIN_ID, payload.getValue().getHeaderRQ().getUserLoginID());
-        assertEquals(SOA_GATEWAY_USER_ROLE, payload.getValue().getHeaderRQ().getUserRole());
-        Organization payloadOrg = payload.getValue().getSearchCriteria().getOrganization();
-        assertEquals(organisation.getOrganizationName(), payloadOrg.getOrganizationName());
-        assertEquals(organisation.getOrganizationType(), payloadOrg.getOrganizationType());
-        assertEquals(organisation.getCity(), payloadOrg.getCity());
-        assertEquals(organisation.getPostCode(), payloadOrg.getPostCode());
-        assertNotNull(response);
-    }
+    JAXBElement<CommonOrgInqRQ> payload = requestCaptor.getValue();
+    assertNotNull(payload.getValue().getHeaderRQ().getTimeStamp());
+    assertEquals(SOA_GATEWAY_USER_LOGIN_ID, payload.getValue().getHeaderRQ().getUserLoginID());
+    assertEquals(SOA_GATEWAY_USER_ROLE, payload.getValue().getHeaderRQ().getUserRole());
+    Organization payloadOrg = payload.getValue().getSearchCriteria().getOrganization();
+    assertEquals(organisation.getOrganizationName(), payloadOrg.getOrganizationName());
+    assertEquals(organisation.getOrganizationType(), payloadOrg.getOrganizationType());
+    assertEquals(organisation.getCity(), payloadOrg.getCity());
+    assertEquals(organisation.getPostCode(), payloadOrg.getPostCode());
+    assertNotNull(response);
+  }
 
-    @Test
-    public void testGetOrganisationBuildsCorrectRequest() {
-        ObjectFactory objectFactory = new ObjectFactory();
+  @Test
+  public void testGetOrganisationBuildsCorrectRequest() {
+    ObjectFactory objectFactory = new ObjectFactory();
 
-        // Mock the response of the WebServiceTemplate
-        when(webServiceTemplate.marshalSendAndReceive(
-            eq(SERVICE_URL),
-            any(JAXBElement.class),
-            any(SoapActionCallback.class)))
-            .thenReturn(objectFactory.createCommonOrgInqRS(new CommonOrgInqRS()));
+    // Mock the response of the WebServiceTemplate
+    when(webServiceTemplate.marshalSendAndReceive(
+            eq(SERVICE_URL), any(JAXBElement.class), any(SoapActionCallback.class)))
+        .thenReturn(objectFactory.createCommonOrgInqRS(new CommonOrgInqRS()));
 
-        final String partyId = "123";
+    final String partyId = "123";
 
-        CommonOrgInqRS response = client.getOrganisation(
-            SOA_GATEWAY_USER_LOGIN_ID,
-            SOA_GATEWAY_USER_ROLE,
-            MAX_RECORDS,
-            partyId);
+    CommonOrgInqRS response =
+        client.getOrganisation(
+            SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE, MAX_RECORDS, partyId);
 
-        // Verify interactions
-        verify(webServiceTemplate, times(1)).marshalSendAndReceive(
-            eq(SERVICE_URL),
-            requestCaptor.capture(),
-            any(SoapActionCallback.class));
+    // Verify interactions
+    verify(webServiceTemplate, times(1))
+        .marshalSendAndReceive(
+            eq(SERVICE_URL), requestCaptor.capture(), any(SoapActionCallback.class));
 
-        JAXBElement<CommonOrgInqRQ> payload = requestCaptor.getValue();
-        assertNotNull(payload.getValue().getHeaderRQ().getTimeStamp());
-        assertEquals(SOA_GATEWAY_USER_LOGIN_ID, payload.getValue().getHeaderRQ().getUserLoginID());
-        assertEquals(SOA_GATEWAY_USER_ROLE, payload.getValue().getHeaderRQ().getUserRole());
-        assertEquals(partyId, payload.getValue().getSearchCriteria().getOrganizationPartyID());
-        assertNotNull(response);
-    }
+    JAXBElement<CommonOrgInqRQ> payload = requestCaptor.getValue();
+    assertNotNull(payload.getValue().getHeaderRQ().getTimeStamp());
+    assertEquals(SOA_GATEWAY_USER_LOGIN_ID, payload.getValue().getHeaderRQ().getUserLoginID());
+    assertEquals(SOA_GATEWAY_USER_ROLE, payload.getValue().getHeaderRQ().getUserRole());
+    assertEquals(partyId, payload.getValue().getSearchCriteria().getOrganizationPartyID());
+    assertNotNull(response);
+  }
 
-    private Organization buildOrganisation(){
-        Organization organization = new Organization();
-        organization.setOrganizationName("name");
-        organization.setOrganizationType("type");
-        organization.setCity("thecity");
-        organization.setPostCode("thepostcode");
-        return organization;
-    }
+  private Organization buildOrganisation() {
+    Organization organization = new Organization();
+    organization.setOrganizationName("name");
+    organization.setOrganizationType("type");
+    organization.setCity("thecity");
+    organization.setPostCode("thepostcode");
+    return organization;
+  }
 }

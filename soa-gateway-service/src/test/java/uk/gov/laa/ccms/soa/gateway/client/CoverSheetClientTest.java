@@ -33,16 +33,13 @@ public class CoverSheetClientTest {
   private static final String SOA_GATEWAY_USER_ROLE = "EXTERNAL";
   private static final Integer MAX_RECORDS = 50;
 
-  @Mock
-  Logger mockLogger;
+  @Mock Logger mockLogger;
 
-  @Mock
-  WebServiceTemplate webServiceTemplate;
+  @Mock WebServiceTemplate webServiceTemplate;
 
   private CoverSheetClient client;
 
-  @Captor
-  ArgumentCaptor<JAXBElement<DocumentCoverRQ>> coverRequestCaptor;
+  @Captor ArgumentCaptor<JAXBElement<DocumentCoverRQ>> coverRequestCaptor;
 
   @BeforeEach
   void setup() {
@@ -60,21 +57,19 @@ public class CoverSheetClientTest {
 
     // Mock the response of the WebServiceTemplate
     when(webServiceTemplate.marshalSendAndReceive(
-        eq(SERVICE_URL),
-        any(JAXBElement.class),
-        any(SoapActionCallback.class)))
+            eq(SERVICE_URL), any(JAXBElement.class), any(SoapActionCallback.class)))
         .thenReturn(objectFactory.createDocumentCoverRS(documentCoverRS));
 
     String documentId = "document-id";
 
-    byte[] response = client.downloadDocumentCoverSheet(
-        SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE, documentId);
+    byte[] response =
+        client.downloadDocumentCoverSheet(
+            SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE, documentId);
 
     // Verify interactions
-    verify(webServiceTemplate, times(1)).marshalSendAndReceive(
-        eq(SERVICE_URL),
-        coverRequestCaptor.capture(),
-        any(SoapActionCallback.class));
+    verify(webServiceTemplate, times(1))
+        .marshalSendAndReceive(
+            eq(SERVICE_URL), coverRequestCaptor.capture(), any(SoapActionCallback.class));
 
     JAXBElement<DocumentCoverRQ> payload = coverRequestCaptor.getValue();
     assertNotNull(payload.getValue().getHeaderRQ().getTimeStamp());
@@ -84,5 +79,4 @@ public class CoverSheetClientTest {
     assertNotNull(response);
     assertEquals(documentContent, response);
   }
-
 }

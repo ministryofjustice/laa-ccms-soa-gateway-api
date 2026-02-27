@@ -16,12 +16,11 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.DocumentUploa
 import uk.gov.legalservices.enterprise.common._1_0.common.DocumentElementType;
 
 /**
- * Provides a client interface for interacting with Document Services in the SOA-based
- * system.
+ * Provides a client interface for interacting with Document Services in the SOA-based system.
  *
  * <p>This client extends the foundational utilities provided by {@link AbstractSoaClient} and
- * specifically focuses on document services. It allows for the registering, upload
- * and download of documents. Service name and URL details are injected at runtime.</p>
+ * specifically focuses on document services. It allows for the registering, upload and download of
+ * documents. Service name and URL details are injected at runtime.
  */
 @Slf4j
 @SuppressWarnings("unchecked")
@@ -35,21 +34,20 @@ public class DocumentClient extends AbstractSoaClient {
   private static final ObjectFactory CASE_BIM_FACTORY = new ObjectFactory();
 
   /**
-   * Value to indicate that the document is not related to a notification.
-   * Passing this value, and omitting a documentId will also trigger SOA to route
-   * the message to RegisterDocument.
+   * Value to indicate that the document is not related to a notification. Passing this value, and
+   * omitting a documentId will also trigger SOA to route the message to RegisterDocument.
    */
   public static final String NO_RELATED_NOTIFICATION = "-1";
-
 
   /**
    * Constructs a new {@link DocumentClient} with the given service details.
    *
    * @param webServiceTemplate The web service template for SOAP communication.
-   * @param serviceName        The name of the documentt service.
-   * @param serviceUrl         The URL endpoint for the document service.
+   * @param serviceName The name of the documentt service.
+   * @param serviceUrl The URL endpoint for the document service.
    */
-  public DocumentClient(WebServiceTemplate webServiceTemplate,
+  public DocumentClient(
+      WebServiceTemplate webServiceTemplate,
       @Value("${laa.ccms.soa-gateway.document.service-name}") String serviceName,
       @Value("${laa.ccms.soa-gateway.document.service-url}") String serviceUrl) {
     this.webServiceTemplate = webServiceTemplate;
@@ -60,8 +58,8 @@ public class DocumentClient extends AbstractSoaClient {
   /**
    * Register a new document in Ebs to receive a document id.
    *
-   * @param loggedInUserId      - the logged in UserId
-   * @param loggedInUserType    - the logged in UserType
+   * @param loggedInUserId - the logged in UserId
+   * @param loggedInUserType - the logged in UserType
    * @param documentUploadElementType - the document upload details
    * @param notificationReference - the ID of the notification to which this document is related
    * @return The response from the register request.
@@ -84,8 +82,8 @@ public class DocumentClient extends AbstractSoaClient {
   /**
    * Upload a document.
    *
-   * @param loggedInUserId      - the logged in UserId
-   * @param loggedInUserType    - the logged in UserType
+   * @param loggedInUserId - the logged in UserId
+   * @param loggedInUserType - the logged in UserType
    * @param notificationReference - the notification reference number
    * @param documentUploadElementType - the document upload details
    * @return The response from the upload request.
@@ -105,11 +103,12 @@ public class DocumentClient extends AbstractSoaClient {
     documentUploadRq.setDocument(documentUploadElementType);
 
     final JAXBElement<DocumentUploadRS> response =
-        (JAXBElement<DocumentUploadRS>) getWebServiceTemplate()
-            .marshalSendAndReceive(
-                serviceUrl,
-                CASE_BIM_FACTORY.createDocumentUploadRQ(documentUploadRq),
-                new SoapActionCallback(soapAction));
+        (JAXBElement<DocumentUploadRS>)
+            getWebServiceTemplate()
+                .marshalSendAndReceive(
+                    serviceUrl,
+                    CASE_BIM_FACTORY.createDocumentUploadRQ(documentUploadRq),
+                    new SoapActionCallback(soapAction));
 
     // Check and throw exception if the SOA call was not successful
     isSuccessOrThrowException(serviceName, response.getValue().getHeaderRS());
@@ -120,8 +119,8 @@ public class DocumentClient extends AbstractSoaClient {
   /**
    * Download a document by ebs registered document id.
    *
-   * @param loggedInUserId      - the logged in UserId
-   * @param loggedInUserType    - the logged in UserType
+   * @param loggedInUserId - the logged in UserId
+   * @param loggedInUserType - the logged in UserType
    * @param registeredDocumentId - the id of the ebs-registered document
    * @return Response object containing the full details for a single Case
    */
@@ -136,11 +135,12 @@ public class DocumentClient extends AbstractSoaClient {
     documentDownloadRq.setDocumentID(registeredDocumentId);
 
     JAXBElement<DocumentDownloadRS> response =
-        (JAXBElement<DocumentDownloadRS>) getWebServiceTemplate()
-            .marshalSendAndReceive(
-                serviceUrl,
-                CASE_BIM_FACTORY.createDocumentDownloadRQ(documentDownloadRq),
-                new SoapActionCallback(soapAction));
+        (JAXBElement<DocumentDownloadRS>)
+            getWebServiceTemplate()
+                .marshalSendAndReceive(
+                    serviceUrl,
+                    CASE_BIM_FACTORY.createDocumentDownloadRQ(documentDownloadRq),
+                    new SoapActionCallback(soapAction));
 
     // Check and throw exception if the SOA call was not successful
     isSuccessOrThrowException(serviceName, response.getValue().getHeaderRS());

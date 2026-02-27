@@ -21,24 +21,24 @@ import uk.gov.legalservices.enterprise.common._1_0.common.User;
 @ExtendWith(MockitoExtension.class)
 class ProviderRequestsMapperTest {
 
-  @Mock
-  CommonMapper commonMapper;
+  @Mock CommonMapper commonMapper;
 
-  @InjectMocks
-  ProviderRequestsMapperImpl mapper;
+  @InjectMocks ProviderRequestsMapperImpl mapper;
 
   @Test
-  @DisplayName("toProviderRequestElementType - Maps ProviderRequestMappingContext to ProviderRequestElementType")
+  @DisplayName(
+      "toProviderRequestElementType - Maps ProviderRequestMappingContext to ProviderRequestElementType")
   void testToProviderRequestElementType() {
     ProviderRequestDetail providerRequestDetail = new ProviderRequestDetail();
     providerRequestDetail.setCaseReferenceNumber("CR123");
     providerRequestDetail.setUsername("testUser");
 
-    ProviderRequestMappingContext context = ProviderRequestMappingContext.builder()
-        .userLoginId("userLoginId")
-        .userRole("userRole")
-        .providerRequestDetail(providerRequestDetail)
-        .build();
+    ProviderRequestMappingContext context =
+        ProviderRequestMappingContext.builder()
+            .userLoginId("userLoginId")
+            .userRole("userRole")
+            .providerRequestDetail(providerRequestDetail)
+            .build();
 
     ProviderRequestElementType result = mapper.toProviderRequestElementType(context);
 
@@ -56,11 +56,12 @@ class ProviderRequestsMapperTest {
     ProviderRequestDetail providerRequestDetail = new ProviderRequestDetail();
     providerRequestDetail.setUsername("testUser");
 
-    ProviderRequestMappingContext context = ProviderRequestMappingContext.builder()
-        .userLoginId("userLoginId")
-        .userRole("userRole")
-        .providerRequestDetail(providerRequestDetail)
-        .build();
+    ProviderRequestMappingContext context =
+        ProviderRequestMappingContext.builder()
+            .userLoginId("userLoginId")
+            .userRole("userRole")
+            .providerRequestDetail(providerRequestDetail)
+            .build();
 
     User user = mapper.toUser(context);
 
@@ -71,7 +72,8 @@ class ProviderRequestsMapperTest {
   }
 
   @Test
-  @DisplayName("mapAttributes - Maps list of ProviderRequestAttribute to ProviderRequestTextElementType")
+  @DisplayName(
+      "mapAttributes - Maps list of ProviderRequestAttribute to ProviderRequestTextElementType")
   void testMapAttributes() {
     ProviderRequestAttribute attribute1 = new ProviderRequestAttribute();
     attribute1.setLabel("attr1");
@@ -99,12 +101,12 @@ class ProviderRequestsMapperTest {
     ProviderRequestDetail providerRequestDetail = new ProviderRequestDetail();
     providerRequestDetail.setRequestType("REQ_TYPE");
 
-    ProviderRequestElementType.RequestDetails result = mapper.toRequestDetails(providerRequestDetail);
+    ProviderRequestElementType.RequestDetails result =
+        mapper.toRequestDetails(providerRequestDetail);
 
     assertNotNull(result);
     assertEquals("REQ_TYPE", result.getRequest().getRequestType());
   }
-
 
   @Test
   @DisplayName("toProviderRequestElementType - Handles Null Input Gracefully")
@@ -141,7 +143,4 @@ class ProviderRequestsMapperTest {
   void testToProviderRequestTextElementType_NullInput() {
     assertNull(mapper.toProviderRequestTextElementType(null));
   }
-
-
-
 }

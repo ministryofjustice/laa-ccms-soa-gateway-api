@@ -11,9 +11,7 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.ProviderReque
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.ProviderRequestAddRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ProviderRequestElementType;
 
-/**
- * Client for handling provider requests to the CCMS case management service.
- */
+/** Client for handling provider requests to the CCMS case management service. */
 @Slf4j
 @SuppressWarnings("unchecked")
 @Component
@@ -27,8 +25,8 @@ public class ProviderRequestClient extends AbstractSoaClient {
    * Constructs a new {@link ProviderRequestClient} with the given service details.
    *
    * @param webServiceTemplate The web service template for SOAP communication.
-   * @param serviceName        The name of the case management service.
-   * @param serviceUrl         The URL endpoint for the case management service.
+   * @param serviceName The name of the case management service.
+   * @param serviceUrl The URL endpoint for the case management service.
    */
   public ProviderRequestClient(
       final WebServiceTemplate webServiceTemplate,
@@ -42,9 +40,9 @@ public class ProviderRequestClient extends AbstractSoaClient {
   /**
    * Register a new Provider Request in CCMS.
    *
-   * @param loggedInUserId               - the logged in UserId
-   * @param loggedInUserType             - the logged in UserType
-   * @param providerRequestElementType   - the provider request element type
+   * @param loggedInUserId - the logged in UserId
+   * @param loggedInUserType - the logged in UserType
+   * @param providerRequestElementType - the provider request element type
    * @return Response object containing the result of the provider request creation.
    */
   public ProviderRequestAddRS submitProviderRequest(
@@ -59,15 +57,15 @@ public class ProviderRequestClient extends AbstractSoaClient {
     providerRequestAddRq.setRequestDetails(providerRequestElementType);
 
     final JAXBElement<ProviderRequestAddRS> response =
-        (JAXBElement<ProviderRequestAddRS>) getWebServiceTemplate()
-            .marshalSendAndReceive(
-                serviceUrl,
-                CASE_FACTORY.createProviderRequestAddRQ(providerRequestAddRq),
-                new SoapActionCallback(soapAction));
+        (JAXBElement<ProviderRequestAddRS>)
+            getWebServiceTemplate()
+                .marshalSendAndReceive(
+                    serviceUrl,
+                    CASE_FACTORY.createProviderRequestAddRQ(providerRequestAddRq),
+                    new SoapActionCallback(soapAction));
 
     // Check and throw exception if the SOA call was not successful
     isSuccessOrThrowException(serviceName, response.getValue().getHeaderRS());
     return response.getValue();
   }
-
 }

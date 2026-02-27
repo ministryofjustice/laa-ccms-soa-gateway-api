@@ -15,9 +15,9 @@ import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbim.ClientUp
 /**
  * Service responsible for handling client details operations.
  *
- * <p>This service class communicates with the external Client Services system to fetch and
- * manage client details. It leverages a client services client and a client details mapper
- * to achieve this functionality.</p>
+ * <p>This service class communicates with the external Client Services system to fetch and manage
+ * client details. It leverages a client services client and a client details mapper to achieve this
+ * functionality.
  */
 @Service
 @RequiredArgsConstructor
@@ -28,35 +28,30 @@ public class ClientDetailsService extends AbstractSoaService {
 
   private final ClientDetailsMapper clientDetailsMapper;
 
-
-
   /**
    * Retrieves detailed information for a specific client based on the provided client reference
    * number.
    *
-   * <p>This method communicates with the external Client Services system using the provided
-   * user credentials and client reference number, then fetches the comprehensive details for
-   * that specific client.</p>
+   * <p>This method communicates with the external Client Services system using the provided user
+   * credentials and client reference number, then fetches the comprehensive details for that
+   * specific client.
    *
-   * @param soaGatewayUserLoginId      The user login ID for the SOA Gateway.
-   * @param soaGatewayUserRole         The user role in the SOA Gateway.
-   * @param maxRecords                 The maximum number of records to retrieve.
-   * @param clientReferenceNumber      The unique reference number of the client.
-   * @return                           A {@link ClientDetail} object containing the detailed
-   *                                   information of the specified client.
+   * @param soaGatewayUserLoginId The user login ID for the SOA Gateway.
+   * @param soaGatewayUserRole The user role in the SOA Gateway.
+   * @param maxRecords The maximum number of records to retrieve.
+   * @param clientReferenceNumber The unique reference number of the client.
+   * @return A {@link ClientDetail} object containing the detailed information of the specified
+   *     client.
    */
   public ClientDetail getClientDetail(
-          final String soaGatewayUserLoginId,
-          final String soaGatewayUserRole,
-          final Integer maxRecords,
-          final String clientReferenceNumber
-  ) {
+      final String soaGatewayUserLoginId,
+      final String soaGatewayUserRole,
+      final Integer maxRecords,
+      final String clientReferenceNumber) {
     log.info("ClientDetailsService - getClientDetail");
-    ClientInqRS response = clientServicesClient.getClientDetail(
-            soaGatewayUserLoginId,
-            soaGatewayUserRole,
-            maxRecords,
-            clientReferenceNumber);
+    ClientInqRS response =
+        clientServicesClient.getClientDetail(
+            soaGatewayUserLoginId, soaGatewayUserRole, maxRecords, clientReferenceNumber);
 
     ClientDetail clientDetail = clientDetailsMapper.toClientDetail(response);
     log.debug("clientDetail, received: {}", clientDetail);
@@ -69,24 +64,22 @@ public class ClientDetailsService extends AbstractSoaService {
    * mapped and transformed before they're sent for submission. The method returns the transaction
    * ID of the submission.
    *
-   * @param soaGatewayUserLoginId      User login ID for the SOA Gateway.
-   * @param soaGatewayUserRole         User role in the SOA Gateway.
-   * @param clientDetailDetails        The details of the client to be submitted.
-   * @return                           The transaction ID for the submitted client details.
+   * @param soaGatewayUserLoginId User login ID for the SOA Gateway.
+   * @param soaGatewayUserRole User role in the SOA Gateway.
+   * @param clientDetailDetails The details of the client to be submitted.
+   * @return The transaction ID for the submitted client details.
    */
   public String createClient(
       final String soaGatewayUserLoginId,
       final String soaGatewayUserRole,
-      final ClientDetailDetails clientDetailDetails
-  ) {
+      final ClientDetailDetails clientDetailDetails) {
     log.info("ClientDetailsService - createClient");
-    uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientDetails clientDetails
-        =  clientDetailsMapper.toSoaClientDetails(clientDetailDetails);
+    uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientDetails clientDetails =
+        clientDetailsMapper.toSoaClientDetails(clientDetailDetails);
 
-    ClientAddRS response = clientServicesClient.postClientDetails(
-        soaGatewayUserLoginId,
-        soaGatewayUserRole,
-        clientDetails);
+    ClientAddRS response =
+        clientServicesClient.postClientDetails(
+            soaGatewayUserLoginId, soaGatewayUserRole, clientDetails);
 
     return response.getTransactionID();
   }
@@ -96,29 +89,25 @@ public class ClientDetailsService extends AbstractSoaService {
    * are mapped and transformed before they're sent for submission. The method returns the
    * transaction ID of the submission.
    *
-   * @param clientReferenceNumber      The client unique identifier.
-   * @param soaGatewayUserLoginId      User login ID for the SOA Gateway.
-   * @param soaGatewayUserRole         User role in the SOA Gateway.
-   * @param clientDetailDetails        The details of the client to be submitted.
-   * @return                           The transaction ID for the submitted client details.
+   * @param clientReferenceNumber The client unique identifier.
+   * @param soaGatewayUserLoginId User login ID for the SOA Gateway.
+   * @param soaGatewayUserRole User role in the SOA Gateway.
+   * @param clientDetailDetails The details of the client to be submitted.
+   * @return The transaction ID for the submitted client details.
    */
   public String updateClient(
       final String clientReferenceNumber,
       final String soaGatewayUserLoginId,
       final String soaGatewayUserRole,
-      final ClientDetailDetails clientDetailDetails
-  ) {
+      final ClientDetailDetails clientDetailDetails) {
     log.info("ClientDetailsService - updateClient");
-    ClientUpdateRQ clientUpdateRq = clientDetailsMapper.toClientUpdateRq(
-        clientReferenceNumber, clientDetailDetails);
+    ClientUpdateRQ clientUpdateRq =
+        clientDetailsMapper.toClientUpdateRq(clientReferenceNumber, clientDetailDetails);
 
-    ClientUpdateRS response = clientServicesClient.updateClientDetails(
-        soaGatewayUserLoginId,
-        soaGatewayUserRole,
-        clientUpdateRq);
+    ClientUpdateRS response =
+        clientServicesClient.updateClientDetails(
+            soaGatewayUserLoginId, soaGatewayUserRole, clientUpdateRq);
 
     return response.getTransactionID();
   }
-
-
 }

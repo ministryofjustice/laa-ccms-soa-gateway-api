@@ -1,16 +1,11 @@
 package uk.gov.laa.ccms.soa.gateway.mapper;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.List;
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -21,16 +16,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import uk.gov.laa.ccms.soa.gateway.model.Document;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationCntInqRS;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationInqRS;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationInqRS.NotificationList;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.Notes;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.NotesElementType;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.NotificationCntList;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.NotificationElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.NotificationElementType.AttachedDocuments;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.NotificationElementType.AvailableResponses;
@@ -42,14 +29,13 @@ import uk.gov.legalservices.enterprise.common._1_0.common.User;
 @ExtendWith(MockitoExtension.class)
 public class NotificationMapperTest {
 
-  @Mock
-  CommonMapper commonMapper;
+  @Mock CommonMapper commonMapper;
 
-  @InjectMocks
-  NotificationMapperImpl notificationMapper;
+  @InjectMocks NotificationMapperImpl notificationMapper;
 
-  private static NotificationElementType getNotificationElementTypeWithNullProviderFirmIdAndEmptyNotes()
-      throws DatatypeConfigurationException {
+  private static NotificationElementType
+      getNotificationElementTypeWithNullProviderFirmIdAndEmptyNotes()
+          throws DatatypeConfigurationException {
     NotificationElementType notification = new NotificationElementType();
     notification.setNotificationID("1234");
     XMLGregorianCalendar xmlGreg = getXmlGregorianCalendar();
@@ -86,12 +72,10 @@ public class NotificationMapperTest {
     return documentElementType;
   }
 
-
   @Test
   public void testToNoteReturnsNullWithNullNotes() {
     assertNull(notificationMapper.toNote(null));
   }
-
 
   private NotificationListElementType getNotificationListElementType() {
     NotificationListElementType listElementType = new NotificationListElementType();
@@ -131,7 +115,6 @@ public class NotificationMapperTest {
     notification.setNotes(setNotes(notes));
     return notification;
   }
-  
 
   private AttachedDocuments getAttachedDocuments() {
     AttachedDocuments attachedDocuments = new AttachedDocuments();

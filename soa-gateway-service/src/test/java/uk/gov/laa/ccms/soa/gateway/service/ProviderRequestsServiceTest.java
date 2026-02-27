@@ -20,14 +20,11 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ProviderReque
 @ExtendWith(MockitoExtension.class)
 class ProviderRequestsServiceTest {
 
-  @Mock
-  private ProviderRequestClient providerRequestClient;
+  @Mock private ProviderRequestClient providerRequestClient;
 
-  @Mock
-  private ProviderRequestsMapper providerRequestsMapper;
+  @Mock private ProviderRequestsMapper providerRequestsMapper;
 
-  @InjectMocks
-  private ProviderRequestsService providerRequestsService;
+  @InjectMocks private ProviderRequestsService providerRequestsService;
 
   @Test
   @DisplayName("submitProviderRequest - Successful Submission")
@@ -42,8 +39,8 @@ class ProviderRequestsServiceTest {
     when(providerRequestsMapper.toProviderRequestElementType(any())).thenReturn(elementType);
     when(providerRequestClient.submitProviderRequest(any(), any(), any())).thenReturn(mockResponse);
 
-    final String notificationId = providerRequestsService.submitProviderRequest(
-        userLoginId, userRole, providerRequestDetail);
+    final String notificationId =
+        providerRequestsService.submitProviderRequest(userLoginId, userRole, providerRequestDetail);
 
     assertEquals("notif123", notificationId);
 
@@ -57,18 +54,20 @@ class ProviderRequestsServiceTest {
     final String userRole = "testRole";
     final ProviderRequestDetail providerRequestDetail = new ProviderRequestDetail();
 
-    when(providerRequestsMapper.toProviderRequestElementType(any())).thenReturn(new ProviderRequestElementType());
+    when(providerRequestsMapper.toProviderRequestElementType(any()))
+        .thenReturn(new ProviderRequestElementType());
     when(providerRequestClient.submitProviderRequest(any(), any(), any()))
         .thenThrow(new RuntimeException("Test exception"));
 
-    final RuntimeException exception = org.junit.jupiter.api.Assertions.assertThrows(
-        RuntimeException.class,
-        () -> providerRequestsService.submitProviderRequest(userLoginId, userRole, providerRequestDetail)
-    );
+    final RuntimeException exception =
+        org.junit.jupiter.api.Assertions.assertThrows(
+            RuntimeException.class,
+            () ->
+                providerRequestsService.submitProviderRequest(
+                    userLoginId, userRole, providerRequestDetail));
 
     assertEquals("Test exception", exception.getMessage());
 
     verify(providerRequestClient).submitProviderRequest(any(), any(), any());
   }
-
 }
