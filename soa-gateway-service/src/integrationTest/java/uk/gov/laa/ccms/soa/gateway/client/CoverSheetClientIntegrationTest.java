@@ -20,21 +20,23 @@ import org.springframework.ws.test.client.MockWebServiceServer;
 @SpringBootTest
 public class CoverSheetClientIntegrationTest {
 
-  @Autowired
-  private WebServiceTemplate webServiceTemplate;
+  @Autowired private WebServiceTemplate webServiceTemplate;
 
-  @Autowired
-  private CoverSheetClient client;
+  @Autowired private CoverSheetClient client;
 
   private static MockWebServiceServer mockServer;
 
   @Value("classpath:/payload/DocumentCoverRS_valid.xml")
   Resource documentCoverRS_valid;
 
-  private static final String HEADER_NS = "http://legalservices.gov.uk/Enterprise/Common/1.0/Header";
-  private static final String MSG_NS = "http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIM";
-  private static final String DOC_NS = "http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO";
-  private static final String COMMON_NS = "http://legalservices.gov.uk/Enterprise/Common/1.0/Common";
+  private static final String HEADER_NS =
+      "http://legalservices.gov.uk/Enterprise/Common/1.0/Header";
+  private static final String MSG_NS =
+      "http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIM";
+  private static final String DOC_NS =
+      "http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO";
+  private static final String COMMON_NS =
+      "http://legalservices.gov.uk/Enterprise/Common/1.0/Common";
 
   private String testLoginId;
   private String testUserType;
@@ -60,26 +62,26 @@ public class CoverSheetClientIntegrationTest {
 
     String documentId = "12345";
 
-    mockServer.expect(
-            xpath("/msg:DocumentCoverRQ/header:HeaderRQ/header:TransactionRequestID", namespaces).exists())
+    mockServer
+        .expect(
+            xpath("/msg:DocumentCoverRQ/header:HeaderRQ/header:TransactionRequestID", namespaces)
+                .exists())
         .andExpect(
-            xpath("/msg:DocumentCoverRQ/header:HeaderRQ/header:UserLoginID", namespaces).evaluatesTo(
-                testLoginId))
-        .andExpect(xpath("/msg:DocumentCoverRQ/header:HeaderRQ/header:UserRole", namespaces).evaluatesTo(
-            testUserType))
+            xpath("/msg:DocumentCoverRQ/header:HeaderRQ/header:UserLoginID", namespaces)
+                .evaluatesTo(testLoginId))
         .andExpect(
-            xpath("/msg:DocumentCoverRQ/msg:ExpectedDocumentID",
-                namespaces)
+            xpath("/msg:DocumentCoverRQ/header:HeaderRQ/header:UserRole", namespaces)
+                .evaluatesTo(testUserType))
+        .andExpect(
+            xpath("/msg:DocumentCoverRQ/msg:ExpectedDocumentID", namespaces)
                 .evaluatesTo(documentId))
         .andRespond(withPayload(documentCoverRS_valid));
 
-    byte[] response = client.downloadDocumentCoverSheet(testLoginId, testUserType,
-        documentId);
+    byte[] response = client.downloadDocumentCoverSheet(testLoginId, testUserType, documentId);
 
     assertNotNull(response);
     assertEquals("cover-sheet-content", new String(response, StandardCharsets.UTF_8));
 
     mockServer.verify();
   }
-
 }

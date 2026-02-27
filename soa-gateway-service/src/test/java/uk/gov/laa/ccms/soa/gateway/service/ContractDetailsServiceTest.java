@@ -20,84 +20,78 @@ import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabio.Cont
 @ExtendWith(MockitoExtension.class)
 public class ContractDetailsServiceTest {
 
-    @Mock
-    private ContractDetailsClientImpl contractDetailsClientImpl;
+  @Mock private ContractDetailsClientImpl contractDetailsClientImpl;
 
-    @Mock
-    private ContractDetailsMapper contractDetailsMapper;
+  @Mock private ContractDetailsMapper contractDetailsMapper;
 
-    @InjectMocks
-    private ContractDetailsService contractDetailsService;
+  @InjectMocks private ContractDetailsService contractDetailsService;
 
+  @Test
+  public void testGetContractDetails() {
+    // Create a mocked instance of soa response object
+    String authType = "authType";
+    String catOfLaw = "catOfLaw";
+    String subCat = "subCat";
+    String conDevPowers = "conDevPowers";
 
+    ContractDetailsInqRS response = new ContractDetailsInqRS();
+    response.setContractDetails(new ContractDetailsInqRS.ContractDetails());
+    ContractDetailsElementType contract = new ContractDetailsElementType();
+    contract.setAuthorisationType(authType);
+    contract.setCategoryofLaw(catOfLaw);
+    contract.setSubCategory(subCat);
+    contract.setRemainderAuthorisation(true);
+    contract.setCreateNewMatters(true);
+    contract.setContractualDevolvedPowers(conDevPowers);
+    response.getContractDetails().getContractDetail().add(contract);
 
-    @Test
-    public void testGetContractDetails() {
-        // Create a mocked instance of soa response object
-        String authType = "authType";
-        String catOfLaw = "catOfLaw";
-        String subCat = "subCat";
-        String conDevPowers = "conDevPowers";
+    // Create a mocked instance of gateway response
+    ContractDetails contractDetails = new ContractDetails();
+    contractDetails.addContractsItem(
+        new ContractDetail()
+            .authorisationType(authType)
+            .categoryofLaw(catOfLaw)
+            .contractualDevolvedPowers(conDevPowers)
+            .subCategory(subCat)
+            .remainderAuthorisation(true)
+            .createNewMatters(true));
 
-        ContractDetailsInqRS response = new ContractDetailsInqRS();
-        response.setContractDetails(new ContractDetailsInqRS.ContractDetails());
-        ContractDetailsElementType contract = new ContractDetailsElementType();
-        contract.setAuthorisationType(authType);
-        contract.setCategoryofLaw(catOfLaw);
-        contract.setSubCategory(subCat);
-        contract.setRemainderAuthorisation(true);
-        contract.setCreateNewMatters(true);
-        contract.setContractualDevolvedPowers(conDevPowers);
-        response.getContractDetails().getContractDetail().add(contract);
+    Integer searchFirmId = 123;
+    Integer searchOfficeId = 456;
+    String soaGatewayUserLoginId = "soaGatewayUserLoginId";
+    String soaGatewayUserRole = "soaGatewayUserRole";
+    Integer maxRecords = 50;
 
-        // Create a mocked instance of gateway response
-        ContractDetails contractDetails = new ContractDetails();
-        contractDetails.addContractsItem(
-            new ContractDetail()
-                .authorisationType(authType)
-                .categoryofLaw(catOfLaw)
-                .contractualDevolvedPowers(conDevPowers)
-                .subCategory(subCat)
-                .remainderAuthorisation(true)
-                .createNewMatters(true));
-
-        Integer searchFirmId = 123;
-        Integer searchOfficeId = 456;
-        String soaGatewayUserLoginId = "soaGatewayUserLoginId";
-        String soaGatewayUserRole = "soaGatewayUserRole";
-        Integer maxRecords = 50;
-
-        // Stub the Client to return the mocked response
-        when(contractDetailsClientImpl.getContractDetails(searchFirmId.toString(), searchOfficeId.toString(),
-            soaGatewayUserLoginId, soaGatewayUserRole, maxRecords))
-                .thenReturn(response);
-
-        // Stub the Mapper to return the mocked gateway response
-        when(contractDetailsMapper.toContractDetails(eq(response))).thenReturn(contractDetails);
-
-        // Call the service method
-        ContractDetails result = contractDetailsService.getContractDetails(
-            searchFirmId,
-            searchOfficeId,
-            soaGatewayUserLoginId,
-            soaGatewayUserRole,
-            maxRecords
-        );
-
-        // Verify that the NotificationClient method was called with the expected arguments
-        verify(contractDetailsClientImpl).getContractDetails(
+    // Stub the Client to return the mocked response
+    when(contractDetailsClientImpl.getContractDetails(
             searchFirmId.toString(),
             searchOfficeId.toString(),
             soaGatewayUserLoginId,
             soaGatewayUserRole,
-            maxRecords
-        );
+            maxRecords))
+        .thenReturn(response);
 
-        // Verify that the map function was called with the mocked response
-        verify(contractDetailsMapper).toContractDetails(response);
+    // Stub the Mapper to return the mocked gateway response
+    when(contractDetailsMapper.toContractDetails(eq(response))).thenReturn(contractDetails);
 
-        // Assert the result
-        assertEquals(contractDetails, result);
-    }
+    // Call the service method
+    ContractDetails result =
+        contractDetailsService.getContractDetails(
+            searchFirmId, searchOfficeId, soaGatewayUserLoginId, soaGatewayUserRole, maxRecords);
+
+    // Verify that the NotificationClient method was called with the expected arguments
+    verify(contractDetailsClientImpl)
+        .getContractDetails(
+            searchFirmId.toString(),
+            searchOfficeId.toString(),
+            soaGatewayUserLoginId,
+            soaGatewayUserRole,
+            maxRecords);
+
+    // Verify that the map function was called with the mocked response
+    verify(contractDetailsMapper).toContractDetails(response);
+
+    // Assert the result
+    assertEquals(contractDetails, result);
+  }
 }
-

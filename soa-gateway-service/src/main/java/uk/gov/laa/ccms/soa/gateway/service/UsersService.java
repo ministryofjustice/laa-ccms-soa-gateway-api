@@ -12,8 +12,8 @@ import uk.gov.laa.ccms.soa.gateway.model.UserOptions;
 /**
  * Service class responsible for processing user options.
  *
- * <p>This service interacts with the external Users system to update user options via the
- * {@link UserClient}.</p>
+ * <p>This service interacts with the external Users system to update user options via the {@link
+ * UserClient}.
  */
 @Service
 @RequiredArgsConstructor
@@ -26,22 +26,18 @@ public class UsersService {
   /**
    * Updates user profile options in Ebs.
    *
-   * @param soaGatewayUserLoginId  (required) - the user requesting the data.
-   * @param soaGatewayUserRole  (required) - the user role requesting the data.
+   * @param soaGatewayUserLoginId (required) - the user requesting the data.
+   * @param soaGatewayUserRole (required) - the user role requesting the data.
    * @param userOptions User options (required) - the updated user options.
    * @return the transaction ID.
    */
-  public String updateUserOptions(String soaGatewayUserLoginId, String soaGatewayUserRole,
-      UserOptions userOptions) {
+  public String updateUserOptions(
+      String soaGatewayUserLoginId, String soaGatewayUserRole, UserOptions userOptions) {
     CCMSUser ccmsUser = userMapper.toCcmsUser(userOptions);
 
-    UpdateUserRS response = userClient.updateUser(
-        soaGatewayUserLoginId,
-        soaGatewayUserRole,
-        ccmsUser
-    );
+    UpdateUserRS response =
+        userClient.updateUser(soaGatewayUserLoginId, soaGatewayUserRole, ccmsUser);
 
     return response.getHeaderRS().getTransactionID();
   }
-
 }

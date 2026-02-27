@@ -13,9 +13,7 @@ import uk.gov.laa.ccms.soa.gateway.model.Document;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.DocumentUploadRS;
 import uk.gov.legalservices.enterprise.common._1_0.common.DocumentElementType;
 
-/**
- * Service responsible for handling document operations.
- */
+/** Service responsible for handling document operations. */
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -32,29 +30,28 @@ public class DocumentService extends AbstractSoaService {
   /**
    * Register a new document in EBS, and get a registered document id.
    *
-   * @param soaGatewayUserLoginId  The user login ID for the SOA Gateway.
-   * @param soaGatewayUserRole     The user role in the SOA Gateway.
-   * @param document               The document details to register
-   * @param notificationReference  The ID of the notification to which this document
-   *                               is related.
-   * @param caseReferenceNumber    The reference id of the case to which this document
-   *                               is related.
-   * @return                       A {@link ClientTransactionResponse} object containing the
-   *                               transaction id and ebs registered document id.
+   * @param soaGatewayUserLoginId The user login ID for the SOA Gateway.
+   * @param soaGatewayUserRole The user role in the SOA Gateway.
+   * @param document The document details to register
+   * @param notificationReference The ID of the notification to which this document is related.
+   * @param caseReferenceNumber The reference id of the case to which this document is related.
+   * @return A {@link ClientTransactionResponse} object containing the transaction id and ebs
+   *     registered document id.
    */
   public ClientTransactionResponse registerDocument(
-          final String soaGatewayUserLoginId,
-          final String soaGatewayUserRole,
-          final Document document,
-          final String notificationReference,
-          final String caseReferenceNumber) {
+      final String soaGatewayUserLoginId,
+      final String soaGatewayUserRole,
+      final Document document,
+      final String notificationReference,
+      final String caseReferenceNumber) {
 
-    final DocumentUploadRS response = documentClient.registerDocument(
-        soaGatewayUserLoginId,
-        soaGatewayUserRole,
-        documentMapper.toDocumentUploadElementType(document),
-        notificationReference,
-        caseReferenceNumber);
+    final DocumentUploadRS response =
+        documentClient.registerDocument(
+            soaGatewayUserLoginId,
+            soaGatewayUserRole,
+            documentMapper.toDocumentUploadElementType(document),
+            notificationReference,
+            caseReferenceNumber);
 
     return documentMapper.toClientTransactionResponse(response);
   }
@@ -62,14 +59,12 @@ public class DocumentService extends AbstractSoaService {
   /**
    * Upload a new document in EBS, including its file data.
    *
-   * @param soaGatewayUserLoginId  The user login ID for the SOA Gateway.
-   * @param soaGatewayUserRole     The user role in the SOA Gateway.
-   * @param documentId             The registered id of the document to download.
-   * @param document               The document details to register
-   * @param notificationReference  The ID of the notification to which this document
-   *                               is related.
-   * @return                       A {@link ClientTransactionResponse} object containing the
-   *                               transaction id
+   * @param soaGatewayUserLoginId The user login ID for the SOA Gateway.
+   * @param soaGatewayUserRole The user role in the SOA Gateway.
+   * @param documentId The registered id of the document to download.
+   * @param document The document details to register
+   * @param notificationReference The ID of the notification to which this document is related.
+   * @return A {@link ClientTransactionResponse} object containing the transaction id
    */
   public ClientTransactionResponse uploadDocument(
       final String soaGatewayUserLoginId,
@@ -79,12 +74,13 @@ public class DocumentService extends AbstractSoaService {
       final String notificationReference,
       final String caseReferenceNumber) {
 
-    final DocumentUploadRS response = documentClient.registerDocument(
-        soaGatewayUserLoginId,
-        soaGatewayUserRole,
-        documentMapper.toDocumentUploadElementType(documentId, document),
-        notificationReference,
-        caseReferenceNumber);
+    final DocumentUploadRS response =
+        documentClient.registerDocument(
+            soaGatewayUserLoginId,
+            soaGatewayUserRole,
+            documentMapper.toDocumentUploadElementType(documentId, document),
+            notificationReference,
+            caseReferenceNumber);
 
     return documentMapper.toClientTransactionResponse(response);
   }
@@ -92,20 +88,18 @@ public class DocumentService extends AbstractSoaService {
   /**
    * Download a document.
    *
-   * @param soaGatewayUserLoginId  The user login ID for the SOA Gateway.
-   * @param soaGatewayUserRole     The user role in the SOA Gateway.
-   * @param documentId             The registered id of the document to download.
-   * @return                       A {@link Document} object containing the document data.
+   * @param soaGatewayUserLoginId The user login ID for the SOA Gateway.
+   * @param soaGatewayUserRole The user role in the SOA Gateway.
+   * @param documentId The registered id of the document to download.
+   * @return A {@link Document} object containing the document data.
    */
   public Document downloadDocument(
       final String soaGatewayUserLoginId,
       final String soaGatewayUserRole,
       final String documentId) {
 
-    final DocumentElementType response = documentClient.downloadDocument(
-        soaGatewayUserLoginId,
-        soaGatewayUserRole,
-        documentId);
+    final DocumentElementType response =
+        documentClient.downloadDocument(soaGatewayUserLoginId, soaGatewayUserRole, documentId);
 
     return commonMapper.toDocument(response);
   }
@@ -113,27 +107,22 @@ public class DocumentService extends AbstractSoaService {
   /**
    * Download a document cover sheet.
    *
-   * @param soaGatewayUserLoginId  The user login ID for the SOA Gateway.
-   * @param soaGatewayUserRole     The user role in the SOA Gateway.
-   * @param documentId             The registered id of the document to download the
-   *                               cover sheet for.
-   * @return                       A {@link CoverSheet} object containing the cover sheet data.
+   * @param soaGatewayUserLoginId The user login ID for the SOA Gateway.
+   * @param soaGatewayUserRole The user role in the SOA Gateway.
+   * @param documentId The registered id of the document to download the cover sheet for.
+   * @return A {@link CoverSheet} object containing the cover sheet data.
    */
   public CoverSheet downloadDocumentCoverSheet(
       final String soaGatewayUserLoginId,
       final String soaGatewayUserRole,
       final String documentId) {
 
-    final byte[] documentContent = coverSheetClient.downloadDocumentCoverSheet(
-        soaGatewayUserLoginId,
-        soaGatewayUserRole,
-        documentId);
+    final byte[] documentContent =
+        coverSheetClient.downloadDocumentCoverSheet(
+            soaGatewayUserLoginId, soaGatewayUserRole, documentId);
 
     String encodedContent = commonMapper.toBase64EncodedStringFromByteArray(documentContent);
 
-    return new CoverSheet()
-        .documentId(documentId)
-        .fileData(encodedContent);
+    return new CoverSheet().documentId(documentId).fileData(encodedContent);
   }
-
 }

@@ -21,93 +21,89 @@ import uk.gov.legalservices.enterprise.common._1_0.header.HeaderRSType;
 @ExtendWith(MockitoExtension.class)
 public class DocumentMapperTest {
 
-    @Mock(answer = Answers.CALLS_REAL_METHODS)
-    CommonMapper commonMapper;
+  @Mock(answer = Answers.CALLS_REAL_METHODS)
+  CommonMapper commonMapper;
 
-    @InjectMocks
-    DocumentMapper documentMapper = new DocumentMapperImpl();
+  @InjectMocks DocumentMapper documentMapper = new DocumentMapperImpl();
 
-    @Test
-    public void testToClientTransactionResponse() {
-        // Create a mocked instance of soa response object
-        DocumentUploadRS documentUploadRS = new DocumentUploadRS();
-        documentUploadRS.setDocumentID("docId");
-        documentUploadRS.setHeaderRS(new HeaderRSType());
-        documentUploadRS.getHeaderRS().setTransactionID("transId");
+  @Test
+  public void testToClientTransactionResponse() {
+    // Create a mocked instance of soa response object
+    DocumentUploadRS documentUploadRS = new DocumentUploadRS();
+    documentUploadRS.setDocumentID("docId");
+    documentUploadRS.setHeaderRS(new HeaderRSType());
+    documentUploadRS.getHeaderRS().setTransactionID("transId");
 
-        ClientTransactionResponse result =
-            documentMapper.toClientTransactionResponse(documentUploadRS);
+    ClientTransactionResponse result = documentMapper.toClientTransactionResponse(documentUploadRS);
 
-        assertNotNull(result);
-        assertEquals(documentUploadRS.getDocumentID(), result.getReferenceNumber());
-        assertEquals(documentUploadRS.getHeaderRS().getTransactionID(), result.getTransactionId());
-    }
+    assertNotNull(result);
+    assertEquals(documentUploadRS.getDocumentID(), result.getReferenceNumber());
+    assertEquals(documentUploadRS.getHeaderRS().getTransactionID(), result.getTransactionId());
+  }
 
-    @Test
-    public void testToDocumentUploadElementType() {
-        final String documentId = "thedocid";
+  @Test
+  public void testToDocumentUploadElementType() {
+    final String documentId = "thedocid";
 
-        // Create a mocked instance of soa response object
-        Document document = new Document();
-        document.setFileData("dGhlIGZpbGUgZGF0YQ==");
-        document.setDocumentId("docId");
-        document.setDocumentType("docType");
-        document.setFileExtension("fileExt");
-        document.setText("thetext");
-        document.setChannel("E");
+    // Create a mocked instance of soa response object
+    Document document = new Document();
+    document.setFileData("dGhlIGZpbGUgZGF0YQ==");
+    document.setDocumentId("docId");
+    document.setDocumentType("docType");
+    document.setFileExtension("fileExt");
+    document.setText("thetext");
+    document.setChannel("E");
 
-        DocumentUploadElementType result =
-            documentMapper.toDocumentUploadElementType(documentId, document);
+    DocumentUploadElementType result =
+        documentMapper.toDocumentUploadElementType(documentId, document);
 
-        assertNotNull(result);
-        assertEquals(document.getFileData(), Base64.getEncoder().encodeToString(result.getBinData()));
-        assertEquals(documentId, result.getCCMSDocumentID());
-        assertEquals("E", result.getChannel());
-        assertEquals(document.getDocumentLink(), result.getDocumentLink());
-        assertEquals(document.getDocumentType(), result.getDocumentType());
-        assertEquals(document.getFileExtension(), result.getFileExtension());
-        assertEquals(document.getText(), result.getText());
-    }
+    assertNotNull(result);
+    assertEquals(document.getFileData(), Base64.getEncoder().encodeToString(result.getBinData()));
+    assertEquals(documentId, result.getCCMSDocumentID());
+    assertEquals("E", result.getChannel());
+    assertEquals(document.getDocumentLink(), result.getDocumentLink());
+    assertEquals(document.getDocumentType(), result.getDocumentType());
+    assertEquals(document.getFileExtension(), result.getFileExtension());
+    assertEquals(document.getText(), result.getText());
+  }
 
-    @Test
-    public void testToDocumentUploadElementType_noId() {
-        // Create a mocked instance of soa response object
-        Document document = new Document();
-        document.setFileData("dGhlIGZpbGUgZGF0YQ==");
-        document.setDocumentId("docId");
-        document.setDocumentType("docType");
-        document.setFileExtension("fileExt");
-        document.setText("thetext");
-        document.setChannel("E");
+  @Test
+  public void testToDocumentUploadElementType_noId() {
+    // Create a mocked instance of soa response object
+    Document document = new Document();
+    document.setFileData("dGhlIGZpbGUgZGF0YQ==");
+    document.setDocumentId("docId");
+    document.setDocumentType("docType");
+    document.setFileExtension("fileExt");
+    document.setText("thetext");
+    document.setChannel("E");
 
-        DocumentUploadElementType result =
-            documentMapper.toDocumentUploadElementType(document);
+    DocumentUploadElementType result = documentMapper.toDocumentUploadElementType(document);
 
-        assertNotNull(result);
-        assertNull(result.getCCMSDocumentID());
-        assertEquals(document.getFileData(), Base64.getEncoder().encodeToString(result.getBinData()));
-        assertEquals("E", result.getChannel());
-        assertEquals(document.getDocumentLink(), result.getDocumentLink());
-        assertEquals(document.getDocumentType(), result.getDocumentType());
-        assertEquals(document.getFileExtension(), result.getFileExtension());
-        assertEquals(document.getText(), result.getText());
-    }
+    assertNotNull(result);
+    assertNull(result.getCCMSDocumentID());
+    assertEquals(document.getFileData(), Base64.getEncoder().encodeToString(result.getBinData()));
+    assertEquals("E", result.getChannel());
+    assertEquals(document.getDocumentLink(), result.getDocumentLink());
+    assertEquals(document.getDocumentType(), result.getDocumentType());
+    assertEquals(document.getFileExtension(), result.getFileExtension());
+    assertEquals(document.getText(), result.getText());
+  }
 
-    @Test
-    public void testToDocumentUploadElementTypeBase() {
-        // Create a mocked instance of soa response object
-        BaseDocument document = new BaseDocument();
-        document.setDocumentType("docType");
-        document.setFileExtension("fileExt");
-        document.setText("thetext");
+  @Test
+  public void testToDocumentUploadElementTypeBase() {
+    // Create a mocked instance of soa response object
+    BaseDocument document = new BaseDocument();
+    document.setDocumentType("docType");
+    document.setFileExtension("fileExt");
+    document.setText("thetext");
 
-        DocumentUploadElementType result =
-            documentMapper.toDocumentUploadElementType(document);
+    DocumentUploadElementType result = documentMapper.toDocumentUploadElementType(document);
 
-        assertNotNull(result);
-        assertEquals("E", result.getChannel());
-        assertEquals(document.getDocumentType(), result.getDocumentType());
-        assertEquals(document.getFileExtension(), result.getFileExtension());
-        assertEquals(document.getText(), result.getText());
-    }
+    assertNotNull(result);
+    assertEquals("E", result.getChannel());
+    assertEquals(document.getDocumentType(), result.getDocumentType());
+    assertEquals(document.getFileExtension(), result.getFileExtension());
+    assertEquals(document.getText(), result.getText());
+  }
 }

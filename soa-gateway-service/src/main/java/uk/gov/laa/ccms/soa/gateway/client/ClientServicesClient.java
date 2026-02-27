@@ -22,8 +22,7 @@ import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientIn
  *
  * <p>This client extends the foundational utilities provided by {@link AbstractSoaClient} and
  * specifically focuses on client management services. It provides facilities for retrieving client
- * details based on search criteria provided. Service name and URL details are injected at
- * runtime.</p>
+ * details based on search criteria provided. Service name and URL details are injected at runtime.
  */
 @Slf4j
 @SuppressWarnings("unchecked")
@@ -36,13 +35,13 @@ public class ClientServicesClient extends AbstractSoaClient {
    * Constructs a new {@link ClientServicesClient} with the given service details.
    *
    * @param webServiceTemplate The web service template for SOAP communication.
-   * @param serviceName        The name of the client management service.
-   * @param serviceUrl         The URL endpoint for the client management service.
+   * @param serviceName The name of the client management service.
+   * @param serviceUrl The URL endpoint for the client management service.
    */
   public ClientServicesClient(
-          final WebServiceTemplate webServiceTemplate,
-          @Value("${laa.ccms.soa-gateway.client.service-name}") final String serviceName,
-          @Value("${laa.ccms.soa-gateway.client.service-url}") final String serviceUrl) {
+      final WebServiceTemplate webServiceTemplate,
+      @Value("${laa.ccms.soa-gateway.client.service-name}") final String serviceName,
+      @Value("${laa.ccms.soa-gateway.client.service-url}") final String serviceUrl) {
     this.webServiceTemplate = webServiceTemplate;
     this.serviceName = serviceName;
     this.serviceUrl = serviceUrl;
@@ -51,16 +50,15 @@ public class ClientServicesClient extends AbstractSoaClient {
   /**
    * Create client details based on the provided {@link ClientDetails}.
    *
-   * @param loggedInUserId      The logged-in user ID.
-   * @param loggedInUserType    The type of the logged-in user.
-   * @param clientDetails       The client information to be saved.
-   * @return ClientAddRS        Response containing client details.
+   * @param loggedInUserId The logged-in user ID.
+   * @param loggedInUserType The type of the logged-in user.
+   * @param clientDetails The client information to be saved.
+   * @return ClientAddRS Response containing client details.
    */
   public ClientAddRS postClientDetails(
       final String loggedInUserId,
       final String loggedInUserType,
-      final ClientDetails clientDetails
-  ) {
+      final ClientDetails clientDetails) {
     final String soapAction = String.format("%s/CreateClient", serviceName);
     ClientAddRQ clientAddRq = CASE_FACTORY.createClientAddRQ();
     clientAddRq.setHeaderRQ(createHeaderRq(loggedInUserId, loggedInUserType));
@@ -68,11 +66,12 @@ public class ClientServicesClient extends AbstractSoaClient {
     clientAddRq.setClient(clientDetails);
 
     JAXBElement<ClientAddRS> response =
-        (JAXBElement<ClientAddRS>) getWebServiceTemplate()
-            .marshalSendAndReceive(
-                serviceUrl,
-                CASE_FACTORY.createClientAddRQ(clientAddRq),
-                new SoapActionCallback(soapAction));
+        (JAXBElement<ClientAddRS>)
+            getWebServiceTemplate()
+                .marshalSendAndReceive(
+                    serviceUrl,
+                    CASE_FACTORY.createClientAddRQ(clientAddRq),
+                    new SoapActionCallback(soapAction));
 
     // Check and throw exception if the SOA call was not successful
     isSuccessOrThrowException(serviceName, response.getValue().getHeaderRS());
@@ -83,25 +82,23 @@ public class ClientServicesClient extends AbstractSoaClient {
   /**
    * Update client details based on the provided {@link ClientDetails}.
    *
-   * @param loggedInUserId      The logged-in user ID.
-   * @param loggedInUserType    The type of the logged-in user.
-   * @param clientUpdateRq       The client update information to be saved.
-   * @return ClientAddRS        Response containing client details.
+   * @param loggedInUserId The logged-in user ID.
+   * @param loggedInUserType The type of the logged-in user.
+   * @param clientUpdateRq The client update information to be saved.
+   * @return ClientAddRS Response containing client details.
    */
   public ClientUpdateRS updateClientDetails(
-      final String loggedInUserId,
-      final String loggedInUserType,
-      ClientUpdateRQ clientUpdateRq
-  ) {
+      final String loggedInUserId, final String loggedInUserType, ClientUpdateRQ clientUpdateRq) {
     final String soapAction = String.format("%s/UpdateClient", serviceName);
     clientUpdateRq.setHeaderRQ(createHeaderRq(loggedInUserId, loggedInUserType));
 
     JAXBElement<ClientUpdateRS> response =
-        (JAXBElement<ClientUpdateRS>) getWebServiceTemplate()
-            .marshalSendAndReceive(
-                serviceUrl,
-                CASE_FACTORY.createClientUpdateRQ(clientUpdateRq),
-                new SoapActionCallback(soapAction));
+        (JAXBElement<ClientUpdateRS>)
+            getWebServiceTemplate()
+                .marshalSendAndReceive(
+                    serviceUrl,
+                    CASE_FACTORY.createClientUpdateRQ(clientUpdateRq),
+                    new SoapActionCallback(soapAction));
 
     // Check and throw exception if the SOA call was not successful
     isSuccessOrThrowException(serviceName, response.getValue().getHeaderRS());
@@ -112,76 +109,70 @@ public class ClientServicesClient extends AbstractSoaClient {
   /**
    * Retrieve client details based on the provided {@link ClientInfo} search criteria.
    *
-   * @param loggedInUserId      The logged-in user ID.
-   * @param loggedInUserType    The type of the logged-in user.
-   * @param maxRecords          Maximum number of records to fetch.
-   * @param clientInfo          The client information used for search.
-   * @return ClientInqRS        Response containing client details.
+   * @param loggedInUserId The logged-in user ID.
+   * @param loggedInUserType The type of the logged-in user.
+   * @param maxRecords Maximum number of records to fetch.
+   * @param clientInfo The client information used for search.
+   * @return ClientInqRS Response containing client details.
    */
   public ClientInqRS getClientDetails(
-          final String loggedInUserId,
-          final String loggedInUserType,
-          final Integer maxRecords,
-          final ClientInfo clientInfo
-  ) {
+      final String loggedInUserId,
+      final String loggedInUserType,
+      final Integer maxRecords,
+      final ClientInfo clientInfo) {
 
     final String soapAction = String.format("%s/GetClientDetails", serviceName);
     ClientInqRQ clientInqRq = CASE_FACTORY.createClientInqRQ();
     clientInqRq.setHeaderRQ(createHeaderRq(loggedInUserId, loggedInUserType));
 
-    ClientInqRQ.SearchCriteria searchCriteria = CASE_FACTORY
-            .createClientInqRQSearchCriteria();
+    ClientInqRQ.SearchCriteria searchCriteria = CASE_FACTORY.createClientInqRQSearchCriteria();
 
     searchCriteria.setClientInfo(clientInfo);
 
     return getClientInqRs(maxRecords, soapAction, clientInqRq, searchCriteria);
   }
 
-
   /**
    * Retrieve client details based on the provided client reference number.
    *
-   * @param loggedInUserId          The logged-in user ID.
-   * @param loggedInUserType        The type of the logged-in user.
-   * @param maxRecords              Maximum number of records to fetch.
-   * @param clientReferenceNumber   The client reference number used for search.
-   * @return ClientInqRS            Response containing client details.
+   * @param loggedInUserId The logged-in user ID.
+   * @param loggedInUserType The type of the logged-in user.
+   * @param maxRecords Maximum number of records to fetch.
+   * @param clientReferenceNumber The client reference number used for search.
+   * @return ClientInqRS Response containing client details.
    */
   public ClientInqRS getClientDetail(
-          final String loggedInUserId,
-          final String loggedInUserType,
-          final Integer maxRecords,
-          final String clientReferenceNumber
-  ) {
+      final String loggedInUserId,
+      final String loggedInUserType,
+      final Integer maxRecords,
+      final String clientReferenceNumber) {
 
     final String soapAction = String.format("%s/GetClientDetails", serviceName);
     ClientInqRQ clientInqRq = CASE_FACTORY.createClientInqRQ();
     clientInqRq.setHeaderRQ(createHeaderRq(loggedInUserId, loggedInUserType));
 
-    ClientInqRQ.SearchCriteria searchCriteria = CASE_FACTORY
-            .createClientInqRQSearchCriteria();
+    ClientInqRQ.SearchCriteria searchCriteria = CASE_FACTORY.createClientInqRQSearchCriteria();
 
     searchCriteria.setClientReferenceNumber(clientReferenceNumber);
 
     return getClientInqRs(maxRecords, soapAction, clientInqRq, searchCriteria);
   }
 
-
   private ClientInqRS getClientInqRs(
-          Integer maxRecords,
-          String soapAction,
-          ClientInqRQ clientInqRq,
-          ClientInqRQ.SearchCriteria searchCriteria) {
+      Integer maxRecords,
+      String soapAction,
+      ClientInqRQ clientInqRq,
+      ClientInqRQ.SearchCriteria searchCriteria) {
     clientInqRq.setSearchCriteria(searchCriteria);
     clientInqRq.setRecordCount(createRecordCount(maxRecords));
 
     JAXBElement<ClientInqRS> response =
-            (JAXBElement<ClientInqRS>) getWebServiceTemplate()
-                    .marshalSendAndReceive(
-                            serviceUrl,
-                            CASE_FACTORY.createClientInqRQ(clientInqRq),
-                            new SoapActionCallback(soapAction));
-
+        (JAXBElement<ClientInqRS>)
+            getWebServiceTemplate()
+                .marshalSendAndReceive(
+                    serviceUrl,
+                    CASE_FACTORY.createClientInqRQ(clientInqRq),
+                    new SoapActionCallback(soapAction));
 
     // Check and throw exception if the SOA call was not successful
     isSuccessOrThrowException(serviceName, response.getValue().getHeaderRS());

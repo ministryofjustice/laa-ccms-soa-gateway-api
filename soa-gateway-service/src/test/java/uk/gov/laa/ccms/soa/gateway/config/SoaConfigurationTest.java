@@ -13,41 +13,39 @@ import org.springframework.ws.client.core.WebServiceTemplate;
 @ExtendWith(MockitoExtension.class)
 public class SoaConfigurationTest {
 
-    @InjectMocks
-    private SoaConfiguration soaConfiguration;
+  @InjectMocks private SoaConfiguration soaConfiguration;
 
-    @Mock
-    private Jaxb2Marshaller marshaller;
+  @Mock private Jaxb2Marshaller marshaller;
 
-    @Test
-    public void testWebServiceTemplate() {
-        // Create mock values for the properties
-        String username = "testuser";
-        String password = "testpassword";
+  @Test
+  public void testWebServiceTemplate() {
+    // Create mock values for the properties
+    String username = "testuser";
+    String password = "testpassword";
 
-        // Create a new instance of SoaConfiguration
-        SoaConfiguration soaConfiguration = new SoaConfiguration(username, password);
+    // Create a new instance of SoaConfiguration
+    SoaConfiguration soaConfiguration = new SoaConfiguration(username, password);
 
-        // Call the webServiceTemplate method
-        WebServiceTemplate result = soaConfiguration.webServiceTemplate(marshaller);
+    // Call the webServiceTemplate method
+    WebServiceTemplate result = soaConfiguration.webServiceTemplate(marshaller);
 
-        // Verify that the marshaller and unmarshaller are set correctly
-        assertEquals(marshaller, result.getMarshaller());
-        assertEquals(marshaller, result.getUnmarshaller());
-    }
+    // Verify that the marshaller and unmarshaller are set correctly
+    assertEquals(marshaller, result.getMarshaller());
+    assertEquals(marshaller, result.getUnmarshaller());
+  }
 
-    @Test
-    public void testMarshaller() {
-        // Create a new instance of SoaConfiguration
-        SoaConfiguration soaConfiguration = new SoaConfiguration("testuser", "testpassword");
+  @Test
+  public void testMarshaller() {
+    // Create a new instance of SoaConfiguration
+    SoaConfiguration soaConfiguration = new SoaConfiguration("testuser", "testpassword");
 
-        // Call the marshaller() method
-        Jaxb2Marshaller result = soaConfiguration.marshaller();
+    // Call the marshaller() method
+    Jaxb2Marshaller result = soaConfiguration.marshaller();
 
-        // Verify that the packages to scan are set correctly
-        String[] packagesToScan = result.getPackagesToScan();
-        assertEquals(2, packagesToScan.length);
-        assertEquals("uk.gov.legalservices", packagesToScan[0]);
-        assertEquals("uk.gov.gsi.legalaid", packagesToScan[1]);
-    }
+    // Verify that the packages to scan are set correctly
+    String[] packagesToScan = result.getPackagesToScan();
+    assertEquals(2, packagesToScan.length);
+    assertEquals("uk.gov.legalservices", packagesToScan[0]);
+    assertEquals("uk.gov.gsi.legalaid", packagesToScan[1]);
+  }
 }

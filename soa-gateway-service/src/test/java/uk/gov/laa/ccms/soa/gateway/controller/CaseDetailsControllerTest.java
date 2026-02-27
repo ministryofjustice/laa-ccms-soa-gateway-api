@@ -1,13 +1,12 @@
 package uk.gov.laa.ccms.soa.gateway.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,24 +14,20 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.MediaType;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ws.client.WebServiceIOException;
-import uk.gov.laa.ccms.soa.gateway.mapper.CaseDetailsMapper;
 import uk.gov.laa.ccms.soa.gateway.model.CaseDetail;
-import uk.gov.laa.ccms.soa.gateway.model.TransactionStatus;
 import uk.gov.laa.ccms.soa.gateway.service.CaseDetailsService;
 
 @ExtendWith(MockitoExtension.class)
 public class CaseDetailsControllerTest {
 
-  @Mock
-  private CaseDetailsService caseDetailsService;
+  @Mock private CaseDetailsService caseDetailsService;
 
-  @InjectMocks
-  private CaseDetailsController caseDetailsController;
+  @InjectMocks private CaseDetailsController caseDetailsController;
 
   private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -53,9 +48,10 @@ public class CaseDetailsControllerTest {
 
   @BeforeEach
   public void setup() {
-    this.mockMvc = MockMvcBuilders.standaloneSetup(caseDetailsController)
-        .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
-        .build();
+    this.mockMvc =
+        MockMvcBuilders.standaloneSetup(caseDetailsController)
+            .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
+            .build();
   }
 
   @Test
@@ -65,22 +61,18 @@ public class CaseDetailsControllerTest {
 
     // Stub the clientDetailsService to return the mock response
     when(caseDetailsService.getCaseDetail(
-        SOA_GATEWAY_USER_LOGIN_ID,
-        SOA_GATEWAY_USER_ROLE,
-        CASE_REFERENCE_NUMBER))
+            SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE, CASE_REFERENCE_NUMBER))
         .thenReturn(caseDetail);
 
-    mockMvc.perform(
-            get("/cases/{caseReferenceNumber}",
-                CASE_REFERENCE_NUMBER)
+    mockMvc
+        .perform(
+            get("/cases/{caseReferenceNumber}", CASE_REFERENCE_NUMBER)
                 .header("SoaGateway-User-Login-Id", SOA_GATEWAY_USER_LOGIN_ID)
                 .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE))
         .andExpect(status().isOk());
 
-    verify(caseDetailsService).getCaseDetail(
-        SOA_GATEWAY_USER_LOGIN_ID,
-        SOA_GATEWAY_USER_ROLE,
-        CASE_REFERENCE_NUMBER);
+    verify(caseDetailsService)
+        .getCaseDetail(SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE, CASE_REFERENCE_NUMBER);
   }
 
   @Test
@@ -88,22 +80,18 @@ public class CaseDetailsControllerTest {
 
     // Stub the mock response
     when(caseDetailsService.getCaseDetail(
-        SOA_GATEWAY_USER_LOGIN_ID,
-        SOA_GATEWAY_USER_ROLE,
-        CASE_REFERENCE_NUMBER))
+            SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE, CASE_REFERENCE_NUMBER))
         .thenThrow(new WebServiceIOException("Test exception"));
 
-    mockMvc.perform(
-            get("/cases/{caseReferenceNumber}",
-                CASE_REFERENCE_NUMBER)
+    mockMvc
+        .perform(
+            get("/cases/{caseReferenceNumber}", CASE_REFERENCE_NUMBER)
                 .header("SoaGateway-User-Login-Id", SOA_GATEWAY_USER_LOGIN_ID)
                 .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE))
         .andExpect(status().isInternalServerError());
 
-    verify(caseDetailsService).getCaseDetail(
-        SOA_GATEWAY_USER_LOGIN_ID,
-        SOA_GATEWAY_USER_ROLE,
-        CASE_REFERENCE_NUMBER);
+    verify(caseDetailsService)
+        .getCaseDetail(SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE, CASE_REFERENCE_NUMBER);
   }
 
   @Test
@@ -111,9 +99,9 @@ public class CaseDetailsControllerTest {
     // Create a mock response
     CaseDetail caseDetail = new CaseDetail();
 
-    mockMvc.perform(
-            put("/cases",
-                CASE_REFERENCE_NUMBER)
+    mockMvc
+        .perform(
+            put("/cases", CASE_REFERENCE_NUMBER)
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("SoaGateway-User-Login-Id", SOA_GATEWAY_USER_LOGIN_ID)
                 .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE)
@@ -121,11 +109,7 @@ public class CaseDetailsControllerTest {
                 .content(objectMapper.writeValueAsString(caseDetail)))
         .andExpect(status().isOk());
 
-    verify(caseDetailsService).amendCase(
-        SOA_GATEWAY_USER_LOGIN_ID,
-        SOA_GATEWAY_USER_ROLE,
-        caseDetail,
-        "caseUpdateType");
+    verify(caseDetailsService)
+        .amendCase(SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE, caseDetail, "caseUpdateType");
   }
-
 }

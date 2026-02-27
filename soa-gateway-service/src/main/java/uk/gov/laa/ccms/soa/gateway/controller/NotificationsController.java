@@ -12,9 +12,8 @@ import uk.gov.laa.ccms.soa.gateway.service.NotificationsService;
 /**
  * Controller for handling notification related requests.
  *
- * <p>Provides an endpoint for adding responses to existing notifications.
- * Implements the {@link NotificationsApi} for consistent behavior with other
- * API implementations.</p>
+ * <p>Provides an endpoint for adding responses to existing notifications. Implements the {@link
+ * NotificationsApi} for consistent behavior with other API implementations.
  */
 @RestController
 @RequiredArgsConstructor
@@ -26,22 +25,23 @@ public class NotificationsController implements NotificationsApi {
   /**
    * Update a notification.
    *
-   * @param notificationId  (required) - the id of the notification to update.
-   * @param soaGatewayUserLoginId  (required) - the user requesting the data.
-   * @param soaGatewayUserRole  (required) - the user role requesting the data.
+   * @param notificationId (required) - the id of the notification to update.
+   * @param soaGatewayUserLoginId (required) - the user requesting the data.
+   * @param soaGatewayUserRole (required) - the user role requesting the data.
    * @param notification Notification (required) - the notification details to update.
    * @return {@link ResponseEntity} wrapping the transaction id.
    */
   @Override
-  public ResponseEntity<ClientTransactionResponse> updateNotification(String notificationId,
-      String soaGatewayUserLoginId, String soaGatewayUserRole, Notification notification) {
+  public ResponseEntity<ClientTransactionResponse> updateNotification(
+      String notificationId,
+      String soaGatewayUserLoginId,
+      String soaGatewayUserRole,
+      Notification notification) {
     log.info("PUT /notifications/{}", notificationId);
     try {
-      String transactionId = notificationsService.updateNotification(
-          soaGatewayUserLoginId,
-          soaGatewayUserRole,
-          notification,
-          notificationId);
+      String transactionId =
+          notificationsService.updateNotification(
+              soaGatewayUserLoginId, soaGatewayUserRole, notification, notificationId);
 
       return ResponseEntity.ok(new ClientTransactionResponse().transactionId(transactionId));
     } catch (Exception e) {
@@ -49,5 +49,4 @@ public class NotificationsController implements NotificationsApi {
       return ResponseEntity.internalServerError().build();
     }
   }
-
 }

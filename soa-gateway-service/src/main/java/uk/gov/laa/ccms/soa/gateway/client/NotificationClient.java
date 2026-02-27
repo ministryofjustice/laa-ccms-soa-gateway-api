@@ -17,8 +17,7 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.ObjectFactory
  *
  * <p>This client extends the foundational utilities provided by {@link AbstractSoaClient} and
  * specifically focuses on notification management services. It provides facilities for updating
- * notifications with response details. Service name and URL details are injected at
- * runtime.</p>
+ * notifications with response details. Service name and URL details are injected at runtime.
  */
 @Slf4j
 @SuppressWarnings("unchecked")
@@ -31,8 +30,8 @@ public class NotificationClient extends AbstractSoaClient {
    * Constructs a new {@link NotificationClient} with the given service details.
    *
    * @param webServiceTemplate The web service template for SOAP communication.
-   * @param serviceName        The name of the notification management service.
-   * @param serviceUrl         The URL endpoint for the notification management service.
+   * @param serviceName The name of the notification management service.
+   * @param serviceUrl The URL endpoint for the notification management service.
    */
   public NotificationClient(
       final WebServiceTemplate webServiceTemplate,
@@ -46,10 +45,10 @@ public class NotificationClient extends AbstractSoaClient {
   /**
    * Updates a notification with details of the response to the notification.
    *
-   * @param loggedInUserId      - the logged in UserId
-   * @param loggedInUserType    - the logged in UserType
-   * @param notification        - the notification details to update
-   * @param notificationId      - the id of the notification to update
+   * @param loggedInUserId - the logged in UserId
+   * @param loggedInUserType - the logged in UserType
+   * @param notification - the notification details to update
+   * @param notificationId - the id of the notification to update
    * @return a {@link NotificationUpdateRS} containing the notification update response details.
    */
   public NotificationUpdateRS updateNotification(
@@ -69,11 +68,12 @@ public class NotificationClient extends AbstractSoaClient {
     notificationUpdateRq.setUserID(notification.getUserId());
 
     JAXBElement<NotificationUpdateRS> response =
-        (JAXBElement<NotificationUpdateRS>) getWebServiceTemplate()
-            .marshalSendAndReceive(
-                serviceUrl,
-                CASE_FACTORY.createNotificationUpdateRQ(notificationUpdateRq),
-                new SoapActionCallback(soapAction));
+        (JAXBElement<NotificationUpdateRS>)
+            getWebServiceTemplate()
+                .marshalSendAndReceive(
+                    serviceUrl,
+                    CASE_FACTORY.createNotificationUpdateRQ(notificationUpdateRq),
+                    new SoapActionCallback(soapAction));
 
     // Check and throw exception if the SOA call was not successful
     isSuccessOrThrowException(serviceName, response.getValue().getHeaderRS());

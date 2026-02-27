@@ -13,7 +13,7 @@ import uk.gov.laa.ccms.soa.gateway.service.UsersService;
  * Controller for handling user related requests.
  *
  * <p>Provides an endpoint for updating user profile options. Implements the {@link UsersApi} for
- * consistent behavior with other API implementations.</p>
+ * consistent behavior with other API implementations.
  */
 @Slf4j
 @RestController
@@ -25,20 +25,18 @@ public class UsersController implements UsersApi {
   /**
    * Update user profile options in Ebs.
    *
-   * @param soaGatewayUserLoginId  (required) - the user requesting the data.
-   * @param soaGatewayUserRole  (required) - the user role requesting the data.
+   * @param soaGatewayUserLoginId (required) - the user requesting the data.
+   * @param soaGatewayUserRole (required) - the user role requesting the data.
    * @param userOptions User options (required) - the updated user options.
    * @return a ResponseEntity wrapping a ClientTransactionResponse.
    */
   @Override
-  public ResponseEntity<ClientTransactionResponse> updateUserOptions(String soaGatewayUserLoginId,
-      String soaGatewayUserRole, UserOptions userOptions) {
+  public ResponseEntity<ClientTransactionResponse> updateUserOptions(
+      String soaGatewayUserLoginId, String soaGatewayUserRole, UserOptions userOptions) {
     log.info("PUT /users/options");
     try {
-      String transactionId = usersService.updateUserOptions(
-          soaGatewayUserLoginId,
-          soaGatewayUserRole,
-          userOptions);
+      String transactionId =
+          usersService.updateUserOptions(soaGatewayUserLoginId, soaGatewayUserRole, userOptions);
 
       return ResponseEntity.ok(new ClientTransactionResponse().transactionId(transactionId));
     } catch (Exception e) {
