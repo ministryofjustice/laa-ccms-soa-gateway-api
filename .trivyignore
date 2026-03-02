@@ -1,0 +1,4 @@
+# https://github.com/advisories/GHSA-72hv-8253-57qq
+# com.fasterxml.jackson.core:jackson-core (jackson-core-2.20.2.jar)
+# tools.jackson.core:jackson-core (jackson-core-3.0.4.jar)
+GHSA-72hv-8253-57qq exp:2026-05-01
