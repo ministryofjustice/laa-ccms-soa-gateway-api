@@ -28,166 +28,183 @@ import uk.gov.laa.ccms.soa.gateway.service.ClientDetailsService;
 @ExtendWith(MockitoExtension.class)
 public class ClientDetailsControllerTest {
 
-    @Mock
-    private ClientDetailsService clientDetailsService;
+  @Mock private ClientDetailsService clientDetailsService;
 
-    @InjectMocks
-    private ClientDetailsController clientDetailsController;
+  @InjectMocks private ClientDetailsController clientDetailsController;
 
-    private MockMvc mockMvc;
+  private MockMvc mockMvc;
 
-    private String soaGatewayUserLoginId;
-    private String soaGatewayUserRole;
-    private String firstName;
-    private String surname;
-    private String gender;
+  private String soaGatewayUserLoginId;
+  private String soaGatewayUserRole;
+  private String firstName;
+  private String surname;
+  private String gender;
 
-    private String clientReferenceNumber;
+  private String clientReferenceNumber;
 
-    private String homeOfficeReference;
-    private String nationalInsuranceNumber;
-    private Integer maxRecords;
+  private String homeOfficeReference;
+  private String nationalInsuranceNumber;
+  private Integer maxRecords;
 
-    private Pageable pageable;
+  private Pageable pageable;
 
-    @BeforeEach
-    public void setup() {
-        this.mockMvc = MockMvcBuilders.standaloneSetup(clientDetailsController)
-                .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
-                .build();
+  @BeforeEach
+  public void setup() {
+    this.mockMvc =
+        MockMvcBuilders.standaloneSetup(clientDetailsController)
+            .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
+            .build();
 
-        this.soaGatewayUserLoginId = "user";
-        this.soaGatewayUserRole = "EXTERNAL";
-        this.firstName = "John";
-        this.surname = "Doe";
-        this.gender = "Male";
-        this.clientReferenceNumber = "1234567890";
-        this.homeOfficeReference = "ABC123";
-        this.nationalInsuranceNumber = "AB123456C";
-        this.maxRecords = 50;
-        this.pageable = Pageable.ofSize(20);
-    }
+    this.soaGatewayUserLoginId = "user";
+    this.soaGatewayUserRole = "EXTERNAL";
+    this.firstName = "John";
+    this.surname = "Doe";
+    this.gender = "Male";
+    this.clientReferenceNumber = "1234567890";
+    this.homeOfficeReference = "ABC123";
+    this.nationalInsuranceNumber = "AB123456C";
+    this.maxRecords = 50;
+    this.pageable = Pageable.ofSize(20);
+  }
 
-    @Test
-    public void testGetClient_Success() throws Exception {
-        // Create a mock client detail response
-        ClientDetail clientDetail = new ClientDetail();
+  @Test
+  public void testGetClient_Success() throws Exception {
+    // Create a mock client detail response
+    ClientDetail clientDetail = new ClientDetail();
 
-        // Stub the clientDetailsService to return the mock response
-        when(clientDetailsService.getClientDetail(
-                soaGatewayUserLoginId,
-                soaGatewayUserRole,
-                maxRecords,
-                clientReferenceNumber)) // Assuming you have the clientReferenceNumber parameter
-                .thenReturn(clientDetail);
+    // Stub the clientDetailsService to return the mock response
+    when(clientDetailsService.getClientDetail(
+            soaGatewayUserLoginId,
+            soaGatewayUserRole,
+            maxRecords,
+            clientReferenceNumber)) // Assuming you have the clientReferenceNumber parameter
+        .thenReturn(clientDetail);
 
-        mockMvc.perform(
-                        get("/clients/{clientReferenceNumber}", clientReferenceNumber)
-                                .param("max-records", String.valueOf(maxRecords))
-                                .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
-                                .header("SoaGateway-User-Role", soaGatewayUserRole))
-                .andExpect(status().isOk());
+    mockMvc
+        .perform(
+            get("/clients/{clientReferenceNumber}", clientReferenceNumber)
+                .param("max-records", String.valueOf(maxRecords))
+                .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
+                .header("SoaGateway-User-Role", soaGatewayUserRole))
+        .andExpect(status().isOk());
 
-        verify(clientDetailsService).getClientDetail(soaGatewayUserLoginId, soaGatewayUserRole, maxRecords, clientReferenceNumber);
-    }
+    verify(clientDetailsService)
+        .getClientDetail(
+            soaGatewayUserLoginId, soaGatewayUserRole, maxRecords, clientReferenceNumber);
+  }
 
-    @Test
-    public void testGetClient_Exception() throws Exception {
-        // Stub the clientDetailsService to throw an exception
-        when(clientDetailsService.getClientDetail(any(), any(), any(), any()))
-                .thenThrow(new WebServiceIOException("Test exception"));
+  @Test
+  public void testGetClient_Exception() throws Exception {
+    // Stub the clientDetailsService to throw an exception
+    when(clientDetailsService.getClientDetail(any(), any(), any(), any()))
+        .thenThrow(new WebServiceIOException("Test exception"));
 
-        mockMvc.perform(
-                        get("/clients/{clientReferenceNumber}", clientReferenceNumber)
-                                .param("max-records", String.valueOf(maxRecords))
-                                .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
-                                .header("SoaGateway-User-Role", soaGatewayUserRole))
-                .andExpect(status().isInternalServerError());
+    mockMvc
+        .perform(
+            get("/clients/{clientReferenceNumber}", clientReferenceNumber)
+                .param("max-records", String.valueOf(maxRecords))
+                .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
+                .header("SoaGateway-User-Role", soaGatewayUserRole))
+        .andExpect(status().isInternalServerError());
 
-        verify(clientDetailsService).getClientDetail(any(), any(), any(), any());
-    }
+    verify(clientDetailsService).getClientDetail(any(), any(), any(), any());
+  }
 
-    @Test
-    public void testPostClient_Success() throws Exception {
-        uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails clientDetailDetails = new uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails();  // You may need to set some data for this object.
-        String expectedTransactionId = "trans123";
+  @Test
+  public void testPostClient_Success() throws Exception {
+    uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails clientDetailDetails =
+        new uk.gov.laa.ccms.soa.gateway.model
+            .ClientDetailDetails(); // You may need to set some data for this object.
+    String expectedTransactionId = "trans123";
 
-        when(clientDetailsService.createClient(soaGatewayUserLoginId, soaGatewayUserRole, clientDetailDetails))
-            .thenReturn(expectedTransactionId);
+    when(clientDetailsService.createClient(
+            soaGatewayUserLoginId, soaGatewayUserRole, clientDetailDetails))
+        .thenReturn(expectedTransactionId);
 
-        mockMvc.perform(
-                post("/clients")  // Assuming the endpoint for postClient method is "/clients"
-                    .content(new ObjectMapper().writeValueAsString(clientDetailDetails))
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
-                    .header("SoaGateway-User-Role", soaGatewayUserRole))
-            .andExpect(status().isOk());
+    mockMvc
+        .perform(
+            post("/clients") // Assuming the endpoint for postClient method is "/clients"
+                .content(new ObjectMapper().writeValueAsString(clientDetailDetails))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
+                .header("SoaGateway-User-Role", soaGatewayUserRole))
+        .andExpect(status().isOk());
 
-        verify(clientDetailsService).createClient(soaGatewayUserLoginId, soaGatewayUserRole, clientDetailDetails);
-    }
+    verify(clientDetailsService)
+        .createClient(soaGatewayUserLoginId, soaGatewayUserRole, clientDetailDetails);
+  }
 
-    @Test
-    public void testPostClient_Exception() throws Exception {
-        uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails clientDetailDetails = new uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails();
+  @Test
+  public void testPostClient_Exception() throws Exception {
+    uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails clientDetailDetails =
+        new uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails();
 
-        when(clientDetailsService.createClient(any(), any(), any()))
-            .thenThrow(new RuntimeException("Test exception"));
+    when(clientDetailsService.createClient(any(), any(), any()))
+        .thenThrow(new RuntimeException("Test exception"));
 
-        mockMvc.perform(
-                post("/clients")
-                    .content(new ObjectMapper().writeValueAsString(clientDetailDetails))
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
-                    .header("SoaGateway-User-Role", soaGatewayUserRole))
-            .andExpect(status().isInternalServerError());
+    mockMvc
+        .perform(
+            post("/clients")
+                .content(new ObjectMapper().writeValueAsString(clientDetailDetails))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
+                .header("SoaGateway-User-Role", soaGatewayUserRole))
+        .andExpect(status().isInternalServerError());
 
-        verify(clientDetailsService).createClient(any(), any(), any());
-    }
+    verify(clientDetailsService).createClient(any(), any(), any());
+  }
 
-    @Test
-    public void testUpdateClient_Success() throws Exception {
-        uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails clientDetailDetails = new uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails();  // You may need to set some data for this object.
-        String expectedTransactionId = "trans123";
+  @Test
+  public void testUpdateClient_Success() throws Exception {
+    uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails clientDetailDetails =
+        new uk.gov.laa.ccms.soa.gateway.model
+            .ClientDetailDetails(); // You may need to set some data for this object.
+    String expectedTransactionId = "trans123";
 
-        when(clientDetailsService.updateClient("123456", soaGatewayUserLoginId, soaGatewayUserRole, clientDetailDetails))
-            .thenReturn(expectedTransactionId);
+    when(clientDetailsService.updateClient(
+            "123456", soaGatewayUserLoginId, soaGatewayUserRole, clientDetailDetails))
+        .thenReturn(expectedTransactionId);
 
-        mockMvc.perform(
-                put("/clients/123456")
-                    .content(new ObjectMapper().writeValueAsString(clientDetailDetails))
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
-                    .header("SoaGateway-User-Role", soaGatewayUserRole))
-            .andExpect(status().isOk());
+    mockMvc
+        .perform(
+            put("/clients/123456")
+                .content(new ObjectMapper().writeValueAsString(clientDetailDetails))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
+                .header("SoaGateway-User-Role", soaGatewayUserRole))
+        .andExpect(status().isOk());
 
-        verify(clientDetailsService).updateClient("123456", soaGatewayUserLoginId, soaGatewayUserRole, clientDetailDetails);
-    }
+    verify(clientDetailsService)
+        .updateClient("123456", soaGatewayUserLoginId, soaGatewayUserRole, clientDetailDetails);
+  }
 
-    @Test
-    public void testUpdateClient_Exception() throws Exception {
-        uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails clientDetailDetails = new uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails();
+  @Test
+  public void testUpdateClient_Exception() throws Exception {
+    uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails clientDetailDetails =
+        new uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails();
 
-        when(clientDetailsService.updateClient(any(), any(), any(), any()))
-            .thenThrow(new RuntimeException("Test exception"));
+    when(clientDetailsService.updateClient(any(), any(), any(), any()))
+        .thenThrow(new RuntimeException("Test exception"));
 
-        mockMvc.perform(
-                put("/clients/123456")
-                    .content(new ObjectMapper().writeValueAsString(clientDetailDetails))
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
-                    .header("SoaGateway-User-Role", soaGatewayUserRole))
-            .andExpect(status().isInternalServerError());
+    mockMvc
+        .perform(
+            put("/clients/123456")
+                .content(new ObjectMapper().writeValueAsString(clientDetailDetails))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
+                .header("SoaGateway-User-Role", soaGatewayUserRole))
+        .andExpect(status().isInternalServerError());
 
-        verify(clientDetailsService).updateClient(any(),any(), any(), any());
-    }
+    verify(clientDetailsService).updateClient(any(), any(), any(), any());
+  }
 
-    private ClientSummary buildClientSummary(){
-        return new ClientSummary()
-                .firstName(firstName)
-                .surname(surname)
-                .gender(gender)
-                .clientReferenceNumber(clientReferenceNumber)
-                .homeOfficeReference(homeOfficeReference)
-                .nationalInsuranceNumber(nationalInsuranceNumber);
-    }
+  private ClientSummary buildClientSummary() {
+    return new ClientSummary()
+        .firstName(firstName)
+        .surname(surname)
+        .gender(gender)
+        .clientReferenceNumber(clientReferenceNumber)
+        .homeOfficeReference(homeOfficeReference)
+        .nationalInsuranceNumber(nationalInsuranceNumber);
+  }
 }

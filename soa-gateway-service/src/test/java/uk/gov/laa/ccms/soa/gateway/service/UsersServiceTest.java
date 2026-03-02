@@ -19,14 +19,11 @@ import uk.gov.legalservices.enterprise.common._1_0.header.HeaderRSType;
 @ExtendWith(MockitoExtension.class)
 public class UsersServiceTest {
 
-  @Mock
-  private UserMapper userMapper;
+  @Mock private UserMapper userMapper;
 
-  @Mock
-  private UserClient userClient;
+  @Mock private UserClient userClient;
 
-  @InjectMocks
-  private UsersService usersService;
+  @InjectMocks private UsersService usersService;
 
   @Test
   public void testUpdateUserOptions() {
@@ -49,14 +46,12 @@ public class UsersServiceTest {
     when(userClient.updateUser(soaGatewayUserLoginId, soaGatewayUserRole, ccmsUser))
         .thenReturn(updateUserRS);
 
-    String transactionId = usersService.updateUserOptions(soaGatewayUserLoginId, soaGatewayUserRole,
-        userOptions);
+    String transactionId =
+        usersService.updateUserOptions(soaGatewayUserLoginId, soaGatewayUserRole, userOptions);
 
     assertEquals("12345", transactionId);
 
     verify(userMapper).toCcmsUser(userOptions);
     verify(userClient).updateUser(soaGatewayUserLoginId, soaGatewayUserRole, ccmsUser);
-
   }
-
 }

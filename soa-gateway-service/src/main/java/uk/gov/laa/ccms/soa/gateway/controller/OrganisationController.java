@@ -14,9 +14,8 @@ import uk.gov.laa.ccms.soa.gateway.service.OrganisationService;
 /**
  * Controller for managing organisation related requests.
  *
- * <p>Provides endpoints for retrieving a list of organisation based on
- * various search criteria. Implements the{@link OrganisationsApi} to ensure
- * consistent API behavior.</p>
+ * <p>Provides endpoints for retrieving a list of organisation based on various search criteria.
+ * Implements the{@link OrganisationsApi} to ensure consistent API behavior.
  */
 @RestController
 @RequiredArgsConstructor
@@ -28,13 +27,13 @@ public class OrganisationController implements OrganisationsApi {
   /**
    * Get a list of organisations based on the supplied search criteria.
    *
-   * @param soaGatewayUserLoginId  (required) - the user requesting the data.
-   * @param soaGatewayUserRole  (required) - the user role requesting the data.
-   * @param name  (optional) - the name of the organisation.
-   * @param type  (optional) - the type of the organisation.
-   * @param city  (optional) - the organisation's city.
-   * @param postcode  (optional) - the organisation's postcode.
-   * @param maxRecords  (optional, default to 100) - the maximum records to query.
+   * @param soaGatewayUserLoginId (required) - the user requesting the data.
+   * @param soaGatewayUserRole (required) - the user role requesting the data.
+   * @param name (optional) - the name of the organisation.
+   * @param type (optional) - the type of the organisation.
+   * @param city (optional) - the organisation's city.
+   * @param postcode (optional) - the organisation's postcode.
+   * @param maxRecords (optional, default to 100) - the maximum records to query.
    * @param pageable - the page settings.
    * @return ResponseEntity wrapping the resulting organisation details.
    */
@@ -50,18 +49,12 @@ public class OrganisationController implements OrganisationsApi {
       final Pageable pageable) {
     log.info("GET /organisations");
     try {
-      OrganisationSummary searchOrganisation = new OrganisationSummary()
-          .name(name)
-          .type(type)
-          .city(city)
-          .postcode(postcode);
+      OrganisationSummary searchOrganisation =
+          new OrganisationSummary().name(name).type(type).city(city).postcode(postcode);
 
-      OrganisationDetails organisationDetails = organisationService.getOrganisations(
-          soaGatewayUserLoginId,
-          soaGatewayUserRole,
-          maxRecords,
-          searchOrganisation,
-          pageable);
+      OrganisationDetails organisationDetails =
+          organisationService.getOrganisations(
+              soaGatewayUserLoginId, soaGatewayUserRole, maxRecords, searchOrganisation, pageable);
 
       return ResponseEntity.ok(organisationDetails);
     } catch (Exception e) {
@@ -73,10 +66,10 @@ public class OrganisationController implements OrganisationsApi {
   /**
    * GET the full details for an organisation based on its id.
    *
-   * @param organisationId  (required) - the id for the organisation.
-   * @param soaGatewayUserLoginId  (required) - the user requesting the data.
-   * @param soaGatewayUserRole  (required) - the user role requesting the data.
-   * @param maxRecords  (optional, default to 100) - the maximum records to query.
+   * @param organisationId (required) - the id for the organisation.
+   * @param soaGatewayUserLoginId (required) - the user requesting the data.
+   * @param soaGatewayUserRole (required) - the user role requesting the data.
+   * @param maxRecords (optional, default to 100) - the maximum records to query.
    * @return ResponseEntity wrapping the resulting organisation detail.
    */
   @Override
@@ -86,11 +79,9 @@ public class OrganisationController implements OrganisationsApi {
       final String soaGatewayUserRole,
       final Integer maxRecords) {
     try {
-      OrganisationDetail organisationDetail = organisationService.getOrganisation(
-          soaGatewayUserLoginId,
-          soaGatewayUserRole,
-          maxRecords,
-          organisationId);
+      OrganisationDetail organisationDetail =
+          organisationService.getOrganisation(
+              soaGatewayUserLoginId, soaGatewayUserRole, maxRecords, organisationId);
 
       return ResponseEntity.ok(organisationDetail);
     } catch (Exception e) {

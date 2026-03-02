@@ -85,9 +85,7 @@ import uk.gov.legalservices.enterprise.common._1_0.common.OPAGoalType;
 import uk.gov.legalservices.enterprise.common._1_0.common.OPAInstanceType.Attributes;
 import uk.gov.legalservices.enterprise.common._1_0.common.OPAResultType;
 
-/**
- * Mapper interface for converting case data between different representations.
- */
+/** Mapper interface for converting case data between different representations. */
 @Mapper(componentModel = "spring", uses = CommonMapper.class)
 public interface CaseDetailsMapper {
 
@@ -125,21 +123,27 @@ public interface CaseDetailsMapper {
   OutcomeElementType toOutcomeElementType(final ProceedingDetail proceedingDetail);
 
   @Mapping(target = "otherParties.otherParty", source = "applicationDetails.otherParties")
-  @Mapping(target = "supervisorContactID",
+  @Mapping(
+      target = "supervisorContactID",
       source = "applicationDetails.providerDetails.supervisorContactId")
-  @Mapping(target = "feeEarnerContactID",
+  @Mapping(
+      target = "feeEarnerContactID",
       source = "applicationDetails.providerDetails.feeEarnerContactId")
-  @Mapping(target = "externalResources.externalResource",
+  @Mapping(
+      target = "externalResources.externalResource",
       source = "applicationDetails.externalResources")
-  @Mapping(target = "proceedings.proceeding",
-      source = "applicationDetails.proceedings")
-  @Mapping(target = "meansAssesments.assesmentResults",
+  @Mapping(target = "proceedings.proceeding", source = "applicationDetails.proceedings")
+  @Mapping(
+      target = "meansAssesments.assesmentResults",
       source = "applicationDetails.meansAssessments")
-  @Mapping(target = "meritsAssesments.assesmentResults",
+  @Mapping(
+      target = "meritsAssesments.assesmentResults",
       source = "applicationDetails.meritsAssessments")
   @Mapping(target = ".", source = "applicationDetails")
   @Mapping(target = "undertakings", source = "caseDetail")
-  @Mapping(target = "applicationAmendmentType", source = ".",
+  @Mapping(
+      target = "applicationAmendmentType",
+      source = ".",
       qualifiedByName = "mapToApplicationAmendmentType")
   @Mapping(target = "LARDetails", source = "applicationDetails.larDetails")
   UpdateApplicationDetails toUpdateApplicationDetails(
@@ -153,8 +157,8 @@ public interface CaseDetailsMapper {
    * @return the determined application amendment type
    */
   @Named("mapToApplicationAmendmentType")
-  default String mapToApplicationAmendmentType(final CaseDetail caseDetail,
-      @Context final String caseUpdateType) {
+  default String mapToApplicationAmendmentType(
+      final CaseDetail caseDetail, @Context final String caseUpdateType) {
 
     String amendmentType = caseDetail.getApplicationDetails().getApplicationAmendmentType();
 
@@ -165,7 +169,7 @@ public interface CaseDetailsMapper {
 
     if (amendment.isMeansAssessmentAmended()) {
       if ("MeansReassessment".equals(caseUpdateType) && reassessment) {
-        //CR217 - Merits Reassessment so ensure the amendment type is substantive
+        // CR217 - Merits Reassessment so ensure the amendment type is substantive
         amendmentType = APP_TYPE_SUBSTANTIVE;
       }
     }
@@ -180,7 +184,8 @@ public interface CaseDetailsMapper {
    * @param updateApplicationDetails the updated application details to map to
    */
   @AfterMapping
-  default void setDevolvedPowersDate(SubmittedApplicationDetails applicationDetails,
+  default void setDevolvedPowersDate(
+      SubmittedApplicationDetails applicationDetails,
       @MappingTarget UpdateApplicationDetails updateApplicationDetails) {
 
     List<String> devolvedPowersTypeList =
@@ -197,8 +202,7 @@ public interface CaseDetailsMapper {
         gregCal.setTime(devolvedPowersDate);
 
         try {
-          result = DatatypeFactory.newInstance()
-              .newXMLGregorianCalendar(gregCal);
+          result = DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal);
         } catch (DatatypeConfigurationException e) {
           throw new SoaGatewayMappingException("Unable to process devolved powers date.", e);
         }
@@ -223,8 +227,9 @@ public interface CaseDetailsMapper {
     LinkedCasesUpdate linkedCasesUpdate = new LinkedCasesUpdate();
 
     if (linkedCases != null) {
-      linkedCasesUpdate.getLinkedCase().addAll(
-          linkedCases.stream().map(this::toLinkedCaseUpdateType).toList());
+      linkedCasesUpdate
+          .getLinkedCase()
+          .addAll(linkedCases.stream().map(this::toLinkedCaseUpdateType).toList());
     }
 
     return linkedCasesUpdate;
@@ -240,8 +245,7 @@ public interface CaseDetailsMapper {
     AwardsElementType awardsElementType = new AwardsElementType();
 
     if (awards != null) {
-      awardsElementType.getAward().addAll(
-          awards.stream().map(this::toAwardElementType).toList());
+      awardsElementType.getAward().addAll(awards.stream().map(this::toAwardElementType).toList());
     }
 
     return awardsElementType;
@@ -257,8 +261,9 @@ public interface CaseDetailsMapper {
     PriorAuthorities soaPriorAuthorities = new PriorAuthorities();
 
     if (priorAuthorities != null) {
-      soaPriorAuthorities.getPriorAuthority().addAll(
-          priorAuthorities.stream().map(this::toPriorAuthorityElementType).toList());
+      soaPriorAuthorities
+          .getPriorAuthority()
+          .addAll(priorAuthorities.stream().map(this::toPriorAuthorityElementType).toList());
     }
 
     return soaPriorAuthorities;
@@ -274,8 +279,7 @@ public interface CaseDetailsMapper {
     CaseDocs soaCaseDocs = new CaseDocs();
 
     if (caseDocs != null) {
-      soaCaseDocs.getCaseDoc().addAll(
-          caseDocs.stream().map(this::toCaseDocElementType).toList());
+      soaCaseDocs.getCaseDoc().addAll(caseDocs.stream().map(this::toCaseDocElementType).toList());
     }
 
     return soaCaseDocs;
@@ -291,8 +295,7 @@ public interface CaseDetailsMapper {
     OPAResultType opaResultType = new OPAResultType();
 
     if (opaGoals != null) {
-      opaResultType.getGoal().addAll(
-          opaGoals.stream().map(this::toOpaGoalType).toList());
+      opaResultType.getGoal().addAll(opaGoals.stream().map(this::toOpaGoalType).toList());
     }
 
     return opaResultType;
@@ -309,8 +312,9 @@ public interface CaseDetailsMapper {
     AssessmentDetailType assessmentDetailType = new AssessmentDetailType();
 
     if (assessmentScreens != null) {
-      assessmentDetailType.getAssessmentScreens().addAll(
-          assessmentScreens.stream().map(this::toAssessmentScreenType).toList());
+      assessmentDetailType
+          .getAssessmentScreens()
+          .addAll(assessmentScreens.stream().map(this::toAssessmentScreenType).toList());
     }
 
     return assessmentDetailType;
@@ -326,8 +330,9 @@ public interface CaseDetailsMapper {
     Attributes attributes = new Attributes();
 
     if (opaAttributes != null) {
-      attributes.getAttribute().addAll(
-          opaAttributes.stream().map(this::toOpaAttributesType).toList());
+      attributes
+          .getAttribute()
+          .addAll(opaAttributes.stream().map(this::toOpaAttributesType).toList());
     }
 
     return attributes;
@@ -345,8 +350,9 @@ public interface CaseDetailsMapper {
         new ProceedingDetElementType.ScopeLimitations();
 
     if (scopeLimitations != null) {
-      soaScopeLimitations.getScopeLimitation().addAll(
-          scopeLimitations.stream().map(this::toScopeLimitationElementType).toList());
+      soaScopeLimitations
+          .getScopeLimitation()
+          .addAll(scopeLimitations.stream().map(this::toScopeLimitationElementType).toList());
     }
 
     return soaScopeLimitations;
@@ -388,7 +394,8 @@ public interface CaseDetailsMapper {
   @Mapping(target = ".", source = "proceedingDetails")
   @Mapping(target = "availableFunctions", source = "availableFunctions.function")
   @Mapping(target = "proceedingCaseId", source = "proceedingCaseID")
-  @Mapping(target = "scopeLimitations",
+  @Mapping(
+      target = "scopeLimitations",
       source = "proceedingDetails.scopeLimitations.scopeLimitation")
   ProceedingDetail toProceedingDetail(final ProceedingElementType proceedingElementType);
 
@@ -538,5 +545,4 @@ public interface CaseDetailsMapper {
   @Mapping(target = "referenceNumber", source = "caseReferenceNumber")
   uk.gov.laa.ccms.soa.gateway.model.TransactionStatus toTransactionStatus(
       CaseAddUpdtStatusRS response);
-
 }

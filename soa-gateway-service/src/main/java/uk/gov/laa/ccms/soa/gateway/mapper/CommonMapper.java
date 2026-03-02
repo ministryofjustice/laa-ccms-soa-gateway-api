@@ -12,17 +12,13 @@ import uk.gov.laa.ccms.soa.gateway.model.Document;
 import uk.gov.laa.ccms.soa.gateway.model.OpaInstance;
 import uk.gov.laa.ccms.soa.gateway.model.RecordHistory;
 import uk.gov.laa.ccms.soa.gateway.model.UserDetail;
-import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabim.ReferenceDataInqRS;
 import uk.gov.legalservices.enterprise.common._1_0.common.Address;
 import uk.gov.legalservices.enterprise.common._1_0.common.AssesmentResultType;
 import uk.gov.legalservices.enterprise.common._1_0.common.DocumentElementType;
 import uk.gov.legalservices.enterprise.common._1_0.common.OPAInstanceType;
 import uk.gov.legalservices.enterprise.common._1_0.common.User;
 
-
-/**
- * Mapper interface for converting common data between different representations.
- */
+/** Mapper interface for converting common data between different representations. */
 @Mapper(componentModel = "spring")
 public interface CommonMapper {
 
@@ -64,9 +60,7 @@ public interface CommonMapper {
    * @return The first result as a string, or null if the list is empty or null.
    */
   default String mapFirstResultToString(List<String> results) {
-    return Optional.ofNullable(results)
-        .flatMap(r -> r.stream().findFirst())
-        .orElse(null);
+    return Optional.ofNullable(results).flatMap(r -> r.stream().findFirst()).orElse(null);
   }
 
   /**
@@ -108,9 +102,6 @@ public interface CommonMapper {
    * @return Base64 encoded String, or null.
    */
   default String toBase64EncodedStringFromByteArray(byte[] bytes) {
-    return Optional.ofNullable(bytes)
-        .map(b -> Base64.getEncoder().encodeToString(b))
-        .orElse(null);
+    return Optional.ofNullable(bytes).map(b -> Base64.getEncoder().encodeToString(b)).orElse(null);
   }
-
 }

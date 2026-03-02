@@ -24,11 +24,9 @@ public class UsersControllerTest {
   private static final String SOA_GATEWAY_USER_LOGIN_ID = "user";
   private static final String SOA_GATEWAY_USER_ROLE = "EXTERNAL";
 
-  @Mock
-  private UsersService usersService;
+  @Mock private UsersService usersService;
 
-  @InjectMocks
-  private UsersController usersController;
+  @InjectMocks private UsersController usersController;
 
   private MockMvc mockMvc;
 
@@ -40,14 +38,15 @@ public class UsersControllerTest {
   @Test
   public void testUpdateUserOptions_Success() throws Exception {
 
-    final UserOptions userOptions = new UserOptions()
-        .userLoginId("user@login.com")
-        .providerFirmId("12345");
+    final UserOptions userOptions =
+        new UserOptions().userLoginId("user@login.com").providerFirmId("12345");
 
-    when(usersService.updateUserOptions(SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE, userOptions))
+    when(usersService.updateUserOptions(
+            SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE, userOptions))
         .thenReturn("67890");
 
-    mockMvc.perform(
+    mockMvc
+        .perform(
             put("/users/options")
                 .content(new ObjectMapper().writeValueAsString(userOptions))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -55,16 +54,17 @@ public class UsersControllerTest {
                 .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE))
         .andExpect(status().isOk());
 
-    verify(usersService).updateUserOptions(SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE, userOptions);
+    verify(usersService)
+        .updateUserOptions(SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE, userOptions);
   }
 
   @Test
   public void testUpdateUserOptions_nullLoginId_returnsBadRequest() throws Exception {
 
-    final UserOptions userOptions = new UserOptions()
-        .providerFirmId("12345");
+    final UserOptions userOptions = new UserOptions().providerFirmId("12345");
 
-    mockMvc.perform(
+    mockMvc
+        .perform(
             put("/users/options")
                 .content(new ObjectMapper().writeValueAsString(userOptions))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -76,10 +76,10 @@ public class UsersControllerTest {
   @Test
   public void testUpdateUserOptions_nullProviderFirmId_returnsBadRequest() throws Exception {
 
-    final UserOptions userOptions = new UserOptions()
-        .userLoginId("user@login.com");
+    final UserOptions userOptions = new UserOptions().userLoginId("user@login.com");
 
-    mockMvc.perform(
+    mockMvc
+        .perform(
             put("/users/options")
                 .content(new ObjectMapper().writeValueAsString(userOptions))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -87,5 +87,4 @@ public class UsersControllerTest {
                 .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE))
         .andExpect(status().isBadRequest());
   }
-
 }

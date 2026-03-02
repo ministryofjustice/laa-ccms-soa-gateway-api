@@ -1,6 +1,5 @@
 package uk.gov.laa.ccms.soa.gateway.client;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -21,8 +20,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.soap.client.core.SoapActionCallback;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddUpdtStatusRQ;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddUpdtStatusRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseInqRQ;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseInqRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseUpdateRQ;
@@ -33,142 +30,127 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseInfo;
 @ExtendWith(MockitoExtension.class)
 class CaseServicesClientTest {
 
-    public static final String SERVICE_NAME = "myService";
-    public static final String SERVICE_URL = "myUrl";
-    private static final String SOA_GATEWAY_USER_LOGIN_ID = "user";
-    private static final String SOA_GATEWAY_USER_ROLE = "EXTERNAL";
-    private static final Integer MAX_RECORDS = 50;
+  public static final String SERVICE_NAME = "myService";
+  public static final String SERVICE_URL = "myUrl";
+  private static final String SOA_GATEWAY_USER_LOGIN_ID = "user";
+  private static final String SOA_GATEWAY_USER_ROLE = "EXTERNAL";
+  private static final Integer MAX_RECORDS = 50;
 
-    @Mock
-    Logger mockLogger;
+  @Mock Logger mockLogger;
 
-    @Mock
-    WebServiceTemplate webServiceTemplate;
+  @Mock WebServiceTemplate webServiceTemplate;
 
-    @Captor
-    ArgumentCaptor<JAXBElement<CaseInqRQ>> requestCaptor;
+  @Captor ArgumentCaptor<JAXBElement<CaseInqRQ>> requestCaptor;
 
-    @Captor
-    ArgumentCaptor<JAXBElement<CaseUpdateRQ>> caseUpdateRequestCaptor;
+  @Captor ArgumentCaptor<JAXBElement<CaseUpdateRQ>> caseUpdateRequestCaptor;
 
-    private CaseServicesClient client;
+  private CaseServicesClient client;
 
-    @BeforeEach
-    void setup() {
-        this.client = new CaseServicesClient(webServiceTemplate, SERVICE_NAME, SERVICE_URL);
-    }
+  @BeforeEach
+  void setup() {
+    this.client = new CaseServicesClient(webServiceTemplate, SERVICE_NAME, SERVICE_URL);
+  }
 
+  @Test
+  public void testGetCaseDetailsBuildsCorrectRequest() {
+    ObjectFactory objectFactory = new ObjectFactory();
 
-    @Test
-    public void testGetCaseDetailsBuildsCorrectRequest() {
-        ObjectFactory objectFactory = new ObjectFactory();
+    // Mock the response of the WebServiceTemplate
+    when(webServiceTemplate.marshalSendAndReceive(
+            eq(SERVICE_URL), any(JAXBElement.class), any(SoapActionCallback.class)))
+        .thenReturn(objectFactory.createCaseInqRS(new CaseInqRS()));
 
-        // Mock the response of the WebServiceTemplate
-        when(webServiceTemplate.marshalSendAndReceive(
-                eq(SERVICE_URL),
-                any(JAXBElement.class),
-                any(SoapActionCallback.class)))
-                .thenReturn(objectFactory.createCaseInqRS(new CaseInqRS()));
+    CaseInfo caseInfo = buildCaseInfo();
 
-        CaseInfo caseInfo = buildCaseInfo();
+    CaseInqRS response =
+        client.getCaseDetails(
+            SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE, MAX_RECORDS, caseInfo);
 
+    // Verify interactions
+    verify(webServiceTemplate, times(1))
+        .marshalSendAndReceive(
+            eq(SERVICE_URL), requestCaptor.capture(), any(SoapActionCallback.class));
 
-        CaseInqRS response = client.getCaseDetails(
-            SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE, MAX_RECORDS, caseInfo
-        );
+    JAXBElement<CaseInqRQ> payload = requestCaptor.getValue();
+    assertNotNull(payload.getValue().getHeaderRQ().getTimeStamp());
+    assertEquals(SOA_GATEWAY_USER_LOGIN_ID, payload.getValue().getHeaderRQ().getUserLoginID());
+    assertEquals(SOA_GATEWAY_USER_ROLE, payload.getValue().getHeaderRQ().getUserRole());
+    CaseInfo payloadCaseInfo = payload.getValue().getSearchCriteria().getCaseInfo();
+    assertEquals(caseInfo.getCaseStatus(), payloadCaseInfo.getCaseStatus());
+    assertEquals(caseInfo.getCaseReferenceNumber(), payloadCaseInfo.getCaseReferenceNumber());
+    assertEquals(caseInfo.getClientSurname(), payloadCaseInfo.getClientSurname());
+    assertEquals(
+        caseInfo.getProviderCaseReferenceNumber(),
+        payloadCaseInfo.getProviderCaseReferenceNumber());
+    assertEquals(caseInfo.getOfficeID(), payloadCaseInfo.getOfficeID());
+    assertEquals(caseInfo.getFeeEarnerContactID(), payloadCaseInfo.getFeeEarnerContactID());
+    assertNotNull(response);
+  }
 
-        // Verify interactions
-        verify(webServiceTemplate, times(1)).marshalSendAndReceive(
-                eq(SERVICE_URL),
-                requestCaptor.capture(),
-                any(SoapActionCallback.class));
+  @Test
+  public void testGetCaseDetailBuildsCorrectRequest() {
+    ObjectFactory objectFactory = new ObjectFactory();
 
-        JAXBElement<CaseInqRQ> payload = requestCaptor.getValue();
-        assertNotNull(payload.getValue().getHeaderRQ().getTimeStamp());
-        assertEquals(SOA_GATEWAY_USER_LOGIN_ID, payload.getValue().getHeaderRQ().getUserLoginID());
-        assertEquals(SOA_GATEWAY_USER_ROLE, payload.getValue().getHeaderRQ().getUserRole());
-        CaseInfo payloadCaseInfo = payload.getValue().getSearchCriteria().getCaseInfo();
-        assertEquals(caseInfo.getCaseStatus(), payloadCaseInfo.getCaseStatus());
-        assertEquals(caseInfo.getCaseReferenceNumber(), payloadCaseInfo.getCaseReferenceNumber());
-        assertEquals(caseInfo.getClientSurname(), payloadCaseInfo.getClientSurname());
-        assertEquals(caseInfo.getProviderCaseReferenceNumber(), payloadCaseInfo.getProviderCaseReferenceNumber());
-        assertEquals(caseInfo.getOfficeID(), payloadCaseInfo.getOfficeID());
-        assertEquals(caseInfo.getFeeEarnerContactID(), payloadCaseInfo.getFeeEarnerContactID());
-        assertNotNull(response);
-    }
+    // Mock the response of the WebServiceTemplate
+    when(webServiceTemplate.marshalSendAndReceive(
+            eq(SERVICE_URL), any(JAXBElement.class), any(SoapActionCallback.class)))
+        .thenReturn(objectFactory.createCaseInqRS(new CaseInqRS()));
 
-    @Test
-    public void testGetCaseDetailBuildsCorrectRequest() {
-        ObjectFactory objectFactory = new ObjectFactory();
+    CaseInqRS response =
+        client.getCaseDetail(SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE, "123");
 
-        // Mock the response of the WebServiceTemplate
-        when(webServiceTemplate.marshalSendAndReceive(
-            eq(SERVICE_URL),
-            any(JAXBElement.class),
-            any(SoapActionCallback.class)))
-            .thenReturn(objectFactory.createCaseInqRS(new CaseInqRS()));
+    // Verify interactions
+    verify(webServiceTemplate, times(1))
+        .marshalSendAndReceive(
+            eq(SERVICE_URL), requestCaptor.capture(), any(SoapActionCallback.class));
 
-        CaseInqRS response = client.getCaseDetail(
-            SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE, "123"
-        );
+    JAXBElement<CaseInqRQ> payload = requestCaptor.getValue();
+    assertNotNull(payload.getValue().getHeaderRQ().getTimeStamp());
+    assertEquals(SOA_GATEWAY_USER_LOGIN_ID, payload.getValue().getHeaderRQ().getUserLoginID());
+    assertEquals(SOA_GATEWAY_USER_ROLE, payload.getValue().getHeaderRQ().getUserRole());
+    assertNull(payload.getValue().getSearchCriteria().getCaseInfo());
+    assertEquals("123", payload.getValue().getSearchCriteria().getCaseReferenceNumber());
+    assertNotNull(response);
+  }
 
-        // Verify interactions
-        verify(webServiceTemplate, times(1)).marshalSendAndReceive(
-            eq(SERVICE_URL),
-            requestCaptor.capture(),
-            any(SoapActionCallback.class));
+  @Test
+  public void updateCaseBuildsCorrectRequest() {
+    ObjectFactory objectFactory = new ObjectFactory();
 
-        JAXBElement<CaseInqRQ> payload = requestCaptor.getValue();
-        assertNotNull(payload.getValue().getHeaderRQ().getTimeStamp());
-        assertEquals(SOA_GATEWAY_USER_LOGIN_ID, payload.getValue().getHeaderRQ().getUserLoginID());
-        assertEquals(SOA_GATEWAY_USER_ROLE, payload.getValue().getHeaderRQ().getUserRole());
-        assertNull(payload.getValue().getSearchCriteria().getCaseInfo());
-        assertEquals("123", payload.getValue().getSearchCriteria().getCaseReferenceNumber());
-        assertNotNull(response);
-    }
+    CaseUpdateRQ caseUpdateRQ = new CaseUpdateRQ();
+    caseUpdateRQ.setCaseReferenceNumber("caseReferenceNumber");
 
-    @Test
-    public void updateCaseBuildsCorrectRequest() {
-        ObjectFactory objectFactory = new ObjectFactory();
+    CaseUpdateRS caseUpdateRS = new CaseUpdateRS();
+    caseUpdateRS.setTransactionID("transactionId");
 
-        CaseUpdateRQ caseUpdateRQ = new CaseUpdateRQ();
-        caseUpdateRQ.setCaseReferenceNumber("caseReferenceNumber");
+    // Mock the response of the WebServiceTemplate
+    when(webServiceTemplate.marshalSendAndReceive(
+            eq(SERVICE_URL), any(JAXBElement.class), any(SoapActionCallback.class)))
+        .thenReturn(objectFactory.createCaseUpdateRS(caseUpdateRS));
 
-        CaseUpdateRS caseUpdateRS = new CaseUpdateRS();
-        caseUpdateRS.setTransactionID("transactionId");
+    CaseUpdateRS response =
+        client.updateCase(SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE, caseUpdateRQ);
 
-        // Mock the response of the WebServiceTemplate
-        when(webServiceTemplate.marshalSendAndReceive(
-            eq(SERVICE_URL),
-            any(JAXBElement.class),
-            any(SoapActionCallback.class)))
-            .thenReturn(objectFactory.createCaseUpdateRS(caseUpdateRS));
+    // Verify interactions
+    verify(webServiceTemplate, times(1))
+        .marshalSendAndReceive(
+            eq(SERVICE_URL), caseUpdateRequestCaptor.capture(), any(SoapActionCallback.class));
 
-        CaseUpdateRS response = client.updateCase(
-            SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE, caseUpdateRQ
-        );
+    JAXBElement<CaseUpdateRQ> payload = caseUpdateRequestCaptor.getValue();
+    assertNotNull(payload.getValue().getHeaderRQ().getTimeStamp());
+    assertEquals(SOA_GATEWAY_USER_LOGIN_ID, payload.getValue().getHeaderRQ().getUserLoginID());
+    assertEquals(SOA_GATEWAY_USER_ROLE, payload.getValue().getHeaderRQ().getUserRole());
+    assertEquals("caseReferenceNumber", payload.getValue().getCaseReferenceNumber());
+    assertEquals("transactionId", response.getTransactionID());
+  }
 
-        // Verify interactions
-        verify(webServiceTemplate, times(1)).marshalSendAndReceive(
-            eq(SERVICE_URL),
-            caseUpdateRequestCaptor.capture(),
-            any(SoapActionCallback.class));
-
-        JAXBElement<CaseUpdateRQ> payload = caseUpdateRequestCaptor.getValue();
-        assertNotNull(payload.getValue().getHeaderRQ().getTimeStamp());
-        assertEquals(SOA_GATEWAY_USER_LOGIN_ID, payload.getValue().getHeaderRQ().getUserLoginID());
-        assertEquals(SOA_GATEWAY_USER_ROLE, payload.getValue().getHeaderRQ().getUserRole());
-        assertEquals("caseReferenceNumber", payload.getValue().getCaseReferenceNumber());
-        assertEquals("transactionId", response.getTransactionID());
-    }
-
-    private CaseInfo buildCaseInfo(){
-        CaseInfo caseInfo = new CaseInfo();
-        caseInfo.setCaseReferenceNumber("caseref");
-        caseInfo.setCaseStatus("casestatus");
-        caseInfo.setClientSurname("asurname");
-        caseInfo.setProviderCaseReferenceNumber("provcaseref");
-        caseInfo.setFeeEarnerContactID("123");
-        return caseInfo;
-    }
+  private CaseInfo buildCaseInfo() {
+    CaseInfo caseInfo = new CaseInfo();
+    caseInfo.setCaseReferenceNumber("caseref");
+    caseInfo.setCaseStatus("casestatus");
+    caseInfo.setClientSurname("asurname");
+    caseInfo.setProviderCaseReferenceNumber("provcaseref");
+    caseInfo.setFeeEarnerContactID("123");
+    return caseInfo;
+  }
 }

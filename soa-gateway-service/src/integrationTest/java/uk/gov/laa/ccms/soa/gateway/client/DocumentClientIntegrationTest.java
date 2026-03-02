@@ -23,11 +23,9 @@ import uk.gov.legalservices.enterprise.common._1_0.common.DocumentElementType;
 @SpringBootTest
 public class DocumentClientIntegrationTest {
 
-  @Autowired
-  private WebServiceTemplate webServiceTemplate;
+  @Autowired private WebServiceTemplate webServiceTemplate;
 
-  @Autowired
-  private DocumentClient client;
+  @Autowired private DocumentClient client;
 
   private static MockWebServiceServer mockServer;
 
@@ -37,10 +35,14 @@ public class DocumentClientIntegrationTest {
   @Value("classpath:/payload/DocumentDownloadRS_valid.xml")
   Resource documentDownloadRS_valid;
 
-  private static final String HEADER_NS = "http://legalservices.gov.uk/Enterprise/Common/1.0/Header";
-  private static final String MSG_NS = "http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIM";
-  private static final String DOC_NS = "http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO";
-  private static final String COMMON_NS = "http://legalservices.gov.uk/Enterprise/Common/1.0/Common";
+  private static final String HEADER_NS =
+      "http://legalservices.gov.uk/Enterprise/Common/1.0/Header";
+  private static final String MSG_NS =
+      "http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIM";
+  private static final String DOC_NS =
+      "http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseBIO";
+  private static final String COMMON_NS =
+      "http://legalservices.gov.uk/Enterprise/Common/1.0/Common";
 
   private String testLoginId;
   private String testUserType;
@@ -65,16 +67,18 @@ public class DocumentClientIntegrationTest {
   public void testRegisterDocument_ReturnsData() throws Exception {
     DocumentUploadElementType documentUploadElementType = buildDocumentUploadElementType();
 
-    mockServer.expect(
-            xpath("/msg:DocumentUploadRQ/header:HeaderRQ/header:TransactionRequestID", namespaces).exists())
+    mockServer
+        .expect(
+            xpath("/msg:DocumentUploadRQ/header:HeaderRQ/header:TransactionRequestID", namespaces)
+                .exists())
         .andExpect(
-            xpath("/msg:DocumentUploadRQ/header:HeaderRQ/header:UserLoginID", namespaces).evaluatesTo(
-                testLoginId))
-        .andExpect(xpath("/msg:DocumentUploadRQ/header:HeaderRQ/header:UserRole", namespaces).evaluatesTo(
-            testUserType))
+            xpath("/msg:DocumentUploadRQ/header:HeaderRQ/header:UserLoginID", namespaces)
+                .evaluatesTo(testLoginId))
         .andExpect(
-            xpath("/msg:DocumentUploadRQ/msg:NotificationID",
-                namespaces)
+            xpath("/msg:DocumentUploadRQ/header:HeaderRQ/header:UserRole", namespaces)
+                .evaluatesTo(testUserType))
+        .andExpect(
+            xpath("/msg:DocumentUploadRQ/msg:NotificationID", namespaces)
                 .evaluatesTo(NO_RELATED_NOTIFICATION))
         .andExpect(
             xpath("/msg:DocumentUploadRQ/msg:Document/doc:DocumentType", namespaces)
@@ -90,8 +94,8 @@ public class DocumentClientIntegrationTest {
                 .evaluatesTo(documentUploadElementType.getChannel()))
         .andRespond(withPayload(documentUploadRS_valid));
 
-    DocumentUploadRS response = client.registerDocument(testLoginId, testUserType,
-        documentUploadElementType, null, null);
+    DocumentUploadRS response =
+        client.registerDocument(testLoginId, testUserType, documentUploadElementType, null, null);
 
     assertNotNull(response.getDocumentID());
 
@@ -104,16 +108,18 @@ public class DocumentClientIntegrationTest {
 
     DocumentUploadElementType documentUploadElementType = buildDocumentUploadElementType();
 
-    mockServer.expect(
-            xpath("/msg:DocumentUploadRQ/header:HeaderRQ/header:TransactionRequestID", namespaces).exists())
+    mockServer
+        .expect(
+            xpath("/msg:DocumentUploadRQ/header:HeaderRQ/header:TransactionRequestID", namespaces)
+                .exists())
         .andExpect(
-            xpath("/msg:DocumentUploadRQ/header:HeaderRQ/header:UserLoginID", namespaces).evaluatesTo(
-                testLoginId))
-        .andExpect(xpath("/msg:DocumentUploadRQ/header:HeaderRQ/header:UserRole", namespaces).evaluatesTo(
-            testUserType))
+            xpath("/msg:DocumentUploadRQ/header:HeaderRQ/header:UserLoginID", namespaces)
+                .evaluatesTo(testLoginId))
         .andExpect(
-            xpath("/msg:DocumentUploadRQ/msg:NotificationID",
-                namespaces)
+            xpath("/msg:DocumentUploadRQ/header:HeaderRQ/header:UserRole", namespaces)
+                .evaluatesTo(testUserType))
+        .andExpect(
+            xpath("/msg:DocumentUploadRQ/msg:NotificationID", namespaces)
                 .evaluatesTo(notificationReference))
         .andExpect(
             xpath("/msg:DocumentUploadRQ/msg:Document/doc:DocumentType", namespaces)
@@ -129,12 +135,9 @@ public class DocumentClientIntegrationTest {
                 .evaluatesTo(documentUploadElementType.getChannel()))
         .andRespond(withPayload(documentUploadRS_valid));
 
-    DocumentUploadRS response = client.uploadDocument(
-        testLoginId,
-        testUserType,
-        notificationReference,
-        null,
-        documentUploadElementType);
+    DocumentUploadRS response =
+        client.uploadDocument(
+            testLoginId, testUserType, notificationReference, null, documentUploadElementType);
 
     assertNotNull(response.getDocumentID());
 
@@ -147,23 +150,21 @@ public class DocumentClientIntegrationTest {
 
     DocumentUploadElementType documentUploadElementType = buildDocumentUploadElementType();
 
-    mockServer.expect(
-            xpath("/msg:DocumentDownloadRQ/header:HeaderRQ/header:TransactionRequestID", namespaces).exists())
+    mockServer
+        .expect(
+            xpath("/msg:DocumentDownloadRQ/header:HeaderRQ/header:TransactionRequestID", namespaces)
+                .exists())
         .andExpect(
-            xpath("/msg:DocumentDownloadRQ/header:HeaderRQ/header:UserLoginID", namespaces).evaluatesTo(
-                testLoginId))
-        .andExpect(xpath("/msg:DocumentDownloadRQ/header:HeaderRQ/header:UserRole", namespaces).evaluatesTo(
-            testUserType))
+            xpath("/msg:DocumentDownloadRQ/header:HeaderRQ/header:UserLoginID", namespaces)
+                .evaluatesTo(testLoginId))
         .andExpect(
-            xpath("/msg:DocumentDownloadRQ/msg:DocumentID",
-                namespaces)
-                .evaluatesTo(documentId))
+            xpath("/msg:DocumentDownloadRQ/header:HeaderRQ/header:UserRole", namespaces)
+                .evaluatesTo(testUserType))
+        .andExpect(
+            xpath("/msg:DocumentDownloadRQ/msg:DocumentID", namespaces).evaluatesTo(documentId))
         .andRespond(withPayload(documentDownloadRS_valid));
 
-    DocumentElementType response = client.downloadDocument(
-        testLoginId,
-        testUserType,
-        documentId);
+    DocumentElementType response = client.downloadDocument(testLoginId, testUserType, documentId);
 
     assertEquals(documentId, response.getDocumentID());
     assertNotNull(response.getBinData());
@@ -174,7 +175,6 @@ public class DocumentClientIntegrationTest {
 
     mockServer.verify();
   }
-
 
   private DocumentUploadElementType buildDocumentUploadElementType() {
     DocumentUploadElementType documentUploadElementType = new DocumentUploadElementType();

@@ -35,11 +35,9 @@ public class OrganisationMapperTest {
   public static final String ORGCITY = "orgcity";
   public static final String ORGPOSTCODE = "orgpostcode";
 
-  @Mock
-  CommonMapper commonMapper;
+  @Mock CommonMapper commonMapper;
 
-  @InjectMocks
-  OrganisationMapperImpl organisationMapper;
+  @InjectMocks OrganisationMapperImpl organisationMapper;
 
   @Test
   public void testToOrganisation() {
@@ -88,11 +86,10 @@ public class OrganisationMapperTest {
 
   @Test
   public void testToOrganisationDetails() {
-    Page<OrganisationSummary> organisationPage = new PageImpl<>(List.of(buildOrganisation()),
-        Pageable.unpaged(), 1);
+    Page<OrganisationSummary> organisationPage =
+        new PageImpl<>(List.of(buildOrganisation()), Pageable.unpaged(), 1);
 
-    OrganisationDetails result =
-        organisationMapper.toOrganisationDetails(organisationPage);
+    OrganisationDetails result = organisationMapper.toOrganisationDetails(organisationPage);
 
     assertNotNull(result);
     assertNotNull(result.getContent());
@@ -110,8 +107,7 @@ public class OrganisationMapperTest {
     when(commonMapper.toBoolean(organizationPartyType.getCurrentlyTrading()))
         .thenReturn("Y".equalsIgnoreCase(organizationPartyType.getCurrentlyTrading()));
 
-    OrganisationDetail result =
-        organisationMapper.toOrganisationDetail(organizationPartyType);
+    OrganisationDetail result = organisationMapper.toOrganisationDetail(organizationPartyType);
 
     assertNotNull(result);
     assertEquals(organizationPartyType.getOrganizationName(), result.getName());
@@ -148,7 +144,7 @@ public class OrganisationMapperTest {
     return soaOrganization;
   }
 
-  private OrganisationSummary buildOrganisation(){
+  private OrganisationSummary buildOrganisation() {
     OrganisationSummary organisation = new OrganisationSummary();
     organisation.setPartyId(ORGPARTYID);
     organisation.setName(ORGNAME);
@@ -158,7 +154,7 @@ public class OrganisationMapperTest {
     return organisation;
   }
 
-  private OrganizationPartyType buildOrganisationPartyType(){
+  private OrganizationPartyType buildOrganisationPartyType() {
     OrganizationPartyType organizationPartyType = new OrganizationPartyType();
     organizationPartyType.setOrganizationPartyID(ORGPARTYID);
     organizationPartyType.setOrganizationName(ORGNAME);

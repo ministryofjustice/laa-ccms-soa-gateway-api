@@ -9,9 +9,7 @@ import uk.gov.laa.ccms.soa.gateway.model.ProviderRequestDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ProviderRequestResponse;
 import uk.gov.laa.ccms.soa.gateway.service.ProviderRequestsService;
 
-/**
- * REST controller for handling provider requests.
- */
+/** REST controller for handling provider requests. */
 @RestController
 @RequiredArgsConstructor
 @Slf4j
@@ -34,12 +32,10 @@ public class ProviderRequestsController implements ProviderRequestsApi {
       final ProviderRequestDetail providerRequestDetail) {
     log.info("POST /provider-requests");
     try {
-      final String notificationId = providerRequestsService.submitProviderRequest(
-          soaGatewayUserLoginId,
-          soaGatewayUserRole,
-          providerRequestDetail);
-      return ResponseEntity.ok(new ProviderRequestResponse()
-          .notificationId(notificationId));
+      final String notificationId =
+          providerRequestsService.submitProviderRequest(
+              soaGatewayUserLoginId, soaGatewayUserRole, providerRequestDetail);
+      return ResponseEntity.ok(new ProviderRequestResponse().notificationId(notificationId));
     } catch (final Exception e) {
       log.error("ProviderRequestsController caught exception", e);
       return ResponseEntity.internalServerError().build();

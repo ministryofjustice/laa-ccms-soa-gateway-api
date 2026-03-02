@@ -21,9 +21,7 @@ import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientIn
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientList;
 import uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.PersonalDetails;
 
-/**
- * Mapper interface responsible for transforming client data between different representations.
- */
+/** Mapper interface responsible for transforming client data between different representations. */
 @Mapper(componentModel = "spring", uses = CommonMapper.class)
 public interface ClientDetailsMapper {
 
@@ -41,8 +39,7 @@ public interface ClientDetailsMapper {
 
   @Mapping(target = "contacts.fax", ignore = true)
   ClientDetailDetails toClientDetailDetails(
-      uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientDetails
-          clientDetails);
+      uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientDetails clientDetails);
 
   // Now, the modified toClientDetail method will use the above method to map the
   // 'personalInformation' fields
@@ -51,15 +48,16 @@ public interface ClientDetailsMapper {
   @Mapping(target = "recordHistory", source = "client.recordHistory")
   ClientDetail toClientDetail(ClientInqRS clientInqRs);
 
-  uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientDetails
-      toSoaClientDetails(ClientDetailDetails clientDetailDetails);
+  uk.gov.legalservices.ccms.clientmanagement.client._1_0.clientbio.ClientDetails toSoaClientDetails(
+      ClientDetailDetails clientDetailDetails);
 
-  @Mapping(target = "NINumber",
-      source = "nationalInsuranceNumber")
-  @Mapping(target = "dateOfBirth",
+  @Mapping(target = "NINumber", source = "nationalInsuranceNumber")
+  @Mapping(
+      target = "dateOfBirth",
       source = "dateOfBirth",
       qualifiedByName = "dateToXmlGregorianCalendarWithoutTimeZone")
-  @Mapping(target = "dateOfDeath",
+  @Mapping(
+      target = "dateOfDeath",
       source = "dateOfDeath",
       qualifiedByName = "dateToXmlGregorianCalendarWithoutTimeZone")
   PersonalDetails toPersonalDetail(ClientPersonalDetail personalInformation);
@@ -88,9 +86,7 @@ public interface ClientDetailsMapper {
   @Mapping(target = "mentalCapacityInd", ignore = true)
   @Mapping(target = "countryOfOrigin", ignore = true)
   @Mapping(target = ".", source = "details.contacts")
-  ClientUpdateRQ toClientUpdateRq(
-      String clientReferenceNumber,
-      ClientDetailDetails details);
+  ClientUpdateRQ toClientUpdateRq(String clientReferenceNumber, ClientDetailDetails details);
 
   /**
    * Amends the ClientUpdateRq before the mapping takes place, passing through the personal details
@@ -101,24 +97,23 @@ public interface ClientDetailsMapper {
    */
   @BeforeMapping
   default void beforeMappingToClientUpdateRq(
-      @MappingTarget ClientUpdateRQ clientUpdateRq,
-      ClientDetailDetails clientDetailDetails) {
+      @MappingTarget ClientUpdateRQ clientUpdateRq, ClientDetailDetails clientDetailDetails) {
     if (clientDetailDetails.getPersonalInformation() != null) {
-      addClientPersonalDetailToClientUpdateRq(clientUpdateRq,
-          clientDetailDetails.getPersonalInformation());
+      addClientPersonalDetailToClientUpdateRq(
+          clientUpdateRq, clientDetailDetails.getPersonalInformation());
     }
   }
 
-  @Mapping(target = "dateOfBirth",
-        source = "dateOfBirth",
+  @Mapping(
+      target = "dateOfBirth",
+      source = "dateOfBirth",
       qualifiedByName = "dateToXmlGregorianCalendarWithoutTimeZone")
-  @Mapping(target = "dateOfDeath",
+  @Mapping(
+      target = "dateOfDeath",
       source = "dateOfDeath",
       qualifiedByName = "dateToXmlGregorianCalendarWithoutTimeZone")
-  @Mapping(target = "NINumber",
-      source = "nationalInsuranceNumber")
-  @Mapping(target = "homeOfficeReference",
-      source = "homeOfficeNumber")
+  @Mapping(target = "NINumber", source = "nationalInsuranceNumber")
+  @Mapping(target = "homeOfficeReference", source = "homeOfficeNumber")
   @Mapping(target = "headerRQ", ignore = true)
   @Mapping(target = "clientReferenceNumber", ignore = true)
   @Mapping(target = "name", ignore = true)
@@ -138,5 +133,4 @@ public interface ClientDetailsMapper {
   @Mapping(target = "recordHistory", ignore = true)
   void addClientPersonalDetailToClientUpdateRq(
       @MappingTarget ClientUpdateRQ clientUpdateRq, ClientPersonalDetail personalInformation);
-
 }

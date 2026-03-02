@@ -1,23 +1,19 @@
 package uk.gov.laa.ccms.soa.gateway.mapper;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
-import org.springframework.data.domain.Page;
 import uk.gov.laa.ccms.soa.gateway.model.Note;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.NotificationInqRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.NotesElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.NotificationCntList;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.NotificationListElementType;
 
 /**
  * Mapper for transforming data related to notifications.
  *
  * <p>Uses the MapStruct framework to facilitate the conversion between the Legal Services endpoint
- * data model.</p>
+ * data model.
  */
 @Mapper(componentModel = "spring", uses = CommonMapper.class)
 public interface NotificationMapper {
@@ -80,11 +76,6 @@ public interface NotificationMapper {
 
   // ----------------------               Notifications             --------------------------
 
-
-
   @Mapping(target = "notesId", source = "notesID")
   Note toNote(NotesElementType notesElementType);
-
-
-
 }

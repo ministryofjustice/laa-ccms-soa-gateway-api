@@ -13,8 +13,7 @@ import uk.gov.laa.ccms.soa.gateway.service.CaseDetailsService;
  * Controller for handling case details related requests.
  *
  * <p>Provides an endpoint for retrieving detailed case information based on various search
- * criteria. Implements the {@link CasesApi} for consistent behavior with other API
- * implementations.</p>
+ * criteria. Implements the {@link CasesApi} for consistent behavior with other API implementations.
  */
 @RestController
 @RequiredArgsConstructor
@@ -30,12 +29,9 @@ public class CaseDetailsController implements CasesApi {
       final CaseDetail caseDetail) {
     log.info("POST /cases");
     try {
-      final String transactionId = caseDetailsService.registerCase(
-          soaGatewayUserLoginId,
-          soaGatewayUserRole,
-          caseDetail);
-      return ResponseEntity.ok(new CaseTransactionResponse()
-          .transactionId(transactionId));
+      final String transactionId =
+          caseDetailsService.registerCase(soaGatewayUserLoginId, soaGatewayUserRole, caseDetail);
+      return ResponseEntity.ok(new CaseTransactionResponse().transactionId(transactionId));
     } catch (final Exception e) {
       log.error("CaseDetailsController caught exception", e);
       return ResponseEntity.internalServerError().build();
@@ -45,9 +41,9 @@ public class CaseDetailsController implements CasesApi {
   /**
    * Get a single case by reference number.
    *
-   * @param caseReferenceNumber  (required) - the reference of the case to return.
-   * @param soaGatewayUserLoginId  (required) - the user requesting the data.
-   * @param soaGatewayUserRole  (required) - the user role requesting the data.
+   * @param caseReferenceNumber (required) - the reference of the case to return.
+   * @param soaGatewayUserLoginId (required) - the user requesting the data.
+   * @param soaGatewayUserRole (required) - the user role requesting the data.
    * @return a ResponseEntity containing the case detail.
    */
   @Override
@@ -57,10 +53,9 @@ public class CaseDetailsController implements CasesApi {
       final String soaGatewayUserRole) {
     log.info("GET /cases/{}", caseReferenceNumber);
     try {
-      final CaseDetail caseDetail = caseDetailsService.getCaseDetail(
-          soaGatewayUserLoginId,
-          soaGatewayUserRole,
-          caseReferenceNumber);
+      final CaseDetail caseDetail =
+          caseDetailsService.getCaseDetail(
+              soaGatewayUserLoginId, soaGatewayUserRole, caseReferenceNumber);
 
       return ResponseEntity.ok(caseDetail);
     } catch (final Exception e) {
@@ -73,22 +68,22 @@ public class CaseDetailsController implements CasesApi {
    * Amends a single case by reference number.
    *
    * @param soaGatewayUserLoginId (required) - the user requesting the data.
-   * @param soaGatewayUserRole    (required) - the user requesting the data.
-   * @param caseDetail            Update a case (required)
+   * @param soaGatewayUserRole (required) - the user requesting the data.
+   * @param caseDetail Update a case (required)
    * @return a CaseTransactionResponse containing the requests operation result.
    */
   @Override
-  public ResponseEntity<CaseTransactionResponse> updateCase(String soaGatewayUserLoginId,
-      String soaGatewayUserRole, String caseUpdateType, CaseDetail caseDetail) {
+  public ResponseEntity<CaseTransactionResponse> updateCase(
+      String soaGatewayUserLoginId,
+      String soaGatewayUserRole,
+      String caseUpdateType,
+      CaseDetail caseDetail) {
     log.info("PUT /cases");
     try {
-      final String transactionId = caseDetailsService.amendCase(
-          soaGatewayUserLoginId,
-          soaGatewayUserRole,
-          caseDetail,
-          caseUpdateType);
-      return ResponseEntity.ok(new CaseTransactionResponse()
-          .transactionId(transactionId));
+      final String transactionId =
+          caseDetailsService.amendCase(
+              soaGatewayUserLoginId, soaGatewayUserRole, caseDetail, caseUpdateType);
+      return ResponseEntity.ok(new CaseTransactionResponse().transactionId(transactionId));
     } catch (final Exception e) {
       log.error("CaseDetailsController caught exception", e);
       return ResponseEntity.internalServerError().build();

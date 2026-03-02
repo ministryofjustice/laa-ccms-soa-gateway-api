@@ -14,8 +14,8 @@ import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabio.KeyT
 import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabio.SearchContext;
 
 /**
- * Client for interacting with the Reference Data service.
- * Provides methods to query and retrieve reference data relevant to case management.
+ * Client for interacting with the Reference Data service. Provides methods to query and retrieve
+ * reference data relevant to case management.
  */
 @Slf4j
 @SuppressWarnings("unchecked")
@@ -32,9 +32,9 @@ public class ReferenceDataClient extends AbstractSoaClient {
    * @param serviceUrl The URL endpoint for the Reference Data service.
    */
   public ReferenceDataClient(
-          final WebServiceTemplate webServiceTemplate,
-          @Value("${laa.ccms.soa-gateway.reference-data.service-name}")final String serviceName,
-          @Value("${laa.ccms.soa-gateway.reference-data.service-url}")final String serviceUrl) {
+      final WebServiceTemplate webServiceTemplate,
+      @Value("${laa.ccms.soa-gateway.reference-data.service-name}") final String serviceName,
+      @Value("${laa.ccms.soa-gateway.reference-data.service-url}") final String serviceUrl) {
     this.webServiceTemplate = webServiceTemplate;
     this.serviceName = serviceName;
     this.serviceUrl = serviceUrl;
@@ -47,8 +47,8 @@ public class ReferenceDataClient extends AbstractSoaClient {
    * @param loggedInUserType Type of the logged-in user.
    * @return The reference data inquiry response containing case reference details.
    */
-  public ReferenceDataInqRS getCaseReference(final String loggedInUserId,
-                                             final String loggedInUserType) {
+  public ReferenceDataInqRS getCaseReference(
+      final String loggedInUserId, final String loggedInUserType) {
 
     final String soapAction = String.format("%s/process", serviceName);
     ReferenceDataInqRQ referenceDataInqRq = CASE_FACTORY.createReferenceDataInqRQ();
@@ -60,8 +60,9 @@ public class ReferenceDataClient extends AbstractSoaClient {
     contexts.add(context);
 
     JAXBElement<ReferenceDataInqRS> response =
-            (JAXBElement<ReferenceDataInqRS>) getWebServiceTemplate()
-            .marshalSendAndReceive(
+        (JAXBElement<ReferenceDataInqRS>)
+            getWebServiceTemplate()
+                .marshalSendAndReceive(
                     serviceUrl,
                     CASE_FACTORY.createReferenceDataInqRQ(referenceDataInqRq),
                     new SoapActionCallback(soapAction));
@@ -69,6 +70,5 @@ public class ReferenceDataClient extends AbstractSoaClient {
     isSuccessOrThrowException(serviceName, response.getValue().getHeaderRS());
 
     return response.getValue();
-
   }
 }

@@ -15,7 +15,7 @@ import org.springframework.ws.soap.security.wss4j2.Wss4jSecurityInterceptor;
  * communication with the necessary security and marshalling configurations.
  *
  * <p>This configuration includes setting up the marshaller, web service template, and security
- * interceptors with the provided username and password for authentication.</p>
+ * interceptors with the provided username and password for authentication.
  */
 @Configuration
 public class SoaConfiguration {
@@ -28,15 +28,16 @@ public class SoaConfiguration {
    * @param username the username for SOA gateway authentication
    * @param password the password for SOA gateway authentication
    */
-  public SoaConfiguration(@Value("${laa.ccms.soa-gateway.username}")String username,
-                          @Value("${laa.ccms.soa-gateway.password}")String password) {
+  public SoaConfiguration(
+      @Value("${laa.ccms.soa-gateway.username}") String username,
+      @Value("${laa.ccms.soa-gateway.password}") String password) {
     this.username = username;
     this.password = password;
   }
 
   /**
-   * Configures the JAXB 2 marshaller for the SOA gateway communication.
-   * Sets up the required packages for scanning.
+   * Configures the JAXB 2 marshaller for the SOA gateway communication. Sets up the required
+   * packages for scanning.
    *
    * @return a configured {@link Jaxb2Marshaller} instance
    */
@@ -48,8 +49,8 @@ public class SoaConfiguration {
   }
 
   /**
-   * Configures the web service template for SOA communication.
-   * Sets up the marshaller/unmarshaller and security interceptors.
+   * Configures the web service template for SOA communication. Sets up the marshaller/unmarshaller
+   * and security interceptors.
    *
    * @param marshaller the configured JAXB 2 marshaller
    * @return a configured {@link WebServiceTemplate} instance
@@ -59,21 +60,21 @@ public class SoaConfiguration {
     WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
     webServiceTemplate.setMarshaller(marshaller);
     webServiceTemplate.setUnmarshaller(marshaller);
-    webServiceTemplate.setInterceptors(new ClientInterceptor[]{ securityInterceptor() });
+    webServiceTemplate.setInterceptors(new ClientInterceptor[] {securityInterceptor()});
     return webServiceTemplate;
   }
 
   /**
-   * Configures the WSS4J security interceptor for SOA communication.
-   * Sets up the security actions and authentication credentials.
+   * Configures the WSS4J security interceptor for SOA communication. Sets up the security actions
+   * and authentication credentials.
    *
    * @return a configured {@link Wss4jSecurityInterceptor} instance
    */
   @Bean
   public Wss4jSecurityInterceptor securityInterceptor() {
     Wss4jSecurityInterceptor security = new Wss4jSecurityInterceptor();
-    security.setSecurementActions(WSHandlerConstants.TIMESTAMP + " "
-            + WSHandlerConstants.USERNAME_TOKEN);
+    security.setSecurementActions(
+        WSHandlerConstants.TIMESTAMP + " " + WSHandlerConstants.USERNAME_TOKEN);
     security.setSecurementPasswordType(WSConstants.PW_TEXT);
     security.setSecurementUsername(this.username);
     security.setSecurementPassword(this.password);

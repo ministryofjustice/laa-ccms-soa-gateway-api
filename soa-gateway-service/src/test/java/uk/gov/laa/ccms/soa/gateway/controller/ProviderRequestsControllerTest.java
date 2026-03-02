@@ -26,11 +26,9 @@ class ProviderRequestsControllerTest {
 
   private MockMvc mockMvc;
 
-  @Mock
-  private ProviderRequestsService providerRequestsService;
+  @Mock private ProviderRequestsService providerRequestsService;
 
-  @InjectMocks
-  private ProviderRequestsController providerRequestsController;
+  @InjectMocks private ProviderRequestsController providerRequestsController;
 
   private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -39,9 +37,10 @@ class ProviderRequestsControllerTest {
 
   @BeforeEach
   public void setup() {
-    this.mockMvc = MockMvcBuilders.standaloneSetup(providerRequestsController)
-        .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
-        .build();
+    this.mockMvc =
+        MockMvcBuilders.standaloneSetup(providerRequestsController)
+            .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
+            .build();
   }
 
   @Test
@@ -50,11 +49,15 @@ class ProviderRequestsControllerTest {
     final ProviderRequestDetail providerRequestDetail = new ProviderRequestDetail();
     final String expectedNotificationId = "notif123";
 
-    Mockito.when(providerRequestsService.submitProviderRequest(
-            eq(SOA_GATEWAY_USER_LOGIN_ID), eq(SOA_GATEWAY_USER_ROLE), eq(providerRequestDetail)))
+    Mockito.when(
+            providerRequestsService.submitProviderRequest(
+                eq(SOA_GATEWAY_USER_LOGIN_ID),
+                eq(SOA_GATEWAY_USER_ROLE),
+                eq(providerRequestDetail)))
         .thenReturn(expectedNotificationId);
 
-    mockMvc.perform(
+    mockMvc
+        .perform(
             post("/provider-requests")
                 .content(objectMapper.writeValueAsString(providerRequestDetail))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -62,8 +65,9 @@ class ProviderRequestsControllerTest {
                 .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE))
         .andExpect(status().isOk());
 
-    Mockito.verify(providerRequestsService).submitProviderRequest(
-        eq(SOA_GATEWAY_USER_LOGIN_ID), eq(SOA_GATEWAY_USER_ROLE), eq(providerRequestDetail));
+    Mockito.verify(providerRequestsService)
+        .submitProviderRequest(
+            eq(SOA_GATEWAY_USER_LOGIN_ID), eq(SOA_GATEWAY_USER_ROLE), eq(providerRequestDetail));
   }
 
   @Test
@@ -74,7 +78,8 @@ class ProviderRequestsControllerTest {
     Mockito.when(providerRequestsService.submitProviderRequest(any(), any(), any()))
         .thenThrow(new RuntimeException("Test exception"));
 
-    mockMvc.perform(
+    mockMvc
+        .perform(
             post("/provider-requests")
                 .content(objectMapper.writeValueAsString(providerRequestDetail))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -84,5 +89,4 @@ class ProviderRequestsControllerTest {
 
     Mockito.verify(providerRequestsService).submitProviderRequest(any(), any(), any());
   }
-
 }

@@ -22,22 +22,24 @@ import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabim.Cont
 @SpringBootTest
 public class ContractDetailsClientImplIntegrationTest {
 
-  @Autowired
-  private WebServiceTemplate webServiceTemplate;
+  @Autowired private WebServiceTemplate webServiceTemplate;
 
-  @Autowired
-  private ContractDetailsClientImpl client;
+  @Autowired private ContractDetailsClientImpl client;
 
   private static MockWebServiceServer mockServer;
 
   @Value("classpath:/payload/ContractDetailsInqRS_valid.xml")
   Resource contractDetailsInqRS_valid;
 
-  private static final String HEADER_NS = "http://legalservices.gov.uk/Enterprise/Common/1.0/Header";
-  private static final String MSG_NS = "http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/ReferenceDataBIM";
-  private static final String REFDATA_NS = "http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/ReferenceDataBIO";
+  private static final String HEADER_NS =
+      "http://legalservices.gov.uk/Enterprise/Common/1.0/Header";
+  private static final String MSG_NS =
+      "http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/ReferenceDataBIM";
+  private static final String REFDATA_NS =
+      "http://legalservices.gov.uk/CCMS/Common/ReferenceData/1.0/ReferenceDataBIO";
 
-  private static final String COMMON_NS = "http://legalservices.gov.uk/Enterprise/Common/1.0/Common";
+  private static final String COMMON_NS =
+      "http://legalservices.gov.uk/Enterprise/Common/1.0/Common";
 
   @BeforeEach
   public void createServer() {
@@ -58,23 +60,44 @@ public class ContractDetailsClientImplIntegrationTest {
     namespaces.put("refdata", REFDATA_NS);
     namespaces.put("common", COMMON_NS);
 
-    mockServer.expect(xpath("/msg:ContractDetailsRQ/header:HeaderRQ/header:TimeStamp", namespaces).exists())
-        .andExpect(xpath("/msg:ContractDetailsRQ/header:HeaderRQ/header:TransactionRequestID", namespaces).exists())
-        .andExpect(xpath("/msg:ContractDetailsRQ/header:HeaderRQ/header:UserLoginID", namespaces).evaluatesTo(testLoginId))
-        .andExpect(xpath("/msg:ContractDetailsRQ/header:HeaderRQ/header:UserRole", namespaces).evaluatesTo(testUserType))
-        .andExpect(xpath("/msg:ContractDetailsRQ/msg:RecordCount/common:MaxRecordsToFetch", namespaces).evaluatesTo(maxRecords))
-        .andExpect(xpath("/msg:ContractDetailsRQ/msg:SearchCriteria/msg:FirmID", namespaces).evaluatesTo(providerFirmId))
-        .andExpect(xpath("/msg:ContractDetailsRQ/msg:SearchCriteria/msg:OfficeID", namespaces).evaluatesTo(officeId))
+    mockServer
+        .expect(
+            xpath("/msg:ContractDetailsRQ/header:HeaderRQ/header:TimeStamp", namespaces).exists())
+        .andExpect(
+            xpath("/msg:ContractDetailsRQ/header:HeaderRQ/header:TransactionRequestID", namespaces)
+                .exists())
+        .andExpect(
+            xpath("/msg:ContractDetailsRQ/header:HeaderRQ/header:UserLoginID", namespaces)
+                .evaluatesTo(testLoginId))
+        .andExpect(
+            xpath("/msg:ContractDetailsRQ/header:HeaderRQ/header:UserRole", namespaces)
+                .evaluatesTo(testUserType))
+        .andExpect(
+            xpath("/msg:ContractDetailsRQ/msg:RecordCount/common:MaxRecordsToFetch", namespaces)
+                .evaluatesTo(maxRecords))
+        .andExpect(
+            xpath("/msg:ContractDetailsRQ/msg:SearchCriteria/msg:FirmID", namespaces)
+                .evaluatesTo(providerFirmId))
+        .andExpect(
+            xpath("/msg:ContractDetailsRQ/msg:SearchCriteria/msg:OfficeID", namespaces)
+                .evaluatesTo(officeId))
         .andRespond(withPayload(contractDetailsInqRS_valid));
 
-    ContractDetailsInqRS response = client.getContractDetails(Integer.toString(providerFirmId),
-        Integer.toString(officeId), testLoginId, testUserType,
-        maxRecords);
+    ContractDetailsInqRS response =
+        client.getContractDetails(
+            Integer.toString(providerFirmId),
+            Integer.toString(officeId),
+            testLoginId,
+            testUserType,
+            maxRecords);
 
     assertNotNull(response.getContractDetails());
     assertEquals(4, response.getContractDetails().getContractDetail().size());
-    assertEquals("MAT", response.getContractDetails().getContractDetail().get(0).getCategoryofLaw());
-    assertEquals("Not Applicable", response.getContractDetails().getContractDetail().get(0).getSubCategory());
+    assertEquals(
+        "MAT", response.getContractDetails().getContractDetail().get(0).getCategoryofLaw());
+    assertEquals(
+        "Not Applicable",
+        response.getContractDetails().getContractDetail().get(0).getSubCategory());
 
     mockServer.verify();
   }
@@ -93,12 +116,21 @@ public class ContractDetailsClientImplIntegrationTest {
     namespaces.put("refdata", REFDATA_NS);
     namespaces.put("common", COMMON_NS);
 
-    mockServer.expect(xpath("/msg:ContractDetailsRQ/header:HeaderRQ/header:TransactionRequestID", namespaces).exists())
+    mockServer
+        .expect(
+            xpath("/msg:ContractDetailsRQ/header:HeaderRQ/header:TransactionRequestID", namespaces)
+                .exists())
         .andRespond(withError("Failed to call soap service"));
 
-    assertThrows(RuntimeException.class, () -> client.getContractDetails(
-        Integer.toString(providerFirmId), Integer.toString(officeId), testLoginId, testUserType,
-        maxRecords));
+    assertThrows(
+        RuntimeException.class,
+        () ->
+            client.getContractDetails(
+                Integer.toString(providerFirmId),
+                Integer.toString(officeId),
+                testLoginId,
+                testUserType,
+                maxRecords));
 
     mockServer.verify();
   }

@@ -18,7 +18,7 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseAdd;
  *
  * <p>This service interacts with the external Case Services system to fetch case details. It then
  * processes and converts these details to the desired format using the {@link CaseDetailsMapper}.
- * Pagination of results is handled by the {@link PaginationUtil} utility.</p>
+ * Pagination of results is handled by the {@link PaginationUtil} utility.
  */
 @Service
 @RequiredArgsConstructor
@@ -32,26 +32,24 @@ public class CaseDetailsService extends AbstractSoaService {
   /**
    * Retrieve the full details of a single Case based on the supplied caseReferenceNumber.
    *
-   * <p>This method communicates with the external Case Services system using the provided
-   * case reference, fetches the relevant case details, and then maps these details
-   * to the desired format.</p>
+   * <p>This method communicates with the external Case Services system using the provided case
+   * reference, fetches the relevant case details, and then maps these details to the desired
+   * format.
    *
    * @param soaGatewayUserLoginId The user login ID for the SOA Gateway.
-   * @param soaGatewayUserRole    The user role in the SOA Gateway.
-   * @param caseReferenceNumber   The reference number for the case.
+   * @param soaGatewayUserRole The user role in the SOA Gateway.
+   * @param caseReferenceNumber The reference number for the case.
    * @return A {@link CaseDetail} object containing the retrieved and processed case detail.
    */
   public CaseDetail getCaseDetail(
       final String soaGatewayUserLoginId,
       final String soaGatewayUserRole,
-      final String caseReferenceNumber
-  ) {
+      final String caseReferenceNumber) {
     log.info("CaseDetailsService - getCaseDetail");
 
-    CaseInqRS response = caseServicesClient.getCaseDetail(
-        soaGatewayUserLoginId,
-        soaGatewayUserRole,
-        caseReferenceNumber);
+    CaseInqRS response =
+        caseServicesClient.getCaseDetail(
+            soaGatewayUserLoginId, soaGatewayUserRole, caseReferenceNumber);
 
     return caseDetailsMapper.toCaseDetail(response.getCase());
   }
@@ -59,27 +57,24 @@ public class CaseDetailsService extends AbstractSoaService {
   /**
    * Registers a new case based on the provided case details.
    *
-   * <p>This method communicates with the external Case Services system using the provided
-   * case details, creates a new case in CCMS, and then extracts the returned transaction id
-   * for return.</p>
+   * <p>This method communicates with the external Case Services system using the provided case
+   * details, creates a new case in CCMS, and then extracts the returned transaction id for return.
    *
    * @param soaGatewayUserLoginId The user login ID for the SOA Gateway.
-   * @param soaGatewayUserRole    The user role in the SOA Gateway.
-   * @param caseDetail            The case details to register.
+   * @param soaGatewayUserRole The user role in the SOA Gateway.
+   * @param caseDetail The case details to register.
    * @return A {@link String} representing the SOA transaction id for the case registration.
    */
   public String registerCase(
       final String soaGatewayUserLoginId,
       final String soaGatewayUserRole,
-      final CaseDetail caseDetail
-  ) {
+      final CaseDetail caseDetail) {
     log.info("CaseDetailsService - registerCase");
     final CaseAdd caseAdd = caseDetailsMapper.toCaseAdd(caseDetail);
 
-    final CaseAddRS response = caseServicesClient.createCaseApplication(
-        soaGatewayUserLoginId,
-        soaGatewayUserRole,
-        caseAdd);
+    final CaseAddRS response =
+        caseServicesClient.createCaseApplication(
+            soaGatewayUserLoginId, soaGatewayUserRole, caseAdd);
 
     return response.getTransactionID();
   }
@@ -87,31 +82,27 @@ public class CaseDetailsService extends AbstractSoaService {
   /**
    * Amends an existing case based on the provided case details.
    *
-   * <p>This method communicates with the external Case Services system using the provided
-   * case details, amends an existing case in CCMS, and then extracts the returned transaction id
-   * for return.</p>
+   * <p>This method communicates with the external Case Services system using the provided case
+   * details, amends an existing case in CCMS, and then extracts the returned transaction id for
+   * return.
    *
    * @param soaGatewayUserLoginId The user login ID for the SOA Gateway.
-   * @param soaGatewayUserRole    The user role in the SOA Gateway.
-   * @param caseDetail            The case details to amend.
+   * @param soaGatewayUserRole The user role in the SOA Gateway.
+   * @param caseDetail The case details to amend.
    * @return A {@link String} representing the SOA transaction id for the case amendment.
    */
   public String amendCase(
       final String soaGatewayUserLoginId,
       final String soaGatewayUserRole,
       final CaseDetail caseDetail,
-      final String caseUpdateType
-  ) {
+      final String caseUpdateType) {
     log.info("CaseDetailsService - amendCase");
 
     CaseUpdateRQ caseUpdateRq = caseDetailsMapper.toCaseUpdateRq(caseDetail, caseUpdateType);
 
-    final CaseUpdateRS response = caseServicesClient.updateCase(
-        soaGatewayUserLoginId,
-        soaGatewayUserRole,
-        caseUpdateRq);
+    final CaseUpdateRS response =
+        caseServicesClient.updateCase(soaGatewayUserLoginId, soaGatewayUserRole, caseUpdateRq);
 
     return response.getTransactionID();
   }
-
 }

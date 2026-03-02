@@ -17,11 +17,9 @@ import uk.gov.legalservices.enterprise.common._1_0.header.HeaderRSType;
 @ExtendWith(MockitoExtension.class)
 public class NotificationsServiceTest {
 
-  @Mock
-  private NotificationClient notificationClient;
+  @Mock private NotificationClient notificationClient;
 
-  @InjectMocks
-  private NotificationsService notificationsService;
+  @InjectMocks private NotificationsService notificationsService;
 
   @Test
   public void testUpdateNotification() {
@@ -31,10 +29,8 @@ public class NotificationsServiceTest {
 
     String notificationId = "notificationId";
 
-    Notification notification = new Notification()
-        .userId("userId")
-        .action("action")
-        .message("message");
+    Notification notification =
+        new Notification().userId("userId").action("action").message("message");
 
     HeaderRSType headerRSType = new HeaderRSType();
     headerRSType.setTransactionID("12345");
@@ -42,18 +38,18 @@ public class NotificationsServiceTest {
     NotificationUpdateRS notificationUpdateRS = new NotificationUpdateRS();
     notificationUpdateRS.setHeaderRS(headerRSType);
 
-    when(notificationClient.updateNotification(soaGatewayUserLoginId, soaGatewayUserRole,
-        notification, notificationId))
+    when(notificationClient.updateNotification(
+            soaGatewayUserLoginId, soaGatewayUserRole, notification, notificationId))
         .thenReturn(notificationUpdateRS);
 
-    String transactionId = notificationsService.updateNotification(soaGatewayUserLoginId,
-        soaGatewayUserRole, notification, notificationId);
+    String transactionId =
+        notificationsService.updateNotification(
+            soaGatewayUserLoginId, soaGatewayUserRole, notification, notificationId);
 
     assertEquals("12345", transactionId);
 
-    verify(notificationClient).updateNotification(soaGatewayUserLoginId, soaGatewayUserRole,
-        notification, notificationId);
-
+    verify(notificationClient)
+        .updateNotification(
+            soaGatewayUserLoginId, soaGatewayUserRole, notification, notificationId);
   }
-
 }

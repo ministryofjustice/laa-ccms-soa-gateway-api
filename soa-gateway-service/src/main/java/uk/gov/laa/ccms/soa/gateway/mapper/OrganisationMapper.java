@@ -14,10 +14,7 @@ import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabim.Comm
 import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabim.CommonOrgInqRS.OrganizationList;
 import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabio.OrganizationPartyType;
 
-
-/**
- * Mapper interface for converting organisation data between different representations.
- */
+/** Mapper interface for converting organisation data between different representations. */
 @Mapper(componentModel = "spring", uses = CommonMapper.class)
 public interface OrganisationMapper {
 

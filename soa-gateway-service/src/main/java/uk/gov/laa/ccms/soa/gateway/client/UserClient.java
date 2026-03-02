@@ -16,7 +16,7 @@ import uk.gov.gsi.legalaid.ccms.common.usermanagement._1_0.usermanagementbio.CCM
  *
  * <p>This client extends the foundational utilities provided by {@link AbstractSoaClient} and
  * specifically focuses on user services. It allows for the update of user profile options. Service
- * name and URL details are injected at runtime.</p>
+ * name and URL details are injected at runtime.
  */
 @Slf4j
 @SuppressWarnings("unchecked")
@@ -33,10 +33,11 @@ public class UserClient extends AbstractSoaClient {
    * Constructs a new {@link UserClient} with the given service details.
    *
    * @param webServiceTemplate The web service template for SOAP communication.
-   * @param serviceName        The name of the update user service.
-   * @param serviceUrl         The URL endpoint for the update user service.
+   * @param serviceName The name of the update user service.
+   * @param serviceUrl The URL endpoint for the update user service.
    */
-  public UserClient(WebServiceTemplate webServiceTemplate,
+  public UserClient(
+      WebServiceTemplate webServiceTemplate,
       @Value("${laa.ccms.soa-gateway.user.service-name}") String serviceName,
       @Value("${laa.ccms.soa-gateway.user.service-url}") String serviceUrl) {
     this.webServiceTemplate = webServiceTemplate;
@@ -47,13 +48,13 @@ public class UserClient extends AbstractSoaClient {
   /**
    * Download a document cover sheet by ebs registered document id.
    *
-   * @param loggedInUserId       - the logged in UserId
-   * @param loggedInUserType     - the logged in UserType
-   * @param user                 - the user details
+   * @param loggedInUserId - the logged in UserId
+   * @param loggedInUserType - the logged in UserType
+   * @param user - the user details
    * @return Response object containing the cover sheet for the document.
    */
-  public UpdateUserRS updateUser(final String loggedInUserId,
-      final String loggedInUserType, final CCMSUser user) {
+  public UpdateUserRS updateUser(
+      final String loggedInUserId, final String loggedInUserType, final CCMSUser user) {
 
     final String soapAction = String.format("%s/UpdateUser", serviceName);
     UpdateUserRQ updateUserRq = USER_BIM_FACTORY.createUpdateUserRQ();
@@ -61,14 +62,16 @@ public class UserClient extends AbstractSoaClient {
     updateUserRq.setCCMSUser(user);
 
     JAXBElement<UpdateUserRS> response =
-        (JAXBElement<UpdateUserRS>) getWebServiceTemplate().marshalSendAndReceive(
-            serviceUrl, USER_BIM_FACTORY.createUpdateUserRQ(updateUserRq),
-            new SoapActionCallback(soapAction));
+        (JAXBElement<UpdateUserRS>)
+            getWebServiceTemplate()
+                .marshalSendAndReceive(
+                    serviceUrl,
+                    USER_BIM_FACTORY.createUpdateUserRQ(updateUserRq),
+                    new SoapActionCallback(soapAction));
 
     // Check and throw exception if the SOA call was not successful
     isSuccessOrThrowException(serviceName, response.getValue().getHeaderRS());
 
     return response.getValue();
   }
-
 }

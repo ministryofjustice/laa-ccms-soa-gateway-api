@@ -27,93 +27,82 @@ import uk.gov.legalservices.ccms.common.referencedata._1_0.referencedatabio.Orga
 @ExtendWith(MockitoExtension.class)
 public class OrganisationServiceTest {
 
-    @Mock
-    private CommonOrgClient commonOrgClient;
+  @Mock private CommonOrgClient commonOrgClient;
 
-    @Mock
-    private OrganisationMapper organisationMapper;
+  @Mock private OrganisationMapper organisationMapper;
 
-    @InjectMocks
-    private OrganisationService organisationService;
+  @InjectMocks private OrganisationService organisationService;
 
-    private String soaGatewayUserLoginId;
-    private String soaGatewayUserRole;
+  private String soaGatewayUserLoginId;
+  private String soaGatewayUserRole;
 
-    private Integer maxRecords;
+  private Integer maxRecords;
 
-    private Pageable pageable;
+  private Pageable pageable;
 
-    @BeforeEach
-    void setup() {
-        this.soaGatewayUserLoginId = "user";
-        this.soaGatewayUserRole = "EXTERNAL";
-        this.maxRecords = 50;
-        this.pageable = Pageable.ofSize(20);
-    }
+  @BeforeEach
+  void setup() {
+    this.soaGatewayUserLoginId = "user";
+    this.soaGatewayUserRole = "EXTERNAL";
+    this.maxRecords = 50;
+    this.pageable = Pageable.ofSize(20);
+  }
 
-    @Test
-    @SuppressWarnings("unchecked")
-    public void testGetOrganisations() {
-        OrganisationSummary searchOrganisation = new OrganisationSummary();
-        Organization organization = buildOrganization();
-        OrganisationDetails expectedResponse = new OrganisationDetails();
+  @Test
+  @SuppressWarnings("unchecked")
+  public void testGetOrganisations() {
+    OrganisationSummary searchOrganisation = new OrganisationSummary();
+    Organization organization = buildOrganization();
+    OrganisationDetails expectedResponse = new OrganisationDetails();
 
-        when(organisationMapper.toOrganization(searchOrganisation)).thenReturn(organization);
+    when(organisationMapper.toOrganization(searchOrganisation)).thenReturn(organization);
 
-        when(commonOrgClient.getOrganisations(
+    when(commonOrgClient.getOrganisations(
             soaGatewayUserLoginId, soaGatewayUserRole, maxRecords, organization))
-            .thenReturn(new CommonOrgInqRS());
+        .thenReturn(new CommonOrgInqRS());
 
-        when(organisationMapper.toOrganisationSummaryList(any(CommonOrgInqRS.class)))
-            .thenReturn(List.of(searchOrganisation));
+    when(organisationMapper.toOrganisationSummaryList(any(CommonOrgInqRS.class)))
+        .thenReturn(List.of(searchOrganisation));
 
-        when(organisationMapper.toOrganisationDetails(any(Page.class))).thenReturn(
-            expectedResponse);
+    when(organisationMapper.toOrganisationDetails(any(Page.class))).thenReturn(expectedResponse);
 
-        OrganisationDetails result = organisationService.getOrganisations(
-            soaGatewayUserLoginId,
-            soaGatewayUserRole,
-            maxRecords,
-            searchOrganisation,
-            pageable);
+    OrganisationDetails result =
+        organisationService.getOrganisations(
+            soaGatewayUserLoginId, soaGatewayUserRole, maxRecords, searchOrganisation, pageable);
 
+    assertNotNull(result);
+    assertEquals(expectedResponse, result);
+  }
 
-        assertNotNull(result);
-        assertEquals(expectedResponse, result);
-    }
+  @Test
+  public void testGetOrganisation() {
+    String partyId = "123";
+    OrganisationDetail expectedResponse = new OrganisationDetail();
 
-    @Test
-    public void testGetOrganisation() {
-        String partyId = "123";
-        OrganisationDetail expectedResponse = new OrganisationDetail();
+    CommonOrgInqRS commonOrgInqRS = new CommonOrgInqRS();
+    commonOrgInqRS.setOrganization(new OrganizationPartyType());
 
-        CommonOrgInqRS commonOrgInqRS = new CommonOrgInqRS();
-        commonOrgInqRS.setOrganization(new OrganizationPartyType());
-
-        when(commonOrgClient.getOrganisation(
+    when(commonOrgClient.getOrganisation(
             soaGatewayUserLoginId, soaGatewayUserRole, maxRecords, partyId))
-            .thenReturn(commonOrgInqRS);
+        .thenReturn(commonOrgInqRS);
 
-        when(organisationMapper.toOrganisationDetail(commonOrgInqRS.getOrganization()))
-            .thenReturn(expectedResponse);
+    when(organisationMapper.toOrganisationDetail(commonOrgInqRS.getOrganization()))
+        .thenReturn(expectedResponse);
 
-        OrganisationDetail result = organisationService.getOrganisation(
-            soaGatewayUserLoginId,
-            soaGatewayUserRole,
-            maxRecords,
-            partyId);
+    OrganisationDetail result =
+        organisationService.getOrganisation(
+            soaGatewayUserLoginId, soaGatewayUserRole, maxRecords, partyId);
 
+    assertNotNull(result);
+    assertEquals(expectedResponse, result);
+  }
 
-        assertNotNull(result);
-        assertEquals(expectedResponse, result);
-    }
-
-    private Organization buildOrganization(){
-        Organization organization = new Organization();
-        organization.setOrganizationName("thename");
-        organization.setOrganizationType("thetype");
-        organization.setCity("thecity");
-        organization.setPostCode("thepostcode");
-        return organization;
-    }
+  private Organization buildOrganization() {
+    Organization organization = new Organization();
+    organization.setOrganizationName("thename");
+    organization.setOrganizationType("thetype");
+    organization.setCity("thecity");
+    organization.setPostCode("thepostcode");
+    return organization;
+  }
 }
