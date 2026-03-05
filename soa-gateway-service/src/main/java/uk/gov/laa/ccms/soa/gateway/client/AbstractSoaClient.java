@@ -1,14 +1,13 @@
 package uk.gov.laa.ccms.soa.gateway.client;
 
-import java.security.SecureRandom;
 import static uk.gov.legalservices.enterprise.common._1_0.header.StatusTextType.SUCCESS;
 
 import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.Optional;
-import java.util.Random;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import lombok.extern.slf4j.Slf4j;
