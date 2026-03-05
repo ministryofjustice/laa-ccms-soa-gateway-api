@@ -1,5 +1,6 @@
 package uk.gov.laa.ccms.soa.gateway.client;
 
+import java.security.SecureRandom;
 import static uk.gov.legalservices.enterprise.common._1_0.header.StatusTextType.SUCCESS;
 
 import java.math.BigInteger;
@@ -44,6 +45,8 @@ public abstract class AbstractSoaClient {
       COMMON_FACTORY = new uk.gov.legalservices.enterprise.common._1_0.common.ObjectFactory();
 
   protected WebServiceTemplate webServiceTemplate;
+
+  private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
   /**
    * Get the WebServiceTemplate for this SoaClient.
@@ -104,7 +107,7 @@ public abstract class AbstractSoaClient {
     return String.format(
         "%s%010d",
         new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date()),
-        (new Random().nextInt(999999998) + 1));
+        (SECURE_RANDOM.nextInt(999999998) + 1));
     //      yyyyMMddHHmmssSSS
     // e.g. 2016051215540200506053
   }
