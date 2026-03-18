@@ -3,11 +3,11 @@ package uk.gov.laa.ccms.soa.gateway.client;
 import static uk.gov.legalservices.enterprise.common._1_0.header.StatusTextType.SUCCESS;
 
 import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.Optional;
-import java.util.Random;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +44,8 @@ public abstract class AbstractSoaClient {
       COMMON_FACTORY = new uk.gov.legalservices.enterprise.common._1_0.common.ObjectFactory();
 
   protected WebServiceTemplate webServiceTemplate;
+
+  private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
   /**
    * Get the WebServiceTemplate for this SoaClient.
@@ -104,7 +106,7 @@ public abstract class AbstractSoaClient {
     return String.format(
         "%s%010d",
         new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date()),
-        (new Random().nextInt(999999998) + 1));
+        (SECURE_RANDOM.nextInt(999999998) + 1));
     //      yyyyMMddHHmmssSSS
     // e.g. 2016051215540200506053
   }
