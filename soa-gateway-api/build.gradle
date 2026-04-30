@@ -47,7 +47,7 @@ openApiGenerate {
             booleanGetterPrefix   : "is",
             serializableModel     : "true",
             annotationLibrary     : "swagger2",
-            useSpringBoot3        : "true"
+            useSpringBoot4        : "true"
     ]
 }
 

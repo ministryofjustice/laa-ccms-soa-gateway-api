@@ -5,6 +5,7 @@ import org.apache.wss4j.dom.handler.WSHandlerConstants;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
@@ -18,6 +19,7 @@ import org.springframework.ws.soap.security.wss4j2.Wss4jSecurityInterceptor;
  * interceptors with the provided username and password for authentication.
  */
 @Configuration
+@EnableSpringDataWebSupport
 public class SoaConfiguration {
   private final String username;
   private final String password;
