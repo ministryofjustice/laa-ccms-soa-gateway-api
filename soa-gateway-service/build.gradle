@@ -19,7 +19,7 @@ dependencies {
         implementation('org.bouncycastle:bcprov-jdk15on:1.70') {
             because("Fixes CVE-2018-1000613")
         }
-        implementation("org.springframework.security:spring-security-core:7.0.5") {
+        implementation("org.springframework.security:spring-security-core:7.1.0") {
             because("Fixes CVE-2025-41232")
         }
         implementation('org.bouncycastle:bcpkix-jdk18on:1.84') {
