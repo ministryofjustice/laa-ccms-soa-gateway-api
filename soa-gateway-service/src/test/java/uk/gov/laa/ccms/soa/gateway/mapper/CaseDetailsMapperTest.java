@@ -1932,9 +1932,9 @@ public class CaseDetailsMapperTest {
     uk.gov.legalservices.enterprise.common._1_0.common.RecordHistory recordHistory =
         new uk.gov.legalservices.enterprise.common._1_0.common.RecordHistory();
     recordHistory.setCreatedBy(createdBy);
-    recordHistory.setDateCreated(df.newXMLGregorianCalendar("2001-12-01T12:00:00.000Z"));
+    recordHistory.setDateCreated(df.newXMLGregorianCalendar("2001-12-01T12:00:00.000"));
     recordHistory.setLastUpdatedBy(lastUpdatedBy);
-    recordHistory.setDateLastUpdated(df.newXMLGregorianCalendar("2001-12-02T12:00:00.000Z"));
+    recordHistory.setDateLastUpdated(df.newXMLGregorianCalendar("2001-12-02T12:00:00.000"));
 
     return recordHistory;
   }
