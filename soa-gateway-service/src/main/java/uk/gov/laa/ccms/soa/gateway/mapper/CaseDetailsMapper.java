@@ -214,24 +214,84 @@ public interface CaseDetailsMapper {
   }
 
   /**
-   * Removes the timezone offset from the record-history dates: MapStruct's built-in date conversion
-   * emits the default-zone offset (e.g. {@code +01:00}) the EBS date mask rejects (ORA-01830).
+   * Removes the timezone offset from all XMLGregorianCalendar fields in the mapped request.
+   * MapStruct's built-in date conversion can emit a zone offset (e.g. {@code +01:00}) which the
+   * EBS date masks reject (ORA-01830). This traverses the mapped object graph and clears the
+   * timezone on every XMLGregorianCalendar instance without adding any 'Z' suffix.
    *
    * @param caseUpdateRq the mapped case update request
    */
   @AfterMapping
   default void stripRecordHistoryDateOffset(@MappingTarget CaseUpdateRQ caseUpdateRq) {
-    uk.gov.legalservices.enterprise.common._1_0.common.RecordHistory recordHistory =
-        caseUpdateRq.getRecordHistory();
-    if (recordHistory != null) {
-      clearTimezone(recordHistory.getDateCreated());
-      clearTimezone(recordHistory.getDateLastUpdated());
+    if (caseUpdateRq == null) {
+      return;
     }
+    clearAllDateOffsets(caseUpdateRq, new java.util.IdentityHashMap<>());
   }
 
-  private void clearTimezone(XMLGregorianCalendar date) {
-    if (date != null) {
-      date.setTimezone(DatatypeConstants.FIELD_UNDEFINED);
+  /**
+   * Recursively traverses the provided object graph and clears timezones on XMLGregorianCalendar
+   * instances. Handles Iterables, arrays and nested POJOs. Skips JDK classes.
+   */
+  private static void clearAllDateOffsets(Object obj, java.util.Map<Object, Boolean> visited) {
+    if (obj == null) {
+      return;
+    }
+
+    // avoid cycles
+    if (visited.containsKey(obj)) {
+      return;
+    }
+    visited.put(obj, Boolean.TRUE);
+
+    if (obj instanceof XMLGregorianCalendar) {
+      ((XMLGregorianCalendar) obj).setTimezone(DatatypeConstants.FIELD_UNDEFINED);
+      return;
+    }
+
+    if (obj instanceof Iterable) {
+      for (Object item : (Iterable<?>) obj) {
+        clearAllDateOffsets(item, visited);
+      }
+      return;
+    }
+
+    if (obj.getClass().isArray()) {
+      int len = java.lang.reflect.Array.getLength(obj);
+      for (int i = 0; i < len; i++) {
+        Object item = java.lang.reflect.Array.get(obj, i);
+        clearAllDateOffsets(item, visited);
+      }
+      return;
+    }
+
+    Package pkg = obj.getClass().getPackage();
+    if (pkg != null) {
+      String pkgName = pkg.getName();
+      // skip standard JDK / common framework classes
+      if (pkgName.startsWith("java.")
+          || pkgName.startsWith("javax.")
+          || pkgName.startsWith("org.slf4j")
+          || pkgName.startsWith("org.mapstruct")
+          || pkgName.startsWith("com.fasterxml")) {
+        return;
+      }
+    }
+
+    // traverse declared fields
+    java.lang.reflect.Field[] fields = obj.getClass().getDeclaredFields();
+    for (java.lang.reflect.Field field : fields) {
+      // skip static fields
+      if (java.lang.reflect.Modifier.isStatic(field.getModifiers())) {
+        continue;
+      }
+      field.setAccessible(true);
+      try {
+        Object value = field.get(obj);
+        clearAllDateOffsets(value, visited);
+      } catch (IllegalAccessException ignored) {
+        // best-effort traversal; ignore fields that cannot be accessed
+      }
     }
   }
 
