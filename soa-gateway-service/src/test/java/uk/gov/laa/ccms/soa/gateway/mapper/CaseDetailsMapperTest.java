@@ -36,11 +36,14 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.Instant;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeConstants;
 import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -1757,7 +1760,21 @@ public class CaseDetailsMapperTest {
 
     CaseUpdateRQ result = caseDetailsMapper.toCaseUpdateRq(caseDetail, "caseUpdateType");
 
-    assertThat(result).usingRecursiveComparison().isEqualTo(expected);
+    // Dates are now emitted without a timezone offset, so compare by instant (an undefined
+    // timezone resolves to the host default) rather than by the raw timezone field.
+    Comparator<XMLGregorianCalendar> byInstant =
+        Comparator.comparing(cal -> cal.toGregorianCalendar().toInstant());
+
+    assertThat(result)
+        .usingRecursiveComparison()
+        .withComparatorForType(byInstant, XMLGregorianCalendar.class)
+        .isEqualTo(expected);
+
+    // The fix: case-update dates carry no timezone offset (the EBS date mask rejects it,
+    // ORA-01830).
+    assertEquals(
+        DatatypeConstants.FIELD_UNDEFINED,
+        result.getRecordHistory().getDateLastUpdated().getTimezone());
   }
 
   private CaseDetail buildCaseDetail() {
@@ -1915,9 +1932,9 @@ public class CaseDetailsMapperTest {
     uk.gov.legalservices.enterprise.common._1_0.common.RecordHistory recordHistory =
         new uk.gov.legalservices.enterprise.common._1_0.common.RecordHistory();
     recordHistory.setCreatedBy(createdBy);
-    recordHistory.setDateCreated(df.newXMLGregorianCalendar("2001-12-01T12:00:00.000"));
+    recordHistory.setDateCreated(df.newXMLGregorianCalendar("2001-12-01T12:00:00.000Z"));
     recordHistory.setLastUpdatedBy(lastUpdatedBy);
-    recordHistory.setDateLastUpdated(df.newXMLGregorianCalendar("2001-12-02T12:00:00.000"));
+    recordHistory.setDateLastUpdated(df.newXMLGregorianCalendar("2001-12-02T12:00:00.000Z"));
 
     return recordHistory;
   }

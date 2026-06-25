@@ -196,42 +196,32 @@ public interface CaseDetailsMapper {
 
     if (updateApplicationDetails.getApplicationAmendmentType() != null
         && devolvedPowersTypeList.contains(applicationDetails.getApplicationAmendmentType())) {
-      GregorianCalendar gregCal = new GregorianCalendar();
-      Date devolvedPowersDate = applicationDetails.getDevolvedPowersDate();
-
-      if (devolvedPowersDate != null) {
-        gregCal.setTime(devolvedPowersDate);
-
-        try {
-          result = DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal);
-        } catch (DatatypeConfigurationException e) {
-          throw new SoaGatewayMappingException("Unable to process devolved powers date.", e);
-        }
-      }
+      result = dateToXmlGregorianCalendar(applicationDetails.getDevolvedPowersDate());
     }
 
     updateApplicationDetails.setDevolvedPowersDate(result);
   }
 
   /**
-   * Removes the timezone offset from the record-history dates: MapStruct's built-in date conversion
-   * emits the default-zone offset (e.g. {@code +01:00}) the EBS date mask rejects (ORA-01830).
+   * Converts a {@link Date} to an offset-free {@link XMLGregorianCalendar}, overriding MapStruct's
+   * built-in conversion whose default-zone offset ({@code +01:00} or trailing {@code Z}) the EBS
+   * date mask rejects (ORA-01830). The local wall-clock is kept so dates match the old PUI.
    *
-   * @param caseUpdateRq the mapped case update request
+   * @param date the date to convert
+   * @return the offset-free {@link XMLGregorianCalendar}, or null if {@code date} is null
    */
-  @AfterMapping
-  default void stripRecordHistoryDateOffset(@MappingTarget CaseUpdateRQ caseUpdateRq) {
-    uk.gov.legalservices.enterprise.common._1_0.common.RecordHistory recordHistory =
-        caseUpdateRq.getRecordHistory();
-    if (recordHistory != null) {
-      clearTimezone(recordHistory.getDateCreated());
-      clearTimezone(recordHistory.getDateLastUpdated());
+  default XMLGregorianCalendar dateToXmlGregorianCalendar(Date date) {
+    if (date == null) {
+      return null;
     }
-  }
-
-  private void clearTimezone(XMLGregorianCalendar date) {
-    if (date != null) {
-      date.setTimezone(DatatypeConstants.FIELD_UNDEFINED);
+    GregorianCalendar gregCal = new GregorianCalendar();
+    gregCal.setTime(date);
+    try {
+      XMLGregorianCalendar xmlCal = DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal);
+      xmlCal.setTimezone(DatatypeConstants.FIELD_UNDEFINED);
+      return xmlCal;
+    } catch (DatatypeConfigurationException e) {
+      throw new SoaGatewayMappingException("Unable to convert date.", e);
     }
   }
 
