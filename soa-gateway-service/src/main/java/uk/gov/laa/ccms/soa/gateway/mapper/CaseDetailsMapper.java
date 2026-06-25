@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeConstants;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import org.mapstruct.AfterMapping;
@@ -210,6 +211,28 @@ public interface CaseDetailsMapper {
     }
 
     updateApplicationDetails.setDevolvedPowersDate(result);
+  }
+
+  /**
+   * Removes the timezone offset from the record-history dates: MapStruct's built-in date conversion
+   * emits the default-zone offset (e.g. {@code +01:00}) the EBS date mask rejects (ORA-01830).
+   *
+   * @param caseUpdateRq the mapped case update request
+   */
+  @AfterMapping
+  default void stripRecordHistoryDateOffset(@MappingTarget CaseUpdateRQ caseUpdateRq) {
+    uk.gov.legalservices.enterprise.common._1_0.common.RecordHistory recordHistory =
+        caseUpdateRq.getRecordHistory();
+    if (recordHistory != null) {
+      clearTimezone(recordHistory.getDateCreated());
+      clearTimezone(recordHistory.getDateLastUpdated());
+    }
+  }
+
+  private void clearTimezone(XMLGregorianCalendar date) {
+    if (date != null) {
+      date.setTimezone(DatatypeConstants.FIELD_UNDEFINED);
+    }
   }
 
   @Mapping(target = "maxAmount", source = "undertakingMaximumAmount")
