@@ -1,8 +1,8 @@
 package uk.gov.laa.ccms.soa.gateway.client;
 
+import jakarta.xml.bind.JAXBElement;
 import java.io.StringWriter;
 import javax.xml.transform.stream.StreamResult;
-import jakarta.xml.bind.JAXBElement;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -148,10 +148,7 @@ public class CaseServicesClient extends AbstractSoaClient {
     JAXBElement<CaseUpdateRS> response =
         (JAXBElement<CaseUpdateRS>)
             getWebServiceTemplate()
-                .marshalSendAndReceive(
-                    serviceUrl,
-                    request,
-                    new SoapActionCallback(soapAction));
+                .marshalSendAndReceive(serviceUrl, request, new SoapActionCallback(soapAction));
 
     isSuccessOrThrowException(serviceName, response.getValue().getHeaderRS());
     return response.getValue();
