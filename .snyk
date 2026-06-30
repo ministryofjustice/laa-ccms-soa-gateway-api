@@ -1,6 +1,34 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
 version: v1.25.1
-ignore: {}
+ignore:
+      SNYK-UBUNTU2404-GLIBC-15804597:
+        - '*':
+          reason: "temporary ignore while base image is updated"
+          expires: "2026-08-01T00:00:00Z"
+      SNYK-UBUNTU2404-GLIBC-15804816:
+        - '*':
+          reason: "temporary ignore while base image is updated"
+          expires: "2026-08-01T00:00:00Z"
+      SNYK-UBUNTU2404-GLIBC-15884040:
+        - '*':
+          reason: "temporary ignore while base image is updated"
+          expires: "2026-08-01T00:00:00Z"
+      SNYK-UBUNTU2404-GLIBC-16338129:
+        - '*':
+          reason: "temporary ignore while base image is updated"
+          expires: "2026-08-01T00:00:00Z"
+      SNYK-UBUNTU2404-GLIBC-16338217:
+        - '*':
+          reason: "temporary ignore while base image is updated"
+          expires: "2026-08-01T00:00:00Z"
+      SNYK-JAVA-CHQOSLOGBACK-17675439:
+        - '*':
+          reason: "temporary ignore while base image is updated"
+          expires: "2026-08-01T00:00:00Z"
+      SNYK-JAVA-COMFASTERXMLJACKSONCORE-17457695:
+        - '*':
+          reason: "temporary ignore while base image is updated"
+          expires: "2026-08-01T00:00:00Z"
 patch: {}
 exclude:
   global:

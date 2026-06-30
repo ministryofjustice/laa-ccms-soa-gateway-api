@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeConstants;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import org.mapstruct.AfterMapping;
@@ -195,21 +196,33 @@ public interface CaseDetailsMapper {
 
     if (updateApplicationDetails.getApplicationAmendmentType() != null
         && devolvedPowersTypeList.contains(applicationDetails.getApplicationAmendmentType())) {
-      GregorianCalendar gregCal = new GregorianCalendar();
-      Date devolvedPowersDate = applicationDetails.getDevolvedPowersDate();
-
-      if (devolvedPowersDate != null) {
-        gregCal.setTime(devolvedPowersDate);
-
-        try {
-          result = DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal);
-        } catch (DatatypeConfigurationException e) {
-          throw new SoaGatewayMappingException("Unable to process devolved powers date.", e);
-        }
-      }
+      result = dateToXmlGregorianCalendar(applicationDetails.getDevolvedPowersDate());
     }
 
     updateApplicationDetails.setDevolvedPowersDate(result);
+  }
+
+  /**
+   * Converts a {@link Date} to an offset-free {@link XMLGregorianCalendar}, overriding MapStruct's
+   * built-in conversion whose default-zone offset ({@code +01:00} or trailing {@code Z}) the EBS
+   * date mask rejects (ORA-01830). The local wall-clock is kept so dates match the old PUI.
+   *
+   * @param date the date to convert
+   * @return the offset-free {@link XMLGregorianCalendar}, or null if {@code date} is null
+   */
+  default XMLGregorianCalendar dateToXmlGregorianCalendar(Date date) {
+    if (date == null) {
+      return null;
+    }
+    GregorianCalendar gregCal = new GregorianCalendar();
+    gregCal.setTime(date);
+    try {
+      XMLGregorianCalendar xmlCal = DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal);
+      xmlCal.setTimezone(DatatypeConstants.FIELD_UNDEFINED);
+      return xmlCal;
+    } catch (DatatypeConfigurationException e) {
+      throw new SoaGatewayMappingException("Unable to convert date.", e);
+    }
   }
 
   @Mapping(target = "maxAmount", source = "undertakingMaximumAmount")

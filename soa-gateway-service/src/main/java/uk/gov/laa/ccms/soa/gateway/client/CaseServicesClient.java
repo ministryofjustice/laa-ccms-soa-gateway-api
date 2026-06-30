@@ -1,6 +1,8 @@
 package uk.gov.laa.ccms.soa.gateway.client;
 
 import jakarta.xml.bind.JAXBElement;
+import java.io.StringWriter;
+import javax.xml.transform.stream.StreamResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -139,17 +141,31 @@ public class CaseServicesClient extends AbstractSoaClient {
       String loggedInUserId, String loggedInUserType, CaseUpdateRQ caseUpdateRq) {
     final String soapAction = String.format("%s/UpdateCaseApplication", serviceName);
     caseUpdateRq.setHeaderRQ(createHeaderRq(loggedInUserId, loggedInUserType));
+    JAXBElement<CaseUpdateRQ> request = CASE_FACTORY.createCaseUpdateRQ(caseUpdateRq);
+
+    logCaseUpdateRequest(request);
 
     JAXBElement<CaseUpdateRS> response =
         (JAXBElement<CaseUpdateRS>)
             getWebServiceTemplate()
-                .marshalSendAndReceive(
-                    serviceUrl,
-                    CASE_FACTORY.createCaseUpdateRQ(caseUpdateRq),
-                    new SoapActionCallback(soapAction));
+                .marshalSendAndReceive(serviceUrl, request, new SoapActionCallback(soapAction));
 
     isSuccessOrThrowException(serviceName, response.getValue().getHeaderRS());
     return response.getValue();
+  }
+
+  private void logCaseUpdateRequest(JAXBElement<CaseUpdateRQ> request) {
+    if (!log.isInfoEnabled()) {
+      return;
+    }
+
+    try {
+      StringWriter writer = new StringWriter();
+      getWebServiceTemplate().getMarshaller().marshal(request, new StreamResult(writer));
+      log.info("Case Update Request: {}", writer);
+    } catch (Exception e) {
+      log.warn("Unable to log Case Update Request", e);
+    }
   }
 
   private JAXBElement<CaseInqRS> retrieveCaseDetails(String soapAction, CaseInqRQ caseInqRq) {
