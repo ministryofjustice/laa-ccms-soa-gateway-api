@@ -21,6 +21,14 @@ ignore:
         - '*':
           reason: "temporary ignore while base image is updated"
           expires: "2026-08-01T00:00:00Z"
+      SNYK-JAVA-CHQOSLOGBACK-17675439:
+        - '*':
+          reason: "temporary ignore while base image is updated"
+          expires: "2026-08-01T00:00:00Z"
+      SNYK-JAVA-COMFASTERXMLJACKSONCORE-17457695:
+        - '*':
+          reason: "temporary ignore while base image is updated"
+          expires: "2026-08-01T00:00:00Z"
 patch: {}
 exclude:
   global:
