@@ -78,12 +78,6 @@ public class CaseDetailsController implements CasesApi {
       String soaGatewayUserRole,
       String caseUpdateType,
       CaseDetail caseDetail) {
-    log.info(
-        "PUT /cases request received: soaGatewayUserLoginId={}, soaGatewayUserRole={}, "
-            + "caseUpdateType={}",
-        soaGatewayUserLoginId,
-        soaGatewayUserRole,
-        caseUpdateType);
     log.info("PUT /cases request body: {}", caseDetail);
     try {
       final String transactionId =
