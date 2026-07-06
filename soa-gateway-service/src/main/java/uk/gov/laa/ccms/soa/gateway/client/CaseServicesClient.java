@@ -145,12 +145,28 @@ public class CaseServicesClient extends AbstractSoaClient {
 
     logCaseUpdateRequest(request);
 
-    JAXBElement<CaseUpdateRS> response =
-        (JAXBElement<CaseUpdateRS>)
-            getWebServiceTemplate()
-                .marshalSendAndReceive(serviceUrl, request, new SoapActionCallback(soapAction));
+    final JAXBElement<CaseUpdateRS> response;
+    try {
+      response =
+          (JAXBElement<CaseUpdateRS>)
+              getWebServiceTemplate()
+                  .marshalSendAndReceive(serviceUrl, request, new SoapActionCallback(soapAction));
+    } catch (RuntimeException e) {
+      // A SOAP fault (e.g. an EBS/Oracle rejection such as ORA-01830 or a Mod309 validation
+      // failure) is thrown here before we ever inspect the response, so its detail would otherwise
+      // be lost. Log it against the request so a failed case update can be diagnosed.
+      log.error("Case Update failed with a SOAP fault. EBS error: {}", e.getMessage(), e);
+      throw e;
+    }
 
-    isSuccessOrThrowException(serviceName, response.getValue().getHeaderRS());
+    try {
+      isSuccessOrThrowException(serviceName, response.getValue().getHeaderRS());
+    } catch (RuntimeException e) {
+      // A structured non-SUCCESS status; log the full response body for the rejected attributes /
+      // detail beyond the status free-text already logged by isSuccessOrThrowException.
+      logCaseUpdateResponse(response);
+      throw e;
+    }
     return response.getValue();
   }
 
@@ -165,6 +181,16 @@ public class CaseServicesClient extends AbstractSoaClient {
       log.info("Case Update Request: {}", writer);
     } catch (Exception e) {
       log.warn("Unable to log Case Update Request", e);
+    }
+  }
+
+  private void logCaseUpdateResponse(JAXBElement<CaseUpdateRS> response) {
+    try {
+      StringWriter writer = new StringWriter();
+      getWebServiceTemplate().getMarshaller().marshal(response, new StreamResult(writer));
+      log.error("Case Update Response (rejected): {}", writer);
+    } catch (Exception e) {
+      log.warn("Unable to log Case Update Response", e);
     }
   }
 
