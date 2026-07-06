@@ -20,12 +20,16 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ws.client.WebServiceIOException;
 import uk.gov.laa.ccms.soa.gateway.model.CaseDetail;
+import uk.gov.laa.ccms.soa.gateway.model.CaseStatementOfAccount;
 import uk.gov.laa.ccms.soa.gateway.service.CaseDetailsService;
+import uk.gov.laa.ccms.soa.gateway.service.CaseStatementOfAccountService;
 
 @ExtendWith(MockitoExtension.class)
 public class CaseDetailsControllerTest {
 
   @Mock private CaseDetailsService caseDetailsService;
+
+  @Mock private CaseStatementOfAccountService caseStatementOfAccountService;
 
   @InjectMocks private CaseDetailsController caseDetailsController;
 
@@ -92,6 +96,44 @@ public class CaseDetailsControllerTest {
 
     verify(caseDetailsService)
         .getCaseDetail(SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE, CASE_REFERENCE_NUMBER);
+  }
+
+  @Test
+  public void testGetCaseStatementOfAccount_Success() throws Exception {
+    CaseStatementOfAccount statementOfAccount = new CaseStatementOfAccount();
+
+    when(caseStatementOfAccountService.getCaseStatementOfAccount(
+            SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE, CASE_REFERENCE_NUMBER))
+        .thenReturn(statementOfAccount);
+
+    mockMvc
+        .perform(
+            get("/cases/{caseReferenceNumber}/statement-of-account", CASE_REFERENCE_NUMBER)
+                .header("SoaGateway-User-Login-Id", SOA_GATEWAY_USER_LOGIN_ID)
+                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE))
+        .andExpect(status().isOk());
+
+    verify(caseStatementOfAccountService)
+        .getCaseStatementOfAccount(
+            SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE, CASE_REFERENCE_NUMBER);
+  }
+
+  @Test
+  public void testGetCaseStatementOfAccount_Exception() throws Exception {
+    when(caseStatementOfAccountService.getCaseStatementOfAccount(
+            SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE, CASE_REFERENCE_NUMBER))
+        .thenThrow(new WebServiceIOException("Test exception"));
+
+    mockMvc
+        .perform(
+            get("/cases/{caseReferenceNumber}/statement-of-account", CASE_REFERENCE_NUMBER)
+                .header("SoaGateway-User-Login-Id", SOA_GATEWAY_USER_LOGIN_ID)
+                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE))
+        .andExpect(status().isInternalServerError());
+
+    verify(caseStatementOfAccountService)
+        .getCaseStatementOfAccount(
+            SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE, CASE_REFERENCE_NUMBER);
   }
 
   @Test

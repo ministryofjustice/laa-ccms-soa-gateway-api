@@ -128,6 +128,11 @@ wsimport {
         xjcarg("-XautoNameResolution")
         wsdlLocation = 'classpath:wsdl/Schema/BusinessServices/CCMS/CaseManagement/SubmitProviderRequest.wsdl'
     }
+
+    wsdl('Schema/BusinessServices/CCMS/Finance/GetCaseStmtOfAccount.wsdl') {
+        xjcarg("-XautoNameResolution")
+        wsdlLocation = 'classpath:wsdl/Schema/BusinessServices/CCMS/Finance/GetCaseStmtOfAccount.wsdl'
+    }
 }
 
 test {

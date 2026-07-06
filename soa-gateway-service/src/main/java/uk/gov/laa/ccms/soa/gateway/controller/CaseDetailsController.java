@@ -6,8 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.laa.ccms.soa.gateway.api.CasesApi;
 import uk.gov.laa.ccms.soa.gateway.model.CaseDetail;
+import uk.gov.laa.ccms.soa.gateway.model.CaseStatementOfAccount;
 import uk.gov.laa.ccms.soa.gateway.model.CaseTransactionResponse;
 import uk.gov.laa.ccms.soa.gateway.service.CaseDetailsService;
+import uk.gov.laa.ccms.soa.gateway.service.CaseStatementOfAccountService;
 
 /**
  * Controller for handling case details related requests.
@@ -21,6 +23,8 @@ import uk.gov.laa.ccms.soa.gateway.service.CaseDetailsService;
 public class CaseDetailsController implements CasesApi {
 
   private final CaseDetailsService caseDetailsService;
+
+  private final CaseStatementOfAccountService caseStatementOfAccountService;
 
   @Override
   public ResponseEntity<CaseTransactionResponse> createCase(
@@ -58,6 +62,32 @@ public class CaseDetailsController implements CasesApi {
               soaGatewayUserLoginId, soaGatewayUserRole, caseReferenceNumber);
 
       return ResponseEntity.ok(caseDetail);
+    } catch (final Exception e) {
+      log.error("CaseDetailsController caught exception", e);
+      return ResponseEntity.internalServerError().build();
+    }
+  }
+
+  /**
+   * Get the statement of account for a single case by reference number.
+   *
+   * @param caseReferenceNumber (required) - the reference of the case to return.
+   * @param soaGatewayUserLoginId (required) - the user requesting the data.
+   * @param soaGatewayUserRole (required) - the user role requesting the data.
+   * @return a ResponseEntity containing the case statement of account.
+   */
+  @Override
+  public ResponseEntity<CaseStatementOfAccount> getCaseStatementOfAccount(
+      final String caseReferenceNumber,
+      final String soaGatewayUserLoginId,
+      final String soaGatewayUserRole) {
+    log.info("GET /cases/{}/statement-of-account", caseReferenceNumber);
+    try {
+      final CaseStatementOfAccount statementOfAccount =
+          caseStatementOfAccountService.getCaseStatementOfAccount(
+              soaGatewayUserLoginId, soaGatewayUserRole, caseReferenceNumber);
+
+      return ResponseEntity.ok(statementOfAccount);
     } catch (final Exception e) {
       log.error("CaseDetailsController caught exception", e);
       return ResponseEntity.internalServerError().build();

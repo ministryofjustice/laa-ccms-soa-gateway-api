@@ -28,6 +28,9 @@ laa:
       case:
         service-name: http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/CaseServices
         service-url: ${SOA_SERVICE_URL}/soa-infra/services/default/CaseServices/CaseServices_ep
+      case-statement-of-account:
+        service-name: http://legalservices.gov.uk/CCMS/Finance/Payables/1.0/GetCaseStmtOfAccount
+        service-url: ${SOA_SERVICE_URL}/soa-infra/services/default/GetCaseStmtOfAccount/getcasestmtofaccount_ep
       provider-request:
         service-name: http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/SubmitProviderRequest
         service-url: ${SOA_SERVICE_URL}/soa-infra/services/default/SubmitProviderRequest/submitproviderrequest_ep

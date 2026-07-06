@@ -256,6 +256,39 @@ paths:
           description: 'Not found'
         '500':
           description: 'Internal server error'
+  /cases/{case-reference-number}/statement-of-account:
+    get:
+      tags:
+        - cases
+      summary: 'Get Case Statement of Account'
+      operationId: 'getCaseStatementOfAccount'
+      x-spring-paginated: false
+      parameters:
+        - name: 'case-reference-number'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
+            example: '1234567890'
+        - $ref: '#/components/parameters/soaGatewayUserLoginId'
+        - $ref: '#/components/parameters/soaGatewayUserRole'
+      responses:
+        '200':
+          description: 'Successful operation'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/caseStatementOfAccount"
+        '400':
+          description: 'Bad request'
+        '401':
+          description: 'Unauthorized'
+        '403':
+          description: 'Forbidden'
+        '404':
+          description: 'Not found'
+        '500':
+          description: 'Internal server error'
   /organisations:
     get:
       tags:
@@ -649,6 +682,115 @@ components:
         transaction_id:
           type: 'string'
           example: '1234567890'
+    caseStatementOfAccount:
+      type: 'object'
+      description: 'A case statement of account, containing summary financial figures and the list of bills/POA invoices for a case.'
+      properties:
+        case_reference_number:
+          type: 'string'
+          example: '300000123456'
+        certificate_type:
+          type: 'string'
+          example: 'SUBSTANTIVE'
+        certificate_date:
+          type: 'string'
+          format: 'date'
+        total:
+          $ref: '#/components/schemas/soaAmountSummary'
+        statements:
+          type: 'array'
+          items:
+            $ref: '#/components/schemas/soaStatement'
+    soaAmountSummary:
+      type: 'object'
+      properties:
+        cost_limitation:
+          $ref: '#/components/schemas/soaCostLimitation'
+        counsel_cost_ceiling:
+          $ref: '#/components/schemas/soaCostCeiling'
+        undertaking_amount:
+          type: 'number'
+        bills:
+          $ref: '#/components/schemas/soaBillSummary'
+        poa:
+          $ref: '#/components/schemas/soaPoaSummary'
+    soaStatement:
+      type: 'object'
+      properties:
+        firm_id:
+          type: 'string'
+        firm_name:
+          type: 'string'
+        entity_type:
+          type: 'string'
+          example: 'PROVIDER'
+        cost_limitation:
+          $ref: '#/components/schemas/soaCostLimitation'
+        undertaking_amount:
+          type: 'number'
+        bills:
+          $ref: '#/components/schemas/soaBillSummary'
+        poa:
+          $ref: '#/components/schemas/soaPoaSummary'
+        invoices:
+          type: 'array'
+          items:
+            $ref: '#/components/schemas/soaInvoice'
+    soaInvoice:
+      type: 'object'
+      properties:
+        billing_incident_id:
+          type: 'string'
+        invoice_type:
+          type: 'string'
+          example: 'Bill'
+        date_submitted:
+          type: 'string'
+          format: 'date'
+        date_authorized:
+          type: 'string'
+          format: 'date'
+        invoice_amount:
+          type: 'number'
+        invoice_status:
+          type: 'string'
+          example: 'Authorised'
+    soaCostLimitation:
+      type: 'object'
+      properties:
+        certificate_amount:
+          type: 'number'
+        remaining_amount:
+          type: 'number'
+    soaCostCeiling:
+      type: 'object'
+      properties:
+        current_amount:
+          type: 'number'
+        remaining_amount:
+          type: 'number'
+    soaBillSummary:
+      type: 'object'
+      properties:
+        amount_submitted:
+          type: 'number'
+        amount_authorized:
+          type: 'number'
+        total_amount:
+          type: 'number'
+    soaPoaSummary:
+      type: 'object'
+      properties:
+        amount_recouped:
+          type: 'number'
+        amount_authorized:
+          type: 'number'
+        amount_un_recouped:
+          type: 'number'
+        amount_submitted:
+          type: 'number'
+        total_amount:
+          type: 'number'
     page:
       type: 'object'
       properties:
