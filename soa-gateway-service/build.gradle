@@ -26,6 +26,10 @@ configurations.configureEach {
             details.useVersion '1.5.36'
             details.because 'Temporary override to remediate vulnerability'
         }
+        if (details.requested.group == 'org.apache.logging.log4j') {
+            details.useVersion '2.25.5'
+            details.because 'Temporary override to remediate vulnerability'
+        }
         if (details.requested.group == 'org.apache.httpcomponents.core5') {
             details.useVersion '5.4.3'
             details.because 'Temporary override to remediate vulnerability'
