@@ -18,12 +18,16 @@ configurations.configureEach {
             details.useVersion '2.22.1'
             details.because 'Temporary override to remediate vulnerability'
         }
+        if (details.requested.group == 'com.fasterxml.jackson.core' && details.requested.name == 'jackson-annotations') {
+            details.useVersion '2.22'
+            details.because 'Temporary override to remediate vulnerability'
+        }
         if (details.requested.group == 'ch.qos.logback') {
             details.useVersion '1.5.36'
             details.because 'Temporary override to remediate vulnerability'
         }
         if (details.requested.group == 'org.apache.httpcomponents.core5') {
-            details.useVersion '5.6.2'
+            details.useVersion '5.4.3'
             details.because 'Temporary override to remediate vulnerability'
         }
         if (details.requested.group == 'tools.jackson.core') {
