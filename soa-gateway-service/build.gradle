@@ -38,6 +38,10 @@ configurations.configureEach {
             details.useVersion '3.2.1'
             details.because 'Temporary override to remediate vulnerability'
         }
+        if (details.requested.group == 'org.bouncycastle') {
+            details.useVersion '1.85'
+            details.because 'Temporary override to remediate vulnerability'
+        }
     }
 }
 
