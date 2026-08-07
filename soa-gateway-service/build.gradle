@@ -5,6 +5,12 @@ plugins {
 apply plugin: 'uk.gov.justice.service.laa.laa-spring-boot-gradle-plugin'
 apply plugin: "com.diffplug.spotless"
 
+configurations {
+    mockitoAgent {
+        transitive = false
+    }
+}
+
 configurations.configureEach {
     resolutionStrategy.eachDependency { details ->
         if (details.requested.group == 'org.apache.tomcat.embed') {
@@ -98,7 +104,7 @@ dependencies {
     testImplementation 'org.mockito:mockito-core:5.23.0'
     testImplementation 'org.junit.jupiter:junit-jupiter:6.1.2'
 
-
+    mockitoAgent "org.mockito:mockito-core"
 }
 
 wsimport {
@@ -157,8 +163,11 @@ wsimport {
 test {
     useJUnitPlatform()
 
-    // Hide warning for dynamic loading of agents https://github.com/mockito/mockito/issues/3037
-    jvmArgs '-XX:+EnableDynamicAgentLoading'
+    jvmArgs(
+            "-javaagent:${configurations.mockitoAgent.asPath}",
+            "-Xshare:off",
+            "-Dnet.bytebuddy.safe=true" // Prevent unsafe memory access, see https://github.com/raphw/byte-buddy/issues/1803
+    )
 
     finalizedBy jacocoTestReport
 }
