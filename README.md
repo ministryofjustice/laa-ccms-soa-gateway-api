@@ -1,6 +1,6 @@
 [![Ministry of Justice Repository Compliance Badge](https://github-community.service.justice.gov.uk/repository-standards/api/laa-ccms-soa-gateway-api/badge)](https://github-community.service.justice.gov.uk/repository-standards/laa-ccms-soa-gateway-api)
 
-# laa-ccms-soa-gateway-api
+# CCMS SOA Gateway API
 
 This API is made up of multiple projects:
 * soa-gateway-api
