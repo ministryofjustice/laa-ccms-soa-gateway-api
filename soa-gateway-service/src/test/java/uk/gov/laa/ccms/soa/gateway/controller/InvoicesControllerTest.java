@@ -93,6 +93,35 @@ class InvoicesControllerTest {
   }
 
   @Test
+  @DisplayName("POST /invoices - Bad Request When The Body Is A JSON Null")
+  void testCreateInvoice_NullBody() throws Exception {
+    mockMvc
+        .perform(
+            post("/invoices")
+                .content("null")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("SoaGateway-User-Login-Id", SOA_GATEWAY_USER_LOGIN_ID)
+                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE))
+        .andExpect(status().isBadRequest());
+
+    Mockito.verifyNoInteractions(invoicesService);
+  }
+
+  @Test
+  @DisplayName("POST /invoices - Bad Request When The Body Is Absent")
+  void testCreateInvoice_NoBody() throws Exception {
+    mockMvc
+        .perform(
+            post("/invoices")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("SoaGateway-User-Login-Id", SOA_GATEWAY_USER_LOGIN_ID)
+                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE))
+        .andExpect(status().isBadRequest());
+
+    Mockito.verifyNoInteractions(invoicesService);
+  }
+
+  @Test
   @DisplayName("POST /invoices - Bad Request When Neither Bill Nor POA Supplied")
   void testCreateInvoice_NeitherSupplied() throws Exception {
     mockMvc
