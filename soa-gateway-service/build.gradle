@@ -158,6 +158,11 @@ wsimport {
         xjcarg("-XautoNameResolution")
         wsdlLocation = 'classpath:wsdl/Schema/BusinessServices/CCMS/CaseManagement/SubmitProviderRequest.wsdl'
     }
+
+    wsdl('Schema/BusinessServices/CCMS/Finance/CreateInvoice.wsdl') {
+        xjcarg("-XautoNameResolution")
+        wsdlLocation = 'classpath:wsdl/Schema/BusinessServices/CCMS/Finance/CreateInvoice.wsdl'
+    }
 }
 
 test {

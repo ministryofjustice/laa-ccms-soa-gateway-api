@@ -1,0 +1,11 @@
+<InvoiceAddRS xmlns="http://legalservices.gov.uk/CCMS/Finance/Payables/1.0/BillingBIM">
+  <HeaderRS xmlns="http://legalservices.gov.uk/Enterprise/Common/1.0/Header">
+    <RequestDetails/>
+    <Status>
+      <Status>Success</Status>
+      <StatusFreeText/>
+    </Status>
+    <TransactionID/>
+  </HeaderRS>
+  <InvoiceReferenceID>invoice123</InvoiceReferenceID>
+</InvoiceAddRS>

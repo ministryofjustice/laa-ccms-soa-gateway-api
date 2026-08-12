@@ -372,6 +372,43 @@ paths:
         '500':
           description: 'Internal server error'
 
+  /invoices:
+    post:
+      tags:
+        - invoices
+      summary: 'Submit an invoice'
+      description: >-
+        Submit a bill or a payment on account for a case. EBS models the invoice details as a
+        choice, so exactly one of bill or poa must be supplied.
+      operationId: 'createInvoice'
+      requestBody:
+        description: The invoice to submit
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/invoiceDetail"
+      parameters:
+        - $ref: '#/components/parameters/soaGatewayUserLoginId'
+        - $ref: '#/components/parameters/soaGatewayUserRole'
+      responses:
+        '200':
+          description: 'Successful operation'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/invoiceResponse"
+        '400':
+          description: 'Bad request'
+        '401':
+          description: 'Unauthorized'
+        '403':
+          description: 'Forbidden'
+        '404':
+          description: 'Not found'
+        '500':
+          description: 'Internal server error'
+
   /documents:
     post:
       tags:
@@ -649,6 +686,87 @@ components:
         transaction_id:
           type: 'string'
           example: '1234567890'
+    invoiceResponse:
+      type: 'object'
+      properties:
+        invoice_reference_id:
+          type: 'string'
+          example: '1234567890'
+    invoiceDetail:
+      type: 'object'
+      description: >-
+        The invoice to submit. EBS accepts either a bill or a payment on account, never both, so
+        exactly one of these must be supplied.
+      properties:
+        bill:
+          $ref: '#/components/schemas/billDetail'
+        poa:
+          $ref: '#/components/schemas/paymentOnAccountDetail'
+    billDetail:
+      type: 'object'
+      description: 'A bill to submit against a case.'
+      properties:
+        case_reference_number:
+          type: 'string'
+          example: '300000123456'
+        provider_firm_id:
+          type: 'string'
+          example: '12345'
+        type_of_bill:
+          type: 'string'
+          example: 'CLAIM'
+        supporting_info:
+          type: 'string'
+        client_approval:
+          type: 'boolean'
+        date_sent_to_client:
+          type: 'string'
+          format: 'date'
+        client_response:
+          type: 'string'
+        client_objection_reason:
+          type: 'string'
+        court_code:
+          type: 'string'
+        court_assessment:
+          type: 'boolean'
+        court_assessment_date:
+          type: 'string'
+          format: 'date'
+        opa_response:
+          $ref: '#/components/schemas/assessmentResult'
+    paymentOnAccountDetail:
+      type: 'object'
+      description: 'A payment on account to submit against a case.'
+      properties:
+        provider_id:
+          type: 'string'
+          example: '12345'
+        case_reference_number:
+          type: 'string'
+          example: '300000123456'
+        reason:
+          type: 'string'
+        court_type:
+          type: 'string'
+        date_incurred:
+          type: 'string'
+          format: 'date'
+        actual_net_cost:
+          type: 'number'
+        vat_rate:
+          type: 'string'
+        dtld_assessment_order_date:
+          type: 'string'
+          format: 'date'
+        notes:
+          type: 'string'
+        calculated_net_cost:
+          type: 'number'
+        actual_total_cost:
+          type: 'number'
+        opa_response:
+          $ref: '#/components/schemas/assessmentResult'
     page:
       type: 'object'
       properties:
