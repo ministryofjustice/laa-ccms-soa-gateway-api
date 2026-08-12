@@ -34,7 +34,8 @@ public class InvoicesController implements InvoicesApi {
     log.info("POST /invoices");
 
     // EBS models the invoice details as a choice, so exactly one of the two must be supplied.
-    if ((invoiceDetail.getBill() == null) == (invoiceDetail.getPoa() == null)) {
+    if (invoiceDetail == null
+        || (invoiceDetail.getBill() == null) == (invoiceDetail.getPoa() == null)) {
       log.error("POST /invoices requires exactly one of bill or poa");
       return ResponseEntity.badRequest().build();
     }
