@@ -409,6 +409,43 @@ paths:
         '500':
           description: 'Internal server error'
 
+  /invoices/{billing-id}:
+    get:
+      tags:
+        - invoices
+      summary: 'Get the assessment data for an invoice'
+      description: >-
+        Retrieve the OPA assessment data held against a billing id, so that it can be used to seed
+        a new assessment. EBS returns the assessment as a list of OPA entities rather than a full
+        assessment result, so no goal or assessment screens are included.
+      operationId: 'getInvoiceData'
+      parameters:
+        - name: 'billing-id'
+          in: 'path'
+          required: true
+          schema:
+            type: 'string'
+            example: '1234567890'
+        - $ref: '#/components/parameters/soaGatewayUserLoginId'
+        - $ref: '#/components/parameters/soaGatewayUserRole'
+      responses:
+        '200':
+          description: 'Successful operation'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/invoiceDataResponse"
+        '400':
+          description: 'Bad request'
+        '401':
+          description: 'Unauthorized'
+        '403':
+          description: 'Forbidden'
+        '404':
+          description: 'Not found'
+        '500':
+          description: 'Internal server error'
+
   /documents:
     post:
       tags:
@@ -692,6 +729,17 @@ components:
         invoice_reference_id:
           type: 'string'
           example: '1234567890'
+    invoiceDataResponse:
+      type: 'object'
+      description: >-
+        The assessment data held against an invoice. Note that unlike the opa_response submitted
+        with a bill or a payment on account, EBS returns only the OPA entities here, with no goal
+        and no assessment screens.
+      properties:
+        opa_response:
+          type: 'array'
+          items:
+            $ref: '#/components/schemas/opaEntity'
     invoiceDetail:
       type: 'object'
       description: >-

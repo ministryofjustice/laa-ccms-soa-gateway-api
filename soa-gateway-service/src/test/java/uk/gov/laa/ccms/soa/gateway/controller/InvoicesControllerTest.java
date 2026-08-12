@@ -2,11 +2,13 @@ package uk.gov.laa.ccms.soa.gateway.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,6 +23,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import uk.gov.laa.ccms.soa.gateway.model.BillDetail;
 import uk.gov.laa.ccms.soa.gateway.model.InvoiceDetail;
+import uk.gov.laa.ccms.soa.gateway.model.OpaAttribute;
+import uk.gov.laa.ccms.soa.gateway.model.OpaEntity;
+import uk.gov.laa.ccms.soa.gateway.model.OpaInstance;
 import uk.gov.laa.ccms.soa.gateway.model.PaymentOnAccountDetail;
 import uk.gov.laa.ccms.soa.gateway.service.InvoicesService;
 
@@ -37,6 +42,7 @@ class InvoicesControllerTest {
 
   private static final String SOA_GATEWAY_USER_LOGIN_ID = "user";
   private static final String SOA_GATEWAY_USER_ROLE = "EXTERNAL";
+  private static final String BILLING_ID = "1234567890";
 
   @BeforeEach
   public void setup() {
@@ -152,6 +158,67 @@ class InvoicesControllerTest {
         .andExpect(status().isBadRequest());
 
     Mockito.verifyNoInteractions(invoicesService);
+  }
+
+  @Test
+  @DisplayName("GET /invoices/{billing-id} - Successful Retrieval")
+  void testGetInvoiceData_Success() throws Exception {
+    Mockito.when(
+            invoicesService.getInvoiceData(
+                eq(SOA_GATEWAY_USER_LOGIN_ID), eq(SOA_GATEWAY_USER_ROLE), eq(BILLING_ID)))
+        .thenReturn(
+            List.of(
+                new OpaEntity()
+                    .entityName("global")
+                    .addInstancesItem(
+                        new OpaInstance()
+                            .instanceLabel("global")
+                            .addAttributesItem(
+                                new OpaAttribute()
+                                    .attribute("BILLING_IS_COMPLETE")
+                                    .responseValue("true")
+                                    .responseType("boolean")))));
+
+    mockMvc
+        .perform(
+            get("/invoices/{billing-id}", BILLING_ID)
+                .header("SoaGateway-User-Login-Id", SOA_GATEWAY_USER_LOGIN_ID)
+                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.opa_response[0].entity_name").value("global"))
+        .andExpect(jsonPath("$.opa_response[0].instances[0].instance_label").value("global"))
+        .andExpect(
+            jsonPath("$.opa_response[0].instances[0].attributes[0].attribute")
+                .value("BILLING_IS_COMPLETE"))
+        .andExpect(
+            jsonPath("$.opa_response[0].instances[0].attributes[0].response_value").value("true"));
+  }
+
+  @Test
+  @DisplayName("GET /invoices/{billing-id} - Not Found For An Unknown Billing Id")
+  void testGetInvoiceData_NotFound() throws Exception {
+    Mockito.when(invoicesService.getInvoiceData(any(), any(), any())).thenReturn(null);
+
+    mockMvc
+        .perform(
+            get("/invoices/{billing-id}", BILLING_ID)
+                .header("SoaGateway-User-Login-Id", SOA_GATEWAY_USER_LOGIN_ID)
+                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE))
+        .andExpect(status().isNotFound());
+  }
+
+  @Test
+  @DisplayName("GET /invoices/{billing-id} - Exception Handling")
+  void testGetInvoiceData_Exception() throws Exception {
+    Mockito.when(invoicesService.getInvoiceData(any(), any(), any()))
+        .thenThrow(new RuntimeException("Test exception"));
+
+    mockMvc
+        .perform(
+            get("/invoices/{billing-id}", BILLING_ID)
+                .header("SoaGateway-User-Login-Id", SOA_GATEWAY_USER_LOGIN_ID)
+                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE))
+        .andExpect(status().isInternalServerError());
   }
 
   @Test
