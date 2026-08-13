@@ -31,6 +31,9 @@ laa:
       create-invoice:
         service-name: http://legalservices.gov.uk/CCMS/Finance/Payables/1.0/CreateInvoice
         service-url: ${SOA_SERVICE_URL}/soa-infra/services/default/CreateInvoice/createinvoice_client_ep
+      get-invoice-details:
+        service-name: http://legalservices.gov.uk/CCMS/Finance/Payables/1.0/GetInvoiceDetails
+        service-url: ${SOA_SERVICE_URL}/soa-infra/services/default/GetInvoiceDetails/bpelgetinvoicedetails_client_ep
       provider-request:
         service-name: http://legalservices.gov.uk/CCMS/CaseManagement/Case/1.0/SubmitProviderRequest
         service-url: ${SOA_SERVICE_URL}/soa-infra/services/default/SubmitProviderRequest/submitproviderrequest_ep

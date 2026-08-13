@@ -1,12 +1,15 @@
 package uk.gov.laa.ccms.soa.gateway.controller;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.laa.ccms.soa.gateway.api.InvoicesApi;
+import uk.gov.laa.ccms.soa.gateway.model.InvoiceDataResponse;
 import uk.gov.laa.ccms.soa.gateway.model.InvoiceDetail;
 import uk.gov.laa.ccms.soa.gateway.model.InvoiceResponse;
+import uk.gov.laa.ccms.soa.gateway.model.OpaEntity;
 import uk.gov.laa.ccms.soa.gateway.service.InvoicesService;
 
 /** REST controller for handling invoice submissions. */
@@ -44,6 +47,36 @@ public class InvoicesController implements InvoicesApi {
       final String invoiceReferenceId =
           invoicesService.createInvoice(soaGatewayUserLoginId, soaGatewayUserRole, invoiceDetail);
       return ResponseEntity.ok(new InvoiceResponse().invoiceReferenceId(invoiceReferenceId));
+    } catch (final Exception e) {
+      log.error("InvoicesController caught exception", e);
+      return ResponseEntity.internalServerError().build();
+    }
+  }
+
+  /**
+   * Handles retrieval of the assessment data held against an invoice.
+   *
+   * @param billingId the billing id to retrieve the assessment data for
+   * @param soaGatewayUserLoginId the login ID of the SOA gateway user
+   * @param soaGatewayUserRole the role of the SOA gateway user
+   * @return a response entity containing the assessment entities, a not found if EBS holds no
+   *     assessment data for the billing id, or an internal server error
+   */
+  @Override
+  public ResponseEntity<InvoiceDataResponse> getInvoiceData(
+      final String billingId, final String soaGatewayUserLoginId, final String soaGatewayUserRole) {
+    log.info("GET /invoices/{}", billingId);
+
+    try {
+      final List<OpaEntity> opaResponse =
+          invoicesService.getInvoiceData(soaGatewayUserLoginId, soaGatewayUserRole, billingId);
+
+      if (opaResponse == null) {
+        log.error("GET /invoices/{} found no assessment data", billingId);
+        return ResponseEntity.notFound().build();
+      }
+
+      return ResponseEntity.ok(new InvoiceDataResponse().opaResponse(opaResponse));
     } catch (final Exception e) {
       log.error("InvoicesController caught exception", e);
       return ResponseEntity.internalServerError().build();

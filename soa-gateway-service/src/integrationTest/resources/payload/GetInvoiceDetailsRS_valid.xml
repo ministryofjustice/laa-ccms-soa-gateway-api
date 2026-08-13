@@ -1,0 +1,25 @@
+<GetInvoiceDetailsRS xmlns="http://legalservices.gov.uk/CCMS/Finance/Payables/1.0/BillingBIM">
+  <HeaderRS xmlns="http://legalservices.gov.uk/Enterprise/Common/1.0/Header">
+    <RequestDetails/>
+    <Status>
+      <Status>Success</Status>
+      <StatusFreeText/>
+    </Status>
+    <TransactionID/>
+  </HeaderRS>
+  <AssessmentResultsElement>
+    <Entity xmlns="http://legalservices.gov.uk/CCMS/Finance/Payables/1.0/BillingBIO">
+      <EntityName>global</EntityName>
+      <Instances>
+        <InstanceLabel>global</InstanceLabel>
+        <Attributes>
+          <Attribute>
+            <Name>BILLING_IS_COMPLETE</Name>
+            <Value>true</Value>
+            <Type>boolean</Type>
+          </Attribute>
+        </Attributes>
+      </Instances>
+    </Entity>
+  </AssessmentResultsElement>
+</GetInvoiceDetailsRS>

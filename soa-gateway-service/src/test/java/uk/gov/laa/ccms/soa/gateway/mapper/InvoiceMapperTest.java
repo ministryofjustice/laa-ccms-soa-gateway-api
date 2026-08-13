@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
 import javax.xml.datatype.DatatypeConstants;
 import javax.xml.datatype.XMLGregorianCalendar;
 import org.junit.jupiter.api.DisplayName;
@@ -21,9 +22,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.laa.ccms.soa.gateway.model.AssessmentResult;
 import uk.gov.laa.ccms.soa.gateway.model.BillDetail;
 import uk.gov.laa.ccms.soa.gateway.model.InvoiceDetail;
+import uk.gov.laa.ccms.soa.gateway.model.OpaAttribute;
+import uk.gov.laa.ccms.soa.gateway.model.OpaEntity;
+import uk.gov.laa.ccms.soa.gateway.model.OpaInstance;
 import uk.gov.laa.ccms.soa.gateway.model.PaymentOnAccountDetail;
 import uk.gov.legalservices.ccms.finance.payables._1_0.billingbim.InvoiceAddRQ;
 import uk.gov.legalservices.ccms.finance.payables._1_0.billingbio.BillElementType;
+import uk.gov.legalservices.ccms.finance.payables._1_0.billingbio.OPAAttributesType;
+import uk.gov.legalservices.ccms.finance.payables._1_0.billingbio.OPAEntityType;
+import uk.gov.legalservices.ccms.finance.payables._1_0.billingbio.OPAInstanceType;
 import uk.gov.legalservices.ccms.finance.payables._1_0.billingbio.POAElementType;
 import uk.gov.legalservices.enterprise.common._1_0.common.AssesmentResultType;
 
@@ -173,5 +180,48 @@ class InvoiceMapperTest {
   @DisplayName("toXmlDateOnly - null when the date is null")
   void toXmlDateOnly_null() {
     assertNull(invoiceMapper.toXmlDateOnly(null));
+  }
+
+  @Test
+  @DisplayName("toOpaEntities - maps the entities EBS returns for an invoice")
+  void toOpaEntities_maps() {
+    final OPAAttributesType attribute = new OPAAttributesType();
+    attribute.setName("BILLING_IS_COMPLETE");
+    attribute.setValue("true");
+    attribute.setType("boolean");
+
+    final OPAInstanceType.Attributes attributes = new OPAInstanceType.Attributes();
+    attributes.getAttribute().add(attribute);
+
+    final OPAInstanceType instance = new OPAInstanceType();
+    instance.setInstanceLabel("theinstance");
+    instance.setAttributes(attributes);
+
+    final OPAEntityType entity = new OPAEntityType();
+    entity.setEntityName("global");
+    entity.getInstances().add(instance);
+
+    final List<OpaEntity> result = invoiceMapper.toOpaEntities(List.of(entity));
+
+    assertEquals(1, result.size());
+    final OpaEntity mappedEntity = result.getFirst();
+    assertEquals("global", mappedEntity.getEntityName());
+    assertEquals(1, mappedEntity.getInstances().size());
+
+    final OpaInstance mappedInstance = mappedEntity.getInstances().getFirst();
+    assertEquals("theinstance", mappedInstance.getInstanceLabel());
+    assertEquals(1, mappedInstance.getAttributes().size());
+
+    // EBS uses Name/Value/Type here, unlike the attribute submitted with an invoice.
+    final OpaAttribute mappedAttribute = mappedInstance.getAttributes().getFirst();
+    assertEquals("BILLING_IS_COMPLETE", mappedAttribute.getAttribute());
+    assertEquals("true", mappedAttribute.getResponseValue());
+    assertEquals("boolean", mappedAttribute.getResponseType());
+  }
+
+  @Test
+  @DisplayName("toOpaEntities - null when no entities are supplied")
+  void toOpaEntities_null() {
+    assertNull(invoiceMapper.toOpaEntities(null));
   }
 }
