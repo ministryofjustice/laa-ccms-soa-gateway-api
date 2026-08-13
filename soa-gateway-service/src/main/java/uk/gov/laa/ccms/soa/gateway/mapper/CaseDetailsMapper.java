@@ -141,6 +141,7 @@ public interface CaseDetailsMapper {
       target = "meritsAssesments.assesmentResults",
       source = "applicationDetails.meritsAssessments")
   @Mapping(target = ".", source = "applicationDetails")
+  @Mapping(target = "undertakings", source = "caseDetail")
   @Mapping(
       target = "applicationAmendmentType",
       source = ".",
