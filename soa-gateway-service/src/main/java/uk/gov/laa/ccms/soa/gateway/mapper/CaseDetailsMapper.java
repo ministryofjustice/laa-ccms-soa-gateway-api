@@ -116,7 +116,7 @@ public interface CaseDetailsMapper {
   @Mapping(target = "headerRQ", ignore = true)
   @Mapping(target = "actualCaseStatus", ignore = true)
   @Mapping(target = "messages", ignore = true)
-  @Mapping(target = "undertakings", ignore = true)
+  @Mapping(target = "undertakings", source = "caseDetail")
   CaseUpdateRQ toCaseUpdateRq(final CaseDetail caseDetail, @Context String caseUpdateType);
 
   @Mapping(target = "proceedingCaseID", source = "proceedingCaseId")
@@ -141,7 +141,6 @@ public interface CaseDetailsMapper {
       target = "meritsAssesments.assesmentResults",
       source = "applicationDetails.meritsAssessments")
   @Mapping(target = ".", source = "applicationDetails")
-  @Mapping(target = "undertakings", source = "caseDetail")
   @Mapping(
       target = "applicationAmendmentType",
       source = ".",
