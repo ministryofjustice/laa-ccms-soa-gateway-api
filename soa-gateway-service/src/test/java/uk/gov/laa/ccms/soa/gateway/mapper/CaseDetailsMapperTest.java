@@ -1833,6 +1833,8 @@ public class CaseDetailsMapperTest {
 
     CaseDocs caseDocs = buildExpectedCaseDocs();
 
+    UndertakingElementType undertakingElementType = buildExpectedUndertakingElementType();
+
     CaseUpdateRQ caseUpdateRQ = new CaseUpdateRQ();
     caseUpdateRQ.setCaseReferenceNumber("caseReferenceNumber");
     caseUpdateRQ.setUpdateMsgType(caseUpdateType);
@@ -1846,10 +1848,10 @@ public class CaseDetailsMapperTest {
     caseUpdateRQ.setAwards(awardsElementType);
     caseUpdateRQ.setPriorAuthorities(priorAuthorities);
     caseUpdateRQ.setDischargeStatus(null);
-    caseUpdateRQ.setUndertakings(null);
     caseUpdateRQ.setOutcomes(outcomes);
     caseUpdateRQ.setRecordHistory(recordHistory);
     caseUpdateRQ.setCaseDocs(caseDocs);
+    caseUpdateRQ.setUndertakings(undertakingElementType);
 
     return caseUpdateRQ;
   }
