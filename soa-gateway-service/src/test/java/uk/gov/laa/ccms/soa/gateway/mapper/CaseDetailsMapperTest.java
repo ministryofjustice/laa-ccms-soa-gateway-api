@@ -1848,7 +1848,6 @@ public class CaseDetailsMapperTest {
     caseUpdateRQ.setAwards(awardsElementType);
     caseUpdateRQ.setPriorAuthorities(priorAuthorities);
     caseUpdateRQ.setDischargeStatus(null);
-    caseUpdateRQ.setUndertakings(null);
     caseUpdateRQ.setOutcomes(outcomes);
     caseUpdateRQ.setRecordHistory(recordHistory);
     caseUpdateRQ.setCaseDocs(caseDocs);
