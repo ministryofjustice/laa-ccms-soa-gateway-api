@@ -31,6 +31,16 @@ To get the values for these two variables, contact another developer on the team
 
 In addition to setting these environment variables, you will need  https://github.com/ministryofjustice/laa-ccms-mock-contracts to be running for local and dev profiles. 
 
+### Connecting to SOA dev
+
+SOA dev only accepts HTTPS, which the local `SOA_SERVICE_URL` of
+`http://localhost:8051` cannot speak to directly. The `laa-ccms-soa-proxy`
+container in the
+[laa-ccms-caab development stack](https://github.com/ministryofjustice/laa-ccms-caab/blob/main/docs/first-time-setup.md#soa-proxy)
+listens on `localhost:8051` and does the HTTPS to SOA. With it running and the
+SOA port-forward on local port 8052, run this service from the IDE as before;
+nothing here changes.
+
 ## Common Components
 
 This API uses components from the [LAA CCMS Common Library](https://github.com/ministryofjustice/laa-ccms-spring-boot-common):
