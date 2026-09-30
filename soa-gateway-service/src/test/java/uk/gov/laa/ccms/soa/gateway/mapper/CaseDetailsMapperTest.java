@@ -10,7 +10,6 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildApplicationDetails;
 import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildAwardElementType;
-import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildCase;
 import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildCaseDocsElementType;
 import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildCategoryOfLawElementType;
 import static uk.gov.laa.ccms.soa.gateway.util.SoaModelUtils.buildContactDetails;
@@ -102,7 +101,6 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.AwardDetailEl
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.AwardDetailElementType.AwardDetails;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.AwardElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.AwardsElementType;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.Case;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseAdd;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseDetailsAdd;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseDocs;
@@ -179,14 +177,6 @@ public class CaseDetailsMapperTest {
     } catch (DatatypeConfigurationException e) {
       throw new RuntimeException(e);
     }
-  }
-
-  @Test
-  public void testToCaseDetail() {
-    Case sourceCase = buildCase();
-
-    CaseDetail result = caseDetailsMapper.toCaseDetail(sourceCase);
-    assertNotNull(result);
   }
 
   @Test

@@ -32,9 +32,6 @@ public class CaseServicesClientIntegrationTest {
   @Value("classpath:/payload/CaseInqRS_valid.xml")
   Resource caseInqRS_valid;
 
-  @Value("classpath:/payload/CaseInqRS_valid_one.xml")
-  Resource caseInqRS_valid_one;
-
   @Value("classpath:/payload/CaseAddUpdtStatusRS_Valid.xml")
   Resource caseAddUpdtStatusRS_valid;
 
@@ -115,51 +112,6 @@ public class CaseServicesClientIntegrationTest {
     assertThrows(
         RuntimeException.class,
         () -> client.getCaseDetails(testLoginId, testUserType, maxRecords, caseInfo));
-
-    mockServer.verify();
-  }
-
-  @Test
-  public void testGetCaseDetail_ReturnsData() throws Exception {
-    final String caseReferenceNumber = "300000195071";
-
-    mockServer
-        .expect(
-            xpath("/msg:CaseInqRQ/header:HeaderRQ/header:TransactionRequestID", namespaces)
-                .exists())
-        .andExpect(
-            xpath("/msg:CaseInqRQ/header:HeaderRQ/header:UserLoginID", namespaces)
-                .evaluatesTo(testLoginId))
-        .andExpect(
-            xpath("/msg:CaseInqRQ/header:HeaderRQ/header:UserRole", namespaces)
-                .evaluatesTo(testUserType))
-        .andExpect(
-            xpath("/msg:CaseInqRQ/msg:SearchCriteria/msg:CaseReferenceNumber", namespaces)
-                .evaluatesTo(caseReferenceNumber))
-        .andRespond(withPayload(caseInqRS_valid_one));
-
-    CaseInqRS response = client.getCaseDetail(testLoginId, testUserType, caseReferenceNumber);
-
-    assertNotNull(response.getCase());
-    assertEquals(caseReferenceNumber, response.getCase().getCaseReferenceNumber());
-    assertNotNull(response.getCase().getCaseDetails());
-
-    mockServer.verify();
-  }
-
-  @Test
-  public void testGetCaseDetail_HandlesError() {
-    final String caseReferenceNumber = "300000195071";
-
-    mockServer
-        .expect(
-            xpath("/msg:CaseInqRQ/header:HeaderRQ/header:TransactionRequestID", namespaces)
-                .exists())
-        .andRespond(withError("Failed to call soap service"));
-
-    assertThrows(
-        RuntimeException.class,
-        () -> client.getCaseDetail(testLoginId, testUserType, caseReferenceNumber));
 
     mockServer.verify();
   }

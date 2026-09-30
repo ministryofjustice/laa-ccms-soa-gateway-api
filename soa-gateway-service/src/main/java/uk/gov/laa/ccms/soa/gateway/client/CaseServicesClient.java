@@ -79,28 +79,6 @@ public class CaseServicesClient extends AbstractSoaClient {
   }
 
   /**
-   * Retrieve a single Case for the supplied case reference number.
-   *
-   * @param loggedInUserId - the logged in UserId
-   * @param loggedInUserType - the logged in UserType
-   * @param caseReferenceNumber - the case reference number
-   * @return Response object containing the full details for a single Case
-   */
-  public CaseInqRS getCaseDetail(
-      String loggedInUserId, String loggedInUserType, String caseReferenceNumber) {
-
-    final String soapAction = String.format("%s/GetCaseDetails", serviceName);
-    CaseInqRQ caseInqRq = CASE_FACTORY.createCaseInqRQ();
-    caseInqRq.setHeaderRQ(createHeaderRq(loggedInUserId, loggedInUserType));
-
-    caseInqRq.setSearchCriteria(CASE_FACTORY.createCaseInqRQSearchCriteria());
-    caseInqRq.getSearchCriteria().setCaseReferenceNumber(caseReferenceNumber);
-    caseInqRq.setRecordCount(createRecordCount(1));
-
-    return retrieveCaseDetails(soapAction, caseInqRq).getValue();
-  }
-
-  /**
    * Register a new Case in CCMS.
    *
    * @param loggedInUserId - the logged in UserId

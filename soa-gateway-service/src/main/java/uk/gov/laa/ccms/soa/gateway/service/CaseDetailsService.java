@@ -8,7 +8,6 @@ import uk.gov.laa.ccms.soa.gateway.mapper.CaseDetailsMapper;
 import uk.gov.laa.ccms.soa.gateway.model.CaseDetail;
 import uk.gov.laa.ccms.soa.gateway.util.PaginationUtil;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddRS;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseInqRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseUpdateRQ;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseUpdateRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseAdd;
@@ -28,31 +27,6 @@ public class CaseDetailsService extends AbstractSoaService {
   private final CaseServicesClient caseServicesClient;
 
   private final CaseDetailsMapper caseDetailsMapper;
-
-  /**
-   * Retrieve the full details of a single Case based on the supplied caseReferenceNumber.
-   *
-   * <p>This method communicates with the external Case Services system using the provided case
-   * reference, fetches the relevant case details, and then maps these details to the desired
-   * format.
-   *
-   * @param soaGatewayUserLoginId The user login ID for the SOA Gateway.
-   * @param soaGatewayUserRole The user role in the SOA Gateway.
-   * @param caseReferenceNumber The reference number for the case.
-   * @return A {@link CaseDetail} object containing the retrieved and processed case detail.
-   */
-  public CaseDetail getCaseDetail(
-      final String soaGatewayUserLoginId,
-      final String soaGatewayUserRole,
-      final String caseReferenceNumber) {
-    log.info("CaseDetailsService - getCaseDetail");
-
-    CaseInqRS response =
-        caseServicesClient.getCaseDetail(
-            soaGatewayUserLoginId, soaGatewayUserRole, caseReferenceNumber);
-
-    return caseDetailsMapper.toCaseDetail(response.getCase());
-  }
 
   /**
    * Registers a new case based on the provided case details.
