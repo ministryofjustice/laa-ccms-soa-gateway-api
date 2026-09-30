@@ -42,7 +42,6 @@ import uk.gov.laa.ccms.soa.gateway.model.RecoveryAmount;
 import uk.gov.laa.ccms.soa.gateway.model.ScopeLimitation;
 import uk.gov.laa.ccms.soa.gateway.model.SubmittedApplicationDetails;
 import uk.gov.laa.ccms.soa.gateway.model.TimeRelatedAward;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddUpdtStatusRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseUpdateRQ;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ApplicationDetails;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.AwardElementType;
@@ -543,9 +542,4 @@ public interface CaseDetailsMapper {
   AssesmentResultType toAssesmentResultType(final AssessmentResult assessmentResult);
 
   OPAAttributesType toOpaAttributesType(final OpaAttribute opaAttribute);
-
-  @Mapping(target = "submissionStatus", source = "headerRS.status.status")
-  @Mapping(target = "referenceNumber", source = "caseReferenceNumber")
-  uk.gov.laa.ccms.soa.gateway.model.TransactionStatus toTransactionStatus(
-      CaseAddUpdtStatusRS response);
 }

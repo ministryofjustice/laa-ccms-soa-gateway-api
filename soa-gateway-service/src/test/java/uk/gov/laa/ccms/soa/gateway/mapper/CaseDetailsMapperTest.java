@@ -91,10 +91,8 @@ import uk.gov.laa.ccms.soa.gateway.model.ScopeLimitation;
 import uk.gov.laa.ccms.soa.gateway.model.ServiceAddress;
 import uk.gov.laa.ccms.soa.gateway.model.SubmittedApplicationDetails;
 import uk.gov.laa.ccms.soa.gateway.model.TimeRelatedAward;
-import uk.gov.laa.ccms.soa.gateway.model.TransactionStatus;
 import uk.gov.laa.ccms.soa.gateway.model.UserDetail;
 import uk.gov.laa.ccms.soa.gateway.model.Valuation;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddUpdtStatusRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseUpdateRQ;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ActionListElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.AwardDetailElementType;
@@ -157,9 +155,6 @@ import uk.gov.legalservices.enterprise.common._1_0.common.OPAInstanceType;
 import uk.gov.legalservices.enterprise.common._1_0.common.OPAInstanceType.Attributes;
 import uk.gov.legalservices.enterprise.common._1_0.common.OPAResultType;
 import uk.gov.legalservices.enterprise.common._1_0.common.User;
-import uk.gov.legalservices.enterprise.common._1_0.header.HeaderRSType;
-import uk.gov.legalservices.enterprise.common._1_0.header.Status;
-import uk.gov.legalservices.enterprise.common._1_0.header.StatusTextType;
 
 @ExtendWith(MockitoExtension.class)
 public class CaseDetailsMapperTest {
@@ -746,23 +741,6 @@ public class CaseDetailsMapperTest {
     assertEquals(applicationDetails.getPreferredAddress(), result.getPreferredAddress());
 
     compareClients(applicationDetails.getClient(), result.getClient());
-  }
-
-  @Test
-  void toTransactionStatus() {
-    CaseAddUpdtStatusRS caseAddUpdtStatusRS = new CaseAddUpdtStatusRS();
-    caseAddUpdtStatusRS.setCaseReferenceNumber("ref1");
-    caseAddUpdtStatusRS.setHeaderRS(new HeaderRSType());
-    caseAddUpdtStatusRS.getHeaderRS().setStatus(new Status());
-    caseAddUpdtStatusRS.getHeaderRS().getStatus().setStatus(StatusTextType.ERROR);
-
-    TransactionStatus result = caseDetailsMapper.toTransactionStatus(caseAddUpdtStatusRS);
-
-    assertNotNull(result);
-    assertEquals(caseAddUpdtStatusRS.getCaseReferenceNumber(), result.getReferenceNumber());
-    assertEquals(
-        caseAddUpdtStatusRS.getHeaderRS().getStatus().getStatus().name(),
-        result.getSubmissionStatus());
   }
 
   private void compareRecovery(RecoveryElementType recoveryElementType, Recovery recovery) {
