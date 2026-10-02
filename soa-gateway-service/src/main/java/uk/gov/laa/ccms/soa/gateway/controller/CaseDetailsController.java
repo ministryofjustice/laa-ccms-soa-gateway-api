@@ -39,32 +39,6 @@ public class CaseDetailsController implements CasesApi {
   }
 
   /**
-   * Get a single case by reference number.
-   *
-   * @param caseReferenceNumber (required) - the reference of the case to return.
-   * @param soaGatewayUserLoginId (required) - the user requesting the data.
-   * @param soaGatewayUserRole (required) - the user role requesting the data.
-   * @return a ResponseEntity containing the case detail.
-   */
-  @Override
-  public ResponseEntity<CaseDetail> getCase(
-      final String caseReferenceNumber,
-      final String soaGatewayUserLoginId,
-      final String soaGatewayUserRole) {
-    log.info("GET /cases/{}", caseReferenceNumber);
-    try {
-      final CaseDetail caseDetail =
-          caseDetailsService.getCaseDetail(
-              soaGatewayUserLoginId, soaGatewayUserRole, caseReferenceNumber);
-
-      return ResponseEntity.ok(caseDetail);
-    } catch (final Exception e) {
-      log.error("CaseDetailsController caught exception", e);
-      return ResponseEntity.internalServerError().build();
-    }
-  }
-
-  /**
    * Amends a single case by reference number.
    *
    * @param soaGatewayUserLoginId (required) - the user requesting the data.

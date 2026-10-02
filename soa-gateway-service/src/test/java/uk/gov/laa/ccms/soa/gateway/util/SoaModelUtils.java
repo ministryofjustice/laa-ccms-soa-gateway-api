@@ -8,12 +8,8 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ActionListEle
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.AwardDetailElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.AwardDetailElementType.AwardDetails;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.AwardElementType;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.AwardsElementType;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.Case;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseDocs;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseDocsElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseList;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseStatusElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CategoryOfLawElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.Client;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ContactDetails;
@@ -21,7 +17,6 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CostAwardElem
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CostAwardElementType.LiableParties;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CostLimitationElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CostLimitations;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.DischargeElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ExtResourceElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ExternalResources;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.FinancialAwardElementType;
@@ -30,7 +25,6 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.LandAwardElem
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.LandAwardElementType.OtherProprietors;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.LandAwardElementType.Valuation;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.LinkedCaseType;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.LinkedCases;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.MeansAssesments;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.MeritsAssesments;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.OtherAssetElementType;
@@ -41,7 +35,6 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.OtherPartyEle
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.OtherPartyOrgType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.OtherPartyPersonType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.OutcomeDetailElementType;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.PriorAuthorities;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.PriorAuthorityAttribElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.PriorAuthorityDetElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.PriorAuthorityElementType;
@@ -204,47 +197,6 @@ public class SoaModelUtils {
     return caseList;
   }
 
-  public static Case buildCase() {
-    Case sourceCase = new Case();
-    sourceCase.setCaseReferenceNumber("123");
-    sourceCase.setCaseDetails(buildCaseDetails());
-    return sourceCase;
-  }
-
-  public static uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseDetails
-      buildCaseDetails() {
-    DatatypeFactory datatypeFactory;
-    try {
-      datatypeFactory = DatatypeFactory.newInstance();
-    } catch (DatatypeConfigurationException e) {
-      throw new RuntimeException(e);
-    }
-
-    uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseDetails caseDetails =
-        new uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseDetails();
-    caseDetails.setCertificateType("certtype");
-    caseDetails.setLegalHelpCosts(BigDecimal.TEN);
-    caseDetails.setCertificateDate(datatypeFactory.newXMLGregorianCalendar());
-    caseDetails.setPreCertificateCosts(BigDecimal.TEN);
-    caseDetails.setUndertakingAmount(BigDecimal.TEN);
-
-    caseDetails.setApplicationDetails(buildApplicationDetails());
-    caseDetails.setCaseStatus(buildCaseStatus());
-    caseDetails.setCaseDocs(new CaseDocs());
-    caseDetails.getCaseDocs().getCaseDoc().add(buildCaseDocsElementType());
-    caseDetails.setLinkedCases(new LinkedCases());
-    caseDetails.getLinkedCases().getLinkedCase().add(buildLinkedCaseType());
-    caseDetails.setAwards(new AwardsElementType());
-    caseDetails.getAwards().getAward().add(buildAwardElementType());
-    caseDetails.setAvailableFunctions(buildAvailableFunctions());
-    caseDetails.setDischargeStatus(buildDischargeStatus());
-    caseDetails.setPriorAuthorities(new PriorAuthorities());
-    caseDetails.getPriorAuthorities().getPriorAuthority().add(buildPriorAuthorityElementType());
-    caseDetails.setRecordHistory(buildRecordHistory());
-
-    return caseDetails;
-  }
-
   public static PriorAuthorityElementType buildPriorAuthorityElementType() {
     PriorAuthorityAttribElementType priorAuthorityAttribElementType =
         new PriorAuthorityAttribElementType();
@@ -264,22 +216,6 @@ public class SoaModelUtils {
     priorAuthorityElementType.setRequestAmount(BigDecimal.TEN);
 
     return priorAuthorityElementType;
-  }
-
-  public static DischargeElementType buildDischargeStatus() {
-    DischargeElementType dischargeElementType = new DischargeElementType();
-    dischargeElementType.setOtherDetails("otherdets");
-    dischargeElementType.setReason("reason");
-    dischargeElementType.setClientContinuePvtInd(Boolean.TRUE);
-
-    return dischargeElementType;
-  }
-
-  public static ActionListElementType buildAvailableFunctions() {
-    ActionListElementType actionListElementType = new ActionListElementType();
-    actionListElementType.getFunction().add("afunction");
-
-    return actionListElementType;
   }
 
   public static AwardElementType buildAwardElementType() {
@@ -518,15 +454,6 @@ public class SoaModelUtils {
     caseDocsElementType.setDocumentSubject("docsubj");
 
     return caseDocsElementType;
-  }
-
-  public static CaseStatusElementType buildCaseStatus() {
-    CaseStatusElementType caseStatusElementType = new CaseStatusElementType();
-    caseStatusElementType.setActualCaseStatus("actstat");
-    caseStatusElementType.setDisplayCaseStatus("dispstat");
-    caseStatusElementType.setStatusUpdateInd(true);
-
-    return caseStatusElementType;
   }
 
   public static uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ApplicationDetails

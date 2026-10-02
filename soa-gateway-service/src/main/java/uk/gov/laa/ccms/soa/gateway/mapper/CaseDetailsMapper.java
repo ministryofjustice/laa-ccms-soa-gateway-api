@@ -42,12 +42,10 @@ import uk.gov.laa.ccms.soa.gateway.model.RecoveryAmount;
 import uk.gov.laa.ccms.soa.gateway.model.ScopeLimitation;
 import uk.gov.laa.ccms.soa.gateway.model.SubmittedApplicationDetails;
 import uk.gov.laa.ccms.soa.gateway.model.TimeRelatedAward;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseAddUpdtStatusRS;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebim.CaseUpdateRQ;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.ApplicationDetails;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.AwardElementType;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.AwardsElementType;
-import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.Case;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseAdd;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseDocs;
 import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseDocsElementType;
@@ -93,15 +91,6 @@ public interface CaseDetailsMapper {
   String APP_TYPE_SUBSTANTIVE = "SUB";
   String APP_TYPE_EMERGENCY_DEVOLVED_POWERS = "DP";
   String APP_TYPE_SUBSTANTIVE_DEVOLVED_POWERS = "SUBDP";
-
-  @Mapping(target = ".", source = "caseDetails")
-  @Mapping(target = "linkedCases", source = "caseDetails.linkedCases.linkedCase")
-  @Mapping(target = "awards", source = "caseDetails.awards.award")
-  @Mapping(target = "priorAuthorities", source = "caseDetails.priorAuthorities.priorAuthority")
-  @Mapping(target = "availableFunctions", source = "caseDetails.availableFunctions.function")
-  @Mapping(target = "caseDocs", source = "caseDetails.caseDocs.caseDoc")
-  @Mapping(target = "undertakingMaximumAmount", ignore = true)
-  CaseDetail toCaseDetail(final Case sourceCase);
 
   @Mapping(target = "caseDetails", source = ".")
   CaseAdd toCaseAdd(final CaseDetail caseDetail);
@@ -553,9 +542,4 @@ public interface CaseDetailsMapper {
   AssesmentResultType toAssesmentResultType(final AssessmentResult assessmentResult);
 
   OPAAttributesType toOpaAttributesType(final OpaAttribute opaAttribute);
-
-  @Mapping(target = "submissionStatus", source = "headerRS.status.status")
-  @Mapping(target = "referenceNumber", source = "caseReferenceNumber")
-  uk.gov.laa.ccms.soa.gateway.model.TransactionStatus toTransactionStatus(
-      CaseAddUpdtStatusRS response);
 }

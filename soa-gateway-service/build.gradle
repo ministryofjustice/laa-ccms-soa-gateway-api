@@ -17,7 +17,7 @@ configurations.configureEach {
             details.useVersion '1.85'
             details.because 'Temporary override to remediate vulnerability'
         }
-        if (details.requested.group == 'com.fasterxml.jackson.core' && details.requested.name == 'jackson-databind') {
+        if (details.requested.group == 'com.fasterxml.jackson.core' && details.requested.name in ['jackson-core', 'jackson-databind']) {
             details.useVersion '2.22.3'
             details.because 'Temporary override to remediate vulnerability'
         }
@@ -30,7 +30,11 @@ configurations.configureEach {
             details.because 'Temporary override to remediate vulnerability'
         }
         if (details.requested.group == 'tools.jackson.core') {
-            details.useVersion '3.2.2'
+            details.useVersion '3.2.3'
+            details.because 'Temporary override to remediate vulnerability'
+        }
+        if (details.requested.group == 'org.apache.tomcat.embed') {
+            details.useVersion '11.0.25'
             details.because 'Temporary override to remediate vulnerability'
         }
     }
