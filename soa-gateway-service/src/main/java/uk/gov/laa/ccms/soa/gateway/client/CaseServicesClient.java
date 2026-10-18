@@ -1,9 +1,6 @@
 package uk.gov.laa.ccms.soa.gateway.client;
 
 import jakarta.xml.bind.JAXBElement;
-import java.io.StringWriter;
-import javax.xml.transform.stream.StreamResult;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.ws.client.core.WebServiceTemplate;
@@ -23,7 +20,6 @@ import uk.gov.legalservices.ccms.casemanagement._case._1_0.casebio.CaseAdd;
  * specifically focuses on case management services. It allows for the retrieval of case details
  * based on search criteria provided. Service name and URL details are injected at runtime.
  */
-@Slf4j
 @SuppressWarnings("unchecked")
 @Component
 public class CaseServicesClient extends AbstractSoaClient {
@@ -93,8 +89,6 @@ public class CaseServicesClient extends AbstractSoaClient {
     caseUpdateRq.setHeaderRQ(createHeaderRq(loggedInUserId, loggedInUserType));
     JAXBElement<CaseUpdateRQ> request = CASE_FACTORY.createCaseUpdateRQ(caseUpdateRq);
 
-    logCaseUpdateRequest(request);
-
     JAXBElement<CaseUpdateRS> response =
         (JAXBElement<CaseUpdateRS>)
             getWebServiceTemplate()
@@ -102,19 +96,5 @@ public class CaseServicesClient extends AbstractSoaClient {
 
     isSuccessOrThrowException(serviceName, response.getValue().getHeaderRS());
     return response.getValue();
-  }
-
-  private void logCaseUpdateRequest(JAXBElement<CaseUpdateRQ> request) {
-    if (!log.isInfoEnabled()) {
-      return;
-    }
-
-    try {
-      StringWriter writer = new StringWriter();
-      getWebServiceTemplate().getMarshaller().marshal(request, new StreamResult(writer));
-      log.info("Case Update Request: {}", writer);
-    } catch (Exception e) {
-      log.warn("Unable to log Case Update Request", e);
-    }
   }
 }

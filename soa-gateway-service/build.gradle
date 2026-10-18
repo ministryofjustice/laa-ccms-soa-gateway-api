@@ -45,6 +45,16 @@ configurations.configureEach {
     }
 }
 
+// Replaces application.yml @version@ with the project version
+processResources {
+    inputs.property('applicationVersion', project.version.toString())
+    filesMatching('application.yml') {
+        filter {
+            it.replace('@version@', version.toString())
+        }
+    }
+}
+
 dependencies {
 
     constraints {
@@ -54,6 +64,9 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    // Required for tracing information
+    implementation 'org.springframework.boot:spring-boot-micrometer-tracing-brave'
     implementation 'io.micrometer:micrometer-tracing-bridge-brave'
 
     implementation 'org.springframework.boot:spring-boot-starter-validation'
