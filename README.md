@@ -41,6 +41,78 @@ listens on `localhost:8051` and does the HTTPS to SOA. With it running and the
 SOA port-forward on local port 8052, run this service from the IDE as before;
 nothing here changes.
 
+## Logging
+
+The service writes its console logs as [Elastic Common Schema (ECS)](https://www.elastic.co/docs/reference/ecs)
+JSON, in line with the LAA monitoring and logging guardrail. This is configured under
+`logging.structured` in [`application.yml`](./soa-gateway-service/src/main/resources/application.yml); there is deliberately no
+`logback-spring.xml`, as one would override this configuration.
+
+### Running locally
+
+The `local` profile switches structured logging off in favour of a readable console pattern, which
+still carries the `[traceId,spanId,sessionID]` of the current request:
+
+```shell
+./gradlew :soa-gateway-service:bootRun --args='--spring.profiles.active=local'
+```
+
+```text
+2026-10-01T23:41:59.958+01:00  INFO 12345 --- [omcat-handler-0] [6abee1b75d73754cc9f35ca586522766,e75b167f726aa789,9f5de6e6-b841-4398-932d-d95fb651748c] u.g.l.s.auth.ApiAuthenticationFilter     : Request rejected for endpoint 'GET /organisations': No API access token provided.
+```
+
+### Structured (ECS) output
+
+With any other profile, each log event is a single line of JSON. For example (formatted for
+readability):
+
+```json
+{
+  "@timestamp": "2026-10-01T22:41:43.762331Z",
+  "log": {
+    "level": "INFO",
+    "logger": "uk.gov.laa.springboot.auth.ApiAuthenticationFilter"
+  },
+  "process": {
+    "pid": 12345,
+    "thread": {
+      "name": "tomcat-handler-0"
+    }
+  },
+  "service": {
+    "name": "laa-ccms-soa-gateway-api",
+    "version": "1.4.2",
+    "environment": "dev",
+    "node": {
+      "name": "laa-ccms-soa-gateway-api-84f6c7d9b-t5r1y"
+    }
+  },
+  "message": "Request rejected for endpoint 'GET /organisations': No API access token provided.",
+  "traceId": "6abee1a7dcf9a61e573b3ad11210f63d",
+  "spanId": "b7af1abbb9cf40a2",
+  "sessionID": "9f5de6e6-b841-4398-932d-d95fb651748c",
+  "ecs": {
+    "version": "8.11"
+  }
+}
+```
+
+| Field                 | Source                                                                                   |
+|-----------------------|------------------------------------------------------------------------------------------|
+| `service.name`        | `spring.application.name`                                                                |
+| `service.version`     | The Gradle project version, substituted for `@version@` in `application.yml` at build time |
+| `service.environment` | The active Spring profiles (`SPRING_PROFILES_ACTIVE`), or `default` when none is set     |
+| `service.node.name`   | The `HOSTNAME` environment variable, which is the pod name in Kubernetes                 |
+| `traceId`, `spanId`   | Micrometer Tracing (Brave), for log events written while a request is being handled      |
+
+### Log levels
+
+| Environment variable   | Logger                | Default |
+|------------------------|-----------------------|---------|
+| `ROOT_LOGGING_LEVEL`   | root                  | `info`  |
+| `SPRING_LOGGING_LEVEL` | `org.springframework` | `info`  |
+| `APP_LOGGING_LEVEL`    | `uk.gov.laa.ccms.soa` | `info`  |
+
 ## Common Components
 
 This API uses components from the [LAA CCMS Common Library](https://github.com/ministryofjustice/laa-ccms-spring-boot-common):
@@ -50,3 +122,16 @@ This API uses components from the [LAA CCMS Common Library](https://github.com/m
 
 ## Contributing
 Follow the [contribution guide](./CONTRIBUTING.md) to make code changes.
+### Request correlation and verification
+
+`sessionID` is a generated opaque logging ID, never the authentication session cookie.
+Requests with an existing HTTP session reuse its logging ID; stateless requests get a new ID
+without creating a session. It is scoped to this service and is not propagated downstream.
+`traceId` and `spanId` are supplied by Micrometer while a request is handled; startup logs
+have no request correlation. The local pattern includes all three fields.
+
+Run the focused checks with `./gradlew soa-gateway-service:test --tests '*LoggingAcceptanceTest' --tests '*SessionCorrelationFilterTest'`.
+They use synthetic requests and write actual captured log lines to `soa-gateway-service/build/logging-evidence/`.
+Do not enable request payload or SQL bind parameter logging with real personal data.
+
+Captured synthetic-request screenshots and validation scope: [logging evidence](docs/logging/README.md).

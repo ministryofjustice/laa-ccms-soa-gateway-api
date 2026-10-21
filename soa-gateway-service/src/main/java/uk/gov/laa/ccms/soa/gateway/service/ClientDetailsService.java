@@ -54,7 +54,7 @@ public class ClientDetailsService extends AbstractSoaService {
             soaGatewayUserLoginId, soaGatewayUserRole, maxRecords, clientReferenceNumber);
 
     ClientDetail clientDetail = clientDetailsMapper.toClientDetail(response);
-    log.debug("clientDetail, received: {}", clientDetail);
+    log.debug("Client detail response received");
 
     return clientDetail;
   }
