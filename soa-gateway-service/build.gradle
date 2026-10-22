@@ -13,6 +13,11 @@ configurations {
 
 configurations.configureEach {
     resolutionStrategy.eachDependency { details ->
+        if (details.requested.group == 'org.hibernate.validator'
+                && details.requested.name == 'hibernate-validator') {
+            details.useVersion '9.1.5.Final'
+            details.because 'Remediate Expression Language Injection (SNYK-JAVA-ORGHIBERNATEVALIDATOR-20877468)'
+        }
         if (details.requested.group == 'com.google.guava' && details.requested.name == 'guava') {
             details.useVersion '33.7.2-jre'
             details.because 'Remediate SNYK-JAVA-COMGOOGLEGUAVA-20825054'
