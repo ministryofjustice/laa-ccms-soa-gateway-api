@@ -29,6 +29,10 @@ ignore:
         - '*':
           reason: "temporary ignore while base image is updated"
           expires: "2026-08-01T00:00:00Z"
+      SNYK-UBUNTU2404-ZLIB-19530295:
+        - '*':
+            reason: "OS package vulnerability in the Paketo buildpacks base image; not controllable from this repo (no builder/base-image pin available in this repo or laa-ccms-common-workflows). Accepted as risk pending a fix upstream."
+            expires: "2026-12-17T00:00:00Z"
 patch: {}
 exclude:
   global:
