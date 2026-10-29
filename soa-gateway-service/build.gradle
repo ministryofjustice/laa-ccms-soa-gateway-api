@@ -100,7 +100,7 @@ dependencies {
     }
     // Overriding transitive dependency
     implementation 'com.google.guava:guava:33.7.2-jre'
-    implementation 'org.modelmapper:modelmapper:3.2.7'
+    implementation 'org.modelmapper:modelmapper:3.2.8'
     implementation 'org.apache.commons:commons-lang3:3.21.0'
     implementation "org.mapstruct:mapstruct:1.6.3"
     compileOnly 'org.projectlombok:lombok'
