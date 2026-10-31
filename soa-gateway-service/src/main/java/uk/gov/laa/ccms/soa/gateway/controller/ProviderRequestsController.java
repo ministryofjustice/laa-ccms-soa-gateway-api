@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.laa.ccms.soa.gateway.api.ProviderRequestsApi;
+import uk.gov.laa.ccms.soa.gateway.logging.LogMasker;
 import uk.gov.laa.ccms.soa.gateway.model.ProviderRequestDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ProviderRequestResponse;
 import uk.gov.laa.ccms.soa.gateway.service.ProviderRequestsService;
@@ -37,7 +38,8 @@ public class ProviderRequestsController implements ProviderRequestsApi {
               soaGatewayUserLoginId, soaGatewayUserRole, providerRequestDetail);
       return ResponseEntity.ok(new ProviderRequestResponse().notificationId(notificationId));
     } catch (final Exception e) {
-      log.error("ProviderRequestsController caught exception", e);
+      log.error("ProviderRequestsController caught exception: {}", LogMasker.describe(e));
+      log.debug("ProviderRequestsController stack trace", e);
       return ResponseEntity.internalServerError().build();
     }
   }
