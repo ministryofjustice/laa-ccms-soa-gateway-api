@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.laa.ccms.soa.gateway.api.UsersApi;
+import uk.gov.laa.ccms.soa.gateway.logging.LogMasker;
 import uk.gov.laa.ccms.soa.gateway.model.ClientTransactionResponse;
 import uk.gov.laa.ccms.soa.gateway.model.UserOptions;
 import uk.gov.laa.ccms.soa.gateway.service.UsersService;
@@ -40,7 +41,8 @@ public class UsersController implements UsersApi {
 
       return ResponseEntity.ok(new ClientTransactionResponse().transactionId(transactionId));
     } catch (Exception e) {
-      log.error("UsersController caught exception", e);
+      log.error("UsersController caught exception: {}", LogMasker.describe(e));
+      log.debug("UsersController stack trace", e);
       return ResponseEntity.internalServerError().build();
     }
   }

@@ -12,6 +12,7 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ws.client.core.WebServiceTemplate;
+import uk.gov.laa.ccms.soa.gateway.logging.LogMasker;
 import uk.gov.legalservices.enterprise.common._1_0.common.RecordCount;
 import uk.gov.legalservices.enterprise.common._1_0.common.SystemsList;
 import uk.gov.legalservices.enterprise.common._1_0.header.HeaderRQType;
@@ -125,7 +126,11 @@ public abstract class AbstractSoaClient {
                       serviceName,
                       Optional.ofNullable(status.getStatus()).orElse(StatusTextType.ERROR).value(),
                       status.getStatusFreeText());
-              log.error(errorMsg);
+              log.error(
+                  "Failure in SOA call {}. Status Code: {}. Status Text: {}",
+                  serviceName,
+                  Optional.ofNullable(status.getStatus()).orElse(StatusTextType.ERROR).value(),
+                  LogMasker.mask(status.getStatusFreeText()));
               throw new RuntimeException(errorMsg);
             });
   }
