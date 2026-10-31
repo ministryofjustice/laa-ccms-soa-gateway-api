@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.laa.ccms.soa.gateway.api.CasesApi;
+import uk.gov.laa.ccms.soa.gateway.logging.LogMasker;
 import uk.gov.laa.ccms.soa.gateway.model.CaseDetail;
 import uk.gov.laa.ccms.soa.gateway.model.CaseTransactionResponse;
 import uk.gov.laa.ccms.soa.gateway.service.CaseDetailsService;
@@ -33,7 +34,8 @@ public class CaseDetailsController implements CasesApi {
           caseDetailsService.registerCase(soaGatewayUserLoginId, soaGatewayUserRole, caseDetail);
       return ResponseEntity.ok(new CaseTransactionResponse().transactionId(transactionId));
     } catch (final Exception e) {
-      log.error("CaseDetailsController caught exception", e);
+      log.error("CaseDetailsController caught exception: {}", LogMasker.describe(e));
+      log.debug("CaseDetailsController stack trace", e);
       return ResponseEntity.internalServerError().build();
     }
   }
@@ -52,14 +54,15 @@ public class CaseDetailsController implements CasesApi {
       String soaGatewayUserRole,
       String caseUpdateType,
       CaseDetail caseDetail) {
-    log.info("PUT /cases request body: {}", caseDetail);
+    log.info("PUT /cases");
     try {
       final String transactionId =
           caseDetailsService.amendCase(
               soaGatewayUserLoginId, soaGatewayUserRole, caseDetail, caseUpdateType);
       return ResponseEntity.ok(new CaseTransactionResponse().transactionId(transactionId));
     } catch (final Exception e) {
-      log.error("CaseDetailsController caught exception", e);
+      log.error("CaseDetailsController caught exception: {}", LogMasker.describe(e));
+      log.debug("CaseDetailsController stack trace", e);
       return ResponseEntity.internalServerError().build();
     }
   }

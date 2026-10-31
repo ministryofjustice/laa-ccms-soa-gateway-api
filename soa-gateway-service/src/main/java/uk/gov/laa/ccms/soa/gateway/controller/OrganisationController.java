@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.laa.ccms.soa.gateway.api.OrganisationsApi;
+import uk.gov.laa.ccms.soa.gateway.logging.LogMasker;
 import uk.gov.laa.ccms.soa.gateway.model.OrganisationDetail;
 import uk.gov.laa.ccms.soa.gateway.model.OrganisationDetails;
 import uk.gov.laa.ccms.soa.gateway.model.OrganisationSummary;
@@ -58,7 +59,8 @@ public class OrganisationController implements OrganisationsApi {
 
       return ResponseEntity.ok(organisationDetails);
     } catch (Exception e) {
-      log.error("OrganisationController caught exception", e);
+      log.error("OrganisationController caught exception: {}", LogMasker.describe(e));
+      log.debug("OrganisationController stack trace", e);
       return ResponseEntity.internalServerError().build();
     }
   }
@@ -85,7 +87,8 @@ public class OrganisationController implements OrganisationsApi {
 
       return ResponseEntity.ok(organisationDetail);
     } catch (Exception e) {
-      log.error("OrganisationController caught exception", e);
+      log.error("OrganisationController caught exception: {}", LogMasker.describe(e));
+      log.debug("OrganisationController stack trace", e);
       return ResponseEntity.internalServerError().build();
     }
   }
