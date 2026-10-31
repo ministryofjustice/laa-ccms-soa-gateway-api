@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.laa.ccms.soa.gateway.api.DocumentsApi;
+import uk.gov.laa.ccms.soa.gateway.logging.LogMasker;
 import uk.gov.laa.ccms.soa.gateway.model.ClientTransactionResponse;
 import uk.gov.laa.ccms.soa.gateway.model.CoverSheet;
 import uk.gov.laa.ccms.soa.gateway.model.Document;
@@ -51,7 +52,8 @@ public class DocumentController implements DocumentsApi {
               caseReferenceNumber);
       return ResponseEntity.ok(response);
     } catch (Exception e) {
-      log.error("DocumentController caught exception", e);
+      log.error("DocumentController caught exception: {}", LogMasker.describe(e));
+      log.debug("DocumentController stack trace", e);
       return ResponseEntity.internalServerError().build();
     }
   }
@@ -85,7 +87,8 @@ public class DocumentController implements DocumentsApi {
               caseReferenceNumber);
       return ResponseEntity.ok(response);
     } catch (Exception e) {
-      log.error("DocumentController caught exception", e);
+      log.error("DocumentController caught exception: {}", LogMasker.describe(e));
+      log.debug("DocumentController stack trace", e);
       return ResponseEntity.internalServerError().build();
     }
   }
@@ -109,7 +112,8 @@ public class DocumentController implements DocumentsApi {
           documentService.downloadDocument(soaGatewayUserLoginId, soaGatewayUserRole, documentId);
       return ResponseEntity.ok(response);
     } catch (Exception e) {
-      log.error("DocumentController caught exception", e);
+      log.error("DocumentController caught exception: {}", LogMasker.describe(e));
+      log.debug("DocumentController stack trace", e);
       return ResponseEntity.internalServerError().build();
     }
   }
@@ -133,7 +137,8 @@ public class DocumentController implements DocumentsApi {
               soaGatewayUserLoginId, soaGatewayUserRole, documentId);
       return ResponseEntity.ok(response);
     } catch (Exception e) {
-      log.error("DocumentController caught exception", e);
+      log.error("DocumentController caught exception: {}", LogMasker.describe(e));
+      log.debug("DocumentController stack trace", e);
       return ResponseEntity.internalServerError().build();
     }
   }

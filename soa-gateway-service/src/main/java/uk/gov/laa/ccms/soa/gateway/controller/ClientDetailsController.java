@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.laa.ccms.soa.gateway.api.ClientsApi;
+import uk.gov.laa.ccms.soa.gateway.logging.LogMasker;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails;
 import uk.gov.laa.ccms.soa.gateway.model.ClientTransactionResponse;
@@ -46,7 +47,8 @@ public class ClientDetailsController implements ClientsApi {
 
       return ResponseEntity.ok(clientDetail);
     } catch (Exception e) {
-      log.error("ClientDetailsController caught exception", e);
+      log.error("ClientDetailsController caught exception: {}", LogMasker.describe(e));
+      log.debug("ClientDetailsController stack trace", e);
       return ResponseEntity.internalServerError().build();
     }
   }
@@ -77,7 +79,8 @@ public class ClientDetailsController implements ClientsApi {
 
       return ResponseEntity.ok(new ClientTransactionResponse().transactionId(transactionId));
     } catch (Exception e) {
-      log.error("ClientDetailsController caught exception", e);
+      log.error("ClientDetailsController caught exception: {}", LogMasker.describe(e));
+      log.debug("ClientDetailsController stack trace", e);
       return ResponseEntity.internalServerError().build();
     }
   }
@@ -103,7 +106,8 @@ public class ClientDetailsController implements ClientsApi {
 
       return ResponseEntity.ok(new ClientTransactionResponse().transactionId(transactionId));
     } catch (Exception e) {
-      log.error("ClientDetailsController caught exception", e);
+      log.error("ClientDetailsController caught exception: {}", LogMasker.describe(e));
+      log.debug("ClientDetailsController stack trace", e);
       return ResponseEntity.internalServerError().build();
     }
   }
