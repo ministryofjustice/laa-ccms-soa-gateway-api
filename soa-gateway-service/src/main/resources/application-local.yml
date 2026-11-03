@@ -16,21 +16,18 @@ laa:
         service-url: http://localhost:${laa.ccms.soa-gateway.contract-details.service-port}/mockGetContractDetailsSOAPBinding
   springboot:
     starter:
-      auth:
-        authentication-header: "Authorization"
-        authorized-clients: '[
-            {
-                "name": "caab-ui",
-                "roles": [
-                    "ALL"
-                ],
-                "token": "94549740-5aaa-4cd9-b9d9-666159d268a9"
-            }
-        ]'
+      oauth2:
+        resourceserver:
+          jwt:
+            tenants:
+              - issuer-uri: https://login.microsoftonline.com/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/v2.0
+                audiences:
+                  - xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+        scopes-claim-path: scp
         authorized-roles: '[
             {
-                "name": "ALL",
-                "URIs": [
+                "name": "test-role",
+                "uris": [
                     "/**"
                 ]
             }

@@ -86,7 +86,6 @@ dependencies {
     implementation 'io.micrometer:micrometer-registry-prometheus'
 
     //Enable access token authentication
-    implementation 'uk.gov.justice.service.laa:laa-spring-boot-starter-auth'
     implementation 'uk.gov.justice.service.laa:laa-spring-boot-starter-oauth2'
 
     //Enable Swagger UI
