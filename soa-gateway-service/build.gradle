@@ -27,7 +27,7 @@ configurations.configureEach {
             details.because 'Remediate Bouncy Castle container findings; keep provider, PKIX and utility modules aligned'
         }
         if (details.requested.group == 'com.fasterxml.jackson.core' && details.requested.name in ['jackson-core', 'jackson-databind']) {
-            details.useVersion '2.22.3'
+            details.useVersion '2.22.4'
             details.because 'Temporary override to remediate vulnerability'
         }
         if (details.requested.group == 'com.fasterxml.jackson.core' && details.requested.name == 'jackson-annotations') {
@@ -40,12 +40,17 @@ configurations.configureEach {
             details.because 'Remediate SNYK-JAVA-CHQOSLOGBACK-20824362; keep Logback modules aligned'
         }
         if (details.requested.group == 'tools.jackson.core') {
-            details.useVersion '3.2.3'
+            details.useVersion '3.2.4'
             details.because 'Temporary override to remediate vulnerability'
         }
         if (details.requested.group == 'org.apache.tomcat.embed') {
-            details.useVersion '11.0.26'
+            details.useVersion '11.0.27'
             details.because 'Remediate SNYK-JAVA-ORGAPACHETOMCATEMBED-20552494'
+        }
+        // Reaches us through the SOAP stack; not pinned by the Spring Boot BOM.
+        if (details.requested.group == 'org.apache.wss4j') {
+            details.useVersion '4.0.2'
+            details.because 'Remediate SNYK-JAVA-ORGAPACHEWSS4J-21716526 and -21716570; fixed in 4.0.2'
         }
     }
 }
