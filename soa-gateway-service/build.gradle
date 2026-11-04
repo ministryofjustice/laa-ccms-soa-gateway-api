@@ -89,7 +89,7 @@ dependencies {
     implementation 'uk.gov.justice.service.laa:laa-spring-boot-starter-auth'
 
     //Enable Swagger UI
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:3.1.1'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:3.2.0'
 
     //Required for pagination
     implementation 'org.springframework.data:spring-data-commons'
@@ -105,7 +105,7 @@ dependencies {
     }
     // Overriding transitive dependency
     implementation 'com.google.guava:guava:33.7.2-jre'
-    implementation 'org.modelmapper:modelmapper:3.2.7'
+    implementation 'org.modelmapper:modelmapper:3.2.8'
     implementation 'org.apache.commons:commons-lang3:3.21.0'
     implementation "org.mapstruct:mapstruct:1.6.3"
     compileOnly 'org.projectlombok:lombok'
