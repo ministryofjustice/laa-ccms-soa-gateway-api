@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.laa.ccms.soa.gateway.api.InvoicesApi;
+import uk.gov.laa.ccms.soa.gateway.logging.LogMasker;
 import uk.gov.laa.ccms.soa.gateway.model.InvoiceDataResponse;
 import uk.gov.laa.ccms.soa.gateway.model.InvoiceDetail;
 import uk.gov.laa.ccms.soa.gateway.model.InvoiceResponse;
@@ -48,7 +49,8 @@ public class InvoicesController implements InvoicesApi {
           invoicesService.createInvoice(soaGatewayUserLoginId, soaGatewayUserRole, invoiceDetail);
       return ResponseEntity.ok(new InvoiceResponse().invoiceReferenceId(invoiceReferenceId));
     } catch (final Exception e) {
-      log.error("InvoicesController caught exception", e);
+      log.error("InvoicesController caught exception: {}", LogMasker.describe(e));
+      log.debug("InvoicesController stack trace", e);
       return ResponseEntity.internalServerError().build();
     }
   }
@@ -78,7 +80,8 @@ public class InvoicesController implements InvoicesApi {
 
       return ResponseEntity.ok(new InvoiceDataResponse().opaResponse(opaResponse));
     } catch (final Exception e) {
-      log.error("InvoicesController caught exception", e);
+      log.error("InvoicesController caught exception: {}", LogMasker.describe(e));
+      log.debug("InvoicesController stack trace", e);
       return ResponseEntity.internalServerError().build();
     }
   }

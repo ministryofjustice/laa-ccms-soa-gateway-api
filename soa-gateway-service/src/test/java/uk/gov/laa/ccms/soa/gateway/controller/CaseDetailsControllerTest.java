@@ -69,4 +69,40 @@ public class CaseDetailsControllerTest {
     verify(caseDetailsService)
         .amendCase(SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE, caseDetail, "caseUpdateType");
   }
+
+  @Test
+  void updateCase_doesNotLogCaseBodyOrPersonalDataInErrors() {
+    var logger =
+        (ch.qos.logback.classic.Logger)
+            org.slf4j.LoggerFactory.getLogger(CaseDetailsController.class);
+    var appender =
+        new ch.qos.logback.core.read.ListAppender<ch.qos.logback.classic.spi.ILoggingEvent>();
+    appender.start();
+    logger.addAppender(appender);
+    try {
+      CaseDetail caseDetail = new CaseDetail();
+      caseDetail.setCaseReferenceNumber("Jane Doe 1980-02-03");
+      org.mockito.Mockito.when(
+              caseDetailsService.amendCase(
+                  org.mockito.ArgumentMatchers.any(),
+                  org.mockito.ArgumentMatchers.any(),
+                  org.mockito.ArgumentMatchers.any(),
+                  org.mockito.ArgumentMatchers.any()))
+          .thenThrow(new RuntimeException("rejected AB123456C for jane.doe@example.com"));
+
+      caseDetailsController.updateCase(
+          SOA_GATEWAY_USER_LOGIN_ID, SOA_GATEWAY_USER_ROLE, "type", caseDetail);
+
+      String info =
+          appender.list.stream()
+              .filter(e -> e.getLevel().isGreaterOrEqual(ch.qos.logback.classic.Level.INFO))
+              .map(ch.qos.logback.classic.spi.ILoggingEvent::getFormattedMessage)
+              .collect(java.util.stream.Collectors.joining("\n"));
+      org.assertj.core.api.Assertions.assertThat(info)
+          .isNotBlank()
+          .doesNotContain("Jane", "1980", "AB123456C", "jane.doe");
+    } finally {
+      logger.detachAppender(appender);
+    }
+  }
 }
