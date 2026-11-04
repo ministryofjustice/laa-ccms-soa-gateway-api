@@ -1875,5 +1875,3 @@ components:
         document:
           type: 'string'
 
-security:
-  - ApiKeyAuth: []
