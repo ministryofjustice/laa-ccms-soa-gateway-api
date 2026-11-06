@@ -2,6 +2,19 @@
 
 # CCMS SOA Gateway API
 
+## Health and error diagnostics
+
+Health responses intentionally hide components and diagnostic details for all callers.
+Status codes and liveness/readiness semantics are unchanged; Boot may advertise probe
+group names at the root. Framework fallback errors omit technical messages, binding
+errors, exceptions and stack traces, even when requested through query parameters.
+Intentional business errors retain their existing contract.
+
+Use approved server-side logs for diagnostics until a separately protected operator
+boundary is delivered. Before release, check effective environment/deployment overrides
+and verify responses in an authorised non-production environment; packaged YAML can be
+overridden. This change does not add operator access or alter deployment configuration.
+
 This API is made up of multiple projects:
 * soa-gateway-api
 * soa-gateway-service
