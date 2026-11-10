@@ -77,6 +77,8 @@ logging:
     root: ${ROOT_LOGGING_LEVEL:info}
     org.springframework: ${SPRING_LOGGING_LEVEL:info}
     uk.gov.laa.ccms.soa: ${APP_LOGGING_LEVEL:info}
+    # Spring logs the rejected parameter value at WARN when it resolves a type mismatch.
+    org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver: ERROR
   structured:
     format:
       console: ecs
