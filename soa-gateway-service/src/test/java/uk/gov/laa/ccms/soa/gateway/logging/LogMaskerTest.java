@@ -7,27 +7,30 @@ import org.junit.jupiter.api.Test;
 class LogMaskerTest {
 
   @Test
-  void masksPersonalDataPatterns() {
-    String masked =
-        LogMasker.mask(
-            "jane.doe@example.com AB 12 34 56 C born 1980-02-03 and 03/02/1980 "
-                + "phone 07700 900123 ref 300001");
-
-    assertThat(masked)
-        .doesNotContain("jane.doe", "AB 12 34 56 C", "1980", "07700 900123")
-        .contains("ref 300001");
+  void describeGivesTheClassAndNeverTheMessage() {
+    assertThat(LogMasker.describe(new IllegalStateException("bad AB123456C Jane Doe")))
+        .isEqualTo("IllegalStateException");
+    assertThat(LogMasker.describe(new RuntimeException())).isEqualTo("RuntimeException");
   }
 
   @Test
-  void truncatesLongText() {
-    assertThat(LogMasker.mask("x".repeat(LogMasker.MAX_LENGTH + 50)))
-        .hasSize(LogMasker.MAX_LENGTH + "...[truncated]".length());
+  void describeListsTheCauseClassesButNotTheirMessages() {
+    var failure =
+        new RuntimeException(
+            "wrapper for 10 High Street",
+            new IllegalArgumentException("Jane Doe", new java.io.IOException("jane@example.com")));
+
+    assertThat(LogMasker.describe(failure))
+        .isEqualTo("RuntimeException caused by IllegalArgumentException caused by IOException");
   }
 
   @Test
-  void describeGivesClassAndMaskedMessageOnly() {
-    assertThat(LogMasker.describe(new IllegalStateException("bad AB123456C")))
-        .isEqualTo("IllegalStateException: bad ***");
-    assertThat(LogMasker.describe(new RuntimeException())).isEqualTo("RuntimeException: ");
+  void describeStopsAtAFixedDepth() {
+    Throwable failure = new RuntimeException("end");
+    for (int i = 0; i < 20; i++) {
+      failure = new RuntimeException("level " + i, failure);
+    }
+
+    assertThat(LogMasker.describe(failure).split(" caused by ")).hasSize(6);
   }
 }
