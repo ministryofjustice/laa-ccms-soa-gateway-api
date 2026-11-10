@@ -125,7 +125,10 @@ public abstract class AbstractSoaClient {
                       serviceName,
                       Optional.ofNullable(status.getStatus()).orElse(StatusTextType.ERROR).value(),
                       status.getStatusFreeText());
-              log.error(errorMsg);
+              log.error(
+                  "Failure in SOA call {}. Status Code: {}",
+                  serviceName,
+                  Optional.ofNullable(status.getStatus()).orElse(StatusTextType.ERROR).value());
               throw new RuntimeException(errorMsg);
             });
   }
