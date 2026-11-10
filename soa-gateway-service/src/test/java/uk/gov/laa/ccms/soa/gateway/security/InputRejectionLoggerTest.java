@@ -64,12 +64,38 @@ class InputRejectionLoggerTest {
   void logsRejectionWithPathOnlyAndLeavesHandlingToOthers(Exception exception) {
     var request = new MockHttpServletRequest("POST", "/application/sections");
     request.setQueryString("ref=SENSITIVE");
+    request.setAttribute(
+        org.springframework.web.servlet.HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE,
+        "/application/sections");
 
     var result = resolver.resolveException(request, new MockHttpServletResponse(), null, exception);
 
     assertNull(result);
     verify(securityEventLogger)
         .inputRejected(eq("POST"), eq("/application/sections"), eq(exception));
+  }
+
+  @Test
+  void logsTheRouteTemplateNotThePersonalDataInThePath() {
+    var request = new MockHttpServletRequest("GET", "/clients/AB123456C;jsessionid=abc123");
+    request.setAttribute(
+        org.springframework.web.servlet.HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE,
+        "/clients/{id}");
+    var exception = new TypeMismatchException("AB123456C", Integer.class);
+
+    resolver.resolveException(request, new MockHttpServletResponse(), null, exception);
+
+    verify(securityEventLogger).inputRejected(eq("GET"), eq("/clients/{id}"), eq(exception));
+  }
+
+  @Test
+  void logsAFixedPathWhenNoRouteMatched() {
+    var request = new MockHttpServletRequest("TRACE", "/clients/AB123456C");
+    var exception = new HttpRequestMethodNotSupportedException("TRACE");
+
+    resolver.resolveException(request, new MockHttpServletResponse(), null, exception);
+
+    verify(securityEventLogger).inputRejected(eq("TRACE"), eq("[unmatched route]"), eq(exception));
   }
 
   @Test

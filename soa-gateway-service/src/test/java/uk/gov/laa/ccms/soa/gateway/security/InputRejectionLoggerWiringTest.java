@@ -53,6 +53,14 @@ class InputRejectionLoggerWiringTest {
   }
 
   @Test
+  void logsTheRouteTemplateWhenAPathVariableIsRejected() throws Exception {
+    mockMvc.perform(get("/people/AB123456C")).andExpect(status().isBadRequest());
+
+    verify(securityEventLogger)
+        .inputRejected(eq("GET"), eq("/people/{id}"), any(TypeMismatchException.class));
+  }
+
+  @Test
   void logsNothingForAValidRequest() throws Exception {
     mockMvc.perform(get("/probe").param("id", "1")).andExpect(status().isOk());
 
@@ -81,6 +89,12 @@ class InputRejectionLoggerWiringTest {
 
   @Controller
   static class ProbeController {
+
+    @GetMapping("/people/{id}")
+    @ResponseBody
+    String person(@org.springframework.web.bind.annotation.PathVariable("id") int id) {
+      return "ok " + id;
+    }
 
     @GetMapping("/probe")
     @ResponseBody
