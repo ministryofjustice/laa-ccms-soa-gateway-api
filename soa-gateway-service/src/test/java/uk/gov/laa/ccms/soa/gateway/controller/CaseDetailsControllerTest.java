@@ -101,6 +101,11 @@ public class CaseDetailsControllerTest {
       org.assertj.core.api.Assertions.assertThat(info)
           .isNotBlank()
           .doesNotContain("Jane", "1980", "AB123456C", "jane.doe");
+      org.assertj.core.api.Assertions.assertThat(appender.list)
+          .noneMatch(
+              e ->
+                  e.getLevel().isGreaterOrEqual(ch.qos.logback.classic.Level.INFO)
+                      && e.getThrowableProxy() != null);
     } finally {
       logger.detachAppender(appender);
     }
