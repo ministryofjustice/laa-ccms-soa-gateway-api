@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import org.slf4j.MDC;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -31,6 +32,13 @@ public class SessionCorrelationFilter extends OncePerRequestFilter {
   private static final String FORWARDED_IP = "network.forwarded_ip";
   private static final String FORWARDED_FOR = "X-Forwarded-For";
 
+  private final boolean logSourceAddress;
+
+  public SessionCorrelationFilter(
+      @Value("${logging.source-address.enabled:false}") boolean logSourceAddress) {
+    this.logSourceAddress = logSourceAddress;
+  }
+
   @Override
   protected void doFilterInternal(
       HttpServletRequest request, HttpServletResponse response, FilterChain chain)
@@ -50,8 +58,11 @@ public class SessionCorrelationFilter extends OncePerRequestFilter {
       }
       put(previous, REQUEST_ID, requestId);
       response.setHeader(REQUEST_ID_HEADER, requestId);
-      put(previous, SOURCE_IP, request.getRemoteAddr());
-      put(previous, FORWARDED_IP, SourceAddress.forwardedIp(forwardedFor(request)));
+      put(previous, SOURCE_IP, logSourceAddress ? request.getRemoteAddr() : null);
+      put(
+          previous,
+          FORWARDED_IP,
+          logSourceAddress ? SourceAddress.forwardedIp(forwardedFor(request)) : null);
       chain.doFilter(request, response);
     } finally {
       previous.forEach(
