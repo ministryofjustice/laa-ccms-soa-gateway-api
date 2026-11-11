@@ -113,6 +113,7 @@ dependencies {
     annotationProcessor "org.mapstruct:mapstruct-processor:1.6.3"
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-security'
     // Adding exclusion for legacy JUnit 4
     testImplementation('org.springframework.ws:spring-ws-test') {
         exclude group: 'junit', module: 'junit'
@@ -254,4 +255,3 @@ tasks.register('installGitHooks', Copy) {
 
 // Linked to compileJava so it installs on the first build
 compileJava.dependsOn installGitHooks
-

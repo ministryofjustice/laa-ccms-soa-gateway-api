@@ -1,4 +1,10 @@
 spring:
+  web:
+    error:
+      include-message: never
+      include-binding-errors: never
+      include-stacktrace: never
+      include-exception: false
   application:
     name: laa-ccms-soa-gateway-api
     version: "@version@"
@@ -62,6 +68,7 @@ management:
   endpoint:
     health:
       show-details: never
+      show-components: never
   endpoints:
     web:
       exposure:
