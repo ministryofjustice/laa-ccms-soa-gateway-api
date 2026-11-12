@@ -632,10 +632,10 @@ paths:
           description: 'Internal server error'
 components:
   securitySchemes:
-    ApiKeyAuth:
-      type: apiKey
-      in: header
-      name: Authorization
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   parameters:
     maxRecords:
       in: query
@@ -1875,5 +1875,6 @@ components:
         document:
           type: 'string'
 
+
 security:
-  - ApiKeyAuth: []
+  - BearerAuth: []
