@@ -8,6 +8,7 @@ import uk.gov.laa.ccms.soa.gateway.api.NotificationsApi;
 import uk.gov.laa.ccms.soa.gateway.logging.LogMasker;
 import uk.gov.laa.ccms.soa.gateway.model.ClientTransactionResponse;
 import uk.gov.laa.ccms.soa.gateway.model.Notification;
+import uk.gov.laa.ccms.soa.gateway.security.ProviderContext;
 import uk.gov.laa.ccms.soa.gateway.service.NotificationsService;
 
 /**
@@ -39,6 +40,7 @@ public class NotificationsController implements NotificationsApi {
       String soaGatewayUserRole,
       Notification notification) {
     log.info("PUT /notifications/{}", notificationId);
+    ProviderContext.requireProviderId();
     try {
       String transactionId =
           notificationsService.updateNotification(

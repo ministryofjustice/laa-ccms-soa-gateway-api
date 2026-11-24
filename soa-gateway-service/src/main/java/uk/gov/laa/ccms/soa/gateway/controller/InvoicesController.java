@@ -11,6 +11,7 @@ import uk.gov.laa.ccms.soa.gateway.model.InvoiceDataResponse;
 import uk.gov.laa.ccms.soa.gateway.model.InvoiceDetail;
 import uk.gov.laa.ccms.soa.gateway.model.InvoiceResponse;
 import uk.gov.laa.ccms.soa.gateway.model.OpaEntity;
+import uk.gov.laa.ccms.soa.gateway.security.ProviderContext;
 import uk.gov.laa.ccms.soa.gateway.service.InvoicesService;
 
 /** REST controller for handling invoice submissions. */
@@ -36,6 +37,7 @@ public class InvoicesController implements InvoicesApi {
       final String soaGatewayUserRole,
       final InvoiceDetail invoiceDetail) {
     log.info("POST /invoices");
+    ProviderContext.requireProviderId();
 
     // EBS models the invoice details as a choice, so exactly one of the two must be supplied.
     if (invoiceDetail == null
@@ -43,6 +45,12 @@ public class InvoicesController implements InvoicesApi {
       log.error("POST /invoices requires exactly one of bill or poa");
       return ResponseEntity.badRequest().build();
     }
+
+    final String invoiceProviderId =
+        invoiceDetail.getBill() != null
+            ? invoiceDetail.getBill().getProviderFirmId()
+            : invoiceDetail.getPoa().getProviderId();
+    ProviderContext.requireMatchingProviderId(invoiceProviderId);
 
     try {
       final String invoiceReferenceId =
@@ -68,6 +76,7 @@ public class InvoicesController implements InvoicesApi {
   public ResponseEntity<InvoiceDataResponse> getInvoiceData(
       final String billingId, final String soaGatewayUserLoginId, final String soaGatewayUserRole) {
     log.info("GET /invoices/{}", billingId);
+    ProviderContext.requireProviderId();
 
     try {
       final List<OpaEntity> opaResponse =

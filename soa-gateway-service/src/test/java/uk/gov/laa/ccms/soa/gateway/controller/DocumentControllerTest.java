@@ -19,13 +19,18 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import uk.gov.laa.ccms.soa.gateway.advice.GlobalExceptionHandler;
 import uk.gov.laa.ccms.soa.gateway.model.ClientTransactionResponse;
 import uk.gov.laa.ccms.soa.gateway.model.CoverSheet;
 import uk.gov.laa.ccms.soa.gateway.model.Document;
+import uk.gov.laa.ccms.soa.gateway.security.ProviderContext;
+import uk.gov.laa.ccms.soa.gateway.security.ProviderScopeFilter;
 import uk.gov.laa.ccms.soa.gateway.service.DocumentService;
 
 @ExtendWith(MockitoExtension.class)
 class DocumentControllerTest {
+  private static final String CAAB_PROVIDER_ID = "12345";
+
   @Mock private DocumentService documentService;
 
   @InjectMocks private DocumentController documentController;
@@ -34,7 +39,11 @@ class DocumentControllerTest {
 
   @BeforeEach
   public void setup() {
-    mockMvc = MockMvcBuilders.standaloneSetup(documentController).build();
+    mockMvc =
+        MockMvcBuilders.standaloneSetup(documentController)
+            .setControllerAdvice(new GlobalExceptionHandler())
+            .addFilters(new ProviderScopeFilter())
+            .build();
   }
 
   @Test
@@ -55,7 +64,8 @@ class DocumentControllerTest {
                 .content(new ObjectMapper().writeValueAsString(document))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
-                .header("SoaGateway-User-Role", soaGatewayUserRole))
+                .header("SoaGateway-User-Role", soaGatewayUserRole)
+                .header(ProviderContext.HEADER_NAME, CAAB_PROVIDER_ID))
         .andExpect(status().isOk());
 
     verify(documentService)
@@ -98,6 +108,7 @@ class DocumentControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
                 .header("SoaGateway-User-Role", soaGatewayUserRole)
+                .header(ProviderContext.HEADER_NAME, CAAB_PROVIDER_ID)
                 .param("notification-reference", notificationReference)
                 .param("case-reference-number", caseReference))
         .andExpect(status().isOk());
@@ -129,7 +140,8 @@ class DocumentControllerTest {
         .perform(
             get("/documents/{document-id}", documentId)
                 .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
-                .header("SoaGateway-User-Role", soaGatewayUserRole))
+                .header("SoaGateway-User-Role", soaGatewayUserRole)
+                .header(ProviderContext.HEADER_NAME, CAAB_PROVIDER_ID))
         .andExpect(status().isOk());
 
     verify(documentService).downloadDocument(soaGatewayUserLoginId, soaGatewayUserRole, documentId);
@@ -151,7 +163,8 @@ class DocumentControllerTest {
         .perform(
             get("/documents/{document-id}/cover-sheet", documentId)
                 .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
-                .header("SoaGateway-User-Role", soaGatewayUserRole))
+                .header("SoaGateway-User-Role", soaGatewayUserRole)
+                .header(ProviderContext.HEADER_NAME, CAAB_PROVIDER_ID))
         .andExpect(status().isOk());
 
     verify(documentService)

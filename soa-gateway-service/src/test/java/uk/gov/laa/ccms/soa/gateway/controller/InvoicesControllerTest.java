@@ -21,12 +21,15 @@ import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import uk.gov.laa.ccms.soa.gateway.advice.GlobalExceptionHandler;
 import uk.gov.laa.ccms.soa.gateway.model.BillDetail;
 import uk.gov.laa.ccms.soa.gateway.model.InvoiceDetail;
 import uk.gov.laa.ccms.soa.gateway.model.OpaAttribute;
 import uk.gov.laa.ccms.soa.gateway.model.OpaEntity;
 import uk.gov.laa.ccms.soa.gateway.model.OpaInstance;
 import uk.gov.laa.ccms.soa.gateway.model.PaymentOnAccountDetail;
+import uk.gov.laa.ccms.soa.gateway.security.ProviderContext;
+import uk.gov.laa.ccms.soa.gateway.security.ProviderScopeFilter;
 import uk.gov.laa.ccms.soa.gateway.service.InvoicesService;
 
 @ExtendWith(MockitoExtension.class)
@@ -42,12 +45,15 @@ class InvoicesControllerTest {
 
   private static final String SOA_GATEWAY_USER_LOGIN_ID = "user";
   private static final String SOA_GATEWAY_USER_ROLE = "EXTERNAL";
+  private static final String CAAB_PROVIDER_ID = "12345";
   private static final String BILLING_ID = "1234567890";
 
   @BeforeEach
   public void setup() {
     this.mockMvc =
         MockMvcBuilders.standaloneSetup(invoicesController)
+            .setControllerAdvice(new GlobalExceptionHandler())
+            .addFilters(new ProviderScopeFilter())
             .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
             .build();
   }
@@ -56,7 +62,11 @@ class InvoicesControllerTest {
   @DisplayName("POST /invoices - Successful POA Submission")
   void testCreateInvoice_Poa_Success() throws Exception {
     final InvoiceDetail invoiceDetail =
-        new InvoiceDetail().poa(new PaymentOnAccountDetail().caseReferenceNumber("300000123456"));
+        new InvoiceDetail()
+            .poa(
+                new PaymentOnAccountDetail()
+                    .providerId(CAAB_PROVIDER_ID)
+                    .caseReferenceNumber("300000123456"));
 
     Mockito.when(
             invoicesService.createInvoice(
@@ -69,7 +79,8 @@ class InvoicesControllerTest {
                 .content(objectMapper.writeValueAsString(invoiceDetail))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("SoaGateway-User-Login-Id", SOA_GATEWAY_USER_LOGIN_ID)
-                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE))
+                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE)
+                .header(ProviderContext.HEADER_NAME, CAAB_PROVIDER_ID))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.invoice_reference_id").value("invoice123"));
 
@@ -81,7 +92,11 @@ class InvoicesControllerTest {
   @DisplayName("POST /invoices - Successful Bill Submission")
   void testCreateInvoice_Bill_Success() throws Exception {
     final InvoiceDetail invoiceDetail =
-        new InvoiceDetail().bill(new BillDetail().caseReferenceNumber("300000123456"));
+        new InvoiceDetail()
+            .bill(
+                new BillDetail()
+                    .providerFirmId(CAAB_PROVIDER_ID)
+                    .caseReferenceNumber("300000123456"));
 
     Mockito.when(invoicesService.createInvoice(any(), any(), any())).thenReturn("invoice123");
 
@@ -91,11 +106,71 @@ class InvoicesControllerTest {
                 .content(objectMapper.writeValueAsString(invoiceDetail))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("SoaGateway-User-Login-Id", SOA_GATEWAY_USER_LOGIN_ID)
-                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE))
+                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE)
+                .header(ProviderContext.HEADER_NAME, CAAB_PROVIDER_ID))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.invoice_reference_id").value("invoice123"));
 
     Mockito.verify(invoicesService).createInvoice(any(), any(), any());
+  }
+
+  @Test
+  @DisplayName("POST /invoices - Forbidden When Bill Provider Firm Mismatches Header")
+  void testCreateInvoice_Bill_Mismatch_ReturnsForbidden() throws Exception {
+    final InvoiceDetail invoiceDetail =
+        new InvoiceDetail()
+            .bill(new BillDetail().providerFirmId("99999").caseReferenceNumber("300000123456"));
+
+    mockMvc
+        .perform(
+            post("/invoices")
+                .content(objectMapper.writeValueAsString(invoiceDetail))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("SoaGateway-User-Login-Id", SOA_GATEWAY_USER_LOGIN_ID)
+                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE)
+                .header(ProviderContext.HEADER_NAME, CAAB_PROVIDER_ID))
+        .andExpect(status().isForbidden());
+
+    Mockito.verifyNoInteractions(invoicesService);
+  }
+
+  @Test
+  @DisplayName("POST /invoices - Forbidden When POA Provider Mismatches Header")
+  void testCreateInvoice_Poa_Mismatch_ReturnsForbidden() throws Exception {
+    final InvoiceDetail invoiceDetail =
+        new InvoiceDetail()
+            .poa(new PaymentOnAccountDetail().providerId("99999").caseReferenceNumber("300000123"));
+
+    mockMvc
+        .perform(
+            post("/invoices")
+                .content(objectMapper.writeValueAsString(invoiceDetail))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("SoaGateway-User-Login-Id", SOA_GATEWAY_USER_LOGIN_ID)
+                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE)
+                .header(ProviderContext.HEADER_NAME, CAAB_PROVIDER_ID))
+        .andExpect(status().isForbidden());
+
+    Mockito.verifyNoInteractions(invoicesService);
+  }
+
+  @Test
+  @DisplayName("POST /invoices - Forbidden When POA Provider Is Null")
+  void testCreateInvoice_Poa_NullProvider_ReturnsForbidden() throws Exception {
+    final InvoiceDetail invoiceDetail =
+        new InvoiceDetail().poa(new PaymentOnAccountDetail().caseReferenceNumber("300000123456"));
+
+    mockMvc
+        .perform(
+            post("/invoices")
+                .content(objectMapper.writeValueAsString(invoiceDetail))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("SoaGateway-User-Login-Id", SOA_GATEWAY_USER_LOGIN_ID)
+                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE)
+                .header(ProviderContext.HEADER_NAME, CAAB_PROVIDER_ID))
+        .andExpect(status().isForbidden());
+
+    Mockito.verifyNoInteractions(invoicesService);
   }
 
   @Test
@@ -107,7 +182,8 @@ class InvoicesControllerTest {
                 .content("null")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("SoaGateway-User-Login-Id", SOA_GATEWAY_USER_LOGIN_ID)
-                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE))
+                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE)
+                .header(ProviderContext.HEADER_NAME, CAAB_PROVIDER_ID))
         .andExpect(status().isBadRequest());
 
     Mockito.verifyNoInteractions(invoicesService);
@@ -121,7 +197,8 @@ class InvoicesControllerTest {
             post("/invoices")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("SoaGateway-User-Login-Id", SOA_GATEWAY_USER_LOGIN_ID)
-                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE))
+                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE)
+                .header(ProviderContext.HEADER_NAME, CAAB_PROVIDER_ID))
         .andExpect(status().isBadRequest());
 
     Mockito.verifyNoInteractions(invoicesService);
@@ -136,7 +213,8 @@ class InvoicesControllerTest {
                 .content(objectMapper.writeValueAsString(new InvoiceDetail()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("SoaGateway-User-Login-Id", SOA_GATEWAY_USER_LOGIN_ID)
-                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE))
+                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE)
+                .header(ProviderContext.HEADER_NAME, CAAB_PROVIDER_ID))
         .andExpect(status().isBadRequest());
 
     Mockito.verifyNoInteractions(invoicesService);
@@ -154,7 +232,8 @@ class InvoicesControllerTest {
                 .content(objectMapper.writeValueAsString(invoiceDetail))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("SoaGateway-User-Login-Id", SOA_GATEWAY_USER_LOGIN_ID)
-                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE))
+                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE)
+                .header(ProviderContext.HEADER_NAME, CAAB_PROVIDER_ID))
         .andExpect(status().isBadRequest());
 
     Mockito.verifyNoInteractions(invoicesService);
@@ -183,7 +262,8 @@ class InvoicesControllerTest {
         .perform(
             get("/invoices/{billing-id}", BILLING_ID)
                 .header("SoaGateway-User-Login-Id", SOA_GATEWAY_USER_LOGIN_ID)
-                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE))
+                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE)
+                .header(ProviderContext.HEADER_NAME, CAAB_PROVIDER_ID))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.opa_response[0].entity_name").value("global"))
         .andExpect(jsonPath("$.opa_response[0].instances[0].instance_label").value("global"))
@@ -203,7 +283,8 @@ class InvoicesControllerTest {
         .perform(
             get("/invoices/{billing-id}", BILLING_ID)
                 .header("SoaGateway-User-Login-Id", SOA_GATEWAY_USER_LOGIN_ID)
-                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE))
+                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE)
+                .header(ProviderContext.HEADER_NAME, CAAB_PROVIDER_ID))
         .andExpect(status().isNotFound());
   }
 
@@ -217,14 +298,16 @@ class InvoicesControllerTest {
         .perform(
             get("/invoices/{billing-id}", BILLING_ID)
                 .header("SoaGateway-User-Login-Id", SOA_GATEWAY_USER_LOGIN_ID)
-                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE))
+                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE)
+                .header(ProviderContext.HEADER_NAME, CAAB_PROVIDER_ID))
         .andExpect(status().isInternalServerError());
   }
 
   @Test
   @DisplayName("POST /invoices - Exception Handling")
   void testCreateInvoice_Exception() throws Exception {
-    final InvoiceDetail invoiceDetail = new InvoiceDetail().poa(new PaymentOnAccountDetail());
+    final InvoiceDetail invoiceDetail =
+        new InvoiceDetail().poa(new PaymentOnAccountDetail().providerId(CAAB_PROVIDER_ID));
 
     Mockito.when(invoicesService.createInvoice(any(), any(), any()))
         .thenThrow(new RuntimeException("Test exception"));
@@ -235,7 +318,8 @@ class InvoicesControllerTest {
                 .content(objectMapper.writeValueAsString(invoiceDetail))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("SoaGateway-User-Login-Id", SOA_GATEWAY_USER_LOGIN_ID)
-                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE))
+                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE)
+                .header(ProviderContext.HEADER_NAME, CAAB_PROVIDER_ID))
         .andExpect(status().isInternalServerError());
 
     Mockito.verify(invoicesService).createInvoice(any(), any(), any());

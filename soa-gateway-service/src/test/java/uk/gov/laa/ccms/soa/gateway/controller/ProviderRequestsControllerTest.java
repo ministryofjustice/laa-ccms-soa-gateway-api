@@ -18,7 +18,10 @@ import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import uk.gov.laa.ccms.soa.gateway.advice.GlobalExceptionHandler;
 import uk.gov.laa.ccms.soa.gateway.model.ProviderRequestDetail;
+import uk.gov.laa.ccms.soa.gateway.security.ProviderContext;
+import uk.gov.laa.ccms.soa.gateway.security.ProviderScopeFilter;
 import uk.gov.laa.ccms.soa.gateway.service.ProviderRequestsService;
 
 @ExtendWith(MockitoExtension.class)
@@ -34,11 +37,14 @@ class ProviderRequestsControllerTest {
 
   private static final String SOA_GATEWAY_USER_LOGIN_ID = "user";
   private static final String SOA_GATEWAY_USER_ROLE = "EXTERNAL";
+  private static final String CAAB_PROVIDER_ID = "12345";
 
   @BeforeEach
   public void setup() {
     this.mockMvc =
         MockMvcBuilders.standaloneSetup(providerRequestsController)
+            .setControllerAdvice(new GlobalExceptionHandler())
+            .addFilters(new ProviderScopeFilter())
             .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
             .build();
   }
@@ -62,12 +68,30 @@ class ProviderRequestsControllerTest {
                 .content(objectMapper.writeValueAsString(providerRequestDetail))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("SoaGateway-User-Login-Id", SOA_GATEWAY_USER_LOGIN_ID)
-                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE))
+                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE)
+                .header(ProviderContext.HEADER_NAME, CAAB_PROVIDER_ID))
         .andExpect(status().isOk());
 
     Mockito.verify(providerRequestsService)
         .submitProviderRequest(
             eq(SOA_GATEWAY_USER_LOGIN_ID), eq(SOA_GATEWAY_USER_ROLE), eq(providerRequestDetail));
+  }
+
+  @Test
+  @DisplayName("POST /provider-requests - Missing Caab-Provider-Id Returns Bad Request")
+  void testSubmitProviderRequest_MissingProviderHeader_ReturnsBadRequest() throws Exception {
+    final ProviderRequestDetail providerRequestDetail = new ProviderRequestDetail();
+
+    mockMvc
+        .perform(
+            post("/provider-requests")
+                .content(objectMapper.writeValueAsString(providerRequestDetail))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("SoaGateway-User-Login-Id", SOA_GATEWAY_USER_LOGIN_ID)
+                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE))
+        .andExpect(status().isBadRequest());
+
+    Mockito.verifyNoInteractions(providerRequestsService);
   }
 
   @Test
@@ -84,7 +108,8 @@ class ProviderRequestsControllerTest {
                 .content(objectMapper.writeValueAsString(providerRequestDetail))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("SoaGateway-User-Login-Id", SOA_GATEWAY_USER_LOGIN_ID)
-                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE))
+                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE)
+                .header(ProviderContext.HEADER_NAME, CAAB_PROVIDER_ID))
         .andExpect(status().isInternalServerError());
 
     Mockito.verify(providerRequestsService).submitProviderRequest(any(), any(), any());

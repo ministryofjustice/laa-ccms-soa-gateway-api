@@ -8,6 +8,7 @@ import uk.gov.laa.ccms.soa.gateway.api.CasesApi;
 import uk.gov.laa.ccms.soa.gateway.logging.LogMasker;
 import uk.gov.laa.ccms.soa.gateway.model.CaseDetail;
 import uk.gov.laa.ccms.soa.gateway.model.CaseTransactionResponse;
+import uk.gov.laa.ccms.soa.gateway.security.ProviderContext;
 import uk.gov.laa.ccms.soa.gateway.service.CaseDetailsService;
 
 /**
@@ -29,6 +30,7 @@ public class CaseDetailsController implements CasesApi {
       final String soaGatewayUserRole,
       final CaseDetail caseDetail) {
     log.info("POST /cases");
+    ProviderContext.requireMatchingCaseProvider(caseDetail);
     try {
       final String transactionId =
           caseDetailsService.registerCase(soaGatewayUserLoginId, soaGatewayUserRole, caseDetail);
@@ -55,6 +57,7 @@ public class CaseDetailsController implements CasesApi {
       String caseUpdateType,
       CaseDetail caseDetail) {
     log.info("PUT /cases");
+    ProviderContext.requireMatchingCaseProvider(caseDetail);
     try {
       final String transactionId =
           caseDetailsService.amendCase(

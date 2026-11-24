@@ -21,8 +21,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ws.client.WebServiceIOException;
+import uk.gov.laa.ccms.soa.gateway.advice.GlobalExceptionHandler;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ClientSummary;
+import uk.gov.laa.ccms.soa.gateway.security.ProviderContext;
+import uk.gov.laa.ccms.soa.gateway.security.ProviderScopeFilter;
 import uk.gov.laa.ccms.soa.gateway.service.ClientDetailsService;
 
 @ExtendWith(MockitoExtension.class)
@@ -36,6 +39,7 @@ public class ClientDetailsControllerTest {
 
   private String soaGatewayUserLoginId;
   private String soaGatewayUserRole;
+  private String caabProviderId;
   private String firstName;
   private String surname;
   private String gender;
@@ -52,11 +56,14 @@ public class ClientDetailsControllerTest {
   public void setup() {
     this.mockMvc =
         MockMvcBuilders.standaloneSetup(clientDetailsController)
+            .setControllerAdvice(new GlobalExceptionHandler())
+            .addFilters(new ProviderScopeFilter())
             .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
             .build();
 
     this.soaGatewayUserLoginId = "user";
     this.soaGatewayUserRole = "EXTERNAL";
+    this.caabProviderId = "12345";
     this.firstName = "John";
     this.surname = "Doe";
     this.gender = "Male";
@@ -85,7 +92,8 @@ public class ClientDetailsControllerTest {
             get("/clients/{clientReferenceNumber}", clientReferenceNumber)
                 .param("max-records", String.valueOf(maxRecords))
                 .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
-                .header("SoaGateway-User-Role", soaGatewayUserRole))
+                .header("SoaGateway-User-Role", soaGatewayUserRole)
+                .header(ProviderContext.HEADER_NAME, caabProviderId))
         .andExpect(status().isOk());
 
     verify(clientDetailsService)
@@ -104,7 +112,8 @@ public class ClientDetailsControllerTest {
             get("/clients/{clientReferenceNumber}", clientReferenceNumber)
                 .param("max-records", String.valueOf(maxRecords))
                 .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
-                .header("SoaGateway-User-Role", soaGatewayUserRole))
+                .header("SoaGateway-User-Role", soaGatewayUserRole)
+                .header(ProviderContext.HEADER_NAME, caabProviderId))
         .andExpect(status().isInternalServerError());
 
     verify(clientDetailsService).getClientDetail(any(), any(), any(), any());
@@ -127,7 +136,8 @@ public class ClientDetailsControllerTest {
                 .content(new ObjectMapper().writeValueAsString(clientDetailDetails))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
-                .header("SoaGateway-User-Role", soaGatewayUserRole))
+                .header("SoaGateway-User-Role", soaGatewayUserRole)
+                .header(ProviderContext.HEADER_NAME, caabProviderId))
         .andExpect(status().isOk());
 
     verify(clientDetailsService)
@@ -148,7 +158,8 @@ public class ClientDetailsControllerTest {
                 .content(new ObjectMapper().writeValueAsString(clientDetailDetails))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
-                .header("SoaGateway-User-Role", soaGatewayUserRole))
+                .header("SoaGateway-User-Role", soaGatewayUserRole)
+                .header(ProviderContext.HEADER_NAME, caabProviderId))
         .andExpect(status().isInternalServerError());
 
     verify(clientDetailsService).createClient(any(), any(), any());
@@ -171,7 +182,8 @@ public class ClientDetailsControllerTest {
                 .content(new ObjectMapper().writeValueAsString(clientDetailDetails))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
-                .header("SoaGateway-User-Role", soaGatewayUserRole))
+                .header("SoaGateway-User-Role", soaGatewayUserRole)
+                .header(ProviderContext.HEADER_NAME, caabProviderId))
         .andExpect(status().isOk());
 
     verify(clientDetailsService)
@@ -192,7 +204,8 @@ public class ClientDetailsControllerTest {
                 .content(new ObjectMapper().writeValueAsString(clientDetailDetails))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
-                .header("SoaGateway-User-Role", soaGatewayUserRole))
+                .header("SoaGateway-User-Role", soaGatewayUserRole)
+                .header(ProviderContext.HEADER_NAME, caabProviderId))
         .andExpect(status().isInternalServerError());
 
     verify(clientDetailsService).updateClient(any(), any(), any(), any());

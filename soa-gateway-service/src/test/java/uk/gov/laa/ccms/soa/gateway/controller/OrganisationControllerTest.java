@@ -16,9 +16,12 @@ import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ws.client.WebServiceIOException;
+import uk.gov.laa.ccms.soa.gateway.advice.GlobalExceptionHandler;
 import uk.gov.laa.ccms.soa.gateway.model.OrganisationDetail;
 import uk.gov.laa.ccms.soa.gateway.model.OrganisationDetails;
 import uk.gov.laa.ccms.soa.gateway.model.OrganisationSummary;
+import uk.gov.laa.ccms.soa.gateway.security.ProviderContext;
+import uk.gov.laa.ccms.soa.gateway.security.ProviderScopeFilter;
 import uk.gov.laa.ccms.soa.gateway.service.OrganisationService;
 
 @ExtendWith(MockitoExtension.class)
@@ -32,6 +35,7 @@ public class OrganisationControllerTest {
 
   private String soaGatewayUserLoginId;
   private String soaGatewayUserRole;
+  private String caabProviderId;
   private String name;
   private String type;
   private String city;
@@ -46,11 +50,14 @@ public class OrganisationControllerTest {
   public void setup() {
     this.mockMvc =
         MockMvcBuilders.standaloneSetup(organisationController)
+            .setControllerAdvice(new GlobalExceptionHandler())
+            .addFilters(new ProviderScopeFilter())
             .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
             .build();
 
     this.soaGatewayUserLoginId = "user";
     this.soaGatewayUserRole = "EXTERNAL";
+    this.caabProviderId = "12345";
     this.name = "orgname";
     this.type = "orgtype";
     this.city = "thecity";
@@ -84,7 +91,8 @@ public class OrganisationControllerTest {
                     city,
                     postcode)
                 .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
-                .header("SoaGateway-User-Role", soaGatewayUserRole))
+                .header("SoaGateway-User-Role", soaGatewayUserRole)
+                .header(ProviderContext.HEADER_NAME, caabProviderId))
         .andExpect(status().isOk());
 
     verify(organisationService)
@@ -114,7 +122,8 @@ public class OrganisationControllerTest {
                     city,
                     postcode)
                 .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
-                .header("SoaGateway-User-Role", soaGatewayUserRole))
+                .header("SoaGateway-User-Role", soaGatewayUserRole)
+                .header(ProviderContext.HEADER_NAME, caabProviderId))
         .andExpect(status().isInternalServerError());
 
     verify(organisationService)
@@ -138,7 +147,8 @@ public class OrganisationControllerTest {
         .perform(
             get("/organisations/{org-party-id}?max-records={maxRecords}", partyId, maxRecords)
                 .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
-                .header("SoaGateway-User-Role", soaGatewayUserRole))
+                .header("SoaGateway-User-Role", soaGatewayUserRole)
+                .header(ProviderContext.HEADER_NAME, caabProviderId))
         .andExpect(status().isOk());
 
     verify(organisationService)
@@ -158,7 +168,8 @@ public class OrganisationControllerTest {
         .perform(
             get("/organisations/{org-party-id}?max-records={maxRecords}", partyId, maxRecords)
                 .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
-                .header("SoaGateway-User-Role", soaGatewayUserRole))
+                .header("SoaGateway-User-Role", soaGatewayUserRole)
+                .header(ProviderContext.HEADER_NAME, caabProviderId))
         .andExpect(status().isInternalServerError());
 
     verify(organisationService)

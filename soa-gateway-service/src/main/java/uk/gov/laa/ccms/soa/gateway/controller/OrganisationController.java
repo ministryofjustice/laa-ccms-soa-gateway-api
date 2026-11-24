@@ -10,6 +10,7 @@ import uk.gov.laa.ccms.soa.gateway.logging.LogMasker;
 import uk.gov.laa.ccms.soa.gateway.model.OrganisationDetail;
 import uk.gov.laa.ccms.soa.gateway.model.OrganisationDetails;
 import uk.gov.laa.ccms.soa.gateway.model.OrganisationSummary;
+import uk.gov.laa.ccms.soa.gateway.security.ProviderContext;
 import uk.gov.laa.ccms.soa.gateway.service.OrganisationService;
 
 /**
@@ -49,6 +50,7 @@ public class OrganisationController implements OrganisationsApi {
       final Integer maxRecords,
       final Pageable pageable) {
     log.info("GET /organisations");
+    ProviderContext.requireProviderId();
     try {
       OrganisationSummary searchOrganisation =
           new OrganisationSummary().name(name).type(type).city(city).postcode(postcode);
@@ -80,6 +82,7 @@ public class OrganisationController implements OrganisationsApi {
       final String soaGatewayUserLoginId,
       final String soaGatewayUserRole,
       final Integer maxRecords) {
+    ProviderContext.requireProviderId();
     try {
       OrganisationDetail organisationDetail =
           organisationService.getOrganisation(

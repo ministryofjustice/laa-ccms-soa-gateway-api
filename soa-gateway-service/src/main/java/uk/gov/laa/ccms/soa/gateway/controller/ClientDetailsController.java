@@ -9,6 +9,7 @@ import uk.gov.laa.ccms.soa.gateway.logging.LogMasker;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ClientDetailDetails;
 import uk.gov.laa.ccms.soa.gateway.model.ClientTransactionResponse;
+import uk.gov.laa.ccms.soa.gateway.security.ProviderContext;
 import uk.gov.laa.ccms.soa.gateway.service.ClientDetailsService;
 
 /**
@@ -40,6 +41,7 @@ public class ClientDetailsController implements ClientsApi {
       final String soaGatewayUserRole,
       final Integer maxRecords) {
     log.info("GET /clients/{}", clientReferenceNumber);
+    ProviderContext.requireProviderId();
     try {
       ClientDetail clientDetail =
           clientDetailsService.getClientDetail(
@@ -69,6 +71,7 @@ public class ClientDetailsController implements ClientsApi {
       final String soaGatewayUserRole,
       final ClientDetailDetails clientDetailDetails) {
     log.info("PUT /clients");
+    ProviderContext.requireProviderId();
     try {
       String transactionId =
           clientDetailsService.updateClient(
@@ -99,6 +102,7 @@ public class ClientDetailsController implements ClientsApi {
       String soaGatewayUserRole,
       ClientDetailDetails clientDetailDetails) {
     log.info("POST /clients");
+    ProviderContext.requireProviderId();
     try {
       String transactionId =
           clientDetailsService.createClient(

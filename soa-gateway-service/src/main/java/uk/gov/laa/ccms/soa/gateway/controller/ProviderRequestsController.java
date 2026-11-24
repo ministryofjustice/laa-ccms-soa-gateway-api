@@ -8,6 +8,7 @@ import uk.gov.laa.ccms.soa.gateway.api.ProviderRequestsApi;
 import uk.gov.laa.ccms.soa.gateway.logging.LogMasker;
 import uk.gov.laa.ccms.soa.gateway.model.ProviderRequestDetail;
 import uk.gov.laa.ccms.soa.gateway.model.ProviderRequestResponse;
+import uk.gov.laa.ccms.soa.gateway.security.ProviderContext;
 import uk.gov.laa.ccms.soa.gateway.service.ProviderRequestsService;
 
 /** REST controller for handling provider requests. */
@@ -32,6 +33,7 @@ public class ProviderRequestsController implements ProviderRequestsApi {
       final String soaGatewayUserRole,
       final ProviderRequestDetail providerRequestDetail) {
     log.info("POST /provider-requests");
+    ProviderContext.requireProviderId();
     try {
       final String notificationId =
           providerRequestsService.submitProviderRequest(
