@@ -8,6 +8,7 @@ import uk.gov.laa.ccms.soa.gateway.api.UsersApi;
 import uk.gov.laa.ccms.soa.gateway.logging.LogMasker;
 import uk.gov.laa.ccms.soa.gateway.model.ClientTransactionResponse;
 import uk.gov.laa.ccms.soa.gateway.model.UserOptions;
+import uk.gov.laa.ccms.soa.gateway.security.ProviderContext;
 import uk.gov.laa.ccms.soa.gateway.service.UsersService;
 
 /**
@@ -35,6 +36,9 @@ public class UsersController implements UsersApi {
   public ResponseEntity<ClientTransactionResponse> updateUserOptions(
       String soaGatewayUserLoginId, String soaGatewayUserRole, UserOptions userOptions) {
     log.info("PUT /users/options");
+    // During provider switch Caab-Provider-Id holds the current firm while userOptions holds the
+    // target firm, so validate caller header presence without requiring body equality.
+    ProviderContext.requireProviderId();
     try {
       String transactionId =
           usersService.updateUserOptions(soaGatewayUserLoginId, soaGatewayUserRole, userOptions);

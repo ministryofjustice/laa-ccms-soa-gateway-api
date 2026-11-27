@@ -18,7 +18,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ws.client.WebServiceIOException;
+import uk.gov.laa.ccms.soa.gateway.advice.GlobalExceptionHandler;
 import uk.gov.laa.ccms.soa.gateway.model.Notification;
+import uk.gov.laa.ccms.soa.gateway.security.ProviderContext;
+import uk.gov.laa.ccms.soa.gateway.security.ProviderScopeFilter;
 import uk.gov.laa.ccms.soa.gateway.service.NotificationsService;
 
 @ExtendWith(MockitoExtension.class)
@@ -26,6 +29,7 @@ public class NotificationsControllerTest {
 
   private static final String SOA_GATEWAY_USER_LOGIN_ID = "user";
   private static final String SOA_GATEWAY_USER_ROLE = "EXTERNAL";
+  private static final String CAAB_PROVIDER_ID = "12345";
 
   @Mock private NotificationsService notificationsService;
 
@@ -35,7 +39,11 @@ public class NotificationsControllerTest {
 
   @BeforeEach
   public void setup() {
-    mockMvc = MockMvcBuilders.standaloneSetup(notificationsController).build();
+    mockMvc =
+        MockMvcBuilders.standaloneSetup(notificationsController)
+            .setControllerAdvice(new GlobalExceptionHandler())
+            .addFilters(new ProviderScopeFilter())
+            .build();
   }
 
   @ParameterizedTest
@@ -62,7 +70,8 @@ public class NotificationsControllerTest {
                 .content(new ObjectMapper().writeValueAsString(notification))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("SoaGateway-User-Login-Id", SOA_GATEWAY_USER_LOGIN_ID)
-                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE))
+                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE)
+                .header(ProviderContext.HEADER_NAME, CAAB_PROVIDER_ID))
         .andExpect(status().isOk());
 
     verify(notificationsService)
@@ -88,7 +97,8 @@ public class NotificationsControllerTest {
                 .content(new ObjectMapper().writeValueAsString(notification))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("SoaGateway-User-Login-Id", SOA_GATEWAY_USER_LOGIN_ID)
-                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE))
+                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE)
+                .header(ProviderContext.HEADER_NAME, CAAB_PROVIDER_ID))
         .andExpect(status().isBadRequest());
   }
 
@@ -110,7 +120,8 @@ public class NotificationsControllerTest {
                 .content(new ObjectMapper().writeValueAsString(notification))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("SoaGateway-User-Login-Id", SOA_GATEWAY_USER_LOGIN_ID)
-                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE))
+                .header("SoaGateway-User-Role", SOA_GATEWAY_USER_ROLE)
+                .header(ProviderContext.HEADER_NAME, CAAB_PROVIDER_ID))
         .andExpect(status().isInternalServerError());
   }
 }

@@ -1,5 +1,7 @@
 package uk.gov.laa.ccms.soa.gateway.controller;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -17,7 +19,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ws.client.WebServiceIOException;
+import uk.gov.laa.ccms.soa.gateway.advice.GlobalExceptionHandler;
 import uk.gov.laa.ccms.soa.gateway.model.ContractDetails;
+import uk.gov.laa.ccms.soa.gateway.security.ProviderContext;
+import uk.gov.laa.ccms.soa.gateway.security.ProviderScopeFilter;
 import uk.gov.laa.ccms.soa.gateway.service.ContractDetailsService;
 
 @ExtendWith(MockitoExtension.class)
@@ -30,7 +35,11 @@ class ContractDetailsControllerTest {
 
   @BeforeEach
   public void setup() {
-    mockMvc = MockMvcBuilders.standaloneSetup(contractDetailsController).build();
+    mockMvc =
+        MockMvcBuilders.standaloneSetup(contractDetailsController)
+            .setControllerAdvice(new GlobalExceptionHandler())
+            .addFilters(new ProviderScopeFilter())
+            .build();
   }
 
   @Test
@@ -69,12 +78,46 @@ class ContractDetailsControllerTest {
                     officeId,
                     maxRecords)
                 .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
-                .header("SoaGateway-User-Role", soaGatewayUserRole))
+                .header("SoaGateway-User-Role", soaGatewayUserRole)
+                .header(ProviderContext.HEADER_NAME, String.valueOf(providerFirmId)))
         .andExpect(status().isOk());
 
     verify(contractDetailsService)
         .getContractDetails(
             providerFirmId, officeId, soaGatewayUserLoginId, soaGatewayUserRole, maxRecords);
+  }
+
+  @Test
+  public void testGetContractDetails_MismatchedProviderFirmId_ReturnsForbidden() throws Exception {
+    mockMvc
+        .perform(
+            get(
+                    "/contract-details?providerFirmId={providerFirmId}&officeId={officeId}&max-records={maxRecords}",
+                    123,
+                    345,
+                    50)
+                .header("SoaGateway-User-Login-Id", "user")
+                .header("SoaGateway-User-Role", "EXTERNAL")
+                .header(ProviderContext.HEADER_NAME, "999"))
+        .andExpect(status().isForbidden());
+
+    verify(contractDetailsService, never()).getContractDetails(any(), any(), any(), any(), any());
+  }
+
+  @Test
+  public void testGetContractDetails_MissingProviderHeader_ReturnsBadRequest() throws Exception {
+    mockMvc
+        .perform(
+            get(
+                    "/contract-details?providerFirmId={providerFirmId}&officeId={officeId}&max-records={maxRecords}",
+                    123,
+                    345,
+                    50)
+                .header("SoaGateway-User-Login-Id", "user")
+                .header("SoaGateway-User-Role", "EXTERNAL"))
+        .andExpect(status().isBadRequest());
+
+    verify(contractDetailsService, never()).getContractDetails(any(), any(), any(), any(), any());
   }
 
   @Test
@@ -100,7 +143,8 @@ class ContractDetailsControllerTest {
                     officeId,
                     maxRecords)
                 .header("SoaGateway-User-Login-Id", soaGatewayUserLoginId)
-                .header("SoaGateway-User-Role", soaGatewayUserRole))
+                .header("SoaGateway-User-Role", soaGatewayUserRole)
+                .header(ProviderContext.HEADER_NAME, String.valueOf(providerFirmId)))
         .andExpect(status().isInternalServerError());
 
     // Verify that the notificationService method was called with the correct parameters
@@ -121,10 +165,11 @@ class ContractDetailsControllerTest {
     // Call the getUserNotificationSummary method with null headers
     MockHttpServletRequestBuilder requestBuilder =
         get(
-            "/contract-details?providerFirmId={providerFirmId}&officeId={officeId}&max-records={maxRecords}",
-            "providerFirmId",
-            "officeId",
-            "50");
+                "/contract-details?providerFirmId={providerFirmId}&officeId={officeId}&max-records={maxRecords}",
+                "providerFirmId",
+                "officeId",
+                "50")
+            .header(ProviderContext.HEADER_NAME, "123");
 
     if (userLoginId != null) {
       requestBuilder.header("SoaGateway-User-Login-Id", userLoginId);

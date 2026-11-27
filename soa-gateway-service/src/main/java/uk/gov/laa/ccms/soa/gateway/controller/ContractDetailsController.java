@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import uk.gov.laa.ccms.soa.gateway.api.ContractDetailsApi;
 import uk.gov.laa.ccms.soa.gateway.logging.LogMasker;
 import uk.gov.laa.ccms.soa.gateway.model.ContractDetails;
+import uk.gov.laa.ccms.soa.gateway.security.ProviderContext;
 import uk.gov.laa.ccms.soa.gateway.service.ContractDetailsService;
 
 /**
@@ -42,7 +43,7 @@ public class ContractDetailsController implements ContractDetailsApi {
       final String soaGatewayUserLoginId,
       final String soaGatewayUserRole,
       final Integer maxRecords) {
-
+    ProviderContext.requireMatchingProviderId(providerFirmId);
     try {
       ContractDetails contractDetails =
           contractDetailsService.getContractDetails(

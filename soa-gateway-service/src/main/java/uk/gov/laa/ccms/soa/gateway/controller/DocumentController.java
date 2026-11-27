@@ -9,6 +9,7 @@ import uk.gov.laa.ccms.soa.gateway.logging.LogMasker;
 import uk.gov.laa.ccms.soa.gateway.model.ClientTransactionResponse;
 import uk.gov.laa.ccms.soa.gateway.model.CoverSheet;
 import uk.gov.laa.ccms.soa.gateway.model.Document;
+import uk.gov.laa.ccms.soa.gateway.security.ProviderContext;
 import uk.gov.laa.ccms.soa.gateway.service.DocumentService;
 
 /**
@@ -41,7 +42,7 @@ public class DocumentController implements DocumentsApi {
       final Document document,
       final String notificationReference,
       final String caseReferenceNumber) {
-
+    ProviderContext.requireProviderId();
     try {
       final ClientTransactionResponse response =
           documentService.registerDocument(
@@ -75,7 +76,7 @@ public class DocumentController implements DocumentsApi {
       final Document document,
       final String notificationReference,
       final String caseReferenceNumber) {
-
+    ProviderContext.requireProviderId();
     try {
       final ClientTransactionResponse response =
           documentService.uploadDocument(
@@ -106,7 +107,7 @@ public class DocumentController implements DocumentsApi {
       final String documentId,
       final String soaGatewayUserLoginId,
       final String soaGatewayUserRole) {
-
+    ProviderContext.requireProviderId();
     try {
       Document response =
           documentService.downloadDocument(soaGatewayUserLoginId, soaGatewayUserRole, documentId);
@@ -130,7 +131,7 @@ public class DocumentController implements DocumentsApi {
   @Override
   public ResponseEntity<CoverSheet> downloadDocumentCoverSheet(
       String documentId, String soaGatewayUserLoginId, String soaGatewayUserRole) {
-
+    ProviderContext.requireProviderId();
     try {
       CoverSheet response =
           documentService.downloadDocumentCoverSheet(
